@@ -48,7 +48,7 @@
       <scope>test</scope>
     </dependency>
 
-	<!-- Analysis tools -->
+    <!-- Analysis tools -->
     <dependency>
       <groupId>net.sourceforge.pmd</groupId>
       <artifactId>pmd-xml</artifactId>
@@ -186,6 +186,43 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <attach>true</attach>
+        </configuration>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.10.3</version>
+          <configuration>
+              <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
+              <failOnError>false</failOnError>
+          </configuration>
+          <executions>
+              <execution>
+                  <id>attach-javadocs</id>
+                  <goals>
+                      <goal>jar</goal>
+                  </goals>
+                  <configuration>
+                      <additionalparam>${javadoc.opts}</additionalparam>
+                  </configuration>
+              </execution>
+          </executions>
       </plugin>
     </plugins>
   </build>
