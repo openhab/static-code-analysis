@@ -46,6 +46,7 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -319,9 +320,14 @@ public class ReportUtility extends AbstractMojo {
       String reportContent = FileUtils.readFileToString(summaryReport);
 
       final String singleItem = "<tr class=alternate><td><a href=\"%s\">%s</a></td></tr><tr></tr>";
-      Path reportPath = FileSystems.getDefault().getPath(htmlOutputFileName);
-      String row = String.format(singleItem, reportPath.toUri(),
-          reportPath.getName(reportPath.getNameCount() - 4));
+      Path absoluteIndividualReportPath = FileSystems.getDefault().getPath(htmlOutputFileName);
+      Path summaryReportDirectoryPath = Paths.get(summaryReportDirectory);
+      Path relativePath = summaryReportDirectoryPath.relativize(absoluteIndividualReportPath);
+
+      String bundleName = absoluteIndividualReportPath.getName(absoluteIndividualReportPath.getNameCount() - 4)
+              .toString();
+
+      String row = String.format(singleItem, relativePath, bundleName);
 
       reportContent = reportContent.replace("<tr></tr>", row);
       FileUtils.writeStringToFile(summaryReport, reportContent);
