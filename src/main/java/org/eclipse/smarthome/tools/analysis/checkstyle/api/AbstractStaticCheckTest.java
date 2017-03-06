@@ -46,8 +46,8 @@ public abstract class AbstractStaticCheckTest extends BaseCheckTestSupport {
   }
 
   /**
-   * Generates message that can be used in the some of the
-   * {@link #verify(Configuration, String, String[], Integer...)} methods.
+   * Generates message that can be used in the
+   * {@link BaseCheckTestSupport} verify methods.
    *
    * @param arguments - a set of line number and message pairs
    * @return String[] in the format used from checkstyle to verify the logged messages

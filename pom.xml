@@ -210,7 +210,7 @@
           <version>2.10.3</version>
           <configuration>
               <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
-              <failOnError>false</failOnError>
+              <failOnError>true</failOnError>
           </configuration>
           <executions>
               <execution>
