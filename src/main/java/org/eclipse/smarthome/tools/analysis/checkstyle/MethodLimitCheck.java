@@ -15,7 +15,7 @@ import com.puppycrawl.tools.checkstyle.api.TokenTypes;
  *
  * Detects classes that have number of methods that exceed a certain limit.
  * This can be a clue that the class has low cohesion.
- * <p/>
+ * <p>
  * This check is used in the checkstyle documentation to demonstrate the usage of the checkstyle Java API.
  *
  * @see <a href=
@@ -33,7 +33,7 @@ public class MethodLimitCheck extends AbstractCheck {
 
     /**
      * The maximum number of methods per class/interface. Can accept different values in the configuration.
-     * 
+     *
      */
     private int max = 30;
 
@@ -49,16 +49,13 @@ public class MethodLimitCheck extends AbstractCheck {
     /**
      * We are interested in CLASS_DEF and INTERFACE_DEF Tokens.
      *
-     * @see Check
+     * @see AbstractCheck
      */
     @Override
     public int[] getDefaultTokens() {
         return new int[] { TokenTypes.CLASS_DEF, TokenTypes.INTERFACE_DEF };
     }
 
-    /**
-     * @see Check
-     */
     @Override
     public void visitToken(DetailAST ast) {
         // the tree below a CLASS_DEF/INTERFACE_DEF looks like this:

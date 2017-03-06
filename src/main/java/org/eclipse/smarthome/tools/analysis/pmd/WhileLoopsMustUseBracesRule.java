@@ -14,7 +14,7 @@ import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
 
 /**
  * The rule is checking if the while loop is declared with braces
- * <p/>
+ * <p>
  * The check is used in the PMD documentation to demonstrate the usage of the PMD Java API.
  *
  * @see <a href="http://pmd.sourceforge.net/snapshot/customizing/howtowritearule.html">http://pmd.sourceforge.net/</a>

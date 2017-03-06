@@ -62,6 +62,9 @@ public abstract class AbstractChecker extends AbstractMojo {
 
     /**
      * Can be used to load resources from the Maven plugin project
+     *
+     * @return URLClassLoader
+     * @throws MojoExecutionException when an exception occurs during the URLClassLoader instantiation
      */
     protected URLClassLoader getMavenRuntimeClasspathClassLoader() throws MojoExecutionException {
         if (mavenRuntimeClasspathClassLoader == null) {
