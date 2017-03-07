@@ -42,7 +42,7 @@
 			<xsl:otherwise>				
 				<xsl:call-template name="substring-after-last">
 					<xsl:with-param name="input" select="@name" />
-					<xsl:with-param name="marker" select="'org.eclipse.smarthome'" />
+					<xsl:with-param name="marker" select="'org.openhab'" />
 				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
