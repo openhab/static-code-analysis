@@ -91,271 +91,268 @@ import org.w3c.dom.NodeList;
 @Mojo(name = "report")
 public class ReportUtility extends AbstractMojo {
 
-  /**
-   * The directory where the individual report will be generated
-   */
-  @Parameter(property = "report.targetDir", defaultValue = "${project.build.directory}/code-analysis")
-  private String targetDirectory;
+    /**
+     * The directory where the individual report will be generated
+     */
+    @Parameter(property = "report.targetDir", defaultValue = "${project.build.directory}/code-analysis")
+    private String targetDirectory;
 
-  /**
-   * Describes of the build should fail if high priority error is found
-   */
-  @Parameter(property = "report.fail.on.error", defaultValue = "true")
-  private boolean failOnError;
+    /**
+     * Describes of the build should fail if high priority error is found
+     */
+    @Parameter(property = "report.fail.on.error", defaultValue = "true")
+    private boolean failOnError;
 
-  /**
-   * The directory where the summary report, containing links to the individual reports will be
-   * generated
-   */
-  @Parameter(property = "report.summary.targetDir", defaultValue = "${session.executionRootDirectory}/target")
-  private String summaryReport;
+    /**
+     * The directory where the summary report, containing links to the individual reports will be
+     * generated
+     */
+    @Parameter(property = "report.summary.targetDir", defaultValue = "${session.executionRootDirectory}/target")
+    private String summaryReport;
 
-  private static final String REPORT_SUBDIR = "report";
+    private static final String REPORT_SUBDIR = "report";
 
-  // XSLT files that are used to create the merged report, located in the resources folder
-  private static final String CREATE_HTML_XSLT = REPORT_SUBDIR + "/create_html.xslt";
-  private static final String MERGE_XSLT = REPORT_SUBDIR + "/merge.xslt";
-  private static final String PREPARE_PMD_XSLT = REPORT_SUBDIR + "/prepare_pmd.xslt";
-  private static final String PREPARE_CHECKSTYLE_XSLT = REPORT_SUBDIR + "/prepare_checkstyle.xslt";
-  private static final String PREPARE_FINDBUGS_XSLT = REPORT_SUBDIR + "/prepare_findbugs.xslt";
+    // XSLT files that are used to create the merged report, located in the resources folder
+    private static final String CREATE_HTML_XSLT = REPORT_SUBDIR + "/create_html.xslt";
+    private static final String MERGE_XSLT = REPORT_SUBDIR + "/merge.xslt";
+    private static final String PREPARE_PMD_XSLT = REPORT_SUBDIR + "/prepare_pmd.xslt";
+    private static final String PREPARE_CHECKSTYLE_XSLT = REPORT_SUBDIR + "/prepare_checkstyle.xslt";
+    private static final String PREPARE_FINDBUGS_XSLT = REPORT_SUBDIR + "/prepare_findbugs.xslt";
 
-  private static final String SUMMARY_TEMPLATE_FILE_NAME = "summary.html";
+    private static final String SUMMARY_TEMPLATE_FILE_NAME = "summary.html";
 
-  // Input files that contain the reports of the different tools
-  private static final String PMD_INPUT_FILE_NAME = "pmd.xml";
-  private static final String CHECKSTYLE_INPUT_FILE_NAME = "checkstyle-result.xml";
-  private static final String FINDBUGS_INPUT_FILE_NAME = "findbugsXml.xml";
+    // Input files that contain the reports of the different tools
+    private static final String PMD_INPUT_FILE_NAME = "pmd.xml";
+    private static final String CHECKSTYLE_INPUT_FILE_NAME = "checkstyle-result.xml";
+    private static final String FINDBUGS_INPUT_FILE_NAME = "findbugsXml.xml";
 
-  // Name of the file that contains the merged report
-  public static final String RESULT_FILE_NAME = "report.html";
-  public static final String SUMMARY_FILE_NAME = "summary_report.html";
+    // Name of the file that contains the merged report
+    public static final String RESULT_FILE_NAME = "report.html";
+    public static final String SUMMARY_FILE_NAME = "summary_report.html";
 
-  private static final String EMPTY = "";
-  private static final String XML_TRANSFORM_PROPERTY_KEY = "javax.xml.transform.TransformerFactory";
-  private static final String XML_TRANSFOMR_PROPERTY_VALUE = "net.sf.saxon.TransformerFactoryImpl";
+    private static final String EMPTY = "";
+    private static final String XML_TRANSFORM_PROPERTY_KEY = "javax.xml.transform.TransformerFactory";
+    private static final String XML_TRANSFOMR_PROPERTY_VALUE = "net.sf.saxon.TransformerFactoryImpl";
 
-  private static final Logger LOGGER = Logger.getLogger(ReportUtility.class);
+    private static final Logger LOGGER = Logger.getLogger(ReportUtility.class);
 
-  // Setters will be used in the test
-  public void setTargetDirectory(String targetDirectory) {
-    this.targetDirectory = targetDirectory;
-  }
-
-  public void setFailOnError(boolean failOnError) {
-    this.failOnError = failOnError;
-  }
-
-  public void setSummaryReport(String summaryReport) {
-    this.summaryReport = summaryReport;
-  }
-
-  @Override
-  public void execute() throws MojoFailureException {
-
-    // Prepare userDirectory and tempDirectoryPrefix
-    final String userDirectory = targetDirectory.replace('\\', '/') + '/';
-    final String timeStamp = Integer.toHexString((int) System.nanoTime());
-    final String tempDirectoryPrefix = userDirectory.replace('\\', '/') + timeStamp;
-
-    System.setProperty(XML_TRANSFORM_PROPERTY_KEY, XML_TRANSFOMR_PROPERTY_VALUE);
-
-    // 1. Create intermediate xml-file for Findbugs
-    final String inputFileFindbugs = userDirectory + FINDBUGS_INPUT_FILE_NAME;
-    final String findbugsTempFile = tempDirectoryPrefix + "_PostFB.xml";
-    run(PREPARE_FINDBUGS_XSLT, inputFileFindbugs, findbugsTempFile, EMPTY, EMPTY);
-
-    // 2. Create intermediate xml-file for Checkstyle
-    final String inputFileCheckstyle = userDirectory + CHECKSTYLE_INPUT_FILE_NAME;
-    final String checkstyleTempFile = tempDirectoryPrefix + "_PostCS.xml";
-    run(PREPARE_CHECKSTYLE_XSLT, inputFileCheckstyle, checkstyleTempFile, EMPTY, EMPTY);
-
-    // 3. Create intermediate xml-file for PMD
-    final String inputFilePMD = userDirectory + PMD_INPUT_FILE_NAME;
-    final String pmdTempFile = tempDirectoryPrefix + "_PostPM.xml";
-    run(PREPARE_PMD_XSLT, inputFilePMD, pmdTempFile, EMPTY, EMPTY);
-
-    // 4. Merge first two files and create firstMergeResult file
-    final String firstMergeResult = tempDirectoryPrefix + "_FirstMerge.xml";
-    run(MERGE_XSLT, checkstyleTempFile, firstMergeResult, "with", findbugsTempFile);
-
-    // 5. Merge result file with third file and create secondMergeResult
-    // file
-    final String secondMergeResult = tempDirectoryPrefix + "_SecondMerge.xml";
-    run(MERGE_XSLT, firstMergeResult, secondMergeResult, "with", pmdTempFile);
-
-    // 6. Create html report out of secondMergeResult
-    final String htmlOutputFileName = userDirectory + RESULT_FILE_NAME;
-    run(CREATE_HTML_XSLT, secondMergeResult, htmlOutputFileName, EMPTY, EMPTY);
-
-    // 7. Append the individual report to the summary, if it is not empty
-    if (summaryReport != null) {
-      appendToSummary(htmlOutputFileName, summaryReport, secondMergeResult);
+    // Setters will be used in the test
+    public void setTargetDirectory(String targetDirectory) {
+        this.targetDirectory = targetDirectory;
     }
 
-    // 8. Fail the build if the option is enabled and high priority warnings are found
-    if (failOnError) {
-      String errorLog = checkForErrors(secondMergeResult, htmlOutputFileName);
-      if (errorLog != null) {
-        throw new MojoFailureException(errorLog);
-      }
+    public void setFailOnError(boolean failOnError) {
+        this.failOnError = failOnError;
     }
 
-    // 9. Delete all temporary files
-    deletefile(findbugsTempFile);
-    deletefile(checkstyleTempFile);
-    deletefile(pmdTempFile);
-    deletefile(firstMergeResult);
-    deletefile(secondMergeResult);
+    public void setSummaryReport(String summaryReport) {
+        this.summaryReport = summaryReport;
+    }
 
-  }
+    @Override
+    public void execute() throws MojoFailureException {
 
-  private void run(final String xslt, final String input, final String output, final String param,
-      final String value) {
+        // Prepare userDirectory and tempDirectoryPrefix
+        final String userDirectory = targetDirectory.replace('\\', '/') + '/';
+        final String timeStamp = Integer.toHexString((int) System.nanoTime());
+        final String tempDirectoryPrefix = userDirectory.replace('\\', '/') + timeStamp;
 
-    FileOutputStream outputStream = null;
-    try {
+        System.setProperty(XML_TRANSFORM_PROPERTY_KEY, XML_TRANSFOMR_PROPERTY_VALUE);
 
-      LOGGER.debug(input + "  > " + xslt + " " + param + " " + value + " >  " + output);
+        // 1. Create intermediate xml-file for Findbugs
+        final String inputFileFindbugs = userDirectory + FINDBUGS_INPUT_FILE_NAME;
+        final String findbugsTempFile = tempDirectoryPrefix + "_PostFB.xml";
+        run(PREPARE_FINDBUGS_XSLT, inputFileFindbugs, findbugsTempFile, EMPTY, EMPTY);
 
-      // Process the Source into a Transformer Object
-      final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      final InputStream inputStream = Thread.currentThread().getContextClassLoader()
-          .getResourceAsStream(xslt);
-      final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-      final StreamSource source = new StreamSource(reader);
-      final Transformer transformer = transformerFactory.newTransformer(source);
+        // 2. Create intermediate xml-file for Checkstyle
+        final String inputFileCheckstyle = userDirectory + CHECKSTYLE_INPUT_FILE_NAME;
+        final String checkstyleTempFile = tempDirectoryPrefix + "_PostCS.xml";
+        run(PREPARE_CHECKSTYLE_XSLT, inputFileCheckstyle, checkstyleTempFile, EMPTY, EMPTY);
 
-      // Add a parameter for the transformation
-      if (!param.isEmpty()) {
-        transformer.setParameter(param, value);
-      }
+        // 3. Create intermediate xml-file for PMD
+        final String inputFilePMD = userDirectory + PMD_INPUT_FILE_NAME;
+        final String pmdTempFile = tempDirectoryPrefix + "_PostPM.xml";
+        run(PREPARE_PMD_XSLT, inputFilePMD, pmdTempFile, EMPTY, EMPTY);
 
-      outputStream = new FileOutputStream(output);
-      final StreamResult outputTarget = new StreamResult(outputStream);
-      final StreamSource xmlSource = new StreamSource(input);
+        // 4. Merge first two files and create firstMergeResult file
+        final String firstMergeResult = tempDirectoryPrefix + "_FirstMerge.xml";
+        run(MERGE_XSLT, checkstyleTempFile, firstMergeResult, "with", findbugsTempFile);
 
-      // Transform the XML Source to a Result
-      transformer.transform(xmlSource, outputTarget);
+        // 5. Merge result file with third file and create secondMergeResult
+        // file
+        final String secondMergeResult = tempDirectoryPrefix + "_SecondMerge.xml";
+        run(MERGE_XSLT, firstMergeResult, secondMergeResult, "with", pmdTempFile);
 
-    } catch (Exception e) {
-      LOGGER.error(e.getMessage());
-    } finally {
-      if (null != outputStream) {
-        try {
-          outputStream.close();
-        } catch (final IOException e) {
-          LOGGER.error(e.getMessage());
+        // 6. Create html report out of secondMergeResult
+        final String htmlOutputFileName = userDirectory + RESULT_FILE_NAME;
+        run(CREATE_HTML_XSLT, secondMergeResult, htmlOutputFileName, EMPTY, EMPTY);
+
+        // 7. Append the individual report to the summary, if it is not empty
+        if (summaryReport != null) {
+            appendToSummary(htmlOutputFileName, summaryReport, secondMergeResult);
         }
-      }
-    }
-  }
 
-  void deletefile(final String pathName) {
-    final File file = new File(pathName);
-    if (!file.delete()) {
-      LOGGER.error("Unable to delete file " + pathName);
-    }
-  }
+        // 8. Fail the build if the option is enabled and high priority warnings are found
+        if (failOnError) {
+            String errorLog = checkForErrors(secondMergeResult, htmlOutputFileName);
+            if (errorLog != null) {
+                throw new MojoFailureException(errorLog);
+            }
+        }
 
-  private String checkForErrors(String secondMergeResult, String reportLocation) {
-    NodeList nodes = selectNodes(secondMergeResult, "/sca/file/message[@priority=1]");
-    int errorNumber = nodes.getLength();
+        // 9. Delete all temporary files
+        deletefile(findbugsTempFile);
+        deletefile(checkstyleTempFile);
+        deletefile(pmdTempFile);
+        deletefile(firstMergeResult);
+        deletefile(secondMergeResult);
 
-    if (errorNumber == 0) {
-      return null;
-    }
-    StringBuilder result = new StringBuilder();
-    result.append("Code Analysis Tool has found ").append(errorNumber).append(" error(s)! \n");
-    result.append("Please fix the errors and rerun the build. \n");
-    result.append("Errors list: \n");
-
-    for (int i = 0; i < nodes.getLength(); i++) {
-      Node currentNode = nodes.item(i);
-      if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
-        Element messageNode = (Element) currentNode;
-        String message = messageNode.getAttribute("message");
-        String tool = messageNode.getAttribute("tool");
-        String line = messageNode.getAttribute("line");
-
-        Element fileNode = ((Element) messageNode.getParentNode());
-        String fileName = fileNode.getAttribute("name");
-
-        String logTemplate = "ERROR found by %s: %s:%s %s \n";
-        String log = String.format(logTemplate, tool, fileName, line, message);
-        result.append(log);
-      }
-    }
-    result.append("Detailed report can be found at: file").append(File.separator)
-        .append(File.separator).append(File.separator).append(reportLocation).append("\n");
-    return result.toString();
-
-  }
-
-  private void appendToSummary(String htmlOutputFileName, String summaryReportDirectory,
-      String secondMergeResult) {
-
-    NodeList nodes = selectNodes(secondMergeResult, "/sca/file/message");
-    int messagesNumber = nodes.getLength();
-    if (messagesNumber == 0) {
-      LOGGER.info("Empty report will not be appended to the summary report.");
-      return;
     }
 
-    try {
-      File summaryReport = new File(summaryReportDirectory + File.separator + SUMMARY_FILE_NAME);
-      if (!summaryReport.exists()) {
+    private void run(final String xslt, final String input, final String output, final String param,
+            final String value) {
 
-        InputStream inputStream = Thread.currentThread().getContextClassLoader()
-            .getResourceAsStream(REPORT_SUBDIR + "/" + SUMMARY_TEMPLATE_FILE_NAME);
+        FileOutputStream outputStream = null;
+        try {
 
-        StringWriter writer = new StringWriter();
-        IOUtils.copy(inputStream, writer, Charset.defaultCharset());
-        String htmlString = writer.toString();
+            LOGGER.debug(input + "  > " + xslt + " " + param + " " + value + " >  " + output);
 
-        String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-        htmlString = htmlString.replace("$time", now);
+            // Process the Source into a Transformer Object
+            final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(xslt);
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            final StreamSource source = new StreamSource(reader);
+            final Transformer transformer = transformerFactory.newTransformer(source);
 
-        FileUtils.writeStringToFile(summaryReport, htmlString);
-      }
-      String reportContent = FileUtils.readFileToString(summaryReport);
+            // Add a parameter for the transformation
+            if (!param.isEmpty()) {
+                transformer.setParameter(param, value);
+            }
 
-      final String singleItem = "<tr class=alternate><td><a href=\"%s\">%s</a></td></tr><tr></tr>";
-      Path absoluteIndividualReportPath = FileSystems.getDefault().getPath(htmlOutputFileName);
-      Path summaryReportDirectoryPath = Paths.get(summaryReportDirectory);
-      Path relativePath = summaryReportDirectoryPath.relativize(absoluteIndividualReportPath);
+            outputStream = new FileOutputStream(output);
+            final StreamResult outputTarget = new StreamResult(outputStream);
+            final StreamSource xmlSource = new StreamSource(input);
 
-      String bundleName = absoluteIndividualReportPath.getName(absoluteIndividualReportPath.getNameCount() - 4)
-              .toString();
+            // Transform the XML Source to a Result
+            transformer.transform(xmlSource, outputTarget);
 
-      String row = String.format(singleItem, relativePath, bundleName);
-
-      reportContent = reportContent.replace("<tr></tr>", row);
-      FileUtils.writeStringToFile(summaryReport, reportContent);
-      LOGGER.info("Individual report appended to summary report.");
-    } catch (IOException e) {
-      LOGGER.warn("Cann't read or write to summary report. The summary report might be incomplete!",
-          e);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            if (null != outputStream) {
+                try {
+                    outputStream.close();
+                } catch (final IOException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        }
     }
 
-  }
-
-  private NodeList selectNodes(String filePath, String xPathExpression) {
-    try {
-      File file = new File(filePath);
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      Document document = builder.parse(file);
-
-      XPathFactory xPathFactory = XPathFactory.newInstance();
-      XPath xPath = xPathFactory.newXPath();
-      XPathExpression expression = xPath.compile(xPathExpression);
-      return (NodeList) expression.evaluate(document, XPathConstants.NODESET);
-    } catch (Exception e) {
-      LOGGER.warn("Cann't select" + xPathExpression + " nodes from " + filePath
-          + ". Empty NodeList will be returned.", e);
-      return new EmptyNodeList();
+    void deletefile(final String pathName) {
+        final File file = new File(pathName);
+        if (!file.delete()) {
+            LOGGER.error("Unable to delete file " + pathName);
+        }
     }
 
-  }
+    private String checkForErrors(String secondMergeResult, String reportLocation) {
+        NodeList nodes = selectNodes(secondMergeResult, "/sca/file/message[@priority=1]");
+        int errorNumber = nodes.getLength();
+
+        if (errorNumber == 0) {
+            return null;
+        }
+        StringBuilder result = new StringBuilder();
+        result.append("Code Analysis Tool has found ").append(errorNumber).append(" error(s)! \n");
+        result.append("Please fix the errors and rerun the build. \n");
+        result.append("Errors list: \n");
+
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node currentNode = nodes.item(i);
+            if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element messageNode = (Element) currentNode;
+                String message = messageNode.getAttribute("message");
+                String tool = messageNode.getAttribute("tool");
+                String line = messageNode.getAttribute("line");
+
+                Element fileNode = ((Element) messageNode.getParentNode());
+                String fileName = fileNode.getAttribute("name");
+
+                String logTemplate = "ERROR found by %s: %s:%s %s \n";
+                String log = String.format(logTemplate, tool, fileName, line, message);
+                result.append(log);
+            }
+        }
+        result.append("Detailed report can be found at: file").append(File.separator).append(File.separator)
+                .append(File.separator).append(reportLocation).append("\n");
+        return result.toString();
+
+    }
+
+    private void appendToSummary(String htmlOutputFileName, String summaryReportDirectory, String secondMergeResult) {
+
+        NodeList nodes = selectNodes(secondMergeResult, "/sca/file/message");
+        int messagesNumber = nodes.getLength();
+        if (messagesNumber == 0) {
+            LOGGER.info("Empty report will not be appended to the summary report.");
+            return;
+        }
+
+        try {
+            File summaryReport = new File(summaryReportDirectory + File.separator + SUMMARY_FILE_NAME);
+            if (!summaryReport.exists()) {
+
+                InputStream inputStream = Thread.currentThread().getContextClassLoader()
+                        .getResourceAsStream(REPORT_SUBDIR + "/" + SUMMARY_TEMPLATE_FILE_NAME);
+
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(inputStream, writer, Charset.defaultCharset());
+                String htmlString = writer.toString();
+
+                String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
+                htmlString = htmlString.replace("$time", now);
+
+                FileUtils.writeStringToFile(summaryReport, htmlString);
+            }
+            String reportContent = FileUtils.readFileToString(summaryReport);
+
+            final String singleItem = "<tr class=alternate><td><a href=\"%s\">%s</a></td></tr><tr></tr>";
+            Path absoluteIndividualReportPath = FileSystems.getDefault().getPath(htmlOutputFileName);
+            Path summaryReportDirectoryPath = Paths.get(summaryReportDirectory);
+            Path relativePath = summaryReportDirectoryPath.relativize(absoluteIndividualReportPath);
+
+            String bundleName = absoluteIndividualReportPath.getName(absoluteIndividualReportPath.getNameCount() - 4)
+                    .toString();
+
+            String row = String.format(singleItem, relativePath, bundleName);
+
+            reportContent = reportContent.replace("<tr></tr>", row);
+            FileUtils.writeStringToFile(summaryReport, reportContent);
+            LOGGER.info("Individual report appended to summary report.");
+        } catch (IOException e) {
+            LOGGER.warn("Cann't read or write to summary report. The summary report might be incomplete!", e);
+        }
+
+    }
+
+    private NodeList selectNodes(String filePath, String xPathExpression) {
+        try {
+            File file = new File(filePath);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(file);
+
+            XPathFactory xPathFactory = XPathFactory.newInstance();
+            XPath xPath = xPathFactory.newXPath();
+            XPathExpression expression = xPath.compile(xPathExpression);
+            return (NodeList) expression.evaluate(document, XPathConstants.NODESET);
+        } catch (Exception e) {
+            LOGGER.warn("Cann't select" + xPathExpression + " nodes from " + filePath
+                    + ". Empty NodeList will be returned.", e);
+            return new EmptyNodeList();
+        }
+
+    }
 
 }
