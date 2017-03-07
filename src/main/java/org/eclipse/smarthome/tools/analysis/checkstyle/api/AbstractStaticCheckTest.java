@@ -14,7 +14,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import com.puppycrawl.tools.checkstyle.BaseCheckTestSupport;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 
 /**
  * Base test class for static code analysis checks
@@ -24,43 +23,43 @@ import com.puppycrawl.tools.checkstyle.api.Configuration;
  */
 public abstract class AbstractStaticCheckTest extends BaseCheckTestSupport {
 
-  /**
-   * Resolves absolute path to a resource
-   *
-   * @param relativePathToFile - relative path to src/test/resources/checks/checkstyle . It should
-   *          be "/" separated path.
-   * @return absolute path or null if the string can not be parsed as URI
-   */
-  @Override
-  protected String getPath(String relativePathToFile) throws IOException {
-    ClassLoader classLoader = getClass().getClassLoader();
-    try {
-      String pathRelativeToResourcesDir = "checks/checkstyle/" + relativePathToFile;
-      URL url = classLoader.getResource(pathRelativeToResourcesDir);
-      URI uri = url.toURI();
-      File file = new File(uri);
-      return file.getCanonicalPath();
-    } catch (URISyntaxException e) {
-      return null;
+    /**
+     * Resolves absolute path to a resource
+     *
+     * @param relativePathToFile - relative path to src/test/resources/checks/checkstyle . It should
+     *            be "/" separated path.
+     * @return absolute path or null if the string can not be parsed as URI
+     */
+    @Override
+    protected String getPath(String relativePathToFile) throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        try {
+            String pathRelativeToResourcesDir = "checks/checkstyle/" + relativePathToFile;
+            URL url = classLoader.getResource(pathRelativeToResourcesDir);
+            URI uri = url.toURI();
+            File file = new File(uri);
+            return file.getCanonicalPath();
+        } catch (URISyntaxException e) {
+            return null;
+        }
     }
-  }
 
-  /**
-   * Generates message that can be used in the
-   * {@link BaseCheckTestSupport} verify methods.
-   *
-   * @param arguments - a set of line number and message pairs
-   * @return String[] in the format used from checkstyle to verify the logged messages
-   */
-  protected String[] generateExpectedMessages(Object... arguments) {
-    int messageNumber = arguments.length / 2;
-    String[] messages = new String[messageNumber];
+    /**
+     * Generates message that can be used in the
+     * {@link BaseCheckTestSupport} verify methods.
+     *
+     * @param arguments - a set of line number and message pairs
+     * @return String[] in the format used from checkstyle to verify the logged messages
+     */
+    protected String[] generateExpectedMessages(Object... arguments) {
+        int messageNumber = arguments.length / 2;
+        String[] messages = new String[messageNumber];
 
-    for (int i = 0; i < messageNumber; i++) {
-      Object lineNum = arguments[2 * i];
-      Object message = arguments[2 * i + 1];
-      messages[i] = lineNum + ": " + message;
+        for (int i = 0; i < messageNumber; i++) {
+            Object lineNum = arguments[2 * i];
+            Object message = arguments[2 * i + 1];
+            messages[i] = lineNum + ": " + message;
+        }
+        return messages;
     }
-    return messages;
-  }
 }

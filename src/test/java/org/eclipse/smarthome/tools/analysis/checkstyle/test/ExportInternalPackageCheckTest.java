@@ -23,85 +23,83 @@ import com.puppycrawl.tools.checkstyle.api.Configuration;
  */
 public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
 
-  private final String testDirectory = "exportInternalPackageCheckTest";
+    private final String testDirectory = "exportInternalPackageCheckTest";
 
-  @Override
-  protected DefaultConfiguration createCheckerConfig(Configuration config) {
-    DefaultConfiguration configParent = createCheckConfig(TreeWalker.class);
-    configParent.addChild(config);
-    return configParent;
-  }
+    @Override
+    protected DefaultConfiguration createCheckerConfig(Configuration config) {
+        DefaultConfiguration configParent = createCheckConfig(TreeWalker.class);
+        configParent.addChild(config);
+        return configParent;
+    }
 
-  @Test
-  public void testManifestFileExportsSingleInternalPackage() throws Exception {
-    DefaultConfiguration config = createCheckConfig(ExportInternalPackageCheck.class);
+    @Test
+    public void testManifestFileExportsSingleInternalPackage() throws Exception {
+        DefaultConfiguration config = createCheckConfig(ExportInternalPackageCheck.class);
 
-    String testFileName = "singleInternalPackageExported.MF";
-    String testFilePath = testDirectory + "/" + testFileName;
+        String testFileName = "singleInternalPackageExported.MF";
+        String testFilePath = testDirectory + "/" + testFileName;
 
-    String internalPackageName = "org.eclipse.smarthome.buildtools.internal";
-    int lineNumber = 12;
+        String internalPackageName = "org.eclipse.smarthome.buildtools.internal";
+        int lineNumber = 12;
 
-    String[] expectedMessages = generateExpectedMessages(lineNumber,
-        ExportInternalPackageCheck.MESSAGE_INTERNAL_PACKAGE_EXPORTED + " " + internalPackageName);
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                ExportInternalPackageCheck.MESSAGE_INTERNAL_PACKAGE_EXPORTED + " " + internalPackageName);
 
-    String filePath = getPath(testFilePath);
+        String filePath = getPath(testFilePath);
 
-    verify(config, filePath, expectedMessages);
-  }
+        verify(config, filePath, expectedMessages);
+    }
 
-  @Test
-  public void testManifestFileExportsMultipleInternalPackages() throws Exception {
-    DefaultConfiguration config = createCheckConfig(ExportInternalPackageCheck.class);
+    @Test
+    public void testManifestFileExportsMultipleInternalPackages() throws Exception {
+        DefaultConfiguration config = createCheckConfig(ExportInternalPackageCheck.class);
 
-    String testFileName = "multipleInternalPackagesExported.MF";
-    String testFilePath = testDirectory + "/" + testFileName;
+        String testFileName = "multipleInternalPackagesExported.MF";
+        String testFilePath = testDirectory + "/" + testFileName;
 
-    String firstInternalPackageName = "org.eclipse.smarthome.buildtools.internal";
-    int firstLineNumber = 12;
-    String secondInternalPackageName = "org.eclipse.smarthome.buildtools.internal.test";
-    int secondLineNumber = 13;
+        String firstInternalPackageName = "org.eclipse.smarthome.buildtools.internal";
+        int firstLineNumber = 12;
+        String secondInternalPackageName = "org.eclipse.smarthome.buildtools.internal.test";
+        int secondLineNumber = 13;
 
-    String[] expectedMessages = generateExpectedMessages(firstLineNumber,
-        ExportInternalPackageCheck.MESSAGE_INTERNAL_PACKAGE_EXPORTED + " "
-            + firstInternalPackageName,
-        secondLineNumber, ExportInternalPackageCheck.MESSAGE_INTERNAL_PACKAGE_EXPORTED + " "
-            + secondInternalPackageName);
+        String[] expectedMessages = generateExpectedMessages(firstLineNumber,
+                ExportInternalPackageCheck.MESSAGE_INTERNAL_PACKAGE_EXPORTED + " " + firstInternalPackageName,
+                secondLineNumber,
+                ExportInternalPackageCheck.MESSAGE_INTERNAL_PACKAGE_EXPORTED + " " + secondInternalPackageName);
 
-    String filePath = getPath(testFilePath);
+        String filePath = getPath(testFilePath);
 
-    verify(config, filePath, expectedMessages);
-  }
+        verify(config, filePath, expectedMessages);
+    }
 
-  @Test
-  public void testEmptyFile() throws Exception {
-    DefaultConfiguration config = createCheckConfig(ExportInternalPackageCheck.class);
+    @Test
+    public void testEmptyFile() throws Exception {
+        DefaultConfiguration config = createCheckConfig(ExportInternalPackageCheck.class);
 
-    String emptyFileName = "emptyManifest.MF";
-    String testFilePath = testDirectory + "/" + emptyFileName;
-    int lineNumber = 0;
+        String emptyFileName = "emptyManifest.MF";
+        String testFilePath = testDirectory + "/" + emptyFileName;
+        int lineNumber = 0;
 
-    String[] expectedMessages = generateExpectedMessages(lineNumber,
-        ExportInternalPackageCheck.MESSAGE_FILE_EMPTY);
+        String[] expectedMessages = generateExpectedMessages(lineNumber, ExportInternalPackageCheck.MESSAGE_FILE_EMPTY);
 
-    String filePath = getPath(testFilePath);
+        String filePath = getPath(testFilePath);
 
-    verify(config, filePath, expectedMessages);
-  }
+        verify(config, filePath, expectedMessages);
+    }
 
-  @Test
-  public void noInternalPackageExported() throws Exception {
-    DefaultConfiguration config = createCheckConfig(ExportInternalPackageCheck.class);
+    @Test
+    public void noInternalPackageExported() throws Exception {
+        DefaultConfiguration config = createCheckConfig(ExportInternalPackageCheck.class);
 
-    String emptyFileName = "noInternalPackageExported.MF";
-    String testFilePath = testDirectory + "/" + emptyFileName;
+        String emptyFileName = "noInternalPackageExported.MF";
+        String testFilePath = testDirectory + "/" + emptyFileName;
 
-    String[] expectedMessages = {};
-    Integer[] warnList = {};
+        String[] expectedMessages = {};
+        Integer[] warnList = {};
 
-    String filePath = getPath(testFilePath);
+        String filePath = getPath(testFilePath);
 
-    verify(config, filePath, expectedMessages);
-  }
+        verify(config, filePath, expectedMessages);
+    }
 
 }

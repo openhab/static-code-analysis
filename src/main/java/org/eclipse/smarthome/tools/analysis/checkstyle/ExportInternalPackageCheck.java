@@ -24,31 +24,31 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  */
 public class ExportInternalPackageCheck extends AbstractStaticCheck {
 
-  public final static String MANIFEST_EXTENSTION = "MF";
-  public final static String MESSAGE_INTERNAL_PACKAGE_EXPORTED = "Remove internal package export";
-  public final static String MESSAGE_FILE_EMPTY = "File is empty !";
+    public final static String MANIFEST_EXTENSTION = "MF";
+    public final static String MESSAGE_INTERNAL_PACKAGE_EXPORTED = "Remove internal package export";
+    public final static String MESSAGE_FILE_EMPTY = "File is empty !";
 
-  public ExportInternalPackageCheck() {
-    setFileExtensions(MANIFEST_EXTENSTION);
-  }
-
-  @Override
-  protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
-    if (isEmpty(file)) {
-      log(0, MESSAGE_FILE_EMPTY, new Integer(0));
-      return;
-    }
-    BundleInfo manifest = parseManifestFromFile(file);
-    Set<?> exports = manifest.getExports();
-
-    int lineNumber = 0;
-    for (Object export : exports) {
-      String pacakgeName = export.toString();
-      if (pacakgeName.contains(".internal")) {
-        lineNumber = findLineNumber(lines, pacakgeName, lineNumber);
-        log(lineNumber, MESSAGE_INTERNAL_PACKAGE_EXPORTED + " " + pacakgeName, new Integer(0));
-      }
+    public ExportInternalPackageCheck() {
+        setFileExtensions(MANIFEST_EXTENSTION);
     }
 
-  }
+    @Override
+    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+        if (isEmpty(file)) {
+            log(0, MESSAGE_FILE_EMPTY, new Integer(0));
+            return;
+        }
+        BundleInfo manifest = parseManifestFromFile(file);
+        Set<?> exports = manifest.getExports();
+
+        int lineNumber = 0;
+        for (Object export : exports) {
+            String pacakgeName = export.toString();
+            if (pacakgeName.contains(".internal")) {
+                lineNumber = findLineNumber(lines, pacakgeName, lineNumber);
+                log(lineNumber, MESSAGE_INTERNAL_PACKAGE_EXPORTED + " " + pacakgeName, new Integer(0));
+            }
+        }
+
+    }
 }
