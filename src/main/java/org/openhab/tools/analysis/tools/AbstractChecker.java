@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -148,7 +150,7 @@ public abstract class AbstractChecker extends AbstractMojo {
     }
 
     /**
-     * Create an array that contains all necessary dependencies in order to run some the static code analysis tools.
+     * Create an array that contains all necessary dependencies in order to run some of the static code analysis tools.
      * It adds the static-code-analysis artifact as dependency as well, so all checks included there can be used from
      * the analysis tools.
      *
@@ -165,7 +167,7 @@ public abstract class AbstractChecker extends AbstractMojo {
             dependencies.add(coreDependency);
         }
 
-        // Add the static-code-analysis artifact as dependency to findbugs-maven-plugin, because this
+        // Add the static-code-analysis artifact as dependency, because this
         // plugin contains custom checks
         Dependency staticCode = dependency(plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion());
         dependencies.add(staticCode);
@@ -178,5 +180,28 @@ public abstract class AbstractChecker extends AbstractMojo {
             }
         }
         return dependencies.toArray(new Dependency[dependencies.size()]);
+    }
+
+    /**
+     * Gets the location of a resource, external or internal. If {@code externalRelativePath} is given, it
+     * will try to get the path to this file, otherwise will get the {@link URL} to the {@code internalRelativePath}
+     *
+     * @param externalRelativePath - relative path to the execution directory of a resource not included in the current
+     *            project
+     * @param internalRelativePath - relative path of a resource included in the current project
+     * @return location of a resource (absolute path or url)
+     * @throws MojoExecutionException - if error occurs while trying to get the location
+     */
+    protected String getLocation(String externalRelativePath, String internalRelativePath)
+            throws MojoExecutionException {
+        if (externalRelativePath != null) {
+            Path executionDir = Paths.get(mavenSession.getExecutionRootDirectory());
+            Path externalDir = Paths.get(externalRelativePath);
+            Path resolvedPath = executionDir.resolve(externalDir);
+            return resolvedPath.toString();
+        } else {
+            URL url = getMavenRuntimeClasspathClassLoader().getResource(internalRelativePath);
+            return url.toString();
+        }
     }
 }

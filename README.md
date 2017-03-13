@@ -10,12 +10,11 @@ This project contains:
  - custom rules for PMD, CheckStyle and FindBugs and unit tests for the rules;
  - tool that merges the reports from the individual plugins in a summary report.
 
- # Usage
+# Usage
 
 Add the following profiles to your pom.xml:
 
 ```
-<!-- static code analysis profiles -->
   <profile>
     <id>check</id>
     <build>
@@ -62,28 +61,6 @@ Add the following profiles to your pom.xml:
         <plugin>
             <groupId>org.openhab.tools</groupId>
             <artifactId>static-code-analysis</artifactId>
-          <configuration>
-            <ruleset>bundle</ruleset>
-          </configuration>
-        </plugin>
-      </plugins>
-    </build>
-  </profile>
-  <profile>
-    <id>check-bindings</id>
-    <activation>
-      <file>
-        <exists>ESH-INF/binding/binding.xml</exists>
-      </file>
-    </activation>
-    <build>
-      <plugins>
-        <plugin>
-            <groupId>org.openhab.tools</groupId>
-            <artifactId>static-code-analysis</artifactId>
-          <configuration>
-            <ruleset>binding</ruleset>
-          </configuration>
         </plugin>
       </plugins>
     </build>
@@ -111,7 +88,7 @@ Parameters:
 
 | Name | Type| Description |
 | ------ | ------| -------- |
-| **ruleset** | String | The type of the ruleset that will be used (default value is **bundle**)|
+| **pmdRuleset** | String | Relative path of the XML configuration to use. If not set the default ruleset file will be used |
 | **maven.pmd.version** | String | The version of the maven-pmd-plugin that will be used (Default value is **3.7**)|
 | **pmdPlugins** | Dependency [] | A list with artifacts that contain additional checks for PMD |
 
@@ -124,7 +101,8 @@ Parameters:
 
 | Name | Type| Description |
 | ------ | ------| -------- |
-| **ruleset** | String | The type of the ruleset that will be used (Default value is **bundle**)|
+| **checkstyleRuleset** | String | Relative path of the XML configuration to use. If not set the default ruleset file will be used |
+| **checkstyleFilter** | String | Relative path of the suppressions XML file to use. If not set the default filter file will be used |
 | **maven.checkstyle.version** | String | The version of the maven-checkstyle-plugin that will be used (default value is **2.17**)|
 | **checkstylePlugins** | Dependency [] | A list with artifacts that contain additional checks for Checkstyle |
 
@@ -137,7 +115,9 @@ Parameters:
 
 | Name | Type| Description |
 | ------ | ------| -------- |
-| **ruleset** | String | The type of the ruleset that will be used (default value is **bundle**)|
+| **findbugsRuleset** | String | Relative path to the XML that specifies the bug detectors which should be run. If not set the default file will be used|
+| **findbugsInclude** | String | Relative path to the XML that specifies the bug instances that will be included in the report. If not set the default file will be used|
+| **findbugsExclude** | String | Relative path to the XML that specifies the bug instances that will be excluded from the report. If not set the default file will be used|
 | **findbugs.maven.version** | String | The version of the findbugs-maven-plugin that will be used (default value is **3.0.1**)|
 | **findbugsPlugins** | Dependency [] | A list with artifacts that contain additional detectors/patterns for FindBugs |
 
@@ -158,12 +138,36 @@ Parameters:
 
 Different sets of checks can be executed on different types of projects.
 
-At the moment the tool executes different checks on OSGi bundles and ESH Bindings.
+The tool executes different checks on OSGi bundles and ESH Bindings. It uses default configuration files for FindBugs, Checkstyle and PMD that are stored in the `src/main/resources/configuration`.
 
-If you want to add a custom set of rules for UIs for example you will have to follow these steps:
+If you want to use a custom set of rules you will have to set the configuration parameters for the individual MOJOs. An example configuration may look like this;
 
-- in the `src/main/resources/rulesets` add a new rule set for PMD, Checkstyle and FindBugs that includes the rules that have to be executed and follow the naming convention used so far;
-- use the **ruleset** configuration property in the Maven plugin, where the ruleset is the name of the newly created ruleset.
+```
+  <plugin>
+    <groupId>org.openhab.tools</groupId>
+    <artifactId>static-code-analysis</artifactId>
+    <configuration>
+      <checkstyleRuleset>build-tools/checkstyle/binding.xml</checkstyleRuleset>
+      <checkstyleFilter>build-tools/checkstyle/suppressions.xml</checkstyleFilter>
+      <pmdRuleset>build-tools/pmd/binding.xml</pmdRuleset>
+      <findbugsInclude>build-tools/findbugs/binding.xml</findbugsInclude>
+      <findbugsExclude>build-tools/findbugs/exclude.xml</findbugsExclude>
+      <findbugsRuleset>build-tools/findbugs/visitors.xml</findbugsRuleset>
+    </configuration>
+  </plugin>
+```
+
+Information about the syntax of the configuration files (except the `visitors.xml`) can be found on the web pages of the individual plugins.
+
+The `visitors.xml` contains a list with FindBugs visitors (bug detectors) and has the following syntax:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<visitors>
+  <visitor>AtomicityProblem</visitor>
+  ...
+<visitors/>
+```
 
 ### Individual plugin customization
 

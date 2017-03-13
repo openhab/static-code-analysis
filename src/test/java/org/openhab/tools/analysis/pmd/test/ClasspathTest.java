@@ -13,7 +13,7 @@ import net.sourceforge.pmd.testframework.SimpleAggregatorTst;
 
 /**
  * Test class that includes all custom PMD tests for the .classpath files
- * 
+ *
  * @author Svilen Valkanov
  */
 
@@ -23,6 +23,6 @@ public class ClasspathTest extends SimpleAggregatorTst {
     @Override
     @Before
     protected void setUp() {
-        addRule("src/main/resources/rulesets/pmd/xpath/classpath.xml", "AvoidMavenPomderivedInClasspath");
+        addRule("src/test/resources/checks/pmd/ruleset/classpath.xml", "AvoidMavenPomderivedInClasspath");
     }
 }

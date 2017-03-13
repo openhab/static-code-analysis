@@ -23,8 +23,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 /**
  * Executes the
  * <a href="https://maven.apache.org/plugins/maven-pmd-plugin/index.html">maven-pmd-plugin</a> with
- * a
- * predefined ruleset file and configuration properties
+ * a predefined ruleset file and configuration properties
  *
  * @author Svilen Valkanov
  *
@@ -32,11 +31,14 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 @Mojo(name = "pmd", requiresDependencyResolution = ResolutionScope.COMPILE)
 public class PmdChecker extends AbstractChecker {
 
+    private static final String DEFAULT_RULESET_XML = "rulesets/pmd/rules.xml";
+
     /**
-     * The type of the ruleset that will be used
+     * Relative path of the XML configuration to use. If not set the default ruleset file will be used -
+     * {@link #DEFAULT_RULESET_XML}
      */
-    @Parameter(property = "ruleset", defaultValue = "bundle")
-    protected String rulesetType;
+    @Parameter(property = "pmd.ruleset")
+    protected String pmdRuleset;
 
     /**
      * The version of the maven-pmd-plugin that will be used
@@ -54,10 +56,6 @@ public class PmdChecker extends AbstractChecker {
      * Location of the properties files that contains configuration options for the maven-pmd-plugin
      */
     private static final String PMD_PROPERTIES_FILE = "configuration/pmd.properties";
-    /**
-     * Directory where the ruleset files are located
-     */
-    private static final String PMD_RULESET_DIR = "rulesets/pmd";
 
     private static final String MAVEN_PMD_PLUGIN_ARTIFACT_ID = "maven-pmd-plugin";
     private static final String MAVEN_PMD_PLUGIN_GROUP_ID = "org.apache.maven.plugins";
@@ -70,15 +68,14 @@ public class PmdChecker extends AbstractChecker {
         ClassLoader cl = getMavenRuntimeClasspathClassLoader();
         Properties userProps = loadPropertiesFromFile(cl, PMD_PROPERTIES_FILE);
 
-        // Get the ruleset file location and configure the plugin
-        String ruleset = PMD_RULESET_DIR + "/" + rulesetType + ".xml";
-        String rulesetPath = cl.getResource(ruleset).toString();
+        String rulesetLocation = getLocation(pmdRuleset, DEFAULT_RULESET_XML);
+        log.debug("Ruleset location is " + rulesetLocation);
 
         // These configuration properties are not exposed from the maven-pmd-plugin as user properties,
         // so they have to be set direct in the configuration
         Xpp3Dom configuration = configuration(
                 element("targetDirectory", userProps.getProperty("pmd.custom.targetDirectory")),
-                element("rulesets", element("ruleset", rulesetPath)));
+                element("rulesets", element("ruleset", rulesetLocation)));
 
         Dependency[] allDependencies = getDependencies(pmdPlugins, null);
 
