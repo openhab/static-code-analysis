@@ -22,6 +22,6 @@ public class PomTest extends SimpleAggregatorTst {
     @Override
     @Before
     protected void setUp() {
-        addRule("src/main/resources/rulesets/pmd/xpath/pom.xml", "AvoidOverridingParentPomConfiguration");
+        addRule("src/test/resources/checks/pmd/ruleset/pom.xml", "AvoidOverridingParentPomConfiguration");
     }
 }

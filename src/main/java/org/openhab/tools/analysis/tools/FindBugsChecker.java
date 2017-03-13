@@ -9,10 +9,19 @@ package org.openhab.tools.analysis.tools;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
-import java.net.URL;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -22,6 +31,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.openhab.tools.analysis.tools.internal.FindBugsVisitors;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 
 /**
@@ -36,10 +46,25 @@ import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 public class FindBugsChecker extends AbstractChecker {
 
     /**
-     * The type of the ruleset that will be used
+     * Relative path to the XML that specifies the bug detectors which should be run. If not set the
+     * {@link #DEFAULT_VISITORS_XML} will be used
      */
-    @Parameter(property = "ruleset", defaultValue = "bundle")
-    private String rulesetType;
+    @Parameter(property = "findbugs.ruleset")
+    private String findbugsRuleset;
+
+    /**
+     * Relative path of the XML that specifies the bug instances that will be included from the report. If not set the
+     * {@link #DEFAULT_INCLUDE_FILTER_XML} will be used
+     */
+    @Parameter(property = "findbugs.include")
+    private String findbugsInclude;
+
+    /**
+     ** Relative path of the XML that specifies the bug instances that will be excluded in the report. If not set the
+     * {@link #DEFAULT_EXCLUDE_FILTER_XML} will be used
+     */
+    @Parameter(property = "findbugs.exclude")
+    private String findbugsExclude;
 
     /**
      * The version of the findbugs-maven-plugin that will be used
@@ -59,32 +84,31 @@ public class FindBugsChecker extends AbstractChecker {
      */
     private static final String FINDBUGS_PROPERTIES_FILE = "configuration/findbugs.properties";
 
-    /**
-     * Directory where the ruleset files are located
-     */
-    private static final String FINDBGUS_FILTER_DIR = "rulesets/findbugs";
+    private static final String DEFAULT_EXCLUDE_FILTER_XML = "rulesets/findbugs/exclude.xml";
+    private static final String DEFAULT_INCLUDE_FILTER_XML = "rulesets/findbugs/include.xml";
+    private static final String DEFAULT_VISITORS_XML = "rulesets/findbugs/visitors.xml";
 
     private static final String FINDBUGS_MAVEN_PLUGIN_GOAL = "findbugs";
     private static final String FINDBUGS_MAVEN_PLUGIN_ARTIFACT_ID = "findbugs-maven-plugin";
     private static final String FINDBUGS_MAVEN_PLUGIN_GROUP_ID = "org.codehaus.mojo";
 
     /**
-     * This is a property in the findbugs-maven-plugin that is used to describe the path to the
-     * include filter file used
-     * from
-     * the plugin. It can not be set in the findbugs.properties file as it depends on the
-     * {@link #rulesetType}
+     * Property in the findbugs-maven-plugin that is used to describe the path to the
+     * include filter file used from the plugin.
      */
     private static final String FINDBUGS_INCLUDE_FILTER_USER_PROPERTY = "findbugs.includeFilterFile";
 
     /**
-     * This is a property in the findbugs-maven-plugin that is used to describe the path to the
-     * exclude filter file used
-     * from
-     * the plugin. It can not be set in the findbugs.properties file as it depends on the
-     * {@link #rulesetType}
+     * Property in the findbugs-maven-plugin that is used to describe the path to the
+     * exclude filter file used from the plugin.
      */
     private static final String FINDBUGS_EXCLUDE_FILTER_USER_PROPERTY = "findbugs.excludeFilterFile";
+
+    /**
+     * Property in the findbugs-maven-plugin, that specifies a comma-separated list of bug detectors which should be
+     * run. The bug detectors are specified by their class names, without any package qualification.
+     */
+    private static final String FINDBUGS_VISITORS_PROPERTY = "findbugs.visitors";
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -94,21 +118,18 @@ public class FindBugsChecker extends AbstractChecker {
         Properties userProps = loadPropertiesFromFile(cl, FINDBUGS_PROPERTIES_FILE);
 
         // Load the include filter file
-        String includeFilter = FINDBGUS_FILTER_DIR + "/" + rulesetType + ".xml";
-        String includeKey = FINDBUGS_INCLUDE_FILTER_USER_PROPERTY;
-        URL includeLocation = cl.getResource(includeFilter);
-        String absoluteLocation = includeLocation.toString();
-        log.debug("Config file found at " + absoluteLocation);
-        userProps.setProperty(includeKey, absoluteLocation);
+        String includeLocation = getLocation(findbugsInclude, DEFAULT_INCLUDE_FILTER_XML);
+        log.debug("Ruleset location is " + includeLocation);
+        userProps.setProperty(FINDBUGS_INCLUDE_FILTER_USER_PROPERTY, includeLocation);
 
         // Load the exclude filter file
-        String excludeFilter = FINDBGUS_FILTER_DIR + "/" + "exclude-" + rulesetType + ".xml";
-        String excludeKey = FINDBUGS_EXCLUDE_FILTER_USER_PROPERTY;
-        URL rulesetLocation = cl.getResource(excludeFilter);
-        String excludeLocation = rulesetLocation.toString();
-        log.debug("Config file found at " + excludeLocation);
-        userProps.setProperty(excludeKey, excludeLocation);
+        String excludeLocation = getLocation(findbugsExclude, DEFAULT_EXCLUDE_FILTER_XML);
+        log.debug("Filter location is " + excludeLocation);
+        userProps.setProperty(FINDBUGS_EXCLUDE_FILTER_USER_PROPERTY, excludeLocation);
 
+        String visitors = getVisitorsString(findbugsRuleset, DEFAULT_VISITORS_XML);
+        log.debug("FindBugs visitors " + visitors);
+        userProps.setProperty(FINDBUGS_VISITORS_PROPERTY, visitors);
         String outputDir = userProps.getProperty("findbugs.report.dir");
 
         // These configuration properties are not exposed from the findbugs-maven-plugin as user
@@ -125,7 +146,6 @@ public class FindBugsChecker extends AbstractChecker {
                 FINDBUGS_MAVEN_PLUGIN_GOAL, config, allDependencies);
 
         log.debug("FindBugs execution has been finished.");
-
     }
 
     /**
@@ -152,4 +172,35 @@ public class FindBugsChecker extends AbstractChecker {
                 element("version", version));
     }
 
+    private String getVisitorsString(String externalLocation, String defaultLocaiton) throws MojoExecutionException {
+        // Get the XML file as a Stream
+        InputStream stream = null;
+        if (externalLocation != null) {
+            Path executionDir = Paths.get(mavenSession.getExecutionRootDirectory());
+            Path externalDir = Paths.get(externalLocation);
+            Path resolvedPath = executionDir.resolve(externalDir);
+            File file = resolvedPath.toFile();
+            try {
+                stream = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                getLog().warn("Unable to find file " + resolvedPath.toString());
+            }
+        } else {
+            stream = getMavenRuntimeClasspathClassLoader().getResourceAsStream(defaultLocaiton);
+
+        }
+
+        // Serialize the content
+        JAXBContext context;
+        try {
+            context = JAXBContext.newInstance(FindBugsVisitors.class);
+            Unmarshaller unmarschaller = context.createUnmarshaller();
+
+            FindBugsVisitors visitors = (FindBugsVisitors) unmarschaller.unmarshal(stream);
+            return visitors.toString();
+        } catch (JAXBException e) {
+            getLog().warn("Unable to load FindBugs visitors", e);
+            return null;
+        }
+    }
 }
