@@ -63,12 +63,13 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.dom4j.dom.DOMNodeHelper.EmptyNodeList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -86,6 +87,7 @@ import org.w3c.dom.NodeList;
  *
  * @author Markus Sprunck - Initial Implementation
  * @author Svilen Valkanov - Some minor changes and adaptations
+ * @author Petar Valchev - Changed the logging to be parameterized
  */
 
 @Mojo(name = "report")
@@ -134,7 +136,7 @@ public class ReportUtility extends AbstractMojo {
     private static final String XML_TRANSFORM_PROPERTY_KEY = "javax.xml.transform.TransformerFactory";
     private static final String XML_TRANSFOMR_PROPERTY_VALUE = "net.sf.saxon.TransformerFactoryImpl";
 
-    private static final Logger LOGGER = Logger.getLogger(ReportUtility.class);
+    private final Logger logger = LoggerFactory.getLogger(ReportUtility.class);
 
     // Setters will be used in the test
     public void setTargetDirectory(String targetDirectory) {
@@ -215,7 +217,7 @@ public class ReportUtility extends AbstractMojo {
         FileOutputStream outputStream = null;
         try {
 
-            LOGGER.debug(input + "  > " + xslt + " " + param + " " + value + " >  " + output);
+            logger.debug("{}  > {} {} {} >  {}", input, xslt, param, value, output);
 
             // Process the Source into a Transformer Object
             final TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -237,13 +239,13 @@ public class ReportUtility extends AbstractMojo {
             transformer.transform(xmlSource, outputTarget);
 
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            logger.error(e.getMessage());
         } finally {
             if (null != outputStream) {
                 try {
                     outputStream.close();
                 } catch (final IOException e) {
-                    LOGGER.error(e.getMessage());
+                    logger.error(e.getMessage());
                 }
             }
         }
@@ -252,7 +254,7 @@ public class ReportUtility extends AbstractMojo {
     void deletefile(final String pathName) {
         final File file = new File(pathName);
         if (!file.delete()) {
-            LOGGER.error("Unable to delete file " + pathName);
+            logger.error("Unable to delete file {}", pathName);
         }
     }
 
@@ -295,7 +297,7 @@ public class ReportUtility extends AbstractMojo {
         NodeList nodes = selectNodes(secondMergeResult, "/sca/file/message");
         int messagesNumber = nodes.getLength();
         if (messagesNumber == 0) {
-            LOGGER.info("Empty report will not be appended to the summary report.");
+            logger.info("Empty report will not be appended to the summary report.");
             return;
         }
 
@@ -329,9 +331,9 @@ public class ReportUtility extends AbstractMojo {
 
             reportContent = reportContent.replace("<tr></tr>", row);
             FileUtils.writeStringToFile(summaryReport, reportContent);
-            LOGGER.info("Individual report appended to summary report.");
+            logger.info("Individual report appended to summary report.");
         } catch (IOException e) {
-            LOGGER.warn("Cann't read or write to summary report. The summary report might be incomplete!", e);
+            logger.warn("Cann't read or write to summary report. The summary report might be incomplete!", e);
         }
 
     }
@@ -348,8 +350,7 @@ public class ReportUtility extends AbstractMojo {
             XPathExpression expression = xPath.compile(xPathExpression);
             return (NodeList) expression.evaluate(document, XPathConstants.NODESET);
         } catch (Exception e) {
-            LOGGER.warn("Cann't select" + xPathExpression + " nodes from " + filePath
-                    + ". Empty NodeList will be returned.", e);
+            logger.warn("Cann't select {} nodes from {}. Empty NodeList will be returned.", xPathExpression, filePath, e);
             return new EmptyNodeList();
         }
 
