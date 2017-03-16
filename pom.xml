@@ -13,7 +13,8 @@
   <description>Tool that aggregates reports of PMD, Checkstyle and FindBugs</description>
 
   <properties>
-    <log4j.version>1.2.17</log4j.version>
+    <slf4j.api.version>1.7.24</slf4j.api.version>
+    <slf4j.simple.version>1.7.24</slf4j.simple.version>
     <junit.version>4.11</junit.version>
     <maven.resources.version>2.4</maven.resources.version>
     <pmd.version>5.5.1</pmd.version>
@@ -37,10 +38,16 @@
 
   <dependencies>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>${log4j.version}</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.api.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j.simple.version}</version>
+    </dependency>
+    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
