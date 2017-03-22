@@ -171,7 +171,7 @@ The `visitors.xml` contains a list with FindBugs visitors (bug detectors) and ha
 
 ### Individual plugin customization
 
-Each of the Maven plugins that are used (for FindBugs, Checkstyle and PMD) are configured by setting a user properties that are located in the `src/main/resources/configuration` directory.
+Each of the Maven plugins that are used (for FindBugs, Checkstyle and PMD) are configured by setting user properties that are located in the `src/main/resources/configuration` directory.
 
 You can refer to the following links for more configuration options for the specific Maven plugins:
 
@@ -200,7 +200,7 @@ Checkstyle API is easy to use and to implement checks for different file extensi
 
 PMD extends this by giving the possibility to define a rule with the XPath syntax. PMD offers even more - a Rule Designer that speeds up the process of developing a new rule! See http://nullpointer.debashish.com/pmd-xpath-custom-rules.
 
-PMD rules with XPatch expressions are defined directly in the rule set (`src/main/resources/rulesets/pmd/xpath` folder.
+PMD rules with XPatch expressions are defined directly in the rule set (`src/main/resources/rulesets/pmd/xpath`) folder.
 
 Helpful links when writing a custom check for the first time may be:
 
@@ -213,8 +213,8 @@ Helpful links when writing a custom check for the first time may be:
 You can easily test your custom rules for PMD and Checkstyle.
 
 In order to add a new test for PMD you have to do two things:
-- Create a test class in the `src\test\java` folder that extends `SimpleAggregatorTst` and overrides the `setUp()` method;
-- Add a .xml file in the `src\test\resources` folder that contains the code to be tested.
+- Create a test class in the `src/test/java` folder that extends `SimpleAggregatorTst` and overrides the `setUp()` method;
+- Add a .xml file in the `src/test/resources` folder that contains the code to be tested.
 
 Adding a test for Checkstyle is even easier - extend the `BaseCheckTestSupport`.
 
