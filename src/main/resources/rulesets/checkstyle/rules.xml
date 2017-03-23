@@ -63,7 +63,13 @@
     <property name="severity" value="warning" />
     <property name="allowedValues" value="openHAB"/>
   </module>
-  
+
+   <module name="org.openhab.tools.analysis.checkstyle.RequiredFilesCheck">
+     <property name="severity" value="error" />
+     <property name="extensions" value="html,properties,xml,MF,md" />
+     <property name="requiredFiles" value="about.html,build.properties,pom.xml,MANIFEST.MF,README.md" />
+   </module>
+
   <module name="TreeWalker">
     <!-- See http://checkstyle.sourceforge.net/config_coding.html#IllegalThrows -->
     <module name="IllegalThrows">
