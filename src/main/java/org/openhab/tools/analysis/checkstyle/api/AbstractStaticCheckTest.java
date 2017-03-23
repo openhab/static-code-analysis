@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import com.puppycrawl.tools.checkstyle.BaseCheckTestSupport;
 
@@ -62,5 +63,25 @@ public abstract class AbstractStaticCheckTest extends BaseCheckTestSupport {
             messages[i] = lineNum + ": " + message;
         }
         return messages;
+    }
+    
+    /**
+     * Lists all the files from the current directory and its subdirectories.
+     * 
+     * @param directory
+     *            - the directory which files will be returned
+     * @param files
+     *            - list where the found files will be stored
+     * @return File[] with the files in the directory and its subdirectories
+     */
+    protected File[] listFilesForDirectory(File directory, ArrayList<File> files) {
+        for (File fileEntry : directory.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                listFilesForDirectory(fileEntry, files);
+            } else {
+                files.add(fileEntry);
+            }
+        }
+        return files.toArray(new File[] {});
     }
 }
