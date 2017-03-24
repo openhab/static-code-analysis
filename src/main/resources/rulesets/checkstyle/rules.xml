@@ -38,7 +38,7 @@
   </module>
   
   <module name="org.openhab.tools.analysis.checkstyle.ExportInternalPackageCheck">
-    <property name="severity" value="warning" />
+    <property name="severity" value="error" />
   </module>
   
   <module name="org.openhab.tools.analysis.checkstyle.MavenPomderivedInClasspathCheck">
