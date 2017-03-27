@@ -233,7 +233,7 @@ For more information: https://pmd.github.io/pmd-5.4.1/customizing/rule-guideline
 4. Every class, interface and enumeration must have an @author tag in its JavaDoc for every author that wrote a substantial part of the file. - `Work in Progress`
 5. Every constant, field and method with default, protected or public visibility should have JavaDoc (optional, but encouraged for private visibility as well). - `Not covered yet`
 6. The code must be formatted:
-    - [java files must use spaces for formatting, rather than tabs](https://github.com/openhab/static-code-analysis/blob/master/src/main/resources/rulesets/checkstyle/rules.xml#L17)
+    - java files must use spaces for formatting, rather than tabs - `severity=error`;
     - xml files must use tabs for formatting, rather than spaces - `Not covered yet`
     - json files must use tabs for formatting, rather than spaces - `Not covered yet`
 7. Generics must be used where applicable. - `Not covered yet`
