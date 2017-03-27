@@ -52,6 +52,11 @@
   <module name="org.openhab.tools.analysis.checkstyle.RequireBundleCheck">
       <property name="severity" value="error" />
    </module>
+   
+   <module name="org.openhab.tools.analysis.checkstyle.AboutHtmlCheck">
+     <property name="severity" value="error" />
+     <property name="validAboutHtmlFileURL" value="https://raw.githubusercontent.com/openhab/openhab2-addons/master/src/etc/about.html" />
+   </module>
 
   <module name="TreeWalker">
     <!-- See http://checkstyle.sourceforge.net/config_coding.html#IllegalThrows -->
