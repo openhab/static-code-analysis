@@ -15,7 +15,7 @@
 
   <!-- Rules for Code Formatting -->
   <module name="FileTabCharacter">
-    <property name="severity" value="info" />
+    <property name="severity" value="error" />
     <property name="fileExtensions" value="java"/>
   </module>
   
