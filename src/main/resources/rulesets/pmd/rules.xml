@@ -104,9 +104,6 @@
 
   
   <!-- See http://pmd.sourceforge.net/pmd-5.0.0/rules/java/optimizations.html -->
-  <rule ref="rulesets/java/optimizations.xml/AvoidInstantiatingObjectsInLoops">
-    <priority>3</priority>
-  </rule>
   <rule ref="rulesets/java/optimizations.xml/AvoidArrayLoops">
     <priority>3</priority>
   </rule>
