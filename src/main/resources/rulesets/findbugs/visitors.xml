@@ -38,6 +38,7 @@
   <visitor>InitializationChain</visitor>
   <visitor>InitializeNonnullFieldsInConstructor</visitor>
   <visitor>InvalidJUnitTest</visitor>
+  <visitor>ManualMessageDetector</visitor>
   <visitor>MutableLock</visitor>
   <visitor>MutableStaticFields</visitor>
   <visitor>NoiseNullDeref</visitor>

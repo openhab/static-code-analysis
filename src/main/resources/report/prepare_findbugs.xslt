@@ -58,7 +58,7 @@
 		<xsl:variable name="type" select="../@type" />
 		<message>
 			<xsl:attribute name="tool">findbugs</xsl:attribute>
-			<xsl:attribute name="line"><xsl:value-of select="./SourceLine/@start" /></xsl:attribute>
+			<xsl:attribute name="line"><xsl:value-of select="../SourceLine/@start" /></xsl:attribute>
 			<xsl:attribute name="message"><xsl:value-of select="../LongMessage" /></xsl:attribute>
 			<xsl:attribute name="priority"><xsl:value-of
 				select="../../BugInstance/@priority" /></xsl:attribute>
