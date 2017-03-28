@@ -29,8 +29,6 @@ import org.slf4j.LoggerFactory;
 public class RequireBundleCheck extends AbstractStaticCheck {
     private final Logger logger = LoggerFactory.getLogger(RequireBundleCheck.class);
 
-    public static final String REQUIRE_BUNDLE_USED_MSG = "The MANIFEST.MF file must not contain any Require-Bundle entries. "
-            + "Instead, Import-Package must be used.";
     private static final String MANIFEST_EXTENSTION = "MF";
 
     public RequireBundleCheck() {
@@ -49,12 +47,14 @@ public class RequireBundleCheck extends AbstractStaticCheck {
             String requireBundleHeaderName = "Require-Bundle";
             String requireBundleHeaderValue = attributes.getValue(requireBundleHeaderName);
             if (requireBundleHeaderValue != null) {
-                log(findLineNumber(lines, requireBundleHeaderValue, 0), REQUIRE_BUNDLE_USED_MSG);
+                log(findLineNumber(lines, requireBundleHeaderValue, 0),
+                        "The MANIFEST.MF file must not contain any Require-Bundle entries. "
+                                + "Instead, Import-Package must be used.");
             }
         } catch (FileNotFoundException e) {
-            logger.debug("An exception was thrown while trying to open the file {}", file.getPath(), e);
+            logger.error("An exception was thrown while trying to open the file {}", file.getPath(), e);
         } catch (IOException e) {
-            logger.debug("An exception was thrown while trying to read the file {}", file.getPath(), e);
+            logger.error("An exception was thrown while trying to read the file {}", file.getPath(), e);
         }
     }
 }

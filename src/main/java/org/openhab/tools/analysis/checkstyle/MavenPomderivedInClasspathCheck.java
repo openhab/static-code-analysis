@@ -16,6 +16,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -30,26 +32,21 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  */
 public class MavenPomderivedInClasspathCheck extends AbstractStaticCheck {
 
-    public static final String POMDERIVED_EXPRESSION = "/classpath/classpathentry/attributes/attribute[@name='maven.pomderived' and @value='true']/@name";
+    private static final String POMDERIVED_EXPRESSION = "/classpath/classpathentry/attributes/attribute[@name='maven.pomderived' and @value='true']/@name";
 
-    public static final String MESSAGE_POMDERIVED_FOUND = "The classpath file contains maven.pomderived attribute. This attribute should be used only if you have problems downloading your maven dependencies.";
-
-    public static final String CLASSPATH_NAME = "classpath";
-
-    public static final String EMPTY_FILE_MESSAGE = "The " + CLASSPATH_NAME + " file should not be empty.";
-
-    public static final String INVALID_FILE_ERROR_MESSAGE = "An error has occured while parsing the  ." + CLASSPATH_NAME
-            + ". Check if the " + CLASSPATH_NAME + " file is valid.";
+    private static final String CLASSPATH_EXTENSION = ".classpath";
+    
+    private final Logger logger = LoggerFactory.getLogger(MavenPomderivedInClasspathCheck.class);
 
     public MavenPomderivedInClasspathCheck() {
-        setFileExtensions(CLASSPATH_NAME);
+        setFileExtensions(CLASSPATH_EXTENSION);
     }
 
     @Override
     protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
 
         if (isEmpty(file)) {
-            log(0, EMPTY_FILE_MESSAGE);
+            log(0, "The .classpath file should not be empty.");
         } else {
             Document document = parseDomDocumentFromFile(file);
 
@@ -59,7 +56,7 @@ public class MavenPomderivedInClasspathCheck extends AbstractStaticCheck {
             try {
                 nodes = (NodeList) xpathExpression.evaluate(document, XPathConstants.NODESET);
             } catch (XPathExpressionException e) {
-                log(0, INVALID_FILE_ERROR_MESSAGE);
+                logger.error("An error has occured while parsing the .classpath file. Check if the file is valid.", e);
             }
 
             if (nodes != null) {
@@ -68,9 +65,8 @@ public class MavenPomderivedInClasspathCheck extends AbstractStaticCheck {
                 for (int i = 0; i < nodes.getLength(); i++) {
                     lineNumber = findLineNumber(lines, nodes.item(i).getNodeValue(), lineNumber);
                     if (lineNumber != -1) {
-                        log(lineNumber, MESSAGE_POMDERIVED_FOUND);
-                    } else {
-                        throw new CheckstyleException("Unable to read from the " + CLASSPATH_NAME);
+                        log(lineNumber, "The classpath file contains maven.pomderived attribute. "
+                                + "This attribute should be used only if you have problems downloading your maven dependencies.");
                     }
                 }
             }

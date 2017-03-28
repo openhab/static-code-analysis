@@ -26,6 +26,9 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  *
  */
 public class RequireBundleCheckTest extends AbstractStaticCheckTest {
+    private static final String REQUIRE_BUNDLE_USED_MSG = "The MANIFEST.MF file must not contain any Require-Bundle entries. "
+            + "Instead, Import-Package must be used.";
+    
     private static DefaultConfiguration config;
 
     @BeforeClass
@@ -35,8 +38,7 @@ public class RequireBundleCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testExportedInternalPackage() throws Exception {
-        verifyManifest("require_bundle_manifest_directory", "REQUIRE_BUNDLE_MANIFEST.MF", 9,
-                RequireBundleCheck.REQUIRE_BUNDLE_USED_MSG);
+        verifyManifest("require_bundle_manifest_directory", "REQUIRE_BUNDLE_MANIFEST.MF", 9, REQUIRE_BUNDLE_USED_MSG);
     }
 
     @Test
@@ -60,7 +62,7 @@ public class RequireBundleCheckTest extends AbstractStaticCheckTest {
 
         String[] expectedMessages = null;
         if (expectedMessage != null) {
-            expectedMessages = generateExpectedMessages(expectedLine, RequireBundleCheck.REQUIRE_BUNDLE_USED_MSG);
+            expectedMessages = generateExpectedMessages(expectedLine, REQUIRE_BUNDLE_USED_MSG);
         } else {
             expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
         }

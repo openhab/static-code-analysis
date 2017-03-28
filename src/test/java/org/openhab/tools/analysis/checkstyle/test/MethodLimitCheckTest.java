@@ -9,57 +9,42 @@
 package org.openhab.tools.analysis.checkstyle.test;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.MethodLimitCheck;
+import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
-import com.google.checkstyle.test.base.BaseCheckTestSupport;
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
  * Tests for {@link MethodLimitCheck}
  *
- * @author Svilen Valkanov
+ * @author Svilen Valkanov - Initial contribution
+ * @author Petar Valchev - Added the general verifyMethodLimit() method
  *
  */
-
-public class MethodLimitCheckTest extends BaseCheckTestSupport {
-
-    @Override
-    protected String getPath(String fileName) throws IOException {
-        return new File("src/test/resources/checks/checkstyle/methodLimitCheckTest" + File.separator + fileName)
-                .getCanonicalPath();
-    }
+public class MethodLimitCheckTest extends AbstractStaticCheckTest {
+    private static final String TEST_DIRECTORY_NAME = "methodLimitCheckTest";
 
     @Test
     public void testClassThatExceedsMethodLimit() throws Exception {
-        DefaultConfiguration config = createCheckConfig(MethodLimitCheck.class);
-        // Set the maximal number of methods to 1
-        config.addAttribute("max", "1");
-        String fileName = "MethodLimitCheckTestFile.java";
         int lineNumber = 3;
-
-        String[] expected = { lineNumber + ": " + MethodLimitCheck.MSG_KEY };
-
-        String filePath = getPath(fileName);
-
-        Integer[] warnList = getLinesWithWarn(filePath);
-
-        verify(config, filePath, expected, warnList);
+        String[] expectedMessages = generateExpectedMessages(lineNumber, "Too many methods.");
+        verifyMethodLimit("1", "MethodLimitCheckTestFile.java", expectedMessages);
     }
 
     @Test
     public void testClassThatDoesNotExceedMethodLimit() throws Exception {
+        String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        verifyMethodLimit("10", "MethodLimitCheckTestFile.java", expectedMessages);
+    }
+    
+    private void verifyMethodLimit(String maxMethods, String fileName, String[] expectedMessages) throws Exception{
         DefaultConfiguration config = createCheckConfig(MethodLimitCheck.class);
-        // Set the maximal number of methods to 10
-        config.addAttribute("max", "10");
-        String fileName = "MethodLimitCheckTestFile.java";
-
-        String[] expected = {};
-
-        String filePath = getPath(fileName);
-
-        verify(config, filePath, expected);
+        config.addAttribute("max", maxMethods);
+        
+        String filePath = getPath(TEST_DIRECTORY_NAME + File.separator + fileName);
+        verify(config, filePath, expectedMessages);
     }
 }

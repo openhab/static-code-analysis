@@ -16,6 +16,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -29,29 +31,24 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  */
 public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
 
-    public static final String POM_CONFIGURATION_EXPRESSION = "/project//*[@combine.self='override']/@combine.self";
+    private static final String POM_CONFIGURATION_EXPRESSION = "/project//*[@combine.self='override']/@combine.self";
 
-    public static final String MESSAGE_OVERRIDING_POM_CONFIGURATION_FOUND = "Avoid overriding a configuration inherited by the parent pom.";
+    private static final String XML_EXTENSION = "xml";
 
-    public static final String EXTENSION = "xml";
-
-    public static final String FILE_NAME = "pom" + "." + EXTENSION;
-
-    public static final String EMPTY_FILE_MESSAGE = "The " + FILE_NAME + " file should not be empty.";
-
-    public static final String MESSAGE_DOCUMENT_PARSING = "An error has occured while parsing the " + FILE_NAME
-            + ". Check if the " + FILE_NAME + " file is valid.";
+    private static final String POM_XML_FILE_NAME = "pom.xml";
+    
+    private final Logger logger = LoggerFactory.getLogger(OverridingParentPomConfigurationCheck.class);
 
     public OverridingParentPomConfigurationCheck() {
-        setFileExtensions(EXTENSION);
+        setFileExtensions(XML_EXTENSION);
     }
 
     @Override
     protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
 
-        if (file.getName().equals(FILE_NAME)) {
+        if (file.getName().equals(POM_XML_FILE_NAME)) {
             if (isEmpty(file)) {
-                log(0, EMPTY_FILE_MESSAGE);
+                log(0, "The pom.xml file should not be empty.");
             } else {
                 Document document = parseDomDocumentFromFile(file);
 
@@ -61,7 +58,7 @@ public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
                 try {
                     nodes = (NodeList) xpathExpression.evaluate(document, XPathConstants.NODESET);
                 } catch (XPathExpressionException e) {
-                    log(0, MESSAGE_DOCUMENT_PARSING);
+                    logger.error("An error has occured while parsing the pom.xml. Check if the file is valid.", e);
                 }
 
                 if (nodes != null) {
@@ -70,9 +67,7 @@ public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
                     for (int i = 0; i < nodes.getLength(); i++) {
                         lineNumber = findLineNumber(lines, nodes.item(i).getNodeValue(), lineNumber);
                         if (lineNumber != -1) {
-                            log(lineNumber, MESSAGE_OVERRIDING_POM_CONFIGURATION_FOUND);
-                        } else {
-                            throw new CheckstyleException("Unable to read from the " + FILE_NAME);
+                            log(lineNumber, "Avoid overriding a configuration inherited by the parent pom.");
                         }
                     }
                 }

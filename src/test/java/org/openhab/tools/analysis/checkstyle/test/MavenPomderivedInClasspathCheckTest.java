@@ -27,8 +27,8 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  */
 public class MavenPomderivedInClasspathCheckTest extends AbstractStaticCheckTest {
 
-    private static final String FILE_NAME = File.separator + "." + MavenPomderivedInClasspathCheck.CLASSPATH_NAME;
-    private static final String TEST_DIRECTORY = "mavenPomDerivedInClasspathCheck" + File.separator;
+    private static final String CLASSPATH_FILE_RELATIVE_PATH = File.separator + ".classpath";
+    private static final String TEST_DIRECTORY_NAME = "mavenPomDerivedInClasspathCheckTest";
 
     static DefaultConfiguration config;
 
@@ -48,27 +48,32 @@ public class MavenPomderivedInClasspathCheckTest extends AbstractStaticCheckTest
     public void testEmptyClassPath() throws Exception {
         int lineNumber = 0;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                MavenPomderivedInClasspathCheck.EMPTY_FILE_MESSAGE);
-        verify(config, getPath(TEST_DIRECTORY + "emptyClasspath" + FILE_NAME), expectedMessages);
+                "The .classpath file should not be empty.");
+        String classpathFileAbsolutePath = getPath(TEST_DIRECTORY_NAME + File.separator + "emptyClasspath" + CLASSPATH_FILE_RELATIVE_PATH);
+        verify(config, classpathFileAbsolutePath, expectedMessages);
     }
 
     @Test
     public void testValidClasspathConfigurationTest() throws Exception {
         String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        verify(config, getPath(TEST_DIRECTORY + "validClasspathConfiguration" + FILE_NAME), expectedMessages);
+        String classpathFileAbsolutePath = getPath(TEST_DIRECTORY_NAME + File.separator + "validClasspathConfiguration" + CLASSPATH_FILE_RELATIVE_PATH);
+        verify(config, classpathFileAbsolutePath, expectedMessages);
     }
 
     @Test
     public void testMissingPomderivedAttributeInClassPath() throws Exception {
         String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        verify(config, getPath(TEST_DIRECTORY + "missingPomderivedAttributeInClassPath" + FILE_NAME), expectedMessages);
+        String classpathFileAbsolutePath = getPath(TEST_DIRECTORY_NAME + File.separator + "missingPomderivedAttributeInClassPath" + CLASSPATH_FILE_RELATIVE_PATH);
+        verify(config, classpathFileAbsolutePath, expectedMessages);
     }
 
     @Test
     public void testInvalidClasspathConfiguration() throws Exception {
         int lineNumber = 7;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                MavenPomderivedInClasspathCheck.MESSAGE_POMDERIVED_FOUND);
-        verify(config, getPath(TEST_DIRECTORY + "invalidClasspathConfiguration" + FILE_NAME), expectedMessages);
+                "The classpath file contains maven.pomderived attribute. "
+                + "This attribute should be used only if you have problems downloading your maven dependencies.");
+        String classpathFileAbsolutePath = getPath(TEST_DIRECTORY_NAME + File.separator + "invalidClasspathConfiguration" + CLASSPATH_FILE_RELATIVE_PATH);
+        verify(config, classpathFileAbsolutePath, expectedMessages);
     }
 }

@@ -25,9 +25,7 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  */
 public class ExportInternalPackageCheck extends AbstractStaticCheck {
 
-    public final static String MANIFEST_EXTENSION = "MF";
-    public final static String MESSAGE_INTERNAL_PACKAGE_EXPORTED = "Remove internal package export";
-    public final static String MESSAGE_FILE_EMPTY = "File is empty !";
+    private static final String MANIFEST_EXTENSION = "MF";
 
     public ExportInternalPackageCheck() {
         setFileExtensions(MANIFEST_EXTENSION);
@@ -36,7 +34,7 @@ public class ExportInternalPackageCheck extends AbstractStaticCheck {
     @Override
     protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
         if (isEmpty(file)) {
-            log(0, MESSAGE_FILE_EMPTY, 0);
+            log(0, "File is empty!", 0);
             return;
         }
         BundleInfo manifest = parseManifestFromFile(file);
@@ -47,7 +45,7 @@ public class ExportInternalPackageCheck extends AbstractStaticCheck {
             String packageName = export.toString();
             if (packageName.contains(".internal")) {
                 lineNumber = findLineNumber(lines, packageName, lineNumber);
-                log(lineNumber, MESSAGE_INTERNAL_PACKAGE_EXPORTED + " " + packageName, 0);
+                log(lineNumber, "Remove internal package export " + packageName, 0);
             }
         }
 
