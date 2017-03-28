@@ -27,10 +27,10 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  */
 public class OverridingParentPomConfigurationCheckTest extends AbstractStaticCheckTest {
 
-    private static final String FILE_NAME = File.separator + OverridingParentPomConfigurationCheck.FILE_NAME;
-    private static final String TEST_DIRECTORY = "overridingParentPomConfigurationCheck" + File.separator;
+    private static final String POM_XML_RELATIVE_PATH = File.separator + "pom.xml";
+    private static final String TEST_DIRECTORY_NAME = "overridingParentPomConfigurationCheckTest";
 
-    static DefaultConfiguration config;
+    private static DefaultConfiguration config;
 
     @BeforeClass
     public static void createConfiguration() {
@@ -48,22 +48,25 @@ public class OverridingParentPomConfigurationCheckTest extends AbstractStaticChe
     public void testInvalidPomConfiguration() throws Exception {
         int lineNumber = 9;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                OverridingParentPomConfigurationCheck.MESSAGE_OVERRIDING_POM_CONFIGURATION_FOUND);
-        verify(config, getPath(TEST_DIRECTORY + "invalidPomConfiguration" + FILE_NAME), expectedMessages);
+                "Avoid overriding a configuration inherited by the parent pom.");
+        String pomXmlAbsolutePath = getPath(
+                TEST_DIRECTORY_NAME + File.separator + "invalidPomConfiguration" + POM_XML_RELATIVE_PATH);
+        verify(config, pomXmlAbsolutePath, expectedMessages);
     }
 
     @Test
     public void testMissingOverridingParentPomConfiguration() throws Exception {
         String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        verify(config, getPath(TEST_DIRECTORY + "missingOverridingParentPomConfiguration" + FILE_NAME),
-                expectedMessages);
+        String pomXmlAbsolutePath = getPath(TEST_DIRECTORY_NAME + File.separator
+                + "missingOverridingParentPomConfiguration" + POM_XML_RELATIVE_PATH);
+        verify(config, pomXmlAbsolutePath, expectedMessages);
     }
 
     @Test
     public void testEmptyPom() throws Exception {
         int lineNumber = 0;
-        String[] expectedMessages = generateExpectedMessages(lineNumber,
-                OverridingParentPomConfigurationCheck.EMPTY_FILE_MESSAGE);
-        verify(config, getPath(TEST_DIRECTORY + "emptyPom" + FILE_NAME), expectedMessages);
+        String[] expectedMessages = generateExpectedMessages(lineNumber, "The pom.xml file should not be empty.");
+        String pomXmlAbsolutePath = getPath(TEST_DIRECTORY_NAME + File.separator + "emptyPom" + POM_XML_RELATIVE_PATH);
+        verify(config, pomXmlAbsolutePath, expectedMessages);
     }
 }

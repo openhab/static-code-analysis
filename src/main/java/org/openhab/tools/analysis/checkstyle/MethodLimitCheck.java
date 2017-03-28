@@ -30,8 +30,6 @@ import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 
 public class MethodLimitCheck extends AbstractCheck {
 
-    public static final String MSG_KEY = "too.many.methods";
-
     /**
      * The maximum number of methods per class/interface. Can accept different values in the configuration.
      *
@@ -86,7 +84,7 @@ public class MethodLimitCheck extends AbstractCheck {
 
         // report error if limit is reached
         if (methodDefs > max) {
-            log(ast.getLineNo(), MSG_KEY, new Integer(max));
+            log(ast.getLineNo(), "Too many methods.", new Integer(max));
         }
     }
 }
