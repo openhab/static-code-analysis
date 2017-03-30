@@ -258,7 +258,7 @@ For more information: https://pmd.github.io/pmd-5.4.1/customizing/rule-guideline
 `Not covered yet`
 
 ## E. Logging
-1. As we are in a dynamic OSGi environment, loggers should be non-static, when ever possible and have the name logger. - `Work in Progress`
+1. As we are in a dynamic OSGi environment, loggers should be non-static, when ever possible and have the name logger. - `severity=warning`
 2. Parametrized logging must be used (instead of string concatenation). - `severity=error`
 3. Where ever unchecked exceptions are caught and logged, the exception should be added as a last parameter to the logging. For checked exceptions, this is normally not recommended, unless it can be considered an error situation and the stacktrace would hold additional important information for the analysis. - `Not covered yet`
 4. Logging levels should focus on the system itself and describe its state. As every bundle is only one out of many, logging should be done very scarce. It should be up to the user to increase the logging level for specific bundles, packages or classes if necessary. This means in detail:

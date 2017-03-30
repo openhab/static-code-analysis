@@ -7,6 +7,9 @@
   <!-- Excludes all bugs with priority higher than 4 -->
   <Match>
     <Rank value="4"/>
+    <Not>
+      <Bug pattern="SLF4J_LOGGER_SHOULD_BE_NON_STATIC"/>
+    </Not>
   </Match>
   <!-- This pattern is not wanted as it reports usage of Throwable.getMessage() as argument to SLF4G logger -->
   <Match>
