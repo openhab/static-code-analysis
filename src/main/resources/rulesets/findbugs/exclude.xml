@@ -10,6 +10,6 @@
   </Match>
   <!-- This pattern is not wanted as it reports usage of Throwable.getMessage() as argument to SLF4G logger -->
   <Match>
-    <Bug value="SLF4J_MANUALLY_PROVIDED_MESSAGE"/>
+    <Bug pattern="SLF4J_MANUALLY_PROVIDED_MESSAGE"/>
   </Match>
 </FindBugsFilter>
