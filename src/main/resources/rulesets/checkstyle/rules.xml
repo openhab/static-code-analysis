@@ -67,6 +67,10 @@
       <property name="format" value="(TODO)|(FIXME)" />
       <property name="severity" value="info" />
     </module>
+    <!-- See http://checkstyle.sourceforge.net/config_modifier.html#ModifierOrder -->
+    <module name="ModifierOrder">
+      <property name="severity" value="info" />
+    </module>
     <module name="org.openhab.tools.analysis.checkstyle.JavadocFilterCheck">
       <property name="severity" value="warning" />
       <property name="scope" value="public"/>
