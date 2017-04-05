@@ -143,6 +143,15 @@
       <property name="processJavadoc" value="true"/>
       <property name="severity" value="info" />
     </module>
+    
+    <module name="org.openhab.tools.analysis.checkstyle.AuthorTagCheck">
+      <property name="tag" value="@author"/>
+      <property name="tagFormat" value="\S"/> <!-- the tag can be anything but whitespace -->
+      <property name="checkInnerUnits" value="false"/>
+      <property name="severity" value="error"/> <!-- A property defining what should be done if the author is missing. In our case we want the build to fail. -->
+      <property name="tagSeverity" value="ignore"/> <!-- A property defining what should be done when the author tag is found. In our case we want to ignore it. -->
+      <message key="type.missingTag" value="An author tag is missing"/>
+    </module>
 
     <!-- Rules for Java Naming Convention -->
 

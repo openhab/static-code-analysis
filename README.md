@@ -220,7 +220,7 @@ For more information: https://pmd.github.io/pmd-5.4.1/customizing/rule-guideline
 1. [The Java naming conventions should be used.](https://github.com/openhab/static-code-analysis/blob/master/src/main/resources/rulesets/checkstyle/rules.xml#L80) - `severity=info`
 2. [Every Java file must have a license header. You can run mvn license:format on the root of the repo to automatically add missing headers.](https://github.com/openhab/static-code-analysis/blob/master/src/main/resources/rulesets/checkstyle/rules.xml#L34) - `severity=info`
 3. [Every class, interface and enumeration should have JavaDoc describing its purpose and usage.](https://github.com/openhab/static-code-analysis/blob/master/src/main/resources/rulesets/checkstyle/rules.xml#L66) - `severity=warning`
-4. Every class, interface and enumeration must have an @author tag in its JavaDoc for every author that wrote a substantial part of the file. - `Work in Progress`
+4. [Every class, interface and enumeration must have an @author tag in its JavaDoc for every author that wrote a substantial part of the file.](https://github.com/openhab/static-code-analysis/blob/master/src/main/resources/rulesets/checkstyle/rules.xml#L97) - `severity=error`
 5. Every constant, field and method with default, protected or public visibility should have JavaDoc (optional, but encouraged for private visibility as well). - `Not covered yet`
 6. The code must be formatted:
     - java files must use spaces for formatting, rather than tabs - `severity=error`;
