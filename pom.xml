@@ -24,7 +24,7 @@
     <maven.plugin.annotations.version>3.5</maven.plugin.annotations.version>
     <maven.plugin.plugin.version>3.5</maven.plugin.plugin.version>
     <mojo.executor.version>2.2.0</mojo.executor.version>
-    <org.apache.ivy.version>2.3.0</org.apache.ivy.version>
+    <org.apache.ivy.version>2.4.0</org.apache.ivy.version>
     <org.jsoup.version>1.7.1</org.jsoup.version>
   </properties>
 
