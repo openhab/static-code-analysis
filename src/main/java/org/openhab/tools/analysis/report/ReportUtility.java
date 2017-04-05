@@ -333,7 +333,7 @@ public class ReportUtility extends AbstractMojo {
             FileUtils.writeStringToFile(summaryReport, reportContent);
             logger.info("Individual report appended to summary report.");
         } catch (IOException e) {
-            logger.warn("Cann't read or write to summary report. The summary report might be incomplete!", e);
+            logger.warn("Can't read or write to summary report. The summary report might be incomplete!", e);
         }
 
     }
@@ -350,7 +350,7 @@ public class ReportUtility extends AbstractMojo {
             XPathExpression expression = xPath.compile(xPathExpression);
             return (NodeList) expression.evaluate(document, XPathConstants.NODESET);
         } catch (Exception e) {
-            logger.warn("Cann't select {} nodes from {}. Empty NodeList will be returned.", xPathExpression, filePath, e);
+            logger.warn("Can't select {} nodes from {}. Empty NodeList will be returned.", xPathExpression, filePath, e);
             return new EmptyNodeList();
         }
 

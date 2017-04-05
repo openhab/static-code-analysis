@@ -19,6 +19,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -105,7 +106,7 @@ public abstract class AbstractChecker extends AbstractMojo {
         try {
             properties.load(inputStream);
         } catch (IOException | NullPointerException e) {
-            throw new MojoExecutionException("Can't load properties form file " + relativePath, e);
+            throw new MojoExecutionException("Can't load properties from file " + relativePath, e);
         } finally {
             try {
                 inputStream.close();
@@ -139,12 +140,10 @@ public abstract class AbstractChecker extends AbstractMojo {
      */
     protected void executeCheck(String groupId, String artifactId, String version, String goal, Xpp3Dom configuration,
             Dependency... dependencies) throws MojoExecutionException {
-        List<Dependency> deps = new ArrayList<Dependency>();
-        for (Dependency dependency : dependencies) {
-            deps.add(dependency);
-        }
+        List<Dependency> dependencyList = new ArrayList<Dependency>();
+        Collections.addAll(dependencyList, dependencies);
 
-        Plugin plugin = MojoExecutor.plugin(groupId, artifactId, version, deps);
+        Plugin plugin = MojoExecutor.plugin(groupId, artifactId, version, dependencyList);
 
         MojoExecutor.executeMojo(plugin, goal, configuration,
                 MojoExecutor.executionEnvironment(mavenProject, mavenSession, pluginManager));
