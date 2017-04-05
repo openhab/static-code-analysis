@@ -33,7 +33,7 @@ public class CheckstyleChecker extends AbstractChecker {
 
     /**
      * Relative path of the XML configuration to use. If not set the default ruleset file will be used -
-     * {@link #DEFAULT_RULESET_XML}
+     * {@link #DEFAULT_RULE_SET_XML}
      */
     @Parameter(property = "checkstyle.ruleset")
     protected String checkstyleRuleset;
@@ -69,40 +69,42 @@ public class CheckstyleChecker extends AbstractChecker {
     private static final String MAVEN_CHECKSTYLE_PLUGIN_GROUP_ID = "org.apache.maven.plugins";
 
     // Default configuration file
-    private static final String DEFAULT_RULESET_XML = "rulesets/checkstyle/rules.xml";
+    private static final String DEFAULT_RULE_SET_XML = "rulesets/checkstyle/rules.xml";
     private static final String DEFAULT_FILTER_XML = "rulesets/checkstyle/suppressions.xml";
 
     /**
      * This is a property in the maven-checkstyle-plugin that is used to describe the location of the
      * ruleset file used from the plugin.
      */
-    private static final String CHECKSTYLE_RULESET_USER_PROPERTY = "checkstyle.config.location";
+    private static final String CHECKSTYLE_RULE_SET_PROPERTY = "checkstyle.config.location";
 
     /**
      * This is a property in the maven-checkstyle-plugin that is used to describe the location of the
      * suppressions file used from the plugin.
      */
-    private static final String CHECKSTYLE_SUPPRESSION_USER_PROPERTY = "checkstyle.suppressions.location";
+    private static final String CHECKSTYLE_SUPPRESSION_PROPERTY = "checkstyle.suppressions.location";
 
     @Override
     public void execute() throws MojoExecutionException {
         Log log = getLog();
-        ClassLoader cl = getMavenRuntimeClasspathClassLoader();
-        Properties userProps = loadPropertiesFromFile(cl, CHECKSTYLE_PROPERTIES_FILE);
+        ClassLoader classLoader = getMavenRuntimeClasspathClassLoader();
+        Properties userProps = loadPropertiesFromFile(classLoader, CHECKSTYLE_PROPERTIES_FILE);
 
-        String ruleset = getLocation(checkstyleRuleset, DEFAULT_RULESET_XML);
+        String ruleset = getLocation(checkstyleRuleset, DEFAULT_RULE_SET_XML);
         log.debug("Ruleset location is " + ruleset);
-        userProps.setProperty(CHECKSTYLE_RULESET_USER_PROPERTY, ruleset);
+        userProps.setProperty(CHECKSTYLE_RULE_SET_PROPERTY, ruleset);
 
         String supression = getLocation(checkstyleFilter, DEFAULT_FILTER_XML);
         log.debug("Filter location is " + supression);
-        userProps.setProperty(CHECKSTYLE_SUPPRESSION_USER_PROPERTY, supression);
+        userProps.setProperty(CHECKSTYLE_SUPPRESSION_PROPERTY, supression);
 
-        // Maven may load an older version, if I not specify any
-        Dependency checktyle = dependency("com.puppycrawl.tools", "checkstyle", "7.2");
-        Dependency[] allDependencies = getDependencies(checkstylePlugins, checktyle);
+        // Maven may load an older version, if no version is specified
+        Dependency checkstyle = dependency("com.puppycrawl.tools", "checkstyle", "7.2");
+        Dependency[] allDependencies = getDependencies(checkstylePlugins, checkstyle);
 
-        Xpp3Dom config = configuration(element("sourceDirectory", mavenProject.getBasedir().toString()));
+        Xpp3Dom config = configuration(
+                element("sourceDirectory", mavenProject.getBasedir().toString())
+        );
 
         executeCheck(MAVEN_CHECKSTYLE_PLUGIN_GROUP_ID, MAVEN_CHECKSTYLE_PLUGIN_ARTIFACT_ID, checkstyleMavenVersion,
                 MAVEN_CHECKSTYLE_PLUGIN_GOAL, config, allDependencies);
