@@ -238,7 +238,7 @@ For more information: https://pmd.github.io/pmd-5.4.1/customizing/rule-guideline
     - json files must use tabs for formatting, rather than spaces - `Not covered yet`
 7. Generics must be used where applicable. - `Not covered yet`
 8. Code should not show any warnings. Warnings that cannot be circumvented should be suppressed by using the @SuppressWarnings annotation. - `Not covered yet`
-9. For dependency injection, OSGi Declarative Services should be used. - `Work in Progress`
+9. For dependency injection, OSGi Declarative Services should be used. - `severity=warning`
 10. Packages that contain classes that are not meant to be used by other bundles should have “internal” in their package name. - `Work in Progress`
 
 ## B. OSGi Bundles
