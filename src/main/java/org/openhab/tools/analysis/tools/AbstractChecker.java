@@ -47,10 +47,10 @@ import org.twdata.maven.mojoexecutor.MojoExecutor;
  */
 public abstract class AbstractChecker extends AbstractMojo {
 
-    @Component
+    @Parameter(defaultValue = "${project}", readonly = true)
     protected MavenProject mavenProject;
 
-    @Component
+    @Parameter(defaultValue = "${session}", readonly = true)
     protected MavenSession mavenSession;
 
     @Component
