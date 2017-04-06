@@ -114,7 +114,7 @@ public abstract class AbstractChecker extends AbstractMojo {
             }
         }
 
-        Properties userProps = mavenSession.getUserProperties();
+        Properties userProps = mavenProject.getProperties();
 
         Enumeration<?> e = properties.propertyNames();
         while (e.hasMoreElements()) {
