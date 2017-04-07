@@ -1,0 +1,196 @@
+/**
+ * Copyright (c) 2014-2017 by the respective copyright holders.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+package org.openhab.tools.analysis.checkstyle.test;
+
+import java.io.File;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.openhab.tools.analysis.checkstyle.ServiceComponentManifestCheck;
+import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
+
+import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
+import com.puppycrawl.tools.checkstyle.api.Configuration;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+
+/**
+ * Tests for {@link ServiceComponentManifestCheck}
+ *
+ * @author Aleksandar Kovachev - Initial contribution
+ * @author Petar Valchev - Changed the verifyServiceComponentHeader() method and
+ *         some of the test methods
+ * @author Dimitar Ivanov - Common wildcard test added
+ *
+ */
+public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
+    private static final String CHECK_TEST_DIRECTORY = "serviceComponentManifestCheckTest";
+    private static final String MANIFEST_RELATIVE_PATH = "META-INF" + File.separator + "MANIFEST.MF";
+
+    private static final String BEST_APPROACH_MESSAGE = "A good approach is to use OSGI-INF/*.xml "
+            + "instead of including the services metadata files separately or using common wildcard.";
+    private static final String WRONG_DIRECTORY_MESSAGE = "Incorrect directory for services - %s. "
+            + "The best practice is services metadata files to be placed directly in OSGI-INF directory.";
+    private static final String WRONG_EXTENSION_MESSAGE = "The service %s is with invalid extension."
+            + "Only XML metadata files for services description are expected in the OSGI-INF directory.";
+    private static final String NOT_INCLUDED_SERVICE_MESSAGE = "The service %s is not included in the MANIFEST.MF file. "
+            + "Are you sure that there is no need to be included?";
+    private static final String NOT_EXISTING_SERVICE_MESSAGE = "The service %s does not exist in the OSGI-INF folder.";
+    private static final String REPEATED_SERVICE_MESSAGE = "If you are using OSGI-INF/*.xml, do not include any of the services explicitly. "
+            + "Otherwise they will be included more than once.";
+    private static final String NOT_MATCHING_REGEX_MESSAGE = "The service component %s does not match any of the exisitng services.";
+
+    private static DefaultConfiguration config;
+
+    @BeforeClass
+    public static void createConfiguration() {
+        config = createCheckConfig(ServiceComponentManifestCheck.class);
+    }
+
+    @Test
+    public void testWrongServicesDirectoryInManifest() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                String.format(WRONG_DIRECTORY_MESSAGE, "wrong_directory"));
+
+        verifyServiceComponentHeader("wrong_service_directory_in_manifest", expectedMessages);
+    }
+
+    @Test
+    public void testNonExistentServiceDirectory() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                String.format(WRONG_DIRECTORY_MESSAGE, "non_existent_directory"));
+
+        verifyServiceComponentHeader("non_existent_service_directory_in_manifest", expectedMessages);
+    }
+
+    @Test
+    public void testWrongServiceExtensionsInManifest() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                String.format(WRONG_EXTENSION_MESSAGE, "htmlService.html"), lineNumber,
+                String.format(WRONG_EXTENSION_MESSAGE, "txtService.txt"));
+
+        verifyServiceComponentHeader("wrong_service_extension", expectedMessages);
+    }
+
+    @Test
+    public void testMissingServiceComponentHeaderInManifest() throws Exception {
+        int lineNumber = 0;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                String.format(NOT_INCLUDED_SERVICE_MESSAGE, "testServiceFromSubFolder.xml"), lineNumber,
+                String.format(NOT_INCLUDED_SERVICE_MESSAGE, "testServiceOne.xml"), lineNumber,
+                String.format(NOT_INCLUDED_SERVICE_MESSAGE, "testServiceTwo.xml"));
+
+        verifyServiceComponentHeader("missing_service_component_in_manifest", expectedMessages);
+    }
+
+    @Test
+    public void testMissingServicesInManifest() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                String.format(NOT_INCLUDED_SERVICE_MESSAGE, "testServiceFromSubFolder.xml"), lineNumber,
+                String.format(NOT_INCLUDED_SERVICE_MESSAGE, "testServiceThree.xml"), lineNumber, BEST_APPROACH_MESSAGE);
+
+        verifyServiceComponentHeader("not_included_services_in_manifest", expectedMessages);
+    }
+
+    @Test
+    public void testManifestExplicitlyIncludeServices() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber, BEST_APPROACH_MESSAGE);
+
+        verifyServiceComponentHeader("explicitly_included_services_in_manifest", expectedMessages);
+    }
+
+    @Test
+    public void testManifestRegexIncludedServices() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber, BEST_APPROACH_MESSAGE);
+
+        verifyServiceComponentHeader("regex_included_service_in_manifest", expectedMessages);
+    }
+
+    @Test
+    public void testNotMatchingRegex() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                String.format(NOT_MATCHING_REGEX_MESSAGE, "nonExistentService*.xml"), lineNumber, BEST_APPROACH_MESSAGE,
+                lineNumber, String.format(NOT_INCLUDED_SERVICE_MESSAGE, "testServiceOne.xml"), lineNumber,
+                String.format(NOT_INCLUDED_SERVICE_MESSAGE, "testServiceTwo.xml"));
+
+        verifyServiceComponentHeader("not_matching_regex_in_manifest", expectedMessages);
+    }
+
+    @Test
+    public void testServicesInSubdirectory() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                String.format(WRONG_DIRECTORY_MESSAGE, "subdirectory"));
+
+        verifyServiceComponentHeader("subdirectory_services", expectedMessages);
+    }
+
+    @Test
+    public void testExplicitlyIncludedSubfolderServices() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                String.format(WRONG_DIRECTORY_MESSAGE, "subdirectory"), lineNumber,
+                String.format(WRONG_DIRECTORY_MESSAGE, "subdirectory"), lineNumber, BEST_APPROACH_MESSAGE);
+
+        verifyServiceComponentHeader("included_subfolder_services", expectedMessages);
+    }
+
+    @Test
+    public void testNonExistentService() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber, BEST_APPROACH_MESSAGE, lineNumber,
+                String.format(NOT_EXISTING_SERVICE_MESSAGE, "testServiceFour.xml"));
+
+        verifyServiceComponentHeader("non_existent_service_in_manifest", expectedMessages);
+    }
+
+    @Test
+    public void testCorrectlyIncludedServicesInManifest() throws Exception {
+        String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        verifyServiceComponentHeader("correctly_included_services_in_manifest", expectedMessages);
+    }
+
+    @Test
+    public void testRepeatedService() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber, REPEATED_SERVICE_MESSAGE);
+
+        verifyServiceComponentHeader("repeated_service_in_manifest", expectedMessages);
+    }
+
+    @Test
+    public void testCommonWildcard() throws Exception {
+        int lineNumber = 11;
+        String[] expectedMessages = generateExpectedMessages(lineNumber, BEST_APPROACH_MESSAGE, lineNumber);
+        verifyServiceComponentHeader("wildcard_only_in_manifest", expectedMessages);
+    }
+
+    @Override
+    protected DefaultConfiguration createCheckerConfig(Configuration config) {
+        DefaultConfiguration configParent = new DefaultConfiguration("root");
+        configParent.addChild(config);
+        return configParent;
+    }
+
+    private void verifyServiceComponentHeader(String testDirectoryName, String[] expectedMessages) throws Exception {
+        String testDirectoryPath = getPath(CHECK_TEST_DIRECTORY + File.separator + testDirectoryName);
+        File testDirectory = new File(testDirectoryPath);
+        String testFilePath = testDirectory.getPath() + File.separator + MANIFEST_RELATIVE_PATH;
+        // All files are listed recursively
+        File[] testFiles = FileUtils.listFiles(testDirectory, null, true).toArray(new File[] {});
+
+        verify(createChecker(config), testFiles, testFilePath, expectedMessages);
+    }
+}

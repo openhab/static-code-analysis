@@ -69,6 +69,10 @@
      <property name="extensions" value="${checkstyle.requiredFilesCheck.extensions}" default="html,properties,xml,MF" />
      <property name="requiredFiles" value="${checkstyle.requiredFilesCheck.files}" default="about.html,build.properties,pom.xml,MANIFEST.MF" />
    </module>
+   
+   <module name="org.openhab.tools.analysis.checkstyle.ServiceComponentManifestCheck">
+    <property name="severity" value="error" />
+  </module>
 
   <module name="TreeWalker">
     <!-- See http://checkstyle.sourceforge.net/config_coding.html#IllegalThrows -->
