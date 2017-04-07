@@ -58,6 +58,12 @@ public class CheckstyleChecker extends AbstractChecker {
     private Dependency[] checkstylePlugins;
 
     /**
+     * Relative path of the properties file to use in the ruleset to configure specific checks
+     */
+    @Parameter(property = "checkstyle.ruleset.properties")
+    private String checkstyleProperties;
+
+    /**
      * Location of the properties file that contains configuration options for the
      * maven-checkstyle-plugin
      */
@@ -84,6 +90,8 @@ public class CheckstyleChecker extends AbstractChecker {
      */
     private static final String CHECKSTYLE_SUPPRESSION_PROPERTY = "checkstyle.suppressions.location";
 
+    private static final String CHECKSTYLE_RULE_SET_PROPERTIES_PROPERTY = "checkstyle.properties.location";
+
     @Override
     public void execute() throws MojoExecutionException {
         Log log = getLog();
@@ -98,13 +106,17 @@ public class CheckstyleChecker extends AbstractChecker {
         log.debug("Filter location is " + supression);
         userProps.setProperty(CHECKSTYLE_SUPPRESSION_PROPERTY, supression);
 
+        if (checkstyleProperties != null) {
+            String rulesetProperties = getLocation(checkstyleProperties, "");
+            log.debug("Ruleset properties location is " + rulesetProperties);
+            userProps.setProperty(CHECKSTYLE_RULE_SET_PROPERTIES_PROPERTY, rulesetProperties);
+        }
+
         // Maven may load an older version, if no version is specified
         Dependency checkstyle = dependency("com.puppycrawl.tools", "checkstyle", "7.2");
         Dependency[] allDependencies = getDependencies(checkstylePlugins, checkstyle);
 
-        Xpp3Dom config = configuration(
-                element("sourceDirectory", mavenProject.getBasedir().toString())
-        );
+        Xpp3Dom config = configuration(element("sourceDirectory", mavenProject.getBasedir().toString()));
 
         executeCheck(MAVEN_CHECKSTYLE_PLUGIN_GROUP_ID, MAVEN_CHECKSTYLE_PLUGIN_ARTIFACT_ID, checkstyleMavenVersion,
                 MAVEN_CHECKSTYLE_PLUGIN_GOAL, config, allDependencies);

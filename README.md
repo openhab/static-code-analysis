@@ -105,6 +105,7 @@ Parameters:
 | **checkstyleFilter** | String | Relative path of the suppressions XML file to use. If not set the default filter file will be used |
 | **maven.checkstyle.version** | String | The version of the maven-checkstyle-plugin that will be used (default value is **2.17**)|
 | **checkstylePlugins** | Dependency [] | A list with artifacts that contain additional checks for Checkstyle |
+| **checkstyleProperties** | String | Relative path of the properties file to use in the ruleset to configure specific checks |
 
 **static-code-analysis:findbugs**
 

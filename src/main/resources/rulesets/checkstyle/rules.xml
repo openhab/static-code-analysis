@@ -32,7 +32,8 @@
     <property name="ignoreLines" value="1,2,3"/>
     <property name="fileExtensions" value="java"/>
     <property name="header"
-        value="/**\n * Copyright (c) 2010-year by the respective copyright holders.\n *\n * All rights reserved. This program and the accompanying materials\n * are made available under the terms of the Eclipse Public License v1.0\n * which accompanies this distribution, and is available at\n * http://www.eclipse.org/legal/epl-v10.html\n */"/>  </module>
+        value="${checkstyle.headerCheck.content}"
+        default="/**\n * Copyright (c) 2010-year by the respective copyright holders.\n *\n * All rights reserved. This program and the accompanying materials\n * are made available under the terms of the Eclipse Public License v1.0\n * which accompanies this distribution, and is available at\n * http://www.eclipse.org/legal/epl-v10.html\n */"/>  </module>
   <module name="NewlineAtEndOfFile">
     <property name="severity" value="info"/>
   </module>
@@ -55,7 +56,7 @@
    
    <module name="org.openhab.tools.analysis.checkstyle.AboutHtmlCheck">
      <property name="severity" value="error" />
-     <property name="validAboutHtmlFileURL" value="https://raw.githubusercontent.com/openhab/openhab2-addons/master/src/etc/about.html" />
+     <property name="validAboutHtmlFileURL" value="${checkstyle.aboutHtmlCheck.url}" default="https://raw.githubusercontent.com/openhab/openhab2-addons/master/src/etc/about.html" />
    </module>
 
   <module name="org.openhab.tools.analysis.checkstyle.BundleVendorCheck">
