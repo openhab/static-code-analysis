@@ -6,7 +6,7 @@
 
   <groupId>org.openhab.tools</groupId>
   <artifactId>static-code-analysis</artifactId>
-  <version>0.0.4-SNAPSHOT</version>
+  <version>0.0.5-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Static Code Analysis Tool</name>
