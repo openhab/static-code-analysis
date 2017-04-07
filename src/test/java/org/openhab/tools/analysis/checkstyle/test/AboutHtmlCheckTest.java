@@ -31,15 +31,16 @@ public class AboutHtmlCheckTest extends AbstractStaticCheckTest {
     private static final String ABOUT_HTML_CHECK_TEST_DIRECTORY_NAME = "aboutHtmlCheckTest";
     private static final String ABOUT_HTML_FILE_NAME = "about.html";
 
-    private static final String VALID_ABOUT_HTML_FILE_LINK_MSG = "Here is an example of a valid about.html file: https://eclipse.org/legal/epl/about.html";
+    private static final String VALID_ABOUT_HTML_FILE_URL = "https://raw.githubusercontent.com/openhab/openhab2-addons/master/src/etc/about.html";
 
-    private static final String INVALID_LICENSE_HEADER_MSG = "Inavlid or missing license header in the about.html file. "
+    private static final String VALID_ABOUT_HTML_FILE_LINK_MSG = "Here is an example of a valid about.html file: "
+            + VALID_ABOUT_HTML_FILE_URL;
+
+    private static final String INVALID_LICENSE_HEADER_MSG = "Invalid or missing license header in the about.html file. "
             + VALID_ABOUT_HTML_FILE_LINK_MSG;
-    private static final String INVALID_LICENSE_PARAGRAPH_MSG = "Inavlid or missing license paragraph in the about.html file. "
+    private static final String INVALID_LICENSE_PARAGRAPH_MSG = "Invalid or missing license paragraph in the about.html file. "
             + VALID_ABOUT_HTML_FILE_LINK_MSG;
     private static final String EMPTY_FILE_MSG = "Empty about.html file. " + VALID_ABOUT_HTML_FILE_LINK_MSG;
-
-    private static final String VALID_ABOUT_HTML_FILE_URL = "https://raw.githubusercontent.com/openhab/openhab2-addons/master/src/etc/about.html";
 
     private DefaultConfiguration config;
 
