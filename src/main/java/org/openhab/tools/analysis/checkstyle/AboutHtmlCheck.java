@@ -33,7 +33,7 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 public class AboutHtmlCheck extends AbstractStaticCheck {
     private static final String SUSPEND_CHECKS_MSG = "No checks for the about.html file will be done.";
 
-    private static final String VALID_ABOUT_HTML_FILE_LINK_MSG = "Here is an example of a valid about.html file: https://eclipse.org/legal/epl/about.html";
+    private static final String VALID_ABOUT_HTML_FILE_LINK_MSG = "Here is an example of a valid about.html file: ";
 
     private static final String HTML_EXTENSTION = "html";
     private static final String ABOUT_HTML_FILE_NAME = "about.html";
@@ -84,7 +84,7 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
                 checkLicenseHeader(fileDocument);
                 checkLicenseParagraph(fileDocument);
             } else {
-                log(0, "Empty about.html file. " + VALID_ABOUT_HTML_FILE_LINK_MSG);
+                log(0, "Empty about.html file. " + VALID_ABOUT_HTML_FILE_LINK_MSG + validAboutHtmlFileURL);
             }
         }
     }
@@ -92,7 +92,8 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
     private void checkLicenseHeader(Document processedAboutHtmlFileDocument) throws CheckstyleException {
         Elements processedAboutHtmlFileHeaderTags = processedAboutHtmlFileDocument.getElementsByTag(HEADER_3_TAG);
         if (!isElementProvided(processedAboutHtmlFileHeaderTags, LICENSE_HEADER)) {
-            log(0, "Inavlid or missing license header in the about.html file. " + VALID_ABOUT_HTML_FILE_LINK_MSG);
+            log(0, "Invalid or missing license header in the about.html file. " + VALID_ABOUT_HTML_FILE_LINK_MSG
+                    + validAboutHtmlFileURL);
         }
     }
 
@@ -107,7 +108,8 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
         Elements processedFileParagraphTags = processedAboutHtmlFileDocument.getElementsByTag(PARAGRAPH_TAG);
 
         if (!isElementProvided(processedFileParagraphTags, validAboutHtmlFileLicenseParagraphContent)) {
-            log(0, "Inavlid or missing license paragraph in the about.html file. " + VALID_ABOUT_HTML_FILE_LINK_MSG);
+            log(0, "Invalid or missing license paragraph in the about.html file. " + VALID_ABOUT_HTML_FILE_LINK_MSG
+                    + validAboutHtmlFileURL);
         }
     }
 
