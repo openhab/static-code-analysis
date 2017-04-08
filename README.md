@@ -249,7 +249,7 @@ For more information: https://pmd.github.io/pmd-5.4.1/customizing/rule-guideline
 4. The manifest must not contain any “Require-Bundle” entries. Instead, “Import-Package” must be used. - [Opened PR](https://github.com/openhab/static-code-analysis/pull/19) - `severity=error`
 5. [The manifest must not export any internal package.](https://github.com/openhab/static-code-analysis/blob/master/src/main/resources/rulesets/checkstyle/rules.xml#L40) - `severity=error`
 6. The manifest must not have any version constraint on package imports, unless this is thoughtfully added. Note that Eclipse automatically adds these constraints based on the version in the target platform, which might be too high in many cases. - `Work in Progress`
-7. The manifest must include all services in the Service-Component entry. A good approach is to put OSGI-INF/*.xml in there. - `Work in Progress`
+7. The manifest must include all services in the Service-Component entry. A good approach is to put OSGI-INF/*.xml in there - [Opened PR](https://github.com/openhab/static-code-analysis/pull/50) - `severity=error`
 8. Every exported package of a bundle must be imported by the bundle itself again. - `Work in Progress`
 
 ## C. Language Levels and Libraries
