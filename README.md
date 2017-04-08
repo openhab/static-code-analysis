@@ -246,10 +246,10 @@ For more information: https://pmd.github.io/pmd-5.4.1/customizing/rule-guideline
 1. Every bundle must contain a Maven pom.xml with a version and artifact name that is in sync with the manifest entry. The pom.xml must reference the correct parent pom (which is usually in the parent folder). - `Work in Progress`
 2. Every bundle must contain an about.html file, providing license information. - `Work in Progress`
 3. Every bundle must contain a build.properties file, which lists all resources that should end up in the binary under bin.includes. - `Work in Progress`
-4. The manifest must not contain any “Require-Bundle” entries. Instead, “Import-Package” must be used. - [Opened PR](https://github.com/openhab/static-code-analysis/pull/19) - `severity=error`
+4. The manifest must not contain any “Require-Bundle” entries. Instead, “Import-Package” must be used. - `severity=error`
 5. [The manifest must not export any internal package.](https://github.com/openhab/static-code-analysis/blob/master/src/main/resources/rulesets/checkstyle/rules.xml#L40) - `severity=error`
 6. The manifest must not have any version constraint on package imports, unless this is thoughtfully added. Note that Eclipse automatically adds these constraints based on the version in the target platform, which might be too high in many cases. - `Work in Progress`
-7. The manifest must include all services in the Service-Component entry. A good approach is to put OSGI-INF/*.xml in there - [Opened PR](https://github.com/openhab/static-code-analysis/pull/50) - `severity=error`
+7. The manifest must include all services in the Service-Component entry. A good approach is to put OSGI-INF/*.xml in there. - `severity=error`
 8. Every exported package of a bundle must be imported by the bundle itself again. - `Work in Progress`
 
 ## C. Language Levels and Libraries
