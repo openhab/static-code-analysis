@@ -19,7 +19,7 @@ import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
