@@ -64,6 +64,11 @@
     <property name="allowedValues" value="openHAB"/>
   </module>
 
+  <module name="org.openhab.tools.analysis.checkstyle.ManifestJavaVersionCheck">
+    <property name="severity" value="warning" />
+    <property name="allowedValues" value="JavaSE-1.8"/>
+  </module>
+
    <module name="org.openhab.tools.analysis.checkstyle.RequiredFilesCheck">
      <property name="severity" value="error" />
      <property name="extensions" value="${checkstyle.requiredFilesCheck.extensions}" default="html,properties,xml,MF" />
