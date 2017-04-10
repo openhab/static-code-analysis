@@ -10,16 +10,16 @@ package org.openhab.tools.analysis.checkstyle;
 import org.openhab.tools.analysis.checkstyle.api.AbstractManifestAttributeCheck;
 
 /**
- * Checks if a manifest file contains the expected bundle vendor
+ * Checks if a manifest file contains the expected RequiredExecutionEnvironment
  *
  * @author Martin van Wingerden
  */
-public class BundleVendorCheck extends AbstractManifestAttributeCheck {
-    private static final String ATTRIBUTE = "Bundle-Vendor";
-    private static final String ATTRIBUTE_EXAMPLE_VALUE = "openHAB";
+public class ManifestJavaVersionCheck extends AbstractManifestAttributeCheck {
+    private static final String ATTRIBUTE = "Bundle-RequiredExecutionEnvironment";
+    private static final String ATTRIBUTE_EXAMPLE_VALUE = "JavaSE-1.8";
     private static final int SINGLE_OCCURRENCE = 1;
 
-    public BundleVendorCheck() {
+    public ManifestJavaVersionCheck() {
         super(ATTRIBUTE, ATTRIBUTE_EXAMPLE_VALUE, SINGLE_OCCURRENCE);
     }
 }

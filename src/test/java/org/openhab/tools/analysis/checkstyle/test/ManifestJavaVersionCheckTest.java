@@ -13,6 +13,7 @@ import com.puppycrawl.tools.checkstyle.api.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.BundleVendorCheck;
+import org.openhab.tools.analysis.checkstyle.ManifestJavaVersionCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 /**
@@ -20,13 +21,13 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
  *
  * @author Martin van Wingerden
  */
-public class BundleVendorCheckTest extends AbstractStaticCheckTest {
-    private static final String TEST_DIRECTORY = "correctOpenHABSpellingInManifestTest/";
-    private static final DefaultConfiguration checkConfig = createCheckConfig(BundleVendorCheck.class);
+public class ManifestJavaVersionCheckTest extends AbstractStaticCheckTest {
+    private static final String TEST_DIRECTORY = "manifestJavaVersionCheckTest/";
+    private static final DefaultConfiguration checkConfig = createCheckConfig(ManifestJavaVersionCheck.class);
 
     @BeforeClass
     public static void setUpClass() {
-        checkConfig.addAttribute("allowedValues", "openHAB");
+        checkConfig.addAttribute("allowedValues", "JavaSE-1.8");
     }
 
     @Override
@@ -54,20 +55,20 @@ public class BundleVendorCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testMissingBundleVersion() throws Exception {
-        verify("missingBundleVendorSample.MF",
+        verify("missingJavaVersionSample.MF",
                 generateExpectedMessages(
                         0,
-                        "\"Bundle-Vendor\" is missing"
+                        "\"Bundle-RequiredExecutionEnvironment\" is missing"
                 )
         );
     }
 
     @Test
     public void testDoubleBundleVersion() throws Exception {
-        verify("doubleBundleVendorSample.MF",
+        verify("doubleJavaVersionSample.MF",
                 generateExpectedMessages(
-                        4, "Only 1 \"Bundle-Vendor\" was expected.",
-                        8, "Only 1 \"Bundle-Vendor\" was expected."
+                        5, "Only 1 \"Bundle-RequiredExecutionEnvironment\" was expected.",
+                        8, "Only 1 \"Bundle-RequiredExecutionEnvironment\" was expected."
                 )
         );
     }
@@ -76,8 +77,8 @@ public class BundleVendorCheckTest extends AbstractStaticCheckTest {
     public void testWrongLabelForBundleVersion() throws Exception {
         verify("wrongKeySample.MF",
                 generateExpectedMessages(
-                        5,
-                        "Expect eg. \"Bundle-Vendor: openHAB\" got \"Bundle-vendor:openHAB\""
+                        7,
+                        "Expect eg. \"Bundle-RequiredExecutionEnvironment: JavaSE-1.8\" got \"Bundle-RequiredExecutionEnvironmentJavaSE-1.7\""
                 )
         );
     }
@@ -86,8 +87,8 @@ public class BundleVendorCheckTest extends AbstractStaticCheckTest {
     public void testWrongValueForBundleVersion() throws Exception {
         verify("wrongValueSample.MF",
                 generateExpectedMessages(
-                        5,
-                        "Unexpected \"Openhab\", only allowed options: [openHAB]"
+                        7,
+                        "Unexpected \"JavaSE-1.7\", only allowed options: [JavaSE-1.8]"
                 )
         );
     }
