@@ -3,11 +3,11 @@
     "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
     "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
-<!-- 
+<!--
     Checkstyle configuration that checks if a bundle is matching the Coding Guidelines in the Eclipse SmartHome project.
-    
-    For more information about the guidelines see - http://www.eclipse.org/smarthome/documentation/development/guidelines.html. 
-    
+
+    For more information about the guidelines see - http://www.eclipse.org/smarthome/documentation/development/guidelines.html.
+
     Note that some of the required checks may be provided by some of the other plugins used in the Static Code Analysis tool.
  -->
 
@@ -18,10 +18,10 @@
     <property name="severity" value="error" />
     <property name="fileExtensions" value="java"/>
   </module>
-  
+
   <!--See http://checkstyle.sourceforge.net/config_header.html#Header -->
   <module name="Header">
-    <!--  This property represents the severity level of a check violation. The valid options are: 
+    <!--  This property represents the severity level of a check violation. The valid options are:
         -ignore
         -info
         -warning
@@ -37,23 +37,23 @@
   <module name="NewlineAtEndOfFile">
     <property name="severity" value="info"/>
   </module>
-  
+
   <module name="org.openhab.tools.analysis.checkstyle.ExportInternalPackageCheck">
     <property name="severity" value="error" />
   </module>
-  
+
   <module name="org.openhab.tools.analysis.checkstyle.MavenPomderivedInClasspathCheck">
     <property name="severity" value="warning" />
   </module>
-  
+
   <module name="org.openhab.tools.analysis.checkstyle.OverridingParentPomConfigurationCheck">
     <property name="severity" value="warning" />
   </module>
-  
+
   <module name="org.openhab.tools.analysis.checkstyle.RequireBundleCheck">
       <property name="severity" value="error" />
    </module>
-   
+
    <module name="org.openhab.tools.analysis.checkstyle.AboutHtmlCheck">
      <property name="severity" value="error" />
      <property name="validAboutHtmlFileURL" value="${checkstyle.aboutHtmlCheck.url}" default="https://raw.githubusercontent.com/openhab/openhab2-addons/master/src/etc/about.html" />
@@ -69,14 +69,18 @@
     <property name="allowedValues" value="JavaSE-1.8"/>
   </module>
 
-   <module name="org.openhab.tools.analysis.checkstyle.RequiredFilesCheck">
+  <module name="org.openhab.tools.analysis.checkstyle.RequiredFilesCheck">
      <property name="severity" value="error" />
      <property name="extensions" value="${checkstyle.requiredFilesCheck.extensions}" default="html,properties,xml,MF" />
      <property name="requiredFiles" value="${checkstyle.requiredFilesCheck.files}" default="about.html,build.properties,pom.xml,MANIFEST.MF" />
-   </module>
-   
-   <module name="org.openhab.tools.analysis.checkstyle.ServiceComponentManifestCheck">
+  </module>
+
+  <module name="org.openhab.tools.analysis.checkstyle.ServiceComponentManifestCheck">
     <property name="severity" value="error" />
+  </module>
+
+  <module name="org.openhab.tools.analysis.checkstyle.ImportExportedPackagesCheck">
+    <property name="severity" value="warning" />
   </module>
 
   <module name="TreeWalker">
@@ -113,9 +117,9 @@
       <property name="processJavadoc" value="true"/>
       <property name="severity" value="info" />
     </module>
-    
+
     <!-- Rules for Java Naming Convention -->
-    
+
     <module name="PackageName">
       <property name="format"
               value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
