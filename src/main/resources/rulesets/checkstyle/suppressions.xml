@@ -11,4 +11,7 @@
     <!-- The WiFi led binding contains test packages that shouldn't be included in the binary build -->
     <!-- The CometVisu UI contains files in the resources folder that are used only during the build -->
     <suppress files=".+org.openhab.binding.wifiled.+|.+org.openhab.ui.cometvisu.+" checks="BuildPropertiesCheck"/>
+    <!-- Homematic and Tellstick bindings are creating and configuring things dynamically, they will log false positives for unused configuration -->
+    <!-- IO and Voice bundles have specific use cases - they use only the config .xml files and will log false positives as well -->
+    <suppress files=".+org.openhab.binding.homematic.+|.+org.openhab.binding.tellstick.+|.+org.openhab.io.+|.+org.openhab.voice.+" checks="EshInfXmlCheck"/>
 </suppressions>
