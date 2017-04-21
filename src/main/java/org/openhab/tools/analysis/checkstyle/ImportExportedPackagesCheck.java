@@ -30,6 +30,7 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  */
 public class ImportExportedPackagesCheck extends AbstractStaticCheck {
 
+    public static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package is not imported";
     public static final String MANIFEST_EXTENSTION = "MF";
     public static final String EXPORT_PACKAGES_HEADER = "Export-Package:";
 
@@ -50,7 +51,7 @@ public class ImportExportedPackagesCheck extends AbstractStaticCheck {
             for (ExportPackage export : exports) {
                 if (!isPackageImported(imports, export)) {
                     int lineToLog = findLineNumber(lines, export.toString(), lineNumberBeforeExportsStart);
-                    log(lineToLog, String.format("The exported package: %s is not imported", export));
+                    log(lineToLog, NOT_IMPORTED_PACKAGE_MESSAGE);
                 }
             }
         } catch (IOException e) {
