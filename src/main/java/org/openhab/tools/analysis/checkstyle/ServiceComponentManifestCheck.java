@@ -13,6 +13,8 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -22,7 +24,10 @@ import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.pde.core.build.IBuild;
+import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,14 +35,13 @@ import org.slf4j.LoggerFactory;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 
 /**
- *
  * Check if all the declarative services are included in the MANIFEST.MF.
  *
  * @author Aleksandar Kovachev - Initial contribution
  * @author Petar Valchev - Changed the verification of the Service-Component
  *         header
  * @author Dimitar Ivanov - Common wildcard adaptions
- *
+ * @author Svilen Valkanov - Check the build.properties file
  */
 public class ServiceComponentManifestCheck extends AbstractStaticCheck {
     private static final String WILDCARD = "*";
@@ -53,22 +57,63 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
     private String serviceComponentHeaderValue;
     private int serviceComponentHeaderLineNumber;
     private String manifestPath;
+    private String buildPropertiesPath;
+
+    /**
+     * Paths relative to the bundle base directory
+     **/
+    private List<Path> componentXmlRelativePaths = new ArrayList<>();
+    private IBuild buildPropertiesFile;
 
     public ServiceComponentManifestCheck() {
-        logger.info("Executing {}: Check if all the declarative services are included in the {}",
+        logger.debug("Executing {}: Check if all the declarative services are included in the {}",
                 this.getClass().getName(), MANIFEST_FILE_NAME);
-        setFileExtensions(MANIFEST_EXTENSION, XML_EXTENSION);
+        setFileExtensions(MANIFEST_EXTENSION, XML_EXTENSION, PROPERTIES_EXTENSION);
     }
 
     @Override
     protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
-        // All the defined components are collected to be processed later
-        if (file.getPath().contains(OSGI_INF_DIRECTORY_NAME)) {
+
+        Path absolutePath = file.toPath();
+        int osgiInfIndex = getIndex(absolutePath, OSGI_INF_DIRECTORY_NAME);
+        String fileExtension = FilenameUtils.getExtension(file.getName());
+
+        // The components are .xml files located in OSGI-INF folder
+        if (fileExtension.equals(XML_EXTENSION) && osgiInfIndex > -1) {
+            // All the defined components are collected to be processed later
             componentXmlFiles.add(file.getName());
+
+            // Get the relative path
+            Path relativePath = absolutePath.subpath(osgiInfIndex, absolutePath.getNameCount());
+            componentXmlRelativePaths.add(relativePath);
         }
 
         if (file.getName().equals(MANIFEST_FILE_NAME)) {
             verifyManifest(file, lines);
+        }
+
+        if (file.getName().equals(BUILD_PROPERTIES_FILE_NAME)) {
+            processBuildPropertiesFile(file);
+        }
+    }
+
+    private int getIndex(Path path, String dirName) {
+        int result = -1;
+        for (int i = 0; i < path.getNameCount(); i++) {
+            if (path.getName(i).toString().equals(dirName)) {
+                result = i;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private void processBuildPropertiesFile(File file) {
+        try {
+            buildPropertiesFile = parseBuildProperties(file);
+            buildPropertiesPath = file.getPath();
+        } catch (CheckstyleException e) {
+            logger.error("Problem occurred while parsing the file {}", file.getPath(), e);
         }
     }
 
@@ -76,6 +121,33 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
     public void finishProcessing() {
         verifyManifestWildcardDeclaredServiceComponents();
         verifyManifestExplicitlyDeclaredServices();
+        verifyBuildPropertiesFile();
+    }
+
+    private void verifyBuildPropertiesFile() {
+        if (buildPropertiesPath != null) {
+            IBuildEntry binIncludes = buildPropertiesFile.getEntry(IBuildEntry.BIN_INCLUDES);
+            if (binIncludes != null) {
+                String[] includedTokens = binIncludes.getTokens();
+                // Exclude the component files that are added to the bin.includes property
+                for (String included : includedTokens) {
+                    for (Iterator<Path> iterator = componentXmlRelativePaths.iterator(); iterator.hasNext();) {
+                        Path componentXmlFile = iterator.next();
+                        if (componentXmlFile.startsWith(included)) {
+                            iterator.remove();
+                        }
+                    }
+                }
+            }
+
+            for (Path path : componentXmlRelativePaths) {
+                logMessage(buildPropertiesPath, 0, BUILD_PROPERTIES_FILE_NAME,
+                        MessageFormat.format(
+                                "The service component {0} isn`t included in the build.properties file."
+                                        + " Good approach is to include all files by adding `OSGI-INF/` value to the bin.includes property.",
+                                path));
+            }
+        }
     }
 
     private void verifyManifestWildcardDeclaredServiceComponents() {
