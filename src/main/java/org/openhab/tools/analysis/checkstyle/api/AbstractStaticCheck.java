@@ -30,6 +30,11 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.ivy.osgi.core.BundleInfo;
 import org.apache.ivy.osgi.core.ManifestParser;
+import org.eclipse.core.internal.filebuffers.SynchronizableDocument;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.pde.core.build.IBuild;
+import org.eclipse.pde.internal.core.text.build.BuildModel;
 import org.jsoup.Jsoup;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -164,6 +169,26 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
             return xpath.compile(expresion);
         } catch (XPathExpressionException e) {
             throw new CheckstyleException("Unable to compile the expression" + expresion, e);
+        }
+    }
+
+    /**
+     * Parses the content of a given file as a build.properties file
+     *
+     * @param file - the input file
+     * @return IBuild representation of the file
+     * @throws CheckstyleException - if an error occurred while trying to parse the file
+     */
+    protected IBuild parseBuildProperties(File file) throws CheckstyleException {
+        IDocument document = new SynchronizableDocument();
+        BuildModel buildModel = new BuildModel(document, false);
+        try {
+            buildModel.load(new FileInputStream(file), true);
+            return buildModel.getBuild();
+        } catch (FileNotFoundException e) {
+            throw new CheckstyleException("File: " + file.getAbsolutePath() + " does not exist.", e);
+        } catch (CoreException e) {
+            throw new CheckstyleException("Unable to read build.properties file", e);
         }
     }
 
