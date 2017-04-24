@@ -11,6 +11,7 @@ package org.openhab.tools.analysis.checkstyle.test;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
+import java.text.MessageFormat;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
@@ -29,6 +30,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * @author Petar Valchev - Changed the verifyServiceComponentHeader() method and
  *         some of the test methods
  * @author Dimitar Ivanov - Common wildcard test added
+ * @author Svilen Valkanov - Added tests for missing services in build.properties
  *
  */
 public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
@@ -47,6 +49,8 @@ public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
     private static final String REPEATED_SERVICE_MESSAGE = "If you are using OSGI-INF/*.xml, do not include any of the services explicitly. "
             + "Otherwise they will be included more than once.";
     private static final String NOT_MATCHING_REGEX_MESSAGE = "The service component %s does not match any of the exisitng services.";
+    private static final String MISSING_SERVICE_IN_BUILD_PROPERTIES = "The service component {0} isn`t included in the build.properties file."
+            + " Good approach is to include all files by adding `OSGI-INF/` value to the bin.includes property.";
 
     private static DefaultConfiguration config;
 
@@ -180,6 +184,25 @@ public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
         verifyServiceComponentHeader("wildcard_only_in_manifest", expectedMessages);
     }
 
+    @Test
+    public void testMissingServiceInBuildProperties() throws Exception {
+        int lineNumber = 0;
+        String[] expectedMessages = generateExpectedMessages(lineNumber, MessageFormat
+                .format(MISSING_SERVICE_IN_BUILD_PROPERTIES, "OSGI-INF" + File.separator + "serviceTestFileTwo.xml"));
+        verifyBuildProperties("missing_service_in_build_properties", expectedMessages);
+    }
+
+    @Test
+    public void testMissingAllServicesInBuildProperties() throws Exception {
+        int lineNumber = 0;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                MessageFormat.format(MISSING_SERVICE_IN_BUILD_PROPERTIES,
+                        "OSGI-INF" + File.separator + "serviceTestFileOne.xml"),
+                lineNumber, MessageFormat.format(MISSING_SERVICE_IN_BUILD_PROPERTIES,
+                        "OSGI-INF" + File.separator + "serviceTestFileTwo.xml"));
+        verifyBuildProperties("missing_all_services_in_build_properties", expectedMessages);
+    }
+
     @Override
     protected DefaultConfiguration createCheckerConfig(Configuration config) {
         DefaultConfiguration configParent = new DefaultConfiguration("root");
@@ -188,9 +211,17 @@ public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verifyServiceComponentHeader(String testDirectoryName, String[] expectedMessages) throws Exception {
+        verify(MANIFEST_RELATIVE_PATH, testDirectoryName, expectedMessages);
+    }
+
+    private void verifyBuildProperties(String testDirectoryName, String[] expectedMessages) throws Exception {
+        verify(BUILD_PROPERTIES_FILE_NAME, testDirectoryName, expectedMessages);
+    }
+
+    private void verify(String filePath, String testDirectoryName, String[] expectedMessages) throws Exception {
         String testDirectoryPath = getPath(CHECK_TEST_DIRECTORY + File.separator + testDirectoryName);
         File testDirectory = new File(testDirectoryPath);
-        String testFilePath = testDirectory.getPath() + File.separator + MANIFEST_RELATIVE_PATH;
+        String testFilePath = testDirectory.getPath() + File.separator + filePath;
         // All files are listed recursively
         File[] testFiles = FileUtils.listFiles(testDirectory, null, true).toArray(new File[] {});
 
