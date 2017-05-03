@@ -74,7 +74,17 @@
      <property name="extensions" value="${checkstyle.requiredFilesCheck.extensions}" default="html,properties,xml,MF" />
      <property name="requiredFiles" value="${checkstyle.requiredFilesCheck.files}" default="about.html,build.properties,pom.xml,MANIFEST.MF" />
   </module>
-
+   
+  <module name="org.openhab.tools.analysis.checkstyle.BuildPropertiesCheck">
+    <property name="severity" value="error" />
+    <!-- Other bin.includes values will be checked from a specific Checks (e.g.ServiceComponentManifestCheck) -->
+    <!-- The bin.includes values must end with the "/" character -->
+    <property name="expectedBinIncludesValues" value="META-INF/,." />
+    <!-- output.. and source.. properties allow skipping the "/" character at the end of the value -->
+    <property name="expectedOutputValues" value="target/classes" />
+    <property name="possibleSourceValues" value="src/main/java,src/main/resources,src/test/java,src/test/resources,src/main/groovy,src/test/groovy" />
+  </module>
+   
   <module name="org.openhab.tools.analysis.checkstyle.ServiceComponentManifestCheck">
     <property name="severity" value="error" />
   </module>
