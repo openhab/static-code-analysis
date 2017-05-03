@@ -221,10 +221,6 @@ Adding a test for Checkstyle is even easier - extend the `BaseCheckTestSupport`.
 
 For more information: https://pmd.github.io/pmd-5.4.1/customizing/rule-guidelines.html.
 
-## Known Problems
-
-- Flooded console output when running Checkstyle in debug mode in Maven  (- X ) - https://github.com/checkstyle/checkstyle/issues/3184;
-
 # ESH Guidelines Covered
 
 ## A. Code Style

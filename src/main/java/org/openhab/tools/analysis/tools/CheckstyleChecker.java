@@ -113,7 +113,7 @@ public class CheckstyleChecker extends AbstractChecker {
         }
 
         // Maven may load an older version, if no version is specified
-        Dependency checkstyle = dependency("com.puppycrawl.tools", "checkstyle", "7.2");
+        Dependency checkstyle = dependency("com.puppycrawl.tools", "checkstyle", "7.7");
         Dependency[] allDependencies = getDependencies(checkstylePlugins, checkstyle);
 
         Xpp3Dom config = configuration(element("sourceDirectory", mavenProject.getBasedir().toString()));
