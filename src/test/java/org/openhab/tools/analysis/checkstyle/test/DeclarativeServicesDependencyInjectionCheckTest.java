@@ -21,11 +21,10 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
  *
  */
 public class DeclarativeServicesDependencyInjectionCheckTest extends AbstractStaticCheckTest {
+    private static final String TEST_RESOURCES_DIR = "declarativeServicesDependencyInjectionTest";
 
-    public static final String TEST_RESOURCES_DIR = "declarativeServicesDependencyInjectionTest";
-
-    public static final String SERVICE_TRACKER_USED = "Avoid using ServiceTracker for dependency injection, consider using Declarative Services";
-    public static final String SERVICE_CUSTOMIZER_IMPLEMENTED = "Avoid using ServiceTrackerCustomizer for dependency injection, consider using Declarative Services";
+    private static final String SERVICE_TRACKER_USED = "Avoid using ServiceTracker for dependency injection, consider using Declarative Services";
+    private static final String SERVICE_CUSTOMIZER_IMPLEMENTED = "Avoid using ServiceTrackerCustomizer for dependency injection, consider using Declarative Services";
 
     @Test
     public void testServiceTrackerInjection() throws Exception {

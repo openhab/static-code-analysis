@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
+
 import java.io.File;
 
 import org.junit.BeforeClass;
@@ -26,8 +28,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  *
  */
 public class OverridingParentPomConfigurationCheckTest extends AbstractStaticCheckTest {
-
-    private static final String POM_XML_RELATIVE_PATH = File.separator + "pom.xml";
     private static final String TEST_DIRECTORY_NAME = "overridingParentPomConfigurationCheckTest";
 
     private static DefaultConfiguration config;
@@ -49,24 +49,25 @@ public class OverridingParentPomConfigurationCheckTest extends AbstractStaticChe
         int lineNumber = 9;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
                 "Avoid overriding a configuration inherited by the parent pom.");
-        String pomXmlAbsolutePath = getPath(
-                TEST_DIRECTORY_NAME + File.separator + "invalidPomConfiguration" + POM_XML_RELATIVE_PATH);
-        verify(config, pomXmlAbsolutePath, expectedMessages);
+        verifyPom("invalidPomConfiguration", expectedMessages);
     }
 
     @Test
     public void testMissingOverridingParentPomConfiguration() throws Exception {
         String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        String pomXmlAbsolutePath = getPath(TEST_DIRECTORY_NAME + File.separator
-                + "missingOverridingParentPomConfiguration" + POM_XML_RELATIVE_PATH);
-        verify(config, pomXmlAbsolutePath, expectedMessages);
+        verifyPom("missingOverridingParentPomConfiguration", expectedMessages);
     }
 
     @Test
     public void testEmptyPom() throws Exception {
         int lineNumber = 0;
         String[] expectedMessages = generateExpectedMessages(lineNumber, "The pom.xml file should not be empty.");
-        String pomXmlAbsolutePath = getPath(TEST_DIRECTORY_NAME + File.separator + "emptyPom" + POM_XML_RELATIVE_PATH);
+        verifyPom("emptyPom", expectedMessages);
+    }
+
+    private void verifyPom(String pomDirectoryName, String[] expectedMessages) throws Exception {
+        String pomXmlAbsolutePath = getPath(
+                TEST_DIRECTORY_NAME + File.separator + pomDirectoryName + File.separator + POM_XML_FILE_NAME);
         verify(config, pomXmlAbsolutePath, expectedMessages);
     }
 }

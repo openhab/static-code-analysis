@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,10 +31,8 @@ import org.slf4j.LoggerFactory;
 public class RequireBundleCheck extends AbstractStaticCheck {
     private final Logger logger = LoggerFactory.getLogger(RequireBundleCheck.class);
 
-    private static final String MANIFEST_EXTENSTION = "MF";
-
     public RequireBundleCheck() {
-        setFileExtensions(MANIFEST_EXTENSTION);
+        setFileExtensions(MANIFEST_EXTENSION);
     }
 
     @Override

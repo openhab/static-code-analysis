@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_FILE_NAME;
+
 import java.io.File;
 
 import org.junit.BeforeClass;
@@ -27,9 +29,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * @author Svlien Valkanov - Renamed the test class
  */
 public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
-
-    private static final String TEST_FILE_NAME = "MANIFEST.MF";
-
     private static final String VERSION_USED_MSG = "The version of the package %s should not be specified";
 
     private static DefaultConfiguration config;
@@ -100,7 +99,7 @@ public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
     private void verifyManifest(String testFileDirectory, String[] expectedMessages) throws Exception {
         String versionCheckTestDirectory = "manifestPackageVersionCheckTest";
         String filePath = getPath(
-                versionCheckTestDirectory + File.separator + testFileDirectory + File.separator + TEST_FILE_NAME);
+                versionCheckTestDirectory + File.separator + testFileDirectory + File.separator + MANIFEST_FILE_NAME);
 
         verify(config, filePath, expectedMessages);
     }

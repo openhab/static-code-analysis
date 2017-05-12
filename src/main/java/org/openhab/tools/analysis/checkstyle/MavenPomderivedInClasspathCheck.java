@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.CLASSPATH_EXTENSION;
+
 import java.io.File;
 import java.util.List;
 
@@ -31,11 +33,8 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  *
  */
 public class MavenPomderivedInClasspathCheck extends AbstractStaticCheck {
-
     private static final String POMDERIVED_EXPRESSION = "/classpath/classpathentry/attributes/attribute[@name='maven.pomderived' and @value='true']/@name";
 
-    private static final String CLASSPATH_EXTENSION = ".classpath";
-    
     private final Logger logger = LoggerFactory.getLogger(MavenPomderivedInClasspathCheck.class);
 
     public MavenPomderivedInClasspathCheck() {

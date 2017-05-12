@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,15 +31,8 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  *
  */
 public class BuildPropertiesCheck extends AbstractStaticCheck {
-    private static final String PROPERTIES_EXTENSTION = "properties";
-    private static final String BIN_INCLUDES_PROPERTY_NAME = "bin.includes";
-    private static final String OUTPUT_PROPERTY_NAME = "output..";
-    private static final String SOURCE_PROPERTY_NAME = "source..";
-
     private static final String MISSING_PROPERTY_MSG = "Missing %s property in the %s file.";
     private static final String MISSING_VALUE_MSG = "Property  %s in the %s file is missing value: ";
-
-    private static final String BUILD_PROPERTIES_FILE_NAME = "build." + PROPERTIES_EXTENSTION;
 
     private static final String MISSING_BIN_INCLUDES_PROPERTY_MSG = String.format(MISSING_PROPERTY_MSG,
             BIN_INCLUDES_PROPERTY_NAME, BUILD_PROPERTIES_FILE_NAME);
@@ -59,7 +54,7 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
     private List<String> possibleSourceValues;
 
     public BuildPropertiesCheck() {
-        setFileExtensions(PROPERTIES_EXTENSTION);
+        setFileExtensions(PROPERTIES_EXTENSION);
     }
 
     /**

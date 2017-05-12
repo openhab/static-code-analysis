@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -41,7 +43,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
-import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
 
 /**
  * Validate the thing-types, binding and config xml-s against their xsd schemas.<br>
@@ -55,13 +56,8 @@ import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
  */
 public class EshInfXmlCheck extends AbstractStaticCheck {
 
-    private static final String THING_TYPE_EXTENSION = "xml";
-    private static final String PROPERTIES_EXTENSTION = "properties";
-
-    public static final String BUILD_PROPERTIES_FILE_NAME = "build." + PROPERTIES_EXTENSTION;
     public static final String THING_DIRECTORY = "thing";
     public static final String BINDING_DIRECTORY = "binding";
-    public static final String ESH_INF_DIRECTORY = "ESH-INF";
     public static final String CONFIGURATION_DIRECTORY = "config";
 
     private static final String CONFIG_DESCRIPTION_EXPRESSION = "//config-description[@uri]/@uri";
@@ -69,11 +65,11 @@ public class EshInfXmlCheck extends AbstractStaticCheck {
     private static final String BRIDGE_TYPE_EXPRESSION = "//bridge-type[@id]/@id";
     private static final String SUPPORTED_BRIDGE_TYPE_REF_EXPRESSION = "//supported-bridge-type-refs/bridge-type-ref[@id]/@id";
 
-    public static final String MESSAGE_MISSING_URI_CONFIGURATION = "Missing configuration for the configuration reference with uri - {0}";
-    public static final String MESSAGE_MISSING_SUPPORTED_BRIDGE = "Missing the supported bridge with id {0}";
-    public static final String MESSAGE_UNUSED_URI_CONFIGURATION = "Unused configuration reference with uri - {0}";
-    public static final String MESSAGE_UNUSED_BRIDGE = "Unused bridge reference with id - {0}";
-    public static final String MESSAGE_EMPTY_FILE = "The file {0} should not be empty.";
+    private static final String MESSAGE_MISSING_URI_CONFIGURATION = "Missing configuration for the configuration reference with uri - {0}";
+    private static final String MESSAGE_MISSING_SUPPORTED_BRIDGE = "Missing the supported bridge with id {0}";
+    private static final String MESSAGE_UNUSED_URI_CONFIGURATION = "Unused configuration reference with uri - {0}";
+    private static final String MESSAGE_UNUSED_BRIDGE = "Unused bridge reference with id - {0}";
+    private static final String MESSAGE_EMPTY_FILE = "The file {0} should not be empty.";
     private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `ESH-INF/` value to the bin.includes property.";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -113,7 +109,7 @@ public class EshInfXmlCheck extends AbstractStaticCheck {
     }
 
     public EshInfXmlCheck() {
-        setFileExtensions(THING_TYPE_EXTENSION, PROPERTIES_EXTENSTION);
+        setFileExtensions(XML_EXTENSION, PROPERTIES_EXTENSION);
     }
 
     @Override
@@ -127,10 +123,10 @@ public class EshInfXmlCheck extends AbstractStaticCheck {
         logger.debug("Processing the {}", fileName);
 
         switch (FilenameUtils.getExtension(fileName)) {
-            case THING_TYPE_EXTENSION:
+            case XML_EXTENSION:
                 processXmlFile(file);
                 break;
-            case PROPERTIES_EXTENSTION:
+            case PROPERTIES_EXTENSION:
                 if (BUILD_PROPERTIES_FILE_NAME.equals(file.getName())) {
                     processBuildProperties(file);
                 }
@@ -332,13 +328,5 @@ public class EshInfXmlCheck extends AbstractStaticCheck {
             File xmlFile = collection.get(element);
             logMessage(xmlFile.getPath(), 0, xmlFile.getName(), MessageFormat.format(message, element));
         }
-    }
-
-    private void logMessage(String filePath, int line, String fileName, String message) {
-        MessageDispatcher dispatcher = getMessageDispatcher();
-        dispatcher.fireFileStarted(filePath);
-        log(line, message, fileName);
-        fireErrors(filePath);
-        dispatcher.fireFileFinished(filePath);
     }
 }

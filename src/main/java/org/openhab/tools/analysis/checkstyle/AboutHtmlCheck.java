@@ -7,6 +7,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,16 +40,9 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
     private static final String VALID_ABOUT_HTML_FILE_LINK_MSG = "Here is an example of a valid about.html file: ";
     private static final String MISSING_ABOUT_HTML_IN_BUILD_PROPERTIES_MSG = "About.html file must be added to the bin.includes property";
 
-    private static final String PROPERTIES_EXTENSION = "properties";
-    private static final String BUILD_PROPERTIES_FILE_NAME = "build.properties";
-    private static final String HTML_EXTENSTION = "html";
-    private static final String ABOUT_HTML_FILE_NAME = "about.html";
-
     private static final String LICENSE_HEADER = "License";
     private static final String PARAGRAPH_TAG = "p";
     private static final String HEADER_3_TAG = "h3";
-
-    private static final String BIN_INCLUDES_PROPERTY_NAME = "bin.includes";
 
     private final Logger logger = LoggerFactory.getLogger(AboutHtmlCheck.class);
 
@@ -56,7 +51,7 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
     private String validAboutHtmlFileURL;
 
     public AboutHtmlCheck() {
-        setFileExtensions(HTML_EXTENSTION, PROPERTIES_EXTENSION);
+        setFileExtensions(HTML_EXTENSION, PROPERTIES_EXTENSION);
     }
 
     // configuration property for url to a valid about.html file

@@ -1,11 +1,14 @@
 /**
- * Copyright (c) 2014-2017 by the respective copyright holders.
+ * Copyright (c) 2010-2017 by the respective copyright holders.
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
 package org.openhab.tools.analysis.checkstyle.test;
+
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 
@@ -30,7 +33,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  */
 public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
     private static final String CHECK_TEST_DIRECTORY = "serviceComponentManifestCheckTest";
-    private static final String MANIFEST_RELATIVE_PATH = "META-INF" + File.separator + "MANIFEST.MF";
+    private static final String MANIFEST_RELATIVE_PATH = META_INF_DIRECTORY_NAME + File.separator + MANIFEST_FILE_NAME;
 
     private static final String BEST_APPROACH_MESSAGE = "A good approach is to use OSGI-INF/*.xml "
             + "instead of including the services metadata files separately or using common wildcard.";

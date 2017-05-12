@@ -1,11 +1,14 @@
 /**
- * Copyright (c) 2014-2017 by the respective copyright holders.
+ * Copyright (c) 2010-2017 by the respective copyright holders.
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
 package org.openhab.tools.analysis.checkstyle.test;
+
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ABOUT_HTML_FILE_NAME;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +32,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  */
 public class AboutHtmlCheckTest extends AbstractStaticCheckTest {
     private static final String ABOUT_HTML_CHECK_TEST_DIRECTORY_NAME = "aboutHtmlCheckTest";
-    private static final String ABOUT_HTML_FILE_NAME = "about.html";
 
     private static final String VALID_ABOUT_HTML_FILE_URL = "https://raw.githubusercontent.com/openhab/openhab2-addons/master/src/etc/about.html";
 
