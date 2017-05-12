@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -31,9 +33,6 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  * @author Svlien Valkanov - Renamed the check
  */
 public class ManifestPackageVersionCheck extends AbstractStaticCheck {
-
-    private static final String MANIFEST_EXTENSTION = "MF";
-
     private static final String VERSION_USED_MSG = "The version of the package %s should not be specified";
 
     private static final String PACKAGE_PATTERN = "[a-zA-Z0-9\\._-]*";
@@ -42,7 +41,7 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
     private List<String> ignoreExportedPackages;
 
     public ManifestPackageVersionCheck() {
-        setFileExtensions(MANIFEST_EXTENSTION);
+        setFileExtensions(MANIFEST_EXTENSION);
     }
 
     /**

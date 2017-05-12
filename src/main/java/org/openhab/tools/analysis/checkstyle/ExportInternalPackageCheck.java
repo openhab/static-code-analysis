@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+
 import java.io.File;
 import java.util.List;
 import java.util.Set;
@@ -24,8 +26,6 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  *
  */
 public class ExportInternalPackageCheck extends AbstractStaticCheck {
-
-    private static final String MANIFEST_EXTENSION = "MF";
 
     public ExportInternalPackageCheck() {
         setFileExtensions(MANIFEST_EXTENSION);

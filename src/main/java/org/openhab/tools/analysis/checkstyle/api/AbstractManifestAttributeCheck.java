@@ -7,12 +7,14 @@
  */
 package org.openhab.tools.analysis.checkstyle.api;
 
-import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 
 /**
  * Checks if a manifest file contains the expected attribute
@@ -20,8 +22,6 @@ import java.util.stream.Collectors;
  * @author Martin van Wingerden
  */
 public class AbstractManifestAttributeCheck extends AbstractStaticCheck {
-    private final static String MANIFEST_EXTENSION = "MF";
-
     private final String attribute;
     private final String exampleValue;
     private final int maxOccurrences;

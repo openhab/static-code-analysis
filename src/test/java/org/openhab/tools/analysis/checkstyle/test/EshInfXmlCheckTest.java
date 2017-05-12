@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ESH_INF_DIRECTORY;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -37,12 +39,12 @@ public class EshInfXmlCheckTest extends AbstractStaticCheckTest {
 
     private static final String TEST_CHECK_DIRECTORY = "eshInfXmlCheck" + File.separator;
 
-    private static final String RELATIVE_PATH_TO_THING = File.separator + EshInfXmlCheck.ESH_INF_DIRECTORY
-            + File.separator + EshInfXmlCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
-    private static final String RELATIVE_PATH_TO_BINDING = File.separator + EshInfXmlCheck.ESH_INF_DIRECTORY
-            + File.separator + EshInfXmlCheck.BINDING_DIRECTORY + File.separator + "bind.xml";
-    private static final String RELATIVE_PATH_TO_CONFIG = File.separator + EshInfXmlCheck.ESH_INF_DIRECTORY
-            + File.separator + EshInfXmlCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
+    private static final String RELATIVE_PATH_TO_THING = File.separator + ESH_INF_DIRECTORY + File.separator
+            + EshInfXmlCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
+    private static final String RELATIVE_PATH_TO_BINDING = File.separator + ESH_INF_DIRECTORY + File.separator
+            + EshInfXmlCheck.BINDING_DIRECTORY + File.separator + "bind.xml";
+    private static final String RELATIVE_PATH_TO_CONFIG = File.separator + ESH_INF_DIRECTORY + File.separator
+            + EshInfXmlCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
 
     private static final String SCHEMA_ROOT_URL = "http://eclipse.org/smarthome/schemas/";
     private static final String THING_SCHEMA_URL = SCHEMA_ROOT_URL + "thing-description-1.0.0.xsd";

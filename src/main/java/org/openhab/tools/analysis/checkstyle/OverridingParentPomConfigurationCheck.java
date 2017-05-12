@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+
 import java.io.File;
 import java.util.List;
 
@@ -30,13 +32,8 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  *
  */
 public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
-
     private static final String POM_CONFIGURATION_EXPRESSION = "/project//*[@combine.self='override']/@combine.self";
 
-    private static final String XML_EXTENSION = "xml";
-
-    private static final String POM_XML_FILE_NAME = "pom.xml";
-    
     private final Logger logger = LoggerFactory.getLogger(OverridingParentPomConfigurationCheck.class);
 
     public OverridingParentPomConfigurationCheck() {

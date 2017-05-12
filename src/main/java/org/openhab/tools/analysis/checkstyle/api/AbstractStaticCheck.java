@@ -41,6 +41,7 @@ import org.xml.sax.SAXException;
 
 import com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
 
 /**
  * Provides common functionality for different static code analysis checks
@@ -207,5 +208,24 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
             return false;
         }
         return false;
+    }
+
+    /**
+     * Adds an entry in the report using the {@link MessageDispatcher}.
+     * Can be used in the {@link #finishProcessing()} where the {@link #log(int, String, Object...)}
+     * methods can't be used as the entries logged by them won't be included in the report.
+     *
+     * @param filePath the absolute path to the file. Although a relative path can be used,
+     *            it is not recommended as it will make filtering harder
+     * @param line the line that will be added in the report
+     * @param fileName the name the file
+     * @param message the message that will be logged
+     */
+    protected void logMessage(String filePath, int line, String fileName, String message) {
+        MessageDispatcher dispatcher = getMessageDispatcher();
+        dispatcher.fireFileStarted(filePath);
+        log(line, message, fileName);
+        fireErrors(filePath);
+        dispatcher.fireFileFinished(filePath);
     }
 }

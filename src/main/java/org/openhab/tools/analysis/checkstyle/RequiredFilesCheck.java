@@ -1,5 +1,6 @@
 /**
- * Copyright (c) 2014-2017 by the respective copyright holders.
+ * Copyright (c) 2010-2017 by the respective copyright holders.
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +15,6 @@ import java.util.List;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
-import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
@@ -75,10 +75,6 @@ public class RequiredFilesCheck extends AbstractStaticCheck {
             filePath = File.separator + fileName;
         }
         String message = String.format("Missing %s file.", fileName);
-        MessageDispatcher dispatcher = getMessageDispatcher();
-        dispatcher.fireFileStarted(filePath);
-        log(0, message, fileName);
-        fireErrors(filePath);
-        dispatcher.fireFileFinished(filePath);
+        logMessage(filePath, 0, fileName, message);
     }
 }

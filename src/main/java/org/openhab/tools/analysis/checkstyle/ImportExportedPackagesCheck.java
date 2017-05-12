@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -29,15 +31,13 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  * @author Mihaela Memova
  */
 public class ImportExportedPackagesCheck extends AbstractStaticCheck {
+    private static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package is not imported";
+    private static final String EXPORT_PACKAGES_HEADER = "Export-Package:";
 
-    public static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package is not imported";
-    public static final String MANIFEST_EXTENSTION = "MF";
-    public static final String EXPORT_PACKAGES_HEADER = "Export-Package:";
-
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public ImportExportedPackagesCheck() {
-        setFileExtensions(MANIFEST_EXTENSTION);
+        setFileExtensions(MANIFEST_EXTENSION);
     }
 
     @Override

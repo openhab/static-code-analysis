@@ -9,6 +9,7 @@
 package org.openhab.tools.analysis.checkstyle.test;
 
 import java.io.File;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.ImportExportedPackagesCheck;
@@ -25,6 +26,8 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  *
  */
 public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
+    private static final String TEST_DIRECTORY_NAME = "importExportedPackagesCheckTest";
+    private static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package is not imported";
 
     private static DefaultConfiguration configuration;
 
@@ -32,9 +35,6 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
     public static void setUp() {
         configuration = createCheckConfig(ImportExportedPackagesCheck.class);
     }
-
-    private static final String TEST_DIRECTORY_NAME = "importExportedPackagesCheckTest";
-    private static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package is not imported";
 
     @Test
     public void testManifestFileThatDoesNotImportAnExportedPackage() throws Exception {
@@ -46,7 +46,6 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testManifestFileThatDoesNotImportSeveralExportedPackages() throws Exception {
-
         String testFileName = "ManifestNotImportingSeveralExportedPackages.MF";
         int firstLineNumber = 14;
         int secondLineNumber = 15;
@@ -58,18 +57,15 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testManifestFileThatDoesNotImportAnyPackages() throws Exception {
-
         String testFileName = "ManifestNotImportingAnyPackages.MF";
         int lineNumber = 10;
 
-        String[] warningMessages = generateExpectedMessages(lineNumber,
-                ImportExportedPackagesCheck.NOT_IMPORTED_PACKAGE_MESSAGE);
+        String[] warningMessages = generateExpectedMessages(lineNumber, NOT_IMPORTED_PACKAGE_MESSAGE);
         verifyManifestFile(testFileName, warningMessages);
     }
 
     @Test
     public void testManifestThatImportAllExportedPackages() throws Exception {
-
         String testFileName = "ManifestImportingAllExportedPackages.MF";
         String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
         verifyManifestFile(testFileName, warningMessages);
@@ -86,5 +82,4 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
         dc.addChild(config);
         return dc;
     }
-
 }

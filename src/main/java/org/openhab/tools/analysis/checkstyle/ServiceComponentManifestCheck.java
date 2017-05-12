@@ -1,11 +1,14 @@
 /**
- * Copyright (c) 2014-2017 by the respective copyright holders.
+ * Copyright (c) 2010-2017 by the respective copyright holders.
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
 package org.openhab.tools.analysis.checkstyle;
+
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
-import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
 
 /**
  *
@@ -38,12 +40,8 @@ import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
  *
  */
 public class ServiceComponentManifestCheck extends AbstractStaticCheck {
-    private static final String MANIFEST_EXTENSTION = "MF";
-    private static final String XML_EXTENSION = ".xml";
     private static final String WILDCARD = "*";
-    private static final String MANIFEST_FILE_NAME = "MANIFEST.MF";
     private static final String SERVICE_COMPONENT_HEADER = "Service-Component";
-    private static final String OSGI_INF_DIRECTORY_NAME = "OSGI-INF";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -59,7 +57,7 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
     public ServiceComponentManifestCheck() {
         logger.info("Executing {}: Check if all the declarative services are included in the {}",
                 this.getClass().getName(), MANIFEST_FILE_NAME);
-        setFileExtensions(MANIFEST_EXTENSTION, XML_EXTENSION);
+        setFileExtensions(MANIFEST_EXTENSION, XML_EXTENSION);
     }
 
     @Override
@@ -99,7 +97,8 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
             }
 
             // Now check all the .xml service component definitions
-            String manifestServiceComponentName = StringUtils.substringBefore(manifestServiceComponent, XML_EXTENSION);
+            String manifestServiceComponentName = StringUtils.substringBefore(manifestServiceComponent,
+                    "." + XML_EXTENSION);
 
             if (manifestServiceComponentName.contains(WILDCARD)) {
                 // *.xml is used in the service component declaration
@@ -120,7 +119,6 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
                 } else {
                     // Wildcard other than *.xml is used
                     logBestApproachMessage();
-
                     Pattern pattern = Pattern.compile(manifestServiceComponentName);
                     boolean matchedPattern = false;
 
@@ -242,10 +240,6 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
     }
 
     private void logMessage(int line, String message) {
-        MessageDispatcher dispatcher = getMessageDispatcher();
-        dispatcher.fireFileStarted(manifestPath);
-        log(line, message, MANIFEST_FILE_NAME);
-        fireErrors(manifestPath);
-        dispatcher.fireFileFinished(manifestPath);
+        logMessage(manifestPath, line, MANIFEST_FILE_NAME, message);
     }
 }
