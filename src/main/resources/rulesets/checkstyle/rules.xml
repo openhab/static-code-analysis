@@ -105,6 +105,10 @@
     <property name="configSchema" value="https://www.eclipse.org/smarthome/schemas/config-description-1.0.0.xsd" />
   </module>
   
+  <module name="org.openhab.tools.analysis.checkstyle.PomXmlCheck">
+    <property name="severity" value="error" />
+  </module>
+
   <module name="TreeWalker">
     <!-- See http://checkstyle.sourceforge.net/config_coding.html#IllegalThrows -->
     <module name="IllegalThrows">
