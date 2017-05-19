@@ -239,7 +239,7 @@ For more information: https://pmd.github.io/pmd-5.4.1/customizing/rule-guideline
 10. Packages that contain classes that are not meant to be used by other bundles should have “internal” in their package name. - `Work in Progress`
 
 ## B. OSGi Bundles
-1. Every bundle must contain a Maven pom.xml with a version and artifact name that is in sync with the manifest entry. The pom.xml must reference the correct parent pom (which is usually in the parent folder). - `Work in Progress`
+1. Every bundle must contain a Maven pom.xml with a version and artifact name that is in sync with the manifest entry. The pom.xml must reference the correct parent pom (which is usually in the parent folder). - `severity=error`
 2. Every bundle must contain an about.html file, providing license information. - `severity=error`
 3. Every bundle must contain a build.properties file, which lists all resources that should end up in the binary under bin.includes. - `severity=error`
 4. The manifest must not contain any “Require-Bundle” entries. Instead, “Import-Package” must be used. - `severity=error`
