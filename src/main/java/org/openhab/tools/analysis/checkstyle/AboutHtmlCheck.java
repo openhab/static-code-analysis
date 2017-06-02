@@ -38,7 +38,7 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 public class AboutHtmlCheck extends AbstractStaticCheck {
     private static final String SUSPEND_CHECKS_MSG = "No checks for the about.html file will be done.";
     private static final String VALID_ABOUT_HTML_FILE_LINK_MSG = "Here is an example of a valid about.html file: ";
-    private static final String MISSING_ABOUT_HTML_IN_BUILD_PROPERTIES_MSG = "About.html file must be added to the bin.includes property";
+    private static final String MISSING_ABOUT_HTML_IN_BUILD_PROPERTIES_MSG = "about.html file must be added to the bin.includes property";
 
     private static final String LICENSE_HEADER = "License";
     private static final String PARAGRAPH_TAG = "p";
