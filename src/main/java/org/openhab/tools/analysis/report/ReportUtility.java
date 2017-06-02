@@ -286,8 +286,7 @@ public class ReportUtility extends AbstractMojo {
                 result.append(log);
             }
         }
-        result.append("Detailed report can be found at: file").append(File.separator).append(File.separator)
-                .append(File.separator).append(reportLocation).append("\n");
+        result.append("Detailed report can be found at: file:///").append(reportLocation).append("\n");
         return result.toString();
 
     }
