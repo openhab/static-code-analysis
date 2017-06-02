@@ -37,7 +37,7 @@ public class AboutHtmlCheckTest extends AbstractStaticCheckTest {
 
     private static final String VALID_ABOUT_HTML_FILE_LINK_MSG = "Here is an example of a valid about.html file: "
             + VALID_ABOUT_HTML_FILE_URL;
-    private static final String MISSING_ABOUT_HTML_IN_BUILD_PROPERTIES_MSG = "About.html file must be added to the bin.includes property";
+    private static final String MISSING_ABOUT_HTML_IN_BUILD_PROPERTIES_MSG = "about.html file must be added to the bin.includes property";
     private static final String INVALID_LICENSE_HEADER_MSG = "Invalid or missing license header in the about.html file. "
             + VALID_ABOUT_HTML_FILE_LINK_MSG;
     private static final String INVALID_LICENSE_PARAGRAPH_MSG = "Invalid or missing license paragraph in the about.html file. "
