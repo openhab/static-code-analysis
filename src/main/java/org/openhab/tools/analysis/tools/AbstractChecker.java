@@ -154,11 +154,12 @@ public abstract class AbstractChecker extends AbstractMojo {
      * It adds the static-code-analysis artifact as dependency as well, so all checks included there can be used from
      * the analysis tools.
      *
-     * @param additionalArtifacts - artifacts that contain custom checks
      * @param coreDependency - a dependency to the tool itself, used to specify a certain version of the used tool
+     * @param additionalArtifacts - artifacts that contain custom checks
+     *
      * @return dependencies
      */
-    protected Dependency[] getDependencies(Dependency[] additionalArtifacts, Dependency coreDependency) {
+    protected Dependency[] getDependencies(Dependency coreDependency, List<Dependency> additionalArtifacts) {
         List<Dependency> dependencies = new LinkedList<Dependency>();
 
         // First add the core dependency

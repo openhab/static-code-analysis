@@ -10,6 +10,7 @@ package org.openhab.tools.analysis.tools;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.model.Dependency;
@@ -55,7 +56,7 @@ public class CheckstyleChecker extends AbstractChecker {
      * A list with artifacts that contain additional checks for Checkstyle
      */
     @Parameter
-    private Dependency[] checkstylePlugins;
+    private List<Dependency> checkstylePlugins;
 
     /**
      * Relative path of the properties file to use in the ruleset to configure specific checks
@@ -114,7 +115,7 @@ public class CheckstyleChecker extends AbstractChecker {
 
         // Maven may load an older version, if no version is specified
         Dependency checkstyle = dependency("com.puppycrawl.tools", "checkstyle", "7.7");
-        Dependency[] allDependencies = getDependencies(checkstylePlugins, checkstyle);
+        Dependency[] allDependencies = getDependencies(checkstyle, checkstylePlugins);
 
         Xpp3Dom config = configuration(element("sourceDirectory", mavenProject.getBasedir().toString()));
 

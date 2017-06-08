@@ -35,15 +35,6 @@ Add the following profiles to your pom.xml:
                 </goals>
               </execution>
             </executions>
-            <configuration>
-              <findbugsPlugins>
-                <findbugsPlugin>
-                   <groupId>jp.skypencil.findbugs.slf4j</groupId>
-                   <artifactId>bug-pattern</artifactId>
-                  <version>1.2.4</version>
-                </findbugsPlugin>
-              </findbugsPlugins>
-            </configuration>
           </plugin>
         </plugins>
       </pluginManagement>
@@ -90,7 +81,7 @@ Parameters:
 | ------ | ------| -------- |
 | **pmdRuleset** | String | Relative path of the XML configuration to use. If not set the default ruleset file will be used |
 | **maven.pmd.version** | String | The version of the maven-pmd-plugin that will be used (Default value is **3.7**)|
-| **pmdPlugins** | Dependency [] | A list with artifacts that contain additional checks for PMD |
+| **pmdPlugins** | List<Dependency> | A list with artifacts that contain additional checks for PMD |
 
 **static-code-analysis:checkstyle**
 
@@ -104,7 +95,7 @@ Parameters:
 | **checkstyleRuleset** | String | Relative path of the XML configuration to use. If not set the default ruleset file will be used |
 | **checkstyleFilter** | String | Relative path of the suppressions XML file to use. If not set the default filter file will be used |
 | **maven.checkstyle.version** | String | The version of the maven-checkstyle-plugin that will be used (default value is **2.17**)|
-| **checkstylePlugins** | Dependency [] | A list with artifacts that contain additional checks for Checkstyle |
+| **checkstylePlugins** | List<Dependency> | A list with artifacts that contain additional checks for Checkstyle |
 | **checkstyleProperties** | String | Relative path of the properties file to use in the ruleset to configure specific checks |
 
 **static-code-analysis:findbugs**
@@ -120,7 +111,8 @@ Parameters:
 | **findbugsInclude** | String | Relative path to the XML that specifies the bug instances that will be included in the report. If not set the default file will be used|
 | **findbugsExclude** | String | Relative path to the XML that specifies the bug instances that will be excluded from the report. If not set the default file will be used|
 | **findbugs.maven.version** | String | The version of the findbugs-maven-plugin that will be used (default value is **3.0.1**)|
-| **findbugsPlugins** | Dependency [] | A list with artifacts that contain additional detectors/patterns for FindBugs |
+| **findbugsPlugins** | List<Dependency> | A list with artifacts that contain additional detectors/patterns for FindBugs |
+| **findbugs.slf4j.version** | String | The version of the findbugs-slf4j plugin that will be used (default value is **1.2.4**)|
 
 **static-code-analysis:report**
 
