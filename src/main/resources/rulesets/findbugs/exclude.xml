@@ -15,4 +15,13 @@
   <Match>
     <Bug pattern="SLF4J_MANUALLY_PROVIDED_MESSAGE"/>
   </Match>
+  <!-- Allow util classes to have static loggers -->
+  <Match>
+    <Class name="~.*Utils"/>
+    <Bug pattern="SLF4J_LOGGER_SHOULD_BE_NON_STATIC"/>
+  </Match>
+  <Match>
+    <Class name="~.*Util"/>
+    <Bug pattern="SLF4J_LOGGER_SHOULD_BE_NON_STATIC"/>
+  </Match>
 </FindBugsFilter>
