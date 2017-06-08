@@ -74,10 +74,16 @@ public class FindBugsChecker extends AbstractChecker {
     private String findBugsPluginVersion;
 
     /**
+     * The version of the findbugs-slf4j plugin that will be used
+     */
+    @Parameter(property = "findbugs.slf4j.version", defaultValue = "1.2.4")
+    private String findBugsSlf4jPluginVersion;
+
+    /**
      * A list with artifacts that contain additional checks for FindBugs
      */
     @Parameter
-    private Dependency[] findbugsPlugins;
+    private List<Dependency> findbugsPlugins;
 
     /**
      * Location of the properties file that contains configuration options for the
@@ -141,7 +147,12 @@ public class FindBugsChecker extends AbstractChecker {
         // If this dependency is missing, findbugs can not load the core plugin because of classpath
         // issues
         Dependency findBugsDep = dependency("com.google.code.findbugs", "findbugs", findBugsPluginVersion);
-        Dependency[] allDependencies = getDependencies(findbugsPlugins, findBugsDep);
+
+        // Add dependency to the findbugs-slf4j plugin
+        Dependency findBugsSlf4j = dependency("jp.skypencil.findbugs.slf4j", "bug-pattern", findBugsSlf4jPluginVersion);
+        findbugsPlugins.add(findBugsSlf4j);
+
+        Dependency[] allDependencies = getDependencies(findBugsDep, findbugsPlugins);
 
         executeCheck(FINDBUGS_MAVEN_PLUGIN_GROUP_ID, FINDBUGS_MAVEN_PLUGIN_ARTIFACT_ID, findBugsPluginVersion,
                 FINDBUGS_MAVEN_PLUGIN_GOAL, config, allDependencies);

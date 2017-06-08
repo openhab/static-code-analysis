@@ -10,6 +10,7 @@ package org.openhab.tools.analysis.tools;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.model.Dependency;
@@ -51,7 +52,7 @@ public class PmdChecker extends AbstractChecker {
      * A list with artifacts that contain additional checks for PMD
      */
     @Parameter
-    private Dependency[] pmdPlugins;
+    private List<Dependency> pmdPlugins;
 
     /**
      * Location of the properties files that contains configuration options for the maven-pmd-plugin
@@ -78,7 +79,7 @@ public class PmdChecker extends AbstractChecker {
                 element("targetDirectory", userProps.getProperty("pmd.custom.targetDirectory")),
                 element("rulesets", element("ruleset", rulesetLocation)));
 
-        Dependency[] allDependencies = getDependencies(pmdPlugins, null);
+        Dependency[] allDependencies = getDependencies(null, pmdPlugins);
 
         executeCheck(MAVEN_PMD_PLUGIN_GROUP_ID, MAVEN_PMD_PLUGIN_ARTIFACT_ID, mavenPmdVersion, MAVEN_PMD_PLUGIN_GOAL,
                 configuration, allDependencies);
