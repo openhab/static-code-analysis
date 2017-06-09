@@ -81,7 +81,7 @@
     <!-- The bin.includes values must end with the "/" character -->
     <property name="expectedBinIncludesValues" value="META-INF/,." />
     <!-- output.. and source.. properties allow skipping the "/" character at the end of the value -->
-    <property name="expectedOutputValues" value="target/classes" />
+    <property name="possibleOutputValues" value="target/classes,target/test-classes" />
     <property name="possibleSourceValues" value="src/main/java,src/main/resources,src/test/java,src/test/resources,src/main/groovy,src/test/groovy" />
   </module>
    

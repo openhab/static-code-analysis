@@ -50,13 +50,18 @@ public class BuildPropertiesCheckTest extends AbstractStaticCheckTest {
     @BeforeClass
     public static void setUpTest() {
         config.addAttribute("expectedBinIncludesValues", "META-INF/");
-        config.addAttribute("expectedOutputValues", "target/classes");
+        config.addAttribute("possibleOutputValues", "target/classes,target/test-classes");
         config.addAttribute("possibleSourceValues", "src/main/java,src/main/resources,src/test/java,src/test/groovy");
     }
 
     @Test
     public void testValidBuildPropertiesFile() throws Exception {
         verifyBuildPropertiesFile("valid_build_properties_directory", 0, null);
+    }
+
+    @Test
+    public void testValidBuildPropertiesTestFile() throws Exception {
+        verifyBuildPropertiesFile("valid_build_properties_test_directory", 0, null);
     }
 
     @Test
@@ -68,7 +73,7 @@ public class BuildPropertiesCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testMissingOutputValue() throws Exception {
-        String missingValue = "target/classes";
+        String missingValue = "Any of [target/classes, target/test-classes]";
         verifyBuildPropertiesFile("missing_output_value_directory", 1, MISSING_OUTPUT_VALUE_MSG + missingValue);
     }
 
