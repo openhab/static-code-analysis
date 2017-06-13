@@ -13,6 +13,8 @@
   <description>Tool that aggregates reports of PMD, Checkstyle and FindBugs</description>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.eclipse.version>2.10</maven.eclipse.version>
     <slf4j.api.version>1.7.24</slf4j.api.version>
     <slf4j.simple.version>1.7.24</slf4j.simple.version>
     <junit.version>4.11</junit.version>
@@ -137,6 +139,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-eclipse-plugin</artifactId>
+        <version>${maven.eclipse.version}</version>
         <configuration>
           <downloadSources>true</downloadSources>
           <downloadJavadocs>true</downloadJavadocs>
