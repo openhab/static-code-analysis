@@ -43,7 +43,7 @@ public class ReportUtilityTest {
         ReportUtility utility = new ReportUtility();
         utility.setFailOnError(true);
         utility.setSummaryReport(null);
-        utility.setTargetDirectory(TARGET_ABSOLUTE_DIR);
+        utility.setTargetDirectory(new File(TARGET_ABSOLUTE_DIR));
         utility.execute();
 
         assertTrue(file.exists());

@@ -44,15 +44,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -97,7 +96,7 @@ public class ReportUtility extends AbstractMojo {
      * The directory where the individual report will be generated
      */
     @Parameter(property = "report.targetDir", defaultValue = "${project.build.directory}/code-analysis")
-    private String targetDirectory;
+    private File targetDirectory;
 
     /**
      * Describes of the build should fail if high priority error is found
@@ -110,7 +109,7 @@ public class ReportUtility extends AbstractMojo {
      * generated
      */
     @Parameter(property = "report.summary.targetDir", defaultValue = "${session.executionRootDirectory}/target")
-    private String summaryReport;
+    private File summaryReportDirectory;
 
     private static final String REPORT_SUBDIR = "report";
 
@@ -139,7 +138,7 @@ public class ReportUtility extends AbstractMojo {
     private final Logger logger = LoggerFactory.getLogger(ReportUtility.class);
 
     // Setters will be used in the test
-    public void setTargetDirectory(String targetDirectory) {
+    public void setTargetDirectory(File targetDirectory) {
         this.targetDirectory = targetDirectory;
     }
 
@@ -147,51 +146,47 @@ public class ReportUtility extends AbstractMojo {
         this.failOnError = failOnError;
     }
 
-    public void setSummaryReport(String summaryReport) {
-        this.summaryReport = summaryReport;
+    public void setSummaryReport(File summaryReport) {
+        this.summaryReportDirectory = summaryReport;
     }
 
     @Override
     public void execute() throws MojoFailureException {
-
         // Prepare userDirectory and tempDirectoryPrefix
-        final String userDirectory = targetDirectory.replace('\\', '/') + '/';
         final String timeStamp = Integer.toHexString((int) System.nanoTime());
-        final String tempDirectoryPrefix = userDirectory.replace('\\', '/') + timeStamp;
 
         System.setProperty(XML_TRANSFORM_PROPERTY_KEY, XML_TRANSFOMR_PROPERTY_VALUE);
-
         // 1. Create intermediate xml-file for Findbugs
-        final String inputFileFindbugs = userDirectory + FINDBUGS_INPUT_FILE_NAME;
-        final String findbugsTempFile = tempDirectoryPrefix + "_PostFB.xml";
-        run(PREPARE_FINDBUGS_XSLT, inputFileFindbugs, findbugsTempFile, EMPTY, EMPTY);
+        final File inputFileFindbugs = new File(targetDirectory, FINDBUGS_INPUT_FILE_NAME);
+        final File findbugsTempFile = new File(targetDirectory, timeStamp + "_PostFB.xml");
+        run(PREPARE_FINDBUGS_XSLT, inputFileFindbugs, findbugsTempFile, EMPTY, null);
 
         // 2. Create intermediate xml-file for Checkstyle
-        final String inputFileCheckstyle = userDirectory + CHECKSTYLE_INPUT_FILE_NAME;
-        final String checkstyleTempFile = tempDirectoryPrefix + "_PostCS.xml";
-        run(PREPARE_CHECKSTYLE_XSLT, inputFileCheckstyle, checkstyleTempFile, EMPTY, EMPTY);
+        final File inputFileCheckstyle = new File(targetDirectory, CHECKSTYLE_INPUT_FILE_NAME);
+        final File checkstyleTempFile = new File(targetDirectory, timeStamp + "_PostCS.xml");
+        run(PREPARE_CHECKSTYLE_XSLT, inputFileCheckstyle, checkstyleTempFile, EMPTY, null);
 
         // 3. Create intermediate xml-file for PMD
-        final String inputFilePMD = userDirectory + PMD_INPUT_FILE_NAME;
-        final String pmdTempFile = tempDirectoryPrefix + "_PostPM.xml";
-        run(PREPARE_PMD_XSLT, inputFilePMD, pmdTempFile, EMPTY, EMPTY);
+        final File inputFilePMD = new File(targetDirectory, PMD_INPUT_FILE_NAME);
+        final File pmdTempFile = new File(targetDirectory, timeStamp + "_PostPM.xml");
+        run(PREPARE_PMD_XSLT, inputFilePMD, pmdTempFile, EMPTY, null);
 
         // 4. Merge first two files and create firstMergeResult file
-        final String firstMergeResult = tempDirectoryPrefix + "_FirstMerge.xml";
+        final File firstMergeResult = new File(targetDirectory, timeStamp + "_FirstMerge.xml");
         run(MERGE_XSLT, checkstyleTempFile, firstMergeResult, "with", findbugsTempFile);
 
         // 5. Merge result file with third file and create secondMergeResult
         // file
-        final String secondMergeResult = tempDirectoryPrefix + "_SecondMerge.xml";
+        final File secondMergeResult = new File(targetDirectory, timeStamp + "_SecondMerge.xml");
         run(MERGE_XSLT, firstMergeResult, secondMergeResult, "with", pmdTempFile);
 
         // 6. Create html report out of secondMergeResult
-        final String htmlOutputFileName = userDirectory + RESULT_FILE_NAME;
-        run(CREATE_HTML_XSLT, secondMergeResult, htmlOutputFileName, EMPTY, EMPTY);
+        final File htmlOutputFileName = new File(targetDirectory, RESULT_FILE_NAME);
+        run(CREATE_HTML_XSLT, secondMergeResult, htmlOutputFileName, EMPTY, null);
 
         // 7. Append the individual report to the summary, if it is not empty
-        if (summaryReport != null) {
-            appendToSummary(htmlOutputFileName, summaryReport, secondMergeResult);
+        if (summaryReportDirectory != null) {
+            appendToSummary(htmlOutputFileName, summaryReportDirectory, secondMergeResult);
         }
 
         // 8. Fail the build if the option is enabled and high priority warnings are found
@@ -211,8 +206,7 @@ public class ReportUtility extends AbstractMojo {
 
     }
 
-    private void run(final String xslt, final String input, final String output, final String param,
-            final String value) {
+    private void run(final String xslt, final File input, final File output, final String param, final File value) {
 
         FileOutputStream outputStream = null;
         try {
@@ -228,7 +222,7 @@ public class ReportUtility extends AbstractMojo {
 
             // Add a parameter for the transformation
             if (!param.isEmpty()) {
-                transformer.setParameter(param, value);
+                transformer.setParameter(param, value.toURI().toURL());
             }
 
             outputStream = new FileOutputStream(output);
@@ -238,8 +232,10 @@ public class ReportUtility extends AbstractMojo {
             // Transform the XML Source to a Result
             transformer.transform(xmlSource, outputTarget);
 
-        } catch (Exception e) {
-            logger.error(e.getMessage());
+        } catch (IOException e) {
+            logger.error("IOException occcured " + e.getMessage());
+        } catch (TransformerException e) {
+            logger.error("TransformerException occcured " + e.getMessage());
         } finally {
             if (null != outputStream) {
                 try {
@@ -251,14 +247,13 @@ public class ReportUtility extends AbstractMojo {
         }
     }
 
-    void deletefile(final String pathName) {
-        final File file = new File(pathName);
+    void deletefile(File file) {
         if (!file.delete()) {
-            logger.error("Unable to delete file {}", pathName);
+            logger.error("Unable to delete file {}", file.getAbsolutePath());
         }
     }
 
-    private String checkForErrors(String secondMergeResult, String reportLocation) {
+    private String checkForErrors(File secondMergeResult, File reportLocation) {
         NodeList nodes = selectNodes(secondMergeResult, "/sca/file/message[@priority=1]");
         int errorNumber = nodes.getLength();
 
@@ -291,8 +286,7 @@ public class ReportUtility extends AbstractMojo {
 
     }
 
-    private void appendToSummary(String htmlOutputFileName, String summaryReportDirectory, String secondMergeResult) {
-
+    private void appendToSummary(File htmlOutputFileName, File summaryReportDirectory, File secondMergeResult) {
         NodeList nodes = selectNodes(secondMergeResult, "/sca/file/message");
         int messagesNumber = nodes.getLength();
         if (messagesNumber == 0) {
@@ -319,8 +313,8 @@ public class ReportUtility extends AbstractMojo {
             String reportContent = FileUtils.readFileToString(summaryReport);
 
             final String singleItem = "<tr class=alternate><td><a href=\"%s\">%s</a></td></tr><tr></tr>";
-            Path absoluteIndividualReportPath = FileSystems.getDefault().getPath(htmlOutputFileName);
-            Path summaryReportDirectoryPath = Paths.get(summaryReportDirectory);
+            Path absoluteIndividualReportPath = htmlOutputFileName.toPath();
+            Path summaryReportDirectoryPath = summaryReportDirectory.toPath();
             Path relativePath = summaryReportDirectoryPath.relativize(absoluteIndividualReportPath);
 
             String bundleName = absoluteIndividualReportPath.getName(absoluteIndividualReportPath.getNameCount() - 4)
@@ -337,9 +331,8 @@ public class ReportUtility extends AbstractMojo {
 
     }
 
-    private NodeList selectNodes(String filePath, String xPathExpression) {
+    private NodeList selectNodes(File file, String xPathExpression) {
         try {
-            File file = new File(filePath);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(file);
@@ -349,7 +342,8 @@ public class ReportUtility extends AbstractMojo {
             XPathExpression expression = xPath.compile(xPathExpression);
             return (NodeList) expression.evaluate(document, XPathConstants.NODESET);
         } catch (Exception e) {
-            logger.warn("Can't select {} nodes from {}. Empty NodeList will be returned.", xPathExpression, filePath, e);
+            logger.warn("Can't select {} nodes from {}. Empty NodeList will be returned.", xPathExpression,
+                    file.getAbsolutePath(), e);
             return new EmptyNodeList();
         }
 
