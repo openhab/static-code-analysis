@@ -110,7 +110,8 @@ Parameters:
 | **findbugsRuleset** | String | Relative path to the XML that specifies the bug detectors which should be run. If not set the default file will be used|
 | **findbugsInclude** | String | Relative path to the XML that specifies the bug instances that will be included in the report. If not set the default file will be used|
 | **findbugsExclude** | String | Relative path to the XML that specifies the bug instances that will be excluded from the report. If not set the default file will be used|
-| **findbugs.maven.version** | String | The version of the findbugs-maven-plugin that will be used (default value is **3.0.1**)|
+| **findbugs.maven.version** | String | The version of the findbugs-maven-plugin that will be used (default value is **3.0.4**)|
+| **findbugs.version** | String | The version of FindBugs that will be used (default value is **3.0.1**)|
 | **findbugsPlugins** | List<Dependency> | A list with artifacts that contain additional detectors/patterns for FindBugs |
 | **findbugs.slf4j.version** | String | The version of the findbugs-slf4j plugin that will be used (default value is **1.2.4**)|
 
