@@ -21,7 +21,7 @@
 | Generics must be used where applicable. | Not covered yet |  |
 | Code should not show any warnings. Warnings that cannot be circumvented,should be suppressed by using the @SuppressWarnings annotation. | Not covered yet |  |
 | For dependency injection, OSGi Declarative Services should be used. | org.openhab.tools.analysis.checkstyle.DeclarativeServicesDependencyInjectionCheck | warning |
-| Packages that contain classes that are not meant to be used by other bundles should have “internal” in their package name. | Not covered yet |  |
+| Packages that contain classes that are not meant to be used by other bundles should have “internal” in their package name. | warning |  |
 
 ## B. OSGi Bundles
 

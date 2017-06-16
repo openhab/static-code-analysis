@@ -112,6 +112,12 @@
   <module name="org.openhab.tools.analysis.checkstyle.PomXmlCheck">
     <property name="severity" value="error" />
   </module>
+  
+  <module name="org.openhab.tools.analysis.checkstyle.PackageExportsNameCheck">
+    <property name="severity" value="warning" />
+    <property name="sourceDirectories" value="src\main\java" />
+    <property name="excludedPackages" value=".*.internal.*" />
+  </module>
 
   <module name="TreeWalker">
     <!-- See http://checkstyle.sourceforge.net/config_coding.html#IllegalThrows -->
