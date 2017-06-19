@@ -1,5 +1,7 @@
 # Usage
 
+The Static Code Analysis Tools is a Maven plugin that executes the Maven plugins for FindBugs, Checkstyle and PMD and generates a merged .html report.
+
 Add the following profiles to your pom.xml:
 
 ```
@@ -48,7 +50,13 @@ Add the following profiles to your pom.xml:
 
  Execute `mvn clean install -P check` from the root of your project.
 
- Reports are generated for each module individually and can be found in the `target/code-analysis` directory. The merged report can be found in the root target directory.
+ Reports are generated for each module individually and can be found in the `target/code-analysis` directory:
+
+![Individual report](images/individual-report.PNG "Individual report")
+
+The summary report can be found in the root target directory:
+
+![Summary report](images/summary-report.PNG "Summary-report")
 
  The build will fail if a problem with high priority is found by some of the Maven plugins for PMD, Checkstyle and FindBugs. Each of the plugins has its own way to prioritize the detected problems:
 
@@ -58,7 +66,16 @@ Add the following profiles to your pom.xml:
 
 ## Maven plugin goals and parameters
 
-**static-code-analysis:pmd**
+The Static Analysis tool includes several goals:
+
+- [pmd](#static-code-analysispmd);
+- [checkstyle](#static-code-analysischeckstyle);
+- [findbugs](#static-code-analysisfindbugs);
+- [report](#static-code-analysisreport).
+
+Below you can find detailed information what each goal does and how it can be configured.
+
+### static-code-analysis:pmd
 
 Description:
     Executes the `maven-pmd-plugin` goal `pmd` with a ruleset file and configuration properties
@@ -71,7 +88,7 @@ Parameters:
 | **maven.pmd.version** | String | The version of the maven-pmd-plugin that will be used (Default value is **3.7**)|
 | **pmdPlugins** | List<Dependency> | A list with artifacts that contain additional checks for PMD |
 
-**static-code-analysis:checkstyle**
+### static-code-analysis:checkstyle
 
 Description:
     Executes the `maven-checkstyle-plugin` goal `checkstyle` with a ruleset file and configuration properties
@@ -86,7 +103,7 @@ Parameters:
 | **checkstylePlugins** | List<Dependency> | A list with artifacts that contain additional checks for Checkstyle |
 | **checkstyleProperties** | String | Relative path of the properties file to use in the ruleset to configure specific checks |
 
-**static-code-analysis:findbugs**
+### static-code-analysis:findbugs
 
 Description:
     Executes the `findbugs-maven-plugin` goal `findbugs` with a  ruleset file and configuration properties
@@ -103,7 +120,7 @@ Parameters:
 | **findbugsPlugins** | List<Dependency> | A list with artifacts that contain additional detectors/patterns for FindBugs |
 | **findbugs.slf4j.version** | String | The version of the findbugs-slf4j plugin that will be used (default value is **1.2.4**)|
 
-**static-code-analysis:report**
+### static-code-analysis:report
 
 Description:
     Transforms the results from FindBugs, Checkstyle and PMD into a single HTML Report with XSLT
