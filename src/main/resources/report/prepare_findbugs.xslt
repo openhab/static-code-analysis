@@ -61,7 +61,7 @@
 			<xsl:attribute name="line"><xsl:value-of select="../SourceLine/@start" /></xsl:attribute>
 			<xsl:attribute name="message"><xsl:value-of select="../LongMessage" /></xsl:attribute>
 			<xsl:attribute name="priority"><xsl:value-of
-				select="../../BugInstance/@priority" /></xsl:attribute>
+				select="../@priority" /></xsl:attribute>
 			<xsl:attribute name="rule"><xsl:value-of select="../ShortMessage" /> (<xsl:value-of
 				select="../../..//BugPattern[$type=@type]/@abbrev" />)</xsl:attribute>
 			<xsl:variable name="category1" select="../../..//BugPattern[$type=@type]/@category" />
