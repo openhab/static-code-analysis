@@ -80,7 +80,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
      * Sets a configuration property for a regular expression,
      * that must match the version in the pom.xml file
      *
-     * @param pomVersionRegularExpression
+     * @param pomVersionRegularExpression regex that matches the pom.xml version
      */
     public void setPomVersionRegularExpression(String pomVersionRegularExpression) {
         this.pomVersionRegularExpression = pomVersionRegularExpression;
@@ -90,7 +90,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
      * Sets a configuration property for a regular expression,
      * that must match the bundle version in the MANIFEST.MF file
      *
-     * @param manifestVersionRegularExpression
+     * @param manifestVersionRegularExpression regex that matches the MANIFEST.MF version
      */
     public void setManifestVersionRegularExpression(String manifestVersionRegularExpression) {
         this.manifestVersionRegularExpression = manifestVersionRegularExpression;

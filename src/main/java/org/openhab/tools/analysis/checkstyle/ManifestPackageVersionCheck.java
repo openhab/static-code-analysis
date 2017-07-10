@@ -47,7 +47,7 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
     /**
      * Sets the configuration property for ignored imported packages.
      *
-     * @param ignoreImportedPackages
+     * @param ignoreImportedPackages imported packages that will be ignored
      */
     public void setIgnoreImportedPackages(String[] ignoreImportedPackages) {
         this.ignoreImportedPackages = Arrays.asList(ignoreImportedPackages);
@@ -56,7 +56,7 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
     /**
      * Sets the configuration property for ignored exported packages.
      *
-     * @param ignoreExportedPackages
+     * @param ignoreExportedPackages exported packages that will be ignored
      */
     public void setIgnoreExportedPackages(String[] ignoreExportedPackages) {
         this.ignoreExportedPackages = Arrays.asList(ignoreExportedPackages);

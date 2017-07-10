@@ -92,7 +92,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
      * Validate a .xml file located in the ESH-INF/config directory
      *
      * @param xmlFile the file to validate
-     * @throws CheckstyleException
+     * @throws CheckstyleException when exception occurred during XML processing
      */
     protected abstract void checkConfigFile(File xmlFile) throws CheckstyleException;
 
@@ -100,7 +100,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
      * Validate a .xml file located in the ESH-INF/binding directory
      *
      * @param xmlFile the file to validate
-     * @throws CheckstyleException
+     * @throws CheckstyleException when exception occurred during XML processing
      */
     protected abstract void checkBindingFile(File xmlFile) throws CheckstyleException;
 
@@ -108,7 +108,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
      * Validate a .xml file located in the ESH-INF/thing directory
      *
      * @param xmlFile the file to validate
-     * @throws CheckstyleException
+     * @throws CheckstyleException when exception occurred during XML processing
      */
     protected abstract void checkThingTypeFile(File xmlFile) throws CheckstyleException;
 
