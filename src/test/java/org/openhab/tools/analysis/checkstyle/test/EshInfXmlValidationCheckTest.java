@@ -21,7 +21,7 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openhab.tools.analysis.checkstyle.EshInfXmlCheck;
+import org.openhab.tools.analysis.checkstyle.EshInfXmlValidationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
@@ -29,22 +29,22 @@ import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
- * Test for {@link EshInfXmlCheck}
+ * Test for {@link EshInfXmlValidationCheck}
  *
  * @author Aleksandar Kovachev - Initial implementation
  * @author Svilen Valkanov - Added new test cases, message constants and done some refactoring
  *
  */
-public class EshInfXmlCheckTest extends AbstractStaticCheckTest {
+public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
-    private static final String TEST_CHECK_DIRECTORY = "eshInfXmlCheck" + File.separator;
+    private static final String TEST_CHECK_DIRECTORY = "eshInfXmlValidationCheckTest" + File.separator;
 
     private static final String RELATIVE_PATH_TO_THING = File.separator + ESH_INF_DIRECTORY + File.separator
-            + EshInfXmlCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
+            + EshInfXmlValidationCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
     private static final String RELATIVE_PATH_TO_BINDING = File.separator + ESH_INF_DIRECTORY + File.separator
-            + EshInfXmlCheck.BINDING_DIRECTORY + File.separator + "bind.xml";
+            + EshInfXmlValidationCheck.BINDING_DIRECTORY + File.separator + "bind.xml";
     private static final String RELATIVE_PATH_TO_CONFIG = File.separator + ESH_INF_DIRECTORY + File.separator
-            + EshInfXmlCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
+            + EshInfXmlValidationCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
 
     private static final String SCHEMA_ROOT_URL = "http://eclipse.org/smarthome/schemas/";
     private static final String THING_SCHEMA_URL = SCHEMA_ROOT_URL + "thing-description-1.0.0.xsd";
@@ -52,13 +52,9 @@ public class EshInfXmlCheckTest extends AbstractStaticCheckTest {
     private static final String CONFIG_SCHEMA_URL = SCHEMA_ROOT_URL + "config-description-1.0.0.xsd";
 
     private static final String MESSAGE_EMPTY_FILE = "The file {0} should not be empty.";
-    private static final String MESSAGE_MISSING_URI_CONFIGURATION = "Missing configuration for the configuration reference with uri - {0}";
-    private static final String MESSAGE_MISSING_SUPPORTED_BRIDGE = "Missing the supported bridge with id {0}";
-    private static final String MESSAGE_UNUSED_URI_CONFIGURATION = "Unused configuration reference with uri - {0}";
-    private static final String MESSAGE_UNUSED_BRIDGE = "Unused bridge reference with id - {0}";
     private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `ESH-INF/` value to the bin.includes property.";
 
-    private static final DefaultConfiguration CONFIGURATION = createCheckConfig(EshInfXmlCheck.class);
+    private static final DefaultConfiguration CONFIGURATION = createCheckConfig(EshInfXmlValidationCheck.class);
 
     @BeforeClass
     public static void createConfiguration() {
@@ -195,40 +191,6 @@ public class EshInfXmlCheckTest extends AbstractStaticCheckTest {
         String[] expectedMessages = generateExpectedMessages(lineNumber,
                 "The content of element thing:thing-descriptions is not complete. One of {thing-type, bridge-type, channel-type, channel-group-type} is expected.");
         verifyWithPath("missingThingDescriptionsContent", RELATIVE_PATH_TO_THING, expectedMessages);
-    }
-
-    @Test
-    public void testMissingSupportedBridgeRef() throws Exception {
-        String[] expectedMessages = generateExpectedMessages(0,
-                MessageFormat.format(MESSAGE_MISSING_SUPPORTED_BRIDGE, "bridge"));
-        verifyWithPath("missingSupportedBridgeRef", RELATIVE_PATH_TO_THING, expectedMessages);
-    }
-
-    @Test
-    public void testMissingConfigRef() throws Exception {
-        String[] expectedMessages = generateExpectedMessages(0,
-                MessageFormat.format(MESSAGE_MISSING_URI_CONFIGURATION, "binding:ge:config"));
-        verifyWithPath("missingConfigDesciptionRef", RELATIVE_PATH_TO_THING, expectedMessages);
-    }
-
-    @Test
-    public void testUnusedConfig() throws Exception {
-        String[] expectedMessages = generateExpectedMessages(0,
-                MessageFormat.format(MESSAGE_UNUSED_URI_CONFIGURATION, "thing-type:bindingID:thing"));
-        verifyWithPath("unusedConfigDescription", RELATIVE_PATH_TO_CONFIG, expectedMessages);
-    }
-
-    @Test
-    public void testUnusedBridge() throws Exception {
-        String[] expectedMessages = generateExpectedMessages(0, MessageFormat.format(MESSAGE_UNUSED_BRIDGE, "bridge"));
-        verifyWithPath("unusedBridge", RELATIVE_PATH_TO_THING, expectedMessages);
-    }
-
-    @Test
-    public void testConfigurationThingTypeXml() throws Exception {
-        String[] expectedMessages = generateExpectedMessages(0, MessageFormat.format(MESSAGE_MISSING_URI_CONFIGURATION,
-                "thing-type:bindingID:channel", "thing-types.xml"));
-        verifyWithPath("thingTypesConfiguration", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 
     @Test
