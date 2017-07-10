@@ -16,12 +16,16 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.function.BiPredicate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * Checks if a build.properties file is valid.
@@ -50,7 +54,7 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
      * Used for configuration properties
      */
     private List<String> expectedBinIncludesValues;
-    private List<String> expectedOutputValues;
+    private List<String> possibleOutputValues;
     private List<String> possibleSourceValues;
 
     public BuildPropertiesCheck() {
@@ -69,8 +73,8 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
      * Sets the Configuration property for the expected values for
      * the output property in the build.properties file.
      */
-    public void setExpectedOutputValues(String[] outputValues) {
-        this.expectedOutputValues = Arrays.asList(outputValues);
+    public void setPossibleOutputValues(String[] outputValues) {
+        this.possibleOutputValues = Arrays.asList(outputValues);
     }
 
     /**
@@ -104,8 +108,9 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
 
         IBuildEntry binIncludesValue = buildPropertiesFile.getEntry(BIN_INCLUDES_PROPERTY_NAME);
         if (binIncludesValue != null) {
-            checkForExpectedValue(BIN_INCLUDES_PROPERTY_NAME, binIncludesValue, expectedBinIncludesValues,
-                    MISSING_BIN_INCLUDES_VALUE_MSG, lines, true);
+            List<String> missingValues = findMissingValues(binIncludesValue, expectedBinIncludesValues, true,
+                    (a, b) -> a.containsAll(b));
+            logMissingValues(lines, BIN_INCLUDES_PROPERTY_NAME, missingValues, MISSING_BIN_INCLUDES_VALUE_MSG);
         } else {
             // bin.includes property is the single required property
             log(0, MISSING_BIN_INCLUDES_PROPERTY_MSG);
@@ -115,8 +120,16 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
         // so the source and output properties are not required
         IBuildEntry outputPropertyValue = buildPropertiesFile.getEntry(OUTPUT_PROPERTY_NAME);
         if (outputPropertyValue != null) {
-            checkForExpectedValue(OUTPUT_PROPERTY_NAME, outputPropertyValue, expectedOutputValues,
-                    MISSING_OUTPUT_VALUE_MSG, lines, false);
+            List<String> possibleMissingValues = findMissingValues(outputPropertyValue, possibleOutputValues, false,
+                    (a, b) -> CollectionUtils.containsAny(a, b));
+
+            // We would not like to log all possible values in a separate message
+            if (!possibleMissingValues.isEmpty()) {
+                List<String> valuesToLog = new ArrayList<String>();
+                valuesToLog.add("Any of " + possibleOutputValues.toString());
+                logMissingValues(lines, OUTPUT_PROPERTY_NAME, valuesToLog, MISSING_OUTPUT_VALUE_MSG);
+            }
+
         }
 
         IBuildEntry sourcePropertyValue = buildPropertiesFile.getEntry(SOURCE_PROPERTY_NAME);
@@ -124,23 +137,21 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
             // the build properties file is located directly in the base directory of the bundle
             File bundleBaseDir = file.getParentFile();
             removeNonExistingSourceDirs(bundleBaseDir);
-            checkForExpectedValue(SOURCE_PROPERTY_NAME, sourcePropertyValue, possibleSourceValues,
-                    MISSING_SRC_VALUE_MSG, lines, false);
+            List<String> missingValues = findMissingValues(sourcePropertyValue, possibleSourceValues, false,
+                    (a, b) -> a.containsAll(b));
+            logMissingValues(lines, SOURCE_PROPERTY_NAME, missingValues, MISSING_SRC_VALUE_MSG);
         }
     }
 
     /**
      * Checks if a property contains all expected values and logs messages if some of the expected values are missing
      *
-     * @param property - the name of the property,needed only to locate the line in the file
      * @param propertyValue - the value of the property
      * @param expectedPropertyValues - expected values
-     * @param missingValueMessage - message to be used, when a value is missing
-     * @param lines - a list with the lines of the file
      * @param strictSyntax - if set to true, the values should end with "/", otherwise they could end with
      */
-    private void checkForExpectedValue(String property, IBuildEntry propertyValue, List<String> expectedPropertyValues,
-            String missingValueMessage, List<String> lines, boolean strictSyntax) {
+    private List<String> findMissingValues(IBuildEntry propertyValue, List<String> expectedPropertyValues,
+            boolean strictSyntax, BiPredicate<List<String>, List<String>> condition) {
         List<String> values = Arrays.asList(propertyValue.getTokens());
 
         if (!strictSyntax) {
@@ -149,14 +160,22 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
         }
 
         if (expectedPropertyValues != null && values != null) {
-            if (!values.containsAll(expectedPropertyValues)) {
-                List<String> missingValues = removeAll(expectedPropertyValues, values);
-
-                for (String missingValue : missingValues) {
-                    log(findLineNumber(lines, property, 0), missingValueMessage + missingValue);
-                }
-
+            if (!condition.test(values, expectedPropertyValues)) {
+                return removeAll(expectedPropertyValues, values);
             }
+        }
+        return Collections.emptyList();
+    }
+
+    /**
+     *
+     * @param missingValueMessage - message to be used, when a value is missing
+     *
+     */
+    private void logMissingValues(List<String> lines, String property, List<String> missingValues, String messsage) {
+        for (String missingValue : missingValues) {
+            log(findLineNumber(lines, property, 0), messsage + missingValue);
+
         }
     }
 
