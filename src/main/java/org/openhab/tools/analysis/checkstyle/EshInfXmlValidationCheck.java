@@ -61,6 +61,8 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
 
     /**
      * Sets the configuration property for the thing schema file.
+     *
+     * @param thingSchema URL of the thing schema file
      */
     public void setThingSchema(String thingSchema) {
         this.thingSchema = thingSchema;
@@ -68,6 +70,8 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
 
     /**
      * Sets the configuration property for the binding schema file.
+     *
+     * @param bindingSchema URL of the binding schema file
      */
     public void setBindingSchema(String bindingSchema) {
         this.bindingSchema = bindingSchema;
@@ -75,6 +79,8 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
 
     /**
      * Sets the configuration property for the config schema file.
+     *
+     * @param configSchema URL of the config schema file
      */
     public void setConfigSchema(String configSchema) {
         this.configSchema = configSchema;

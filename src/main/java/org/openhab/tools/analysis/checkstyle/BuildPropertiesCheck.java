@@ -64,6 +64,8 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
     /**
      * Sets the configuration property for the expected values for
      * the bin.includes property in the build.properties file.
+     *
+     * @param binIncludesValues values of the bin.includes property
      */
     public void setExpectedBinIncludesValues(String[] binIncludesValues) {
         this.expectedBinIncludesValues = Arrays.asList(binIncludesValues);
@@ -72,6 +74,8 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
     /**
      * Sets the Configuration property for the expected values for
      * the output property in the build.properties file.
+     *
+     * @param outputValues values of the output property
      */
     public void setPossibleOutputValues(String[] outputValues) {
         this.possibleOutputValues = Arrays.asList(outputValues);
@@ -82,6 +86,8 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
      * the source property in the build.properties file.
      * From the possible values only these that point to an existing directory
      * are expected in the build.properties file
+     *
+     * @param possibleSourceValues possible source values
      */
     public void setPossibleSourceValues(String[] possibleSourceValues) {
         // We will have to remove elements from the collection.
