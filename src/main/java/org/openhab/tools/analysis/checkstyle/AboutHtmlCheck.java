@@ -70,8 +70,8 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
             // files with it
             validAboutHtmlFileContent = IOUtils.toString(validAboutHtmlInputStream);
         } catch (IOException e) {
-            logger.error("An exception was thrown, while trying to read the about.html url: {}. {}",
-                    validAboutHtmlFileURL, SUSPEND_CHECKS_MSG, e);
+            logger.error("An exception was thrown, while trying to read the about.html url: {}. {} {}",
+                    validAboutHtmlFileURL, SUSPEND_CHECKS_MSG, e.getMessage());
         } finally {
             IOUtils.closeQuietly(validAboutHtmlInputStream);
         }

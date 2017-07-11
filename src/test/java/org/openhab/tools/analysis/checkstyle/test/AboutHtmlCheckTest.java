@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.AboutHtmlCheck;
@@ -74,101 +75,70 @@ public class AboutHtmlCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testNotValidLicenseHeader() throws Exception {
+        Assume.assumeTrue(availableResourceURL);
+
         createValidConfig();
 
-        String[] expectedMessages;
-        if (availableResourceURL) {
-            expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_HEADER_MSG);
-        } else {
-            expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        }
-
+        String[] expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_HEADER_MSG);
         verifyAboutHtmlFile("not_valid_license_header_directory", expectedMessages);
     }
 
     @Test
     public void testMissingLicenseHeader() throws Exception {
+        Assume.assumeTrue(availableResourceURL);
+
         createValidConfig();
 
-        String[] expectedMessages;
-        if (availableResourceURL) {
-            expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_HEADER_MSG);
-        } else {
-            expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        }
-
+        String[] expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_HEADER_MSG);
         verifyAboutHtmlFile("missing_license_header_directory", expectedMessages);
     }
 
     @Test
     public void testNotValidLicenseParagraph() throws Exception {
+        Assume.assumeTrue(availableResourceURL);
+
         createValidConfig();
 
-        String[] expectedMessages;
-        if (availableResourceURL) {
-            expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_PARAGRAPH_MSG);
-        } else {
-            expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        }
-
+        String[] expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_PARAGRAPH_MSG);
         verifyAboutHtmlFile("not_valid_license_paragraph_directory", expectedMessages);
     }
 
     @Test
     public void testMissingLicenseParagraph() throws Exception {
+        Assume.assumeTrue(availableResourceURL);
+
         createValidConfig();
 
-        String[] expectedMessages;
-        if (availableResourceURL) {
-            expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_PARAGRAPH_MSG);
-        } else {
-            expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        }
-
+        String[] expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_PARAGRAPH_MSG);
         verifyAboutHtmlFile("missing_license_paragraph_directory", expectedMessages);
     }
 
     @Test
     public void testEmptyAboutHtmlFile() throws Exception {
+        Assume.assumeTrue(availableResourceURL);
         createValidConfig();
 
-        String[] expectedMessages;
-        if (availableResourceURL) {
-            expectedMessages = generateExpectedMessages(0, EMPTY_FILE_MSG);
-        } else {
-            expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        }
-
+        String[] expectedMessages = generateExpectedMessages(0, EMPTY_FILE_MSG);
         verifyAboutHtmlFile("empty_about_html_directory", expectedMessages);
     }
 
     @Test
     public void testWrongLicenseHeaderAndParagraph() throws Exception {
+        Assume.assumeTrue(availableResourceURL);
         createValidConfig();
 
-        String[] expectedMessages;
-        if (availableResourceURL) {
-            expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_HEADER_MSG, 0,
-                    INVALID_LICENSE_PARAGRAPH_MSG);
-        } else {
-            expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        }
-
+        String[] expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_HEADER_MSG, 0,
+                INVALID_LICENSE_PARAGRAPH_MSG);
         verifyAboutHtmlFile("not_valid_license_header_and_paragraph_directory", expectedMessages);
     }
 
     @Test
     public void testMissingLicenseHeaderAndParagraph() throws Exception {
+        Assume.assumeTrue(availableResourceURL);
         createValidConfig();
 
-        String[] expectedMessages;
-        if (availableResourceURL) {
-            expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_HEADER_MSG, 0,
-                    INVALID_LICENSE_PARAGRAPH_MSG);
-        } else {
-            expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        }
-
+        String[] expectedMessages = generateExpectedMessages(0, INVALID_LICENSE_HEADER_MSG, 0,
+                INVALID_LICENSE_PARAGRAPH_MSG);
         verifyAboutHtmlFile("missing_license_header_and_paragraph_directory", expectedMessages);
     }
 
