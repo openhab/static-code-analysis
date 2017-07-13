@@ -96,8 +96,7 @@ public class CheckstyleChecker extends AbstractChecker {
     @Override
     public void execute() throws MojoExecutionException {
         Log log = getLog();
-        ClassLoader classLoader = getMavenRuntimeClasspathClassLoader();
-        Properties userProps = loadPropertiesFromFile(classLoader, CHECKSTYLE_PROPERTIES_FILE);
+        Properties userProps = loadPropertiesFromFile(CHECKSTYLE_PROPERTIES_FILE);
 
         String ruleset = getLocation(checkstyleRuleset, DEFAULT_RULE_SET_XML);
         log.debug("Ruleset location is " + ruleset);

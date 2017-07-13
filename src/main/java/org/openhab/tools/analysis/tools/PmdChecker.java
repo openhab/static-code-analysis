@@ -67,8 +67,7 @@ public class PmdChecker extends AbstractChecker {
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
 
-        ClassLoader cl = getMavenRuntimeClasspathClassLoader();
-        Properties userProps = loadPropertiesFromFile(cl, PMD_PROPERTIES_FILE);
+        Properties userProps = loadPropertiesFromFile(PMD_PROPERTIES_FILE);
 
         String rulesetLocation = getLocation(pmdRuleset, DEFAULT_RULESET_XML);
         log.debug("Ruleset location is " + rulesetLocation);
