@@ -127,8 +127,7 @@ public class FindBugsChecker extends AbstractChecker {
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
 
-        ClassLoader cl = getMavenRuntimeClasspathClassLoader();
-        Properties userProps = loadPropertiesFromFile(cl, FINDBUGS_PROPERTIES_FILE);
+        Properties userProps = loadPropertiesFromFile(FINDBUGS_PROPERTIES_FILE);
 
         // Load the include filter file
         String includeLocation = getLocation(findbugsInclude, DEFAULT_INCLUDE_FILTER_XML);
@@ -204,7 +203,7 @@ public class FindBugsChecker extends AbstractChecker {
                 getLog().warn("Unable to find file " + resolvedPath.toString());
             }
         } else {
-            stream = getMavenRuntimeClasspathClassLoader().getResourceAsStream(defaultLocaiton);
+            stream = this.getClass().getClassLoader().getResourceAsStream(defaultLocaiton);
 
         }
 
