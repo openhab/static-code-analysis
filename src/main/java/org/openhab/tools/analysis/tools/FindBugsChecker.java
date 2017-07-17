@@ -36,8 +36,19 @@ import org.openhab.tools.analysis.tools.internal.FindBugsVisitors;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 
 /**
- * Executes the <a href="http://gleclaire.github.io/findbugs-maven-plugin/index.html">findbugs-maven-plugin</a>
+ * <p>
+ * Executes the
+ * <a href="https://mvnrepository.com/artifact/com.github.hazendaz.spotbugs/spotbugs-maven-plugin">spotbugs-maven-plugin
+ * </a> which is a fork of the
+ * <a href="http://gleclaire.github.io/findbugs-maven-plugin/index.html">findbugs-maven-plugin</a>
  * with a predefined ruleset file and configuration properties
+ * </p>
+ *
+ * <p>
+ * The checker uses <a href="https://github.com/spotbugs/spotbugs">SpotBugs</a>
+ * which is the successor of <a href="https://github.com/findbugsproject/findbugs">FindBugs</a>.
+ * SpotBugs is fully backward compatible with FindBugs.
+ * </p>
  *
  * @author Svilen Valkanov
  *
@@ -68,10 +79,10 @@ public class FindBugsChecker extends AbstractChecker {
     private String findbugsExclude;
 
     /**
-     * The version of the findbugs-maven-plugin that will be used
+     * The version of the spotbugs-maven-plugin that will be used
      */
-    @Parameter(property = "maven.findbugs.version", defaultValue = "3.0.4")
-    private String findBugsMavenPluginVersion;
+    @Parameter(property = "maven.spotbugs.version", defaultValue = "3.0.6")
+    private String spotBugsMavenPluginVersion;
 
     /**
      * The version of the findbugs-slf4j plugin that will be used
@@ -80,10 +91,10 @@ public class FindBugsChecker extends AbstractChecker {
     private String findBugsSlf4jPluginVersion;
 
     /**
-     * The version of the findbugs that will be used
+     * The version of the spotbugs that will be used
      */
-    @Parameter(property = "findbugs.version", defaultValue = "3.0.1")
-    private String findBugsVersion;
+    @Parameter(property = "spotbugs.version", defaultValue = "3.1.0-RC3")
+    private String spotBugsVersion;
 
     /**
      * A list with artifacts that contain additional checks for FindBugs
@@ -101,9 +112,9 @@ public class FindBugsChecker extends AbstractChecker {
     private static final String DEFAULT_INCLUDE_FILTER_XML = "rulesets/findbugs/include.xml";
     private static final String DEFAULT_VISITORS_XML = "rulesets/findbugs/visitors.xml";
 
-    private static final String FINDBUGS_MAVEN_PLUGIN_GOAL = "findbugs";
-    private static final String FINDBUGS_MAVEN_PLUGIN_ARTIFACT_ID = "findbugs-maven-plugin";
-    private static final String FINDBUGS_MAVEN_PLUGIN_GROUP_ID = "org.codehaus.mojo";
+    private static final String SPOTBUGS_MAVEN_PLUGIN_GOAL = "findbugs";
+    private static final String SPOTBUGS_MAVEN_PLUGIN_ARTIFACT_ID = "spotbugs-maven-plugin";
+    private static final String SPOTBUGS_MAVEN_PLUGIN_GROUP_ID = "com.github.hazendaz.spotbugs";
 
     /**
      * Property in the findbugs-maven-plugin that is used to describe the path to the
@@ -152,7 +163,7 @@ public class FindBugsChecker extends AbstractChecker {
 
         // If this dependency is missing, findbugs can not load the core plugin because of classpath
         // issues
-        Dependency findBugsDep = dependency("com.google.code.findbugs", "findbugs", findBugsVersion);
+        Dependency findBugsDep = dependency("com.github.spotbugs", "spotbugs", spotBugsVersion);
 
         // Add dependency to the findbugs-slf4j plugin
         Dependency findBugsSlf4j = dependency("jp.skypencil.findbugs.slf4j", "bug-pattern", findBugsSlf4jPluginVersion);
@@ -160,8 +171,8 @@ public class FindBugsChecker extends AbstractChecker {
 
         Dependency[] allDependencies = getDependencies(findBugsDep, findbugsPlugins);
 
-        executeCheck(FINDBUGS_MAVEN_PLUGIN_GROUP_ID, FINDBUGS_MAVEN_PLUGIN_ARTIFACT_ID, findBugsMavenPluginVersion,
-                FINDBUGS_MAVEN_PLUGIN_GOAL, config, allDependencies);
+        executeCheck(SPOTBUGS_MAVEN_PLUGIN_GROUP_ID, SPOTBUGS_MAVEN_PLUGIN_ARTIFACT_ID, spotBugsMavenPluginVersion,
+                SPOTBUGS_MAVEN_PLUGIN_GOAL, config, allDependencies);
 
         log.debug("FindBugs execution has been finished.");
     }

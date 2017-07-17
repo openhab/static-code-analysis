@@ -21,7 +21,7 @@
     <maven.resources.version>2.4</maven.resources.version>
     <pmd.version>5.5.1</pmd.version>
     <checkstyle.version>7.7</checkstyle.version>
-    <findbugs.version>3.0.1</findbugs.version>
+    <spotbugs.version>3.1.0-RC3</spotbugs.version>
     <maven.plugin.api.version>3.1.1</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.5</maven.plugin.annotations.version>
     <maven.plugin.plugin.version>3.5</maven.plugin.plugin.version>
@@ -88,9 +88,9 @@
       <type>test-jar</type>
     </dependency>
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>findbugs</artifactId>
-      <version>${findbugs.version}</version>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs</artifactId>
+      <version>${spotbugs.version}</version>
     </dependency>
 
     <!-- Maven Plugin dependencies -->
