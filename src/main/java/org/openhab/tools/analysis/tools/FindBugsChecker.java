@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -155,18 +156,21 @@ public class FindBugsChecker extends AbstractChecker {
         userProps.setProperty(FINDBUGS_VISITORS_PROPERTY, visitors);
         String outputDir = userProps.getProperty("findbugs.report.dir");
 
-        // These configuration properties are not exposed from the findbugs-maven-plugin as user
-        // properties, so they have to be set direct in the configuration
-        Xpp3Dom config = configuration(element("outputDirectory", outputDir), element("xmlOutputDirectory", outputDir),
-                element("findbugsXmlOutputDirectory", outputDir), getFindBugsPlugins());
-
         // If this dependency is missing, findbugs can not load the core plugin because of classpath
         // issues
         Dependency findBugsDep = dependency("com.github.spotbugs", "spotbugs", spotBugsVersion);
 
         // Add dependency to the findbugs-slf4j plugin
         Dependency findBugsSlf4j = dependency("jp.skypencil.findbugs.slf4j", "bug-pattern", findBugsSlf4jPluginVersion);
+        if (findbugsPlugins == null) {
+            findbugsPlugins = new ArrayList<Dependency>();
+        }
         findbugsPlugins.add(findBugsSlf4j);
+
+        // These configuration properties are not exposed from the findbugs-maven-plugin as user
+        // properties, so they have to be set direct in the configuration
+        Xpp3Dom config = configuration(element("outputDirectory", outputDir), element("xmlOutputDirectory", outputDir),
+                element("findbugsXmlOutputDirectory", outputDir), getFindBugsPlugins(findbugsPlugins));
 
         Dependency[] allDependencies = getDependencies(findBugsDep, findbugsPlugins);
 
@@ -179,20 +183,19 @@ public class FindBugsChecker extends AbstractChecker {
     /**
      * Creates a "plugins" element used in the findbugs-maven-plugin configuration
      */
-    private Element getFindBugsPlugins() {
+    private Element getFindBugsPlugins(List<Dependency> plugins) {
         List<Element> pluginList = new LinkedList<>();
         // Add static code analysis as plugin
         pluginList.add(createPlugin(plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion()));
 
         // Add additional dependencies
-        if (findbugsPlugins != null) {
-            for (Dependency artifact : findbugsPlugins) {
+        if (plugins != null) {
+            for (Dependency artifact : plugins) {
                 Element element = createPlugin(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion());
                 pluginList.add(element);
             }
         }
-        Element plugins = new Element("plugins", pluginList.toArray(new Element[pluginList.size()]));
-        return plugins;
+        return new Element("plugins", pluginList.toArray(new Element[pluginList.size()]));
     }
 
     private Element createPlugin(String groudId, String artifactId, String version) {
