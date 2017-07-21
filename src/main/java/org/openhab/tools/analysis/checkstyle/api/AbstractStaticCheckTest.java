@@ -10,9 +10,6 @@ package org.openhab.tools.analysis.checkstyle.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import com.puppycrawl.tools.checkstyle.BaseCheckTestSupport;
@@ -34,16 +31,7 @@ public abstract class AbstractStaticCheckTest extends BaseCheckTestSupport {
      */
     @Override
     protected String getPath(String relativePathToFile) throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        try {
-            String pathRelativeToResourcesDir = "checks/checkstyle/" + relativePathToFile;
-            URL url = classLoader.getResource(pathRelativeToResourcesDir);
-            URI uri = url.toURI();
-            File file = new File(uri);
-            return file.getCanonicalPath();
-        } catch (URISyntaxException e) {
-            return null;
-        }
+        return new File("src/test/resources/checks/checkstyle/" + relativePathToFile).getCanonicalPath();
     }
 
     /**
@@ -64,10 +52,10 @@ public abstract class AbstractStaticCheckTest extends BaseCheckTestSupport {
         }
         return messages;
     }
-    
+
     /**
      * Lists all the files from the current directory and its subdirectories.
-     * 
+     *
      * @param directory
      *            - the directory which files will be returned
      * @param files
