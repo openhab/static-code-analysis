@@ -61,7 +61,7 @@
 
   <module name="org.openhab.tools.analysis.checkstyle.BundleVendorCheck">
     <property name="severity" value="warning" />
-    <property name="allowedValues" value="openHAB"/>
+    <property name="allowedValues" value="${checkstyle.bundleVendorCheck.allowedValues}" default="openHAB"/>
   </module>
 
   <module name="org.openhab.tools.analysis.checkstyle.ManifestJavaVersionCheck">
