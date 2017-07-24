@@ -156,6 +156,10 @@
       <property name="tagSeverity" value="ignore"/> <!-- A property defining what should be done when the author tag is found. In our case we want to ignore it. -->
       <message key="type.missingTag" value="An author tag is missing"/>
     </module>
+    
+    <module name="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck">
+      <property name="severity" value="info"/>
+    </module>
 
     <!-- Rules for Java Naming Convention -->
 
