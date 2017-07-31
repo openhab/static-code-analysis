@@ -29,7 +29,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  */
 public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
     private static final String TEST_DIRECTORY_NAME = "exportInternalPackageCheckTest";
-    
+
     private static DefaultConfiguration config;
 
     @Override
@@ -38,7 +38,7 @@ public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
         configParent.addChild(config);
         return configParent;
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
         config = createCheckConfig(ExportInternalPackageCheck.class);
@@ -54,11 +54,10 @@ public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testManifestFileExportsMultipleInternalPackages() throws Exception {
-        int firstLineNumber = 12;
-        int secondLineNumber = 13;
-        String[] expectedMessages = generateExpectedMessages(
-                firstLineNumber, "Remove internal package export org.eclipse.smarthome.buildtools.internal", 
-                secondLineNumber, "Remove internal package export org.eclipse.smarthome.buildtools.internal.test");
+        int lineNumber = 12;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                "Remove internal package export org.eclipse.smarthome.buildtools.internal", lineNumber,
+                "Remove internal package export org.eclipse.smarthome.buildtools.internal.test");
         verifyManifest("multipleInternalPackagesExported.MF", expectedMessages);
     }
 
@@ -74,8 +73,17 @@ public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
         String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
         verifyManifest("noInternalPackageExported.MF", expectedMessages);
     }
-    
-    private void verifyManifest(String fileName, String[] expectedMessages) throws Exception{
+
+    @Test
+    public void testManifestJustifiedText() throws Exception {
+        int lineNumber = 13;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                "Remove internal package export org.eclipse.smarthome.buildtools.internal", lineNumber,
+                "Remove internal package export org.eclipse.smarthome.buildtools.internal.test");
+        verifyManifest("manifestJustifiedText.MF", expectedMessages);
+    }
+
+    private void verifyManifest(String fileName, String[] expectedMessages) throws Exception {
         String testFileRelativePath = TEST_DIRECTORY_NAME + File.separator + fileName;
         String testFileAbsolutePath = getPath(testFileRelativePath);
         verify(config, testFileAbsolutePath, expectedMessages);

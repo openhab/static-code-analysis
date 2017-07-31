@@ -30,7 +30,7 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  *
  * @author Petar Valchev - Initial contribution.
  * @author Aleksandar Kovachev - Refactored the code and added check for exported packages.
- * @author Svlien Valkanov - Renamed the check
+ * @author Svlien Valkanov - Renamed the check, bug fixtures
  */
 public class ManifestPackageVersionCheck extends AbstractStaticCheck {
     private static final String VERSION_USED_MSG = "The version of the package %s should not be specified";
@@ -72,14 +72,25 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
     }
 
     private void checkVersionOfImportedPackages(BundleInfo manifest, List<String> lines) {
-        Set<BundleRequirement> imports = manifest.getRequirements();
+        Set<BundleRequirement> requiredBundles = manifest.getRequires();
+        Set<BundleRequirement> importPackages = manifest.getImports();
 
         int lineNumber = 0;
-        for (BundleRequirement requirement : imports) {
-            String requirementName = requirement.getName();
-            if (requirement.getVersion() != null && !isIgnoredPackage(ignoreImportedPackages, requirementName)) {
-                lineNumber = findLineNumber(lines, requirementName, lineNumber);
-                log(lineNumber, String.format(VERSION_USED_MSG, requirementName));
+        for (BundleRequirement importPackage : importPackages) {
+            String importName = importPackage.getName();
+            if (importPackage.getVersion() != null && !isIgnoredPackage(ignoreImportedPackages, importName)) {
+                lineNumber = findLineNumber(lines, importName, lineNumber);
+                log(lineNumber, String.format(VERSION_USED_MSG, importName));
+            }
+        }
+
+        // Start again from the beginning of the file
+        lineNumber = 0;
+        for (BundleRequirement requiredBundle : requiredBundles) {
+            if (requiredBundle.getVersion() != null) {
+                String name = requiredBundle.getName();
+                lineNumber = findLineNumber(lines, name, lineNumber);
+                log(lineNumber, String.format(VERSION_USED_MSG, name));
             }
         }
     }

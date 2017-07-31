@@ -9,6 +9,7 @@
 package org.openhab.tools.analysis.checkstyle.test;
 
 import java.io.File;
+import java.text.MessageFormat;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,7 +28,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  */
 public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
     private static final String TEST_DIRECTORY_NAME = "importExportedPackagesCheckTest";
-    private static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package is not imported";
+    private static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package `{0}` is not imported";
 
     private static DefaultConfiguration configuration;
 
@@ -40,18 +41,20 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
     public void testManifestFileThatDoesNotImportAnExportedPackage() throws Exception {
         String testFileName = "ManifestNotImportingAnExportedPackage.MF";
         int lineNumber = 12;
-        String[] warningMessages = generateExpectedMessages(lineNumber, NOT_IMPORTED_PACKAGE_MESSAGE);
+        String[] warningMessages = generateExpectedMessages(lineNumber,
+                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.eclipse.smarthome.buildtools.package"));
         verifyManifestFile(testFileName, warningMessages);
     }
 
     @Test
     public void testManifestFileThatDoesNotImportSeveralExportedPackages() throws Exception {
         String testFileName = "ManifestNotImportingSeveralExportedPackages.MF";
-        int firstLineNumber = 14;
-        int secondLineNumber = 15;
+        int lineNumber = 13;
 
-        String[] warningMessages = generateExpectedMessages(firstLineNumber, NOT_IMPORTED_PACKAGE_MESSAGE,
-                secondLineNumber, NOT_IMPORTED_PACKAGE_MESSAGE);
+        String[] warningMessages = generateExpectedMessages(lineNumber,
+                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.eclipse.smarthome.buildtools.second.package"),
+                lineNumber,
+                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.eclipse.smarthome.buildtools.third.package"));
         verifyManifestFile(testFileName, warningMessages);
     }
 
@@ -60,7 +63,8 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
         String testFileName = "ManifestNotImportingAnyPackages.MF";
         int lineNumber = 10;
 
-        String[] warningMessages = generateExpectedMessages(lineNumber, NOT_IMPORTED_PACKAGE_MESSAGE);
+        String[] warningMessages = generateExpectedMessages(lineNumber,
+                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.eclipse.smarthome.buildtools.package"));
         verifyManifestFile(testFileName, warningMessages);
     }
 
@@ -68,6 +72,15 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
     public void testManifestThatImportAllExportedPackages() throws Exception {
         String testFileName = "ManifestImportingAllExportedPackages.MF";
         String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        verifyManifestFile(testFileName, warningMessages);
+    }
+
+    @Test
+    public void testJustifiedManifestFileThatDoesNotImportAnExportedPackage() throws Exception {
+        String testFileName = "JustifiedManifestNotImportingAnExportedPackage.MF";
+        int lineNumber = 12;
+        String[] warningMessages = generateExpectedMessages(lineNumber,
+                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.eclipse.smarthome.buildtools.package"));
         verifyManifestFile(testFileName, warningMessages);
     }
 
