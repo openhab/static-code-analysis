@@ -12,6 +12,7 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,7 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  * @author Mihaela Memova
  */
 public class ImportExportedPackagesCheck extends AbstractStaticCheck {
-    private static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package is not imported";
+    private static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package `{0}` is not imported";
     private static final String EXPORT_PACKAGES_HEADER = "Export-Package:";
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -42,7 +43,7 @@ public class ImportExportedPackagesCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
-        int lineNumberBeforeExportsStart = findLineNumber(lines, EXPORT_PACKAGES_HEADER, 0) - 1;
+        int lineToLog = findLineNumber(lines, EXPORT_PACKAGES_HEADER, 0);
 
         try {
             Set<ExportPackage> exports = ManifestParser.parseManifest(file).getExports();
@@ -50,8 +51,7 @@ public class ImportExportedPackagesCheck extends AbstractStaticCheck {
 
             for (ExportPackage export : exports) {
                 if (!isPackageImported(imports, export)) {
-                    int lineToLog = findLineNumber(lines, export.toString(), lineNumberBeforeExportsStart);
-                    log(lineToLog, NOT_IMPORTED_PACKAGE_MESSAGE);
+                    log(lineToLog, MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, export.toString()));
                 }
             }
         } catch (IOException e) {

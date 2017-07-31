@@ -40,11 +40,10 @@ public class ExportInternalPackageCheck extends AbstractStaticCheck {
         BundleInfo manifest = parseManifestFromFile(file);
         Set<?> exports = manifest.getExports();
 
-        int lineNumber = 0;
+        int lineNumber = findLineNumber(lines, "Export-Package:", 0);
         for (Object export : exports) {
             String packageName = export.toString();
             if (packageName.contains(".internal")) {
-                lineNumber = findLineNumber(lines, packageName, lineNumber);
                 log(lineNumber, "Remove internal package export " + packageName, 0);
             }
         }

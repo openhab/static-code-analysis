@@ -96,6 +96,16 @@ public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
         verifyManifest("validManifest", CommonUtils.EMPTY_STRING_ARRAY);
     }
 
+    @Test
+    public void testImportPackageAndRequireBundle() throws Exception {
+        // @formatter:off
+        String[] expectedMessages = generateExpectedMessages(
+                19,  String.format(VERSION_USED_MSG, "org.osgi.framework"),
+                20, String.format(VERSION_USED_MSG, "org.osgi.service.cm"),
+                27, String.format(VERSION_USED_MSG, "org.openhab.io.transport.mqtt"));
+        verifyManifest("testImportPackageAndRequireBundle", expectedMessages);
+    }
+
     private void verifyManifest(String testFileDirectory, String[] expectedMessages) throws Exception {
         String versionCheckTestDirectory = "manifestPackageVersionCheckTest";
         String filePath = getPath(
