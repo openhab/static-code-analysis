@@ -1,0 +1,1 @@
+Here will be added some configuration files for the static-code-analysis tool that are specific to the repository
