@@ -30,6 +30,7 @@
     <org.apache.ivy.version>2.4.0</org.apache.ivy.version>
     <org.jsoup.version>1.7.1</org.jsoup.version>
     <pde.core.version>3.11.1</pde.core.version>
+    <sat.version>0.1.0</sat.version>
   </properties>
 
   <distributionManagement>
@@ -251,7 +252,55 @@
               </execution>
           </executions>
       </plugin>
+      <plugin>
+        <groupId>org.openhab.tools</groupId>
+        <artifactId>static-code-analysis</artifactId>
+        <version>${sat.version}</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>checkstyle</goal>
+              <goal>pmd</goal>
+              <goal>findbugs</goal>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <checkstyleProperties>tools/checkstyle.properties</checkstyleProperties>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
-
+  
+  <pluginRepositories>
+    <pluginRepository>
+      <id>artifactory</id>
+      <name>JFrog Artifactory Repository</name>
+      <url>https://openhab.jfrog.io/openhab/libs-release</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+  
+  <repositories>
+    <repository>
+      <id>openhab-artifactory-release</id>
+      <name>JFrog Artifactory Repository</name>
+      <url>https://openhab.jfrog.io/openhab/libs-release</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        </snapshots>
+    </repository>
+  </repositories>
 </project>
