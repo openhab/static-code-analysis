@@ -233,15 +233,15 @@ public class ReportUtility extends AbstractMojo {
             transformer.transform(xmlSource, outputTarget);
 
         } catch (IOException e) {
-            logger.error("IOException occcured " + e.getMessage());
+            logger.error("IOException occcured ", e);
         } catch (TransformerException e) {
-            logger.error("TransformerException occcured " + e.getMessage());
+            logger.error("TransformerException occcured ", e);
         } finally {
             if (null != outputStream) {
                 try {
                     outputStream.close();
                 } catch (final IOException e) {
-                    logger.error(e.getMessage());
+                    logger.error("{}", e.getMessage());
                 }
             }
         }

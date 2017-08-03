@@ -170,7 +170,7 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
                 int lineNumber = exception.getLineNumber();
                 log(lineNumber, message, xmlFile.getPath());
             } catch (IOException | SAXException e) {
-                logger.error("Problem occurred while parsing the file " + xmlFile.getName(), e);
+                logger.error("Problem occurred while parsing the file {}", xmlFile.getName(), e);
             }
         } else {
             logger.warn("Unable to reach {}. XML validation will be skipped.", schemaPath);

@@ -19,6 +19,8 @@ import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
  * The check is used in the PMD documentation to demonstrate the usage of the PMD Java API.
  *
  * @see <a href="http://pmd.sourceforge.net/snapshot/customizing/howtowritearule.html">http://pmd.sourceforge.net/</a>
+ *
+ * @author Andreas Dangel
  */
 
 public class WhileLoopsMustUseBracesRule extends AbstractJavaRule {

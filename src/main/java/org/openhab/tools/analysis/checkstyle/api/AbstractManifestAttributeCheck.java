@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2010-2017 by the respective copyright holders.
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,8 +50,7 @@ public class AbstractManifestAttributeCheck extends AbstractStaticCheck {
             return;
         }
 
-        List<String> bundleVendors = lines.stream()
-                .filter(line -> line.toLowerCase().startsWith(lowerCasePrefix))
+        List<String> bundleVendors = lines.stream().filter(line -> line.toLowerCase().startsWith(lowerCasePrefix))
                 .collect(Collectors.toList());
 
         boolean tooMany = false;
@@ -71,11 +71,13 @@ public class AbstractManifestAttributeCheck extends AbstractStaticCheck {
                 log(lineNumber, String.format("Only %d \"%s\" was expected.", maxOccurrences, attribute));
             }
             if (!bundleVendor.startsWith(requiredPrefix)) {
-                log(lineNumber, String.format("Expect eg. \"%s%s\" got \"%s\"", requiredPrefix, exampleValue, bundleVendor));
+                log(lineNumber,
+                        String.format("Expect eg. \"%s%s\" got \"%s\"", requiredPrefix, exampleValue, bundleVendor));
             } else {
                 String onlyValue = bundleVendor.replace(requiredPrefix, "");
                 if (!allowedValues.contains(onlyValue)) {
-                    log(lineNumber, String.format("Unexpected \"%s\", only allowed options: %s", onlyValue, allowedValues));
+                    log(lineNumber,
+                            String.format("Unexpected \"%s\", only allowed options: %s", onlyValue, allowedValues));
                 }
             }
         }

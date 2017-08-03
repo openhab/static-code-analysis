@@ -33,6 +33,7 @@ import edu.umd.cs.findbugs.ba.ClassContext;
  *
  * @see <a href="https://github.com/tim-group/test-driven-detectors4findbugs">test-driven-detectors4findbugs</a>
  *
+ * @author Graham Allan
  */
 public class CustomClassNameLengthDetector implements Detector {
 
