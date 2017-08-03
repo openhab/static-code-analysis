@@ -14,6 +14,7 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.PomXmlCheck;
@@ -33,7 +34,7 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
     private static final String POM_XML_CHECK_TEST_DIRECTORY_NAME = "pomXmlCheckTest";
     private static final String VERSION_REGULAR_EXPRESSION = "^\\d+[.]\\d+[.]\\d+";
 
-    private static final String MISSING_VERSION_MSG = "Missing /project/parent/version in the pom.xml file.";
+    private static final String MISSING_VERSION_MSG = "Missing /project/version in the pom.xml file.";
     private static final String MISSING_ARTIFACT_ID_MSG = "Missing /project/artifactId in the pom.xml file.";
     private static final String WRONG_VERSION_MSG = "Wrong /project/parent/version in the pom.xml file. "
             + "The version should match the one in the MANIFEST.MF file.";
@@ -91,6 +92,12 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
         verifyPomXmlFile("invalid_parent_pom_id_directory", parentPomIdlineNumber, formattedMessage);
     }
 
+    @Test
+    public void testMasterPom() throws Exception {
+        String testFileAbsolutePath = getPath(POM_XML_CHECK_TEST_DIRECTORY_NAME + "/pom.xml");
+        verify(createChecker(config), testFileAbsolutePath, ArrayUtils.EMPTY_STRING_ARRAY);
+    }
+
     @Override
     protected DefaultConfiguration createCheckerConfig(Configuration config) {
         DefaultConfiguration defaultConfiguration = new DefaultConfiguration("root");
@@ -103,7 +110,6 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
         File testDirectory = new File(testDirectoryAbsolutePath);
         File[] testFiles = listFilesForDirectory(testDirectory, new ArrayList<File>());
         String testFilePath = testDirectory.getPath() + File.separator + POM_XML_FILE_NAME;
-
         String[] expectedMessages;
         if (expectedMessage != null) {
             expectedMessages = generateExpectedMessages(expectedLine, expectedMessage);

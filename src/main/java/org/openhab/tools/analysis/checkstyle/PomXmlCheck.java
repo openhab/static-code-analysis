@@ -40,7 +40,7 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
  * @author Svilen Valkanov - Replaced headers, applied minor improvements, added check for parent pom ID
  */
 public class PomXmlCheck extends AbstractStaticCheck {
-    private static final String MISSING_VERSION_MSG = "Missing /project/parent/version in the pom.xml file.";
+    private static final String MISSING_VERSION_MSG = "Missing /project/version in the pom.xml file.";
     private static final String MISSING_ARTIFACT_ID_MSG = "Missing /project/artifactId in the pom.xml file.";
     private static final String WRONG_VERSION_MSG = "Wrong /project/parent/version in the pom.xml file. "
             + "The version should match the one in the MANIFEST.MF file.";
@@ -52,7 +52,8 @@ public class PomXmlCheck extends AbstractStaticCheck {
     private static final String DEFAULT_VERSION_REGULAR_EXPRESSION = "^\\d+[.]\\d+[.]\\d+";
     private static final String POM_ARTIFACT_ID_XPATH_EXPRESSION = "/project/artifactId/text()";
     private static final String POM_PARENT_ARTIFACT_ID_XPATH_EXPRESSION = "/project/parent/artifactId/text()";
-    private static String POM_VERSION_XPATH_EXPRESSION = "/project/parent/version/text()";
+    private static String POM_PARENT_VERSION_XPATH_EXPRESSION = "/project/parent/version/text()";
+    private static String POM_VERSION_XPATH_EXPRESSION = "/project/version/text()";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -159,6 +160,9 @@ public class PomXmlCheck extends AbstractStaticCheck {
 
         // get the version from the pom.xml
         String versionNodeValue = getNodeValue(file, POM_VERSION_XPATH_EXPRESSION);
+        if (versionNodeValue == null) {
+            versionNodeValue = getNodeValue(file, POM_PARENT_VERSION_XPATH_EXPRESSION);
+        }
         pomVersion = getVersion(versionNodeValue, pomVersionPattern);
 
         // the version line will be preserved for finalization of the processing
