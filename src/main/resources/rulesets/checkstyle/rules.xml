@@ -69,6 +69,7 @@
 
   <module name="org.openhab.tools.analysis.checkstyle.RequireBundleCheck">
       <property name="severity" value="error" />
+      <property name="allowedRequireBundles" value="${checkstyle.requireBundleCheck.allowedBundles}" default="org.junit,org.mockito,org.hamcrest" />
    </module>
 
    <module name="org.openhab.tools.analysis.checkstyle.AboutHtmlCheck">

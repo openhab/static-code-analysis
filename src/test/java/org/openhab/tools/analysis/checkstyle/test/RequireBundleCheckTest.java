@@ -28,22 +28,42 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 public class RequireBundleCheckTest extends AbstractStaticCheckTest {
     private static final String REQUIRE_BUNDLE_USED_MSG = "The MANIFEST.MF file must not contain any Require-Bundle entries. "
             + "Instead, Import-Package must be used.";
-    
+    private static final String REQUIRE_BUNDLE_TEST_USED_MSG = "The MANIFEST.MF file of a test fragment must not contain "
+            + "Require-Bundle entries other than org.junit, org.hamcrest, org.mockito.";
+
     private static DefaultConfiguration config;
 
     @BeforeClass
     public static void setUpClass() {
         config = createCheckConfig(RequireBundleCheck.class);
+
+        String allowedRequireBundles = String.format("%s,%s,%s", "org.junit", "org.hamcrest", "org.mockito");
+        config.addAttribute("allowedRequireBundles", allowedRequireBundles);
     }
 
     @Test
-    public void testExportedInternalPackage() throws Exception {
+    public void testRequireBundlePackage() throws Exception {
         verifyManifest("require_bundle_manifest_directory", "REQUIRE_BUNDLE_MANIFEST.MF", 9, REQUIRE_BUNDLE_USED_MSG);
     }
 
     @Test
     public void testValidManifest() throws Exception {
         verifyManifest("valid_manifest_directory", "VALID_MANIFEST.MF", 0, null);
+    }
+
+    @Test
+    public void testValidTestManifest() throws Exception {
+        verifyManifest("valid_test_manifest_directory", "VALID_TEST_MANIFEST.MF", 0, null);
+    }
+
+    @Test
+    public void testValidTestManifestNoRequireBundle() throws Exception {
+        verifyManifest("valid_test_manifest_directory", "VALID_TEST_MANIFEST_NO_REQUIRE_BUNDLE.MF", 0, null);
+    }
+
+    @Test
+    public void testInvalidRequireBundleTestPackage() throws Exception {
+        verifyManifest("invalid_test_manifest_directory", "INVALID_TEST_MANIFEST.MF", 13, REQUIRE_BUNDLE_TEST_USED_MSG);
     }
 
     @Override
@@ -62,7 +82,7 @@ public class RequireBundleCheckTest extends AbstractStaticCheckTest {
 
         String[] expectedMessages = null;
         if (expectedMessage != null) {
-            expectedMessages = generateExpectedMessages(expectedLine, REQUIRE_BUNDLE_USED_MSG);
+            expectedMessages = generateExpectedMessages(expectedLine, expectedMessage);
         } else {
             expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
         }
