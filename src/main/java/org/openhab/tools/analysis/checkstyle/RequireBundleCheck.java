@@ -8,32 +8,48 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 /**
- * Checks if the MANIFEST.MF file contains any "Require-Bundle" entries.
+ * Checks if the MANIFEST.MF file contains any "Require-Bundle" entries. Exceptions may be configured using the
+ * configuration property 'checkstyle.requireBundleCheck.allowedBundles', e.g. "org.junit,org.mokcito,org.hamcrest"
+ * which is the default.
  *
  * @author Petar Valchev
+ * @author Henning Treu - Allow bundle exceptions from the check.
  *
  */
 public class RequireBundleCheck extends AbstractStaticCheck {
     private final Logger logger = LoggerFactory.getLogger(RequireBundleCheck.class);
 
+    private List<String> allowedRequireBundles = Collections.emptyList();
+
     public RequireBundleCheck() {
         setFileExtensions(MANIFEST_EXTENSION);
+    }
+
+    // configuration property for the allowed RequireBundle entries
+    @SuppressWarnings("unchecked")
+    public void setAllowedRequireBundles(String[] bundles) {
+        allowedRequireBundles = Arrays.asList(bundles);
     }
 
     @Override
@@ -45,17 +61,50 @@ public class RequireBundleCheck extends AbstractStaticCheck {
             Manifest manifest = new Manifest(new FileInputStream(file));
             Attributes attributes = manifest.getMainAttributes();
 
-            String requireBundleHeaderName = "Require-Bundle";
-            String requireBundleHeaderValue = attributes.getValue(requireBundleHeaderName);
-            if (requireBundleHeaderValue != null) {
+            String fragmentHost = attributes.getValue(FRAGMENT_HOST_HEADER_NAME);
+            String bundleSymbolicName = attributes.getValue(BUNDLE_SYMBOLIC_NAME_HEADER_NAME);
+
+            boolean testBundle = false;
+            if (StringUtils.isNoneBlank(fragmentHost) && StringUtils.isNotBlank(bundleSymbolicName)) {
+                testBundle = bundleSymbolicName.startsWith(fragmentHost)
+                        && bundleSymbolicName.substring(fragmentHost.length()).startsWith(".test");
+            }
+
+            String requireBundleHeaderValue = attributes.getValue(REQUIRE_BUNDLE_HEADER_NAME);
+            if (requireBundleHeaderValue != null && !testBundle) {
                 log(findLineNumber(fileText.toLinesArray(), requireBundleHeaderValue, 0),
                         "The MANIFEST.MF file must not contain any Require-Bundle entries. "
                                 + "Instead, Import-Package must be used.");
+            } else if (requireBundleHeaderValue != null && testBundle) {
+                String[] bundleNames = requireBundleHeaderValue.split(",");
+                for (String bundleName : bundleNames) {
+                    if (!allowedRequireBundles.contains(bundleName)) {
+                        log(findLineNumber(fileText.toLinesArray(), requireBundleHeaderValue, 0),
+                                "The MANIFEST.MF file of a test fragment must not contain Require-Bundle entries other than "
+                                        + getAllowedBundlesString() + ".");
+                        break;
+                    }
+                }
             }
-        } catch (FileNotFoundException e) {
+        } catch (
+
+        FileNotFoundException e) {
             logger.error("An exception was thrown while trying to open the file {}", file.getPath(), e);
         } catch (IOException e) {
             logger.error("An exception was thrown while trying to read the file {}", file.getPath(), e);
         }
     }
+
+    private String getAllowedBundlesString() {
+        StringBuilder sb = new StringBuilder();
+        for (String bundleName : allowedRequireBundles) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(bundleName);
+        }
+
+        return sb.toString();
+    }
+
 }

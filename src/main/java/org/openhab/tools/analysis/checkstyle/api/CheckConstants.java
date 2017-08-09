@@ -40,4 +40,10 @@ public class CheckConstants {
     public static final String BIN_INCLUDES_PROPERTY_NAME = "bin.includes";
     public static final String OUTPUT_PROPERTY_NAME = "output..";
     public static final String SOURCE_PROPERTY_NAME = "source..";
+
+    // OSGi MANIFEST.MF properties
+    public final static String REQUIRE_BUNDLE_HEADER_NAME = "Require-Bundle";
+    public final static String FRAGMENT_HOST_HEADER_NAME = "Fragment-Host";
+    public final static String BUNDLE_SYMBOLIC_NAME_HEADER_NAME = "Bundle-SymbolicName";
+
 }
