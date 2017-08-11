@@ -30,9 +30,7 @@
     <org.apache.ivy.version>2.4.0</org.apache.ivy.version>
     <org.jsoup.version>1.7.1</org.jsoup.version>
     <pde.core.version>3.11.1</pde.core.version>
-    <sat.version>0.1.0</sat.version>
-    <!-- Temporary disable failure on error until switched to next version -->
-    <report.fail.on.error>false</report.fail.on.error>
+    <sat.version>0.2.0</sat.version>
   </properties>
 
   <distributionManagement>
