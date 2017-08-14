@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Check if all the declarative services are included in the MANIFEST.MF.
@@ -72,7 +73,7 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
 
         Path absolutePath = file.toPath();
         int osgiInfIndex = getIndex(absolutePath, OSGI_INF_DIRECTORY_NAME);
@@ -89,7 +90,7 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
         }
 
         if (file.getName().equals(MANIFEST_FILE_NAME)) {
-            verifyManifest(file, lines);
+            verifyManifest(file, fileText.toLinesArray());
         }
 
         if (file.getName().equals(BUILD_PROPERTIES_FILE_NAME)) {
@@ -258,7 +259,7 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
         }
     }
 
-    private void verifyManifest(File file, List<String> lines) {
+    private void verifyManifest(File file, String[] lines) {
         manifestPath = file.getPath();
         try {
             Manifest manifest = new Manifest(new FileInputStream(file));

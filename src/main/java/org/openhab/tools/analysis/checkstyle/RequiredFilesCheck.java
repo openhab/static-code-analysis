@@ -15,6 +15,7 @@ import java.util.List;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
@@ -46,7 +47,7 @@ public class RequiredFilesCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
         if (fileParentDirectoryPath == null) {
             fileParentDirectoryPath = file.getParent();
         }

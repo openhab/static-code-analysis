@@ -12,7 +12,6 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -31,6 +30,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Checks if the version and the artifactId in the pom.xml file correspond to
@@ -116,10 +116,10 @@ public class PomXmlCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+    protected void processFiltered(File file, FileText lines) throws CheckstyleException {
         String fileName = file.getName();
         if (fileName.equals(POM_XML_FILE_NAME)) {
-            processPomXmlFile(file, lines);
+            processPomXmlFile(file, lines.toLinesArray());
         } else if (fileName.equals(MANIFEST_FILE_NAME)) {
             processManifestFile(file);
         }
@@ -135,7 +135,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
         manifestBundleSymbolicName = bundleInfo.getSymbolicName();
     }
 
-    private void processPomXmlFile(File file, List<String> lines) throws CheckstyleException {
+    private void processPomXmlFile(File file, String[] lines) throws CheckstyleException {
         File pomDirectory = file.getParentFile();
         // the pom directory path will be used in the finalization
         pomDirectoryPath = pomDirectory.getPath();

@@ -14,13 +14,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Checks if the MANIFEST.MF file contains any "Require-Bundle" entries.
@@ -36,7 +37,7 @@ public class RequireBundleCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) {
+    protected void processFiltered(File file, FileText fileText) {
         try {
             // We use Manifest class here instead of ManifestParser,
             // because it is easier to get the content of the headers
@@ -47,7 +48,7 @@ public class RequireBundleCheck extends AbstractStaticCheck {
             String requireBundleHeaderName = "Require-Bundle";
             String requireBundleHeaderValue = attributes.getValue(requireBundleHeaderName);
             if (requireBundleHeaderValue != null) {
-                log(findLineNumber(lines, requireBundleHeaderValue, 0),
+                log(findLineNumber(fileText.toLinesArray(), requireBundleHeaderValue, 0),
                         "The MANIFEST.MF file must not contain any Require-Bundle entries. "
                                 + "Instead, Import-Package must be used.");
             }

@@ -12,13 +12,13 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Abstract class for checks that will validate .xml files located in the ESH-INF directory.
@@ -49,7 +49,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
         String fileName = file.getName();
 
         if (FilenameUtils.getExtension(fileName).equals(XML_EXTENSION)) {

@@ -18,7 +18,6 @@ import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -37,6 +36,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Validate the thing-types, binding and config xml-s against their xsd schemas.<br>
@@ -97,13 +97,13 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
         logger.debug("Processing the {}", file.getName());
 
         if (file.getName().equals(BUILD_PROPERTIES_FILE_NAME)) {
             processBuildProperties(file);
         } else {
-            super.processFiltered(file, lines);
+            super.processFiltered(file, fileText);
         }
     }
 

@@ -24,6 +24,7 @@ import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -96,18 +97,18 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
         String fileName = file.getName();
         if (fileName.equals(BUILD_PROPERTIES_FILE_NAME)) {
             if (!isEmpty(file)) {
-                processBuildProperties(file, lines);
+                processBuildProperties(file, fileText.toLinesArray());
             } else {
                 log(0, EMPTY_FILE_MSG);
             }
         }
     }
 
-    private void processBuildProperties(File file, List<String> lines) throws CheckstyleException {
+    private void processBuildProperties(File file, String[] lines) throws CheckstyleException {
         // We ignore the exceptions thrown by the parseBuildProperties() method. A corrupt build.properties file will
         // fail the Maven build in the compile phase, so we should not care about this case in the validate phase
         IBuild buildPropertiesFile = parseBuildProperties(file);
@@ -178,7 +179,7 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
      * @param missingValueMessage - message to be used, when a value is missing
      *
      */
-    private void logMissingValues(List<String> lines, String property, List<String> missingValues, String messsage) {
+    private void logMissingValues(String[] lines, String property, List<String> missingValues, String messsage) {
         for (String missingValue : missingValues) {
             log(findLineNumber(lines, property, 0), messsage + missingValue);
 

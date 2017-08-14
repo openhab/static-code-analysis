@@ -44,6 +44,11 @@ public class DeclarativeServicesDependencyInjectionCheck extends AbstractCheck {
     }
 
     @Override
+    public int[] getAcceptableTokens() {
+        return getDefaultTokens();
+    }
+
+    @Override
     public void visitToken(DetailAST ast) {
         switch (ast.getType()) {
             case TokenTypes.VARIABLE_DEF:
@@ -99,4 +104,5 @@ public class DeclarativeServicesDependencyInjectionCheck extends AbstractCheck {
         String shortOtherClassName = getShortName(otherClassName);
         return shortClassName.equals(shortOtherClassName);
     }
+
 }

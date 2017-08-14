@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.ParseException;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.ivy.osgi.core.BundleRequirement;
@@ -25,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Checks if all of the exported packages are imported by the bundle itself
@@ -42,8 +42,8 @@ public class ImportExportedPackagesCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
-        int lineToLog = findLineNumber(lines, EXPORT_PACKAGES_HEADER, 0);
+    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
+        int lineToLog = findLineNumber(fileText.toLinesArray(), EXPORT_PACKAGES_HEADER, 0);
 
         try {
             Set<ExportPackage> exports = ManifestParser.parseManifest(file).getExports();

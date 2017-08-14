@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Checks if a manifest file contains the expected attribute
@@ -44,13 +45,14 @@ public class AbstractManifestAttributeCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
         if (isEmpty(file)) {
             // not our task to report
             return;
         }
+        String[] lines = fileText.toLinesArray();
 
-        List<String> bundleVendors = lines.stream().filter(line -> line.toLowerCase().startsWith(lowerCasePrefix))
+        List<String> bundleVendors = Arrays.stream(lines).filter(line -> line.toLowerCase().startsWith(lowerCasePrefix))
                 .collect(Collectors.toList());
 
         boolean tooMany = false;
