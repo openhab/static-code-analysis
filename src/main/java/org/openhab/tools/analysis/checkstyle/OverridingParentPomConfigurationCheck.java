@@ -11,7 +11,6 @@ package org.openhab.tools.analysis.checkstyle;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
-import java.util.List;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -24,6 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Checks if a pom file overrides a configuration inherited by the parent pom.
@@ -41,7 +41,7 @@ public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
 
         if (file.getName().equals(POM_XML_FILE_NAME)) {
             if (isEmpty(file)) {
@@ -61,8 +61,10 @@ public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
                 if (nodes != null) {
                     int lineNumber = 0;
 
+                    String[] fileContent = fileText.toLinesArray();
+
                     for (int i = 0; i < nodes.getLength(); i++) {
-                        lineNumber = findLineNumber(lines, nodes.item(i).getNodeValue(), lineNumber);
+                        lineNumber = findLineNumber(fileContent, nodes.item(i).getNodeValue(), lineNumber);
                         if (lineNumber != -1) {
                             log(lineNumber, "Avoid overriding a configuration inherited by the parent pom.");
                         }

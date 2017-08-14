@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.pde.core.build.IBuild;
@@ -28,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Checks if an about.html file is valid.
@@ -79,7 +79,7 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
         String fileName = file.getName();
 
         if (BUILD_PROPERTIES_FILE_NAME.equals(fileName)) {

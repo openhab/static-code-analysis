@@ -23,6 +23,7 @@ import org.apache.ivy.osgi.core.ExportPackage;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Checks if the MANIFEST.MF file has any version constraints on imported and exported packages.
@@ -63,15 +64,16 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File manifestFile, List<String> lines) throws CheckstyleException {
+    protected void processFiltered(File manifestFile, FileText fileText) throws CheckstyleException {
         BundleInfo manifest = parseManifestFromFile(manifestFile);
+        String[] lines = fileText.toLinesArray();
 
         checkVersionOfImportedPackages(manifest, lines);
 
         checkVersionOfExportedPackages(manifest, lines);
     }
 
-    private void checkVersionOfImportedPackages(BundleInfo manifest, List<String> lines) {
+    private void checkVersionOfImportedPackages(BundleInfo manifest, String[] lines) {
         Set<BundleRequirement> requiredBundles = manifest.getRequires();
         Set<BundleRequirement> importPackages = manifest.getImports();
 
@@ -95,7 +97,7 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
         }
     }
 
-    private void checkVersionOfExportedPackages(BundleInfo manifest, List<String> lines) {
+    private void checkVersionOfExportedPackages(BundleInfo manifest, String[] lines) {
         Set<ExportPackage> exports = manifest.getExports();
 
         int lineNumber = 0;

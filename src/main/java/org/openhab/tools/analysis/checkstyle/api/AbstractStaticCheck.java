@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.text.ParseException;
-import java.util.List;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -64,9 +63,9 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
      *         time, or -1 if
      *         no match was found
      */
-    protected int findLineNumber(List<String> fileContent, String searchedText, int startLineNumber) {
-        for (int lineNumber = startLineNumber; lineNumber < fileContent.size(); lineNumber++) {
-            String line = fileContent.get(lineNumber);
+    protected int findLineNumber(String[] fileContent, String searchedText, int startLineNumber) {
+        for (int lineNumber = startLineNumber; lineNumber < fileContent.length; lineNumber++) {
+            String line = fileContent[lineNumber];
             if (line.contains(searchedText)) {
                 // The +1 is to compensate the 0-based list and the 1-based text file
                 return lineNumber + 1;

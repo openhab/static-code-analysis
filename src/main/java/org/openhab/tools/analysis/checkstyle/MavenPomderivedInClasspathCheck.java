@@ -11,7 +11,6 @@ package org.openhab.tools.analysis.checkstyle;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.CLASSPATH_EXTENSION;
 
 import java.io.File;
-import java.util.List;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -24,6 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Checks if the classpath file has a maven.pomderived attribute. This attribute should be used only if you have
@@ -42,7 +42,7 @@ public class MavenPomderivedInClasspathCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
 
         if (isEmpty(file)) {
             log(0, "The .classpath file should not be empty.");
@@ -60,6 +60,7 @@ public class MavenPomderivedInClasspathCheck extends AbstractStaticCheck {
 
             if (nodes != null) {
                 int lineNumber = 0;
+                String[] lines = fileText.toLinesArray();
 
                 for (int i = 0; i < nodes.getLength(); i++) {
                     lineNumber = findLineNumber(lines, nodes.item(i).getNodeValue(), lineNumber);
