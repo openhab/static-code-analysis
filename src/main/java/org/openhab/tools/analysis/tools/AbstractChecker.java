@@ -8,19 +8,15 @@
  */
 package org.openhab.tools.analysis.tools;
 
-import static org.twdata.maven.mojoexecutor.MojoExecutor.dependency;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Dependency;
@@ -104,48 +100,11 @@ public abstract class AbstractChecker extends AbstractMojo {
      * @throws MojoExecutionException - If there are any exceptions locating or executing the MOJO
      */
     protected void executeCheck(String groupId, String artifactId, String version, String goal, Xpp3Dom configuration,
-            Dependency... dependencies) throws MojoExecutionException {
-        List<Dependency> dependencyList = new ArrayList<Dependency>();
-        Collections.addAll(dependencyList, dependencies);
-
-        Plugin plugin = MojoExecutor.plugin(groupId, artifactId, version, dependencyList);
+            List<Dependency> dependencies) throws MojoExecutionException {
+        Plugin plugin = MojoExecutor.plugin(groupId, artifactId, version, dependencies);
 
         MojoExecutor.executeMojo(plugin, goal, configuration,
                 MojoExecutor.executionEnvironment(mavenProject, mavenSession, pluginManager));
-    }
-
-    /**
-     * Create an array that contains all necessary dependencies in order to run some of the static code analysis tools.
-     * It adds the static-code-analysis artifact as dependency as well, so all checks included there can be used from
-     * the analysis tools.
-     *
-     * @param coreDependency - a dependency to the tool itself, used to specify a certain version of the used tool
-     * @param additionalArtifacts - artifacts that contain custom checks
-     *
-     * @return dependencies
-     */
-    protected Dependency[] getDependencies(Dependency coreDependency, List<Dependency> additionalArtifacts) {
-        List<Dependency> dependencies = new LinkedList<Dependency>();
-
-        // First add the core dependency
-        if (coreDependency != null) {
-            getLog().info("Adding dependency to " + coreDependency.getArtifactId() + ":" + coreDependency.getVersion());
-            dependencies.add(coreDependency);
-        }
-
-        // Add the static-code-analysis artifact as dependency, because this
-        // plugin contains custom checks
-        Dependency staticCode = dependency(plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion());
-        dependencies.add(staticCode);
-
-        // Add additional dependencies
-        if (additionalArtifacts != null) {
-            for (Dependency dependency : additionalArtifacts) {
-                getLog().info("Adding dependency to " + dependency.getArtifactId() + ":" + dependency.getVersion());
-                dependencies.add(dependency);
-            }
-        }
-        return dependencies.toArray(new Dependency[dependencies.size()]);
     }
 
     /**
@@ -169,6 +128,15 @@ public abstract class AbstractChecker extends AbstractMojo {
             URL url = this.getClass().getClassLoader().getResource(internalRelativePath);
             return url.toString();
         }
+    }
+
+    /**
+     * Uses the Maven logger to log a message about added dependency
+     *
+     * @return Consumer
+     */
+    protected Consumer<? super Dependency> logDependency() {
+        return d -> getLog().info("Adding dependency to " + d.getArtifactId() + ":" + d.getVersion());
     }
 
 }
