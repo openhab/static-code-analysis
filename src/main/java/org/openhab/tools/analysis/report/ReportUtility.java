@@ -47,6 +47,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -158,54 +160,71 @@ public class ReportUtility extends AbstractMojo {
 
         // Prepare userDirectory and tempDirectoryPrefix
         final String timeStamp = Integer.toHexString((int) System.nanoTime());
+        Queue<File> transformedReports = new LinkedList<>();
 
-        // 1. Create intermediate xml-file for Findbugs
+        // 1. Create intermediate xml-file for FindBugs
         final File inputFileFindbugs = new File(targetDirectory, FINDBUGS_INPUT_FILE_NAME);
-        final File findbugsTempFile = new File(targetDirectory, timeStamp + "_PostFB.xml");
-        run(PREPARE_FINDBUGS_XSLT, inputFileFindbugs, findbugsTempFile, EMPTY, null);
+        if (inputFileFindbugs.exists()) {
+            final File findbugsTempFile = new File(targetDirectory, timeStamp + "_PostFB.xml");
+            run(PREPARE_FINDBUGS_XSLT, inputFileFindbugs, findbugsTempFile, EMPTY, null);
+            transformedReports.add(findbugsTempFile);
+        }
 
         // 2. Create intermediate xml-file for Checkstyle
         final File inputFileCheckstyle = new File(targetDirectory, CHECKSTYLE_INPUT_FILE_NAME);
-        final File checkstyleTempFile = new File(targetDirectory, timeStamp + "_PostCS.xml");
-        run(PREPARE_CHECKSTYLE_XSLT, inputFileCheckstyle, checkstyleTempFile, EMPTY, null);
+        if (inputFileCheckstyle.exists()) {
+            final File checkstyleTempFile = new File(targetDirectory, timeStamp + "_PostCS.xml");
+            run(PREPARE_CHECKSTYLE_XSLT, inputFileCheckstyle, checkstyleTempFile, EMPTY, null);
+            transformedReports.add(checkstyleTempFile);
+        }
 
         // 3. Create intermediate xml-file for PMD
         final File inputFilePMD = new File(targetDirectory, PMD_INPUT_FILE_NAME);
-        final File pmdTempFile = new File(targetDirectory, timeStamp + "_PostPM.xml");
-        run(PREPARE_PMD_XSLT, inputFilePMD, pmdTempFile, EMPTY, null);
-
-        // 4. Merge first two files and create firstMergeResult file
-        final File firstMergeResult = new File(targetDirectory, timeStamp + "_FirstMerge.xml");
-        run(MERGE_XSLT, checkstyleTempFile, firstMergeResult, "with", findbugsTempFile);
-
-        // 5. Merge result file with third file and create secondMergeResult
-        // file
-        final File secondMergeResult = new File(targetDirectory, timeStamp + "_SecondMerge.xml");
-        run(MERGE_XSLT, firstMergeResult, secondMergeResult, "with", pmdTempFile);
-
-        // 6. Create html report out of secondMergeResult
-        final File htmlOutputFileName = new File(targetDirectory, RESULT_FILE_NAME);
-        run(CREATE_HTML_XSLT, secondMergeResult, htmlOutputFileName, EMPTY, null);
-
-        // 7. Append the individual report to the summary, if it is not empty
-        if (summaryReportDirectory != null) {
-            appendToSummary(htmlOutputFileName, summaryReportDirectory, secondMergeResult);
+        if (inputFilePMD.exists()) {
+            final File pmdTempFile = new File(targetDirectory, timeStamp + "_PostPM.xml");
+            run(PREPARE_PMD_XSLT, inputFilePMD, pmdTempFile, EMPTY, null);
+            transformedReports.add(pmdTempFile);
         }
 
-        // 8. Fail the build if the option is enabled and high priority warnings are found
-        if (failOnError) {
-            String errorLog = checkForErrors(secondMergeResult, htmlOutputFileName);
-            if (errorLog != null) {
-                throw new MojoFailureException(errorLog);
+        if (!transformedReports.isEmpty()) {
+            while (transformedReports.size() != 1) {
+                File firstReport = transformedReports.poll();
+                File secondReport = transformedReports.poll();
+
+                // 4. Merge first two files and create merge result file
+                final File mergeResult = new File(targetDirectory,
+                        timeStamp + "_" + transformedReports.size() + "_Merge.xml");
+                run(MERGE_XSLT, firstReport, mergeResult, "with", secondReport);
+
+                // 5. Add the result for further merging
+                transformedReports.add(mergeResult);
+
+                deleteFile(firstReport);
+                deleteFile(secondReport);
             }
-        }
+            // 6. Create html report out of the last merged result
+            final File htmlOutputFileName = new File(targetDirectory, RESULT_FILE_NAME);
+            final File mergedReport = transformedReports.poll();
+            run(CREATE_HTML_XSLT, mergedReport, htmlOutputFileName, EMPTY, null);
 
-        // 9. Delete all temporary files
-        deletefile(findbugsTempFile);
-        deletefile(checkstyleTempFile);
-        deletefile(pmdTempFile);
-        deletefile(firstMergeResult);
-        deletefile(secondMergeResult);
+            // 7. Append the individual report to the summary, if it is not empty
+            if (summaryReportDirectory != null) {
+                appendToSummary(htmlOutputFileName, summaryReportDirectory, mergedReport);
+            }
+
+            // 8. Fail the build if the option is enabled and high priority warnings are found
+            if (failOnError) {
+                String errorLog = checkForErrors(mergedReport, htmlOutputFileName);
+                if (errorLog != null) {
+                    throw new MojoFailureException(errorLog);
+                }
+            }
+
+            // 9. Delete the temporary files
+            deleteFile(mergedReport);
+        } else {
+            getLog().info("No reports found !");
+        }
 
     }
 
@@ -249,7 +268,7 @@ public class ReportUtility extends AbstractMojo {
         }
     }
 
-    void deletefile(File file) {
+    void deleteFile(File file) {
         if (!file.delete()) {
             logger.error("Unable to delete file {}", file.getAbsolutePath());
         }
