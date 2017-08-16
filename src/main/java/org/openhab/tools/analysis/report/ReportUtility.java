@@ -74,6 +74,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import net.sf.saxon.TransformerFactoryImpl;
+
 /**
  * Transforms the results from FindBugs, Checkstyle and PMD into a single HTML Report with XSLT
  *
@@ -130,10 +132,9 @@ public class ReportUtility extends AbstractMojo {
     // Name of the file that contains the merged report
     public static final String RESULT_FILE_NAME = "report.html";
     public static final String SUMMARY_FILE_NAME = "summary_report.html";
-
     private static final String EMPTY = "";
-    private static final String XML_TRANSFORM_PROPERTY_KEY = "javax.xml.transform.TransformerFactory";
-    private static final String XML_TRANSFOMR_PROPERTY_VALUE = "net.sf.saxon.TransformerFactoryImpl";
+
+    private TransformerFactory transformerFactory;
 
     private final Logger logger = LoggerFactory.getLogger(ReportUtility.class);
 
@@ -152,10 +153,12 @@ public class ReportUtility extends AbstractMojo {
 
     @Override
     public void execute() throws MojoFailureException {
+        transformerFactory = TransformerFactory.newInstance(TransformerFactoryImpl.class.getName(),
+                Thread.currentThread().getContextClassLoader());
+
         // Prepare userDirectory and tempDirectoryPrefix
         final String timeStamp = Integer.toHexString((int) System.nanoTime());
 
-        System.setProperty(XML_TRANSFORM_PROPERTY_KEY, XML_TRANSFOMR_PROPERTY_VALUE);
         // 1. Create intermediate xml-file for Findbugs
         final File inputFileFindbugs = new File(targetDirectory, FINDBUGS_INPUT_FILE_NAME);
         final File findbugsTempFile = new File(targetDirectory, timeStamp + "_PostFB.xml");
@@ -214,7 +217,6 @@ public class ReportUtility extends AbstractMojo {
             logger.debug("{}  > {} {} {} >  {}", input, xslt, param, value, output);
 
             // Process the Source into a Transformer Object
-            final TransformerFactory transformerFactory = TransformerFactory.newInstance();
             final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(xslt);
             final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             final StreamSource source = new StreamSource(reader);
