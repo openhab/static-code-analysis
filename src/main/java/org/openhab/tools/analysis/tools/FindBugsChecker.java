@@ -101,7 +101,7 @@ public class FindBugsChecker extends AbstractChecker {
      * A list with artifacts that contain additional checks for FindBugs
      */
     @Parameter
-    private List<Dependency> findbugsPlugins;
+    private List<Dependency> findbugsPlugins = new ArrayList<>();
 
     /**
      * Location of the properties file that contains configuration options for the
@@ -156,26 +156,25 @@ public class FindBugsChecker extends AbstractChecker {
         userProps.setProperty(FINDBUGS_VISITORS_PROPERTY, visitors);
         String outputDir = userProps.getProperty("findbugs.report.dir");
 
-        // If this dependency is missing, findbugs can not load the core plugin because of classpath
-        // issues
-        Dependency findBugsDep = dependency("com.github.spotbugs", "spotbugs", spotBugsVersion);
-
+        // The tool itself is a FindBugs plugin
+        findbugsPlugins.add(dependency(plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion()));
         // Add dependency to the findbugs-slf4j plugin
-        Dependency findBugsSlf4j = dependency("jp.skypencil.findbugs.slf4j", "bug-pattern", findBugsSlf4jPluginVersion);
-        if (findbugsPlugins == null) {
-            findbugsPlugins = new ArrayList<Dependency>();
-        }
-        findbugsPlugins.add(findBugsSlf4j);
+        findbugsPlugins.add(dependency("jp.skypencil.findbugs.slf4j", "bug-pattern", findBugsSlf4jPluginVersion));
+        findbugsPlugins.forEach(logDependency());
 
         // These configuration properties are not exposed from the findbugs-maven-plugin as user
         // properties, so they have to be set direct in the configuration
         Xpp3Dom config = configuration(element("outputDirectory", outputDir), element("xmlOutputDirectory", outputDir),
                 element("findbugsXmlOutputDirectory", outputDir), getFindBugsPlugins(findbugsPlugins));
 
-        Dependency[] allDependencies = getDependencies(findBugsDep, findbugsPlugins);
+        // If this dependency is missing, findbugs can not load the core plugin because of classpath
+        // issues
+        List<Dependency> findbugsDeps = new ArrayList<>();
+        findbugsDeps.add(dependency("com.github.spotbugs", "spotbugs", spotBugsVersion));
+        findbugsDeps.forEach(logDependency());
 
         executeCheck(SPOTBUGS_MAVEN_PLUGIN_GROUP_ID, SPOTBUGS_MAVEN_PLUGIN_ARTIFACT_ID, spotBugsMavenPluginVersion,
-                SPOTBUGS_MAVEN_PLUGIN_GOAL, config, allDependencies);
+                SPOTBUGS_MAVEN_PLUGIN_GOAL, config, findbugsDeps);
 
         log.debug("FindBugs execution has been finished.");
     }
@@ -185,9 +184,6 @@ public class FindBugsChecker extends AbstractChecker {
      */
     private Element getFindBugsPlugins(List<Dependency> plugins) {
         List<Element> pluginList = new LinkedList<>();
-        // Add static code analysis as plugin
-        pluginList.add(createPlugin(plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion()));
-
         // Add additional dependencies
         if (plugins != null) {
             for (Dependency artifact : plugins) {
