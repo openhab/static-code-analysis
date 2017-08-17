@@ -76,6 +76,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.google.common.io.Files;
+
 import net.sf.saxon.TransformerFactoryImpl;
 
 /**
@@ -133,7 +135,8 @@ public class ReportUtility extends AbstractMojo {
 
     // Name of the file that contains the merged report
     public static final String RESULT_FILE_NAME = "report.html";
-    public static final String SUMMARY_FILE_NAME = "summary_report.html";
+    public static final String SUMMARY_REPORT_FILE_NAME = "summary_report.html";
+    public static final String SUMMARY_BUNLES_FILE_NAME = "summary_bundles.html";
     private static final String EMPTY = "";
 
     private TransformerFactory transformerFactory;
@@ -209,7 +212,8 @@ public class ReportUtility extends AbstractMojo {
 
             // 7. Append the individual report to the summary, if it is not empty
             if (summaryReportDirectory != null) {
-                appendToSummary(htmlOutputFileName, summaryReportDirectory, mergedReport);
+                generateSummaryByBundle(htmlOutputFileName, mergedReport);
+                generateSummaryByRules(htmlOutputFileName, mergedReport);
             }
 
             // 8. Fail the build if the option is enabled and high priority warnings are found
@@ -307,7 +311,7 @@ public class ReportUtility extends AbstractMojo {
 
     }
 
-    private void appendToSummary(File htmlOutputFileName, File summaryReportDirectory, File secondMergeResult) {
+    private void generateSummaryByBundle(File htmlOutputFileName, File secondMergeResult) {
         NodeList nodes = selectNodes(secondMergeResult, "/sca/file/message");
         int messagesNumber = nodes.getLength();
         if (messagesNumber == 0) {
@@ -316,7 +320,7 @@ public class ReportUtility extends AbstractMojo {
         }
 
         try {
-            File summaryReport = new File(summaryReportDirectory + File.separator + SUMMARY_FILE_NAME);
+            File summaryReport = new File(summaryReportDirectory, SUMMARY_BUNLES_FILE_NAME);
             if (!summaryReport.exists()) {
 
                 InputStream inputStream = Thread.currentThread().getContextClassLoader()
@@ -350,6 +354,28 @@ public class ReportUtility extends AbstractMojo {
             logger.warn("Can't read or write to summary report. The summary report might be incomplete!", e);
         }
 
+    }
+
+    private void generateSummaryByRules(final File htmlOutputFileName, final File mergedReport) {
+        File latestMergeResult = new File(summaryReportDirectory, "old_Merge.xml");
+        File latestSummaryReport = new File(summaryReportDirectory, SUMMARY_REPORT_FILE_NAME);
+
+        try {
+            if (!latestMergeResult.exists() && !latestSummaryReport.exists()) {
+                latestMergeResult.createNewFile();
+                latestSummaryReport.createNewFile();
+                Files.copy(mergedReport, latestMergeResult);
+                Files.copy(htmlOutputFileName, latestSummaryReport);
+            } else {
+                final File tempMergedReport = new File(summaryReportDirectory, "temp_Merge.xml");
+                Files.copy(latestMergeResult, tempMergedReport);
+                run(MERGE_XSLT, tempMergedReport, latestMergeResult, "with", mergedReport);
+                run(CREATE_HTML_XSLT, latestMergeResult, latestSummaryReport, EMPTY, null);
+                deleteFile(tempMergedReport);
+            }
+        } catch (IOException e) {
+            logger.error("Unable to create or write to file {}", e.getMessage(), e);
+        }
     }
 
     private NodeList selectNodes(File file, String xPathExpression) {
