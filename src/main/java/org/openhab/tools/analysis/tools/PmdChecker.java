@@ -46,7 +46,7 @@ public class PmdChecker extends AbstractChecker {
     /**
      * The version of the maven-pmd-plugin that will be used
      */
-    @Parameter(property = "maven.pmd.version", defaultValue = "3.7")
+    @Parameter(property = "maven.pmd.version", defaultValue = "3.8")
     private String mavenPmdVersion;
 
     /**
@@ -55,6 +55,7 @@ public class PmdChecker extends AbstractChecker {
     @Parameter
     private List<Dependency> pmdPlugins = new ArrayList<>();
 
+    private static final String PMD_VERSION = "5.8.1";
     /**
      * Location of the properties files that contains configuration options for the maven-pmd-plugin
      */
@@ -80,6 +81,10 @@ public class PmdChecker extends AbstractChecker {
                 element("rulesets", element("ruleset", rulesetLocation)));
 
         pmdPlugins.add(dependency(plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion()));
+        pmdPlugins.add(dependency("net.sourceforge.pmd", "pmd-core", PMD_VERSION));
+        pmdPlugins.add(dependency("net.sourceforge.pmd", "pmd-java", PMD_VERSION));
+        pmdPlugins.add(dependency("net.sourceforge.pmd", "pmd-javascript", PMD_VERSION));
+        pmdPlugins.add(dependency("net.sourceforge.pmd", "pmd-jsp", PMD_VERSION));
         pmdPlugins.forEach(logDependency());
 
         executeCheck(MAVEN_PMD_PLUGIN_GROUP_ID, MAVEN_PMD_PLUGIN_ARTIFACT_ID, mavenPmdVersion, MAVEN_PMD_PLUGIN_GOAL,
