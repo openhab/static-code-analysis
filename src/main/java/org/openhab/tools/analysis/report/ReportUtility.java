@@ -32,7 +32,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  */
 package org.openhab.tools.analysis.report;
 
@@ -93,6 +92,7 @@ import net.sf.saxon.TransformerFactoryImpl;
  * @author Markus Sprunck - Initial Implementation
  * @author Svilen Valkanov - Some minor changes and adaptations
  * @author Petar Valchev - Changed the logging to be parameterized
+ * @author Martin van Wingerden - added maven console logging of all messages
  */
 
 @Mojo(name = "report")
@@ -216,27 +216,24 @@ public class ReportUtility extends AbstractMojo {
                 generateSummaryByRules(htmlOutputFileName, mergedReport);
             }
 
-            // 8. Fail the build if the option is enabled and high priority warnings are found
+            // 8. Report errors and warnings
+            reportWarningsAndErrors(mergedReport, htmlOutputFileName);
+
+            // 9. Fail the build if the option is enabled and high priority warnings are found
             if (failOnError) {
-                String errorLog = checkForErrors(mergedReport, htmlOutputFileName);
-                if (errorLog != null) {
-                    throw new MojoFailureException(errorLog);
-                }
+                checkForErrors(mergedReport, htmlOutputFileName);
             }
 
-            // 9. Delete the temporary files
+            // 10. Delete the temporary files
             deleteFile(mergedReport);
         } else {
             getLog().info("No reports found !");
         }
-
     }
 
     private void run(final String xslt, final File input, final File output, final String param, final File value) {
-
         FileOutputStream outputStream = null;
         try {
-
             logger.debug("{}  > {} {} {} >  {}", input, xslt, param, value, output);
 
             // Process the Source into a Transformer Object
@@ -256,11 +253,10 @@ public class ReportUtility extends AbstractMojo {
 
             // Transform the XML Source to a Result
             transformer.transform(xmlSource, outputTarget);
-
         } catch (IOException e) {
-            logger.error("IOException occcured ", e);
+            logger.error("IOException occcurred ", e);
         } catch (TransformerException e) {
-            logger.error("TransformerException occcured ", e);
+            logger.error("TransformerException occcurred ", e);
         } finally {
             if (null != outputStream) {
                 try {
@@ -272,43 +268,94 @@ public class ReportUtility extends AbstractMojo {
         }
     }
 
-    void deleteFile(File file) {
+    private void deleteFile(File file) {
         if (!file.delete()) {
             logger.error("Unable to delete file {}", file.getAbsolutePath());
         }
     }
 
-    private String checkForErrors(File secondMergeResult, File reportLocation) {
-        NodeList nodes = selectNodes(secondMergeResult, "/sca/file/message[@priority=1]");
-        int errorNumber = nodes.getLength();
+    private void reportWarningsAndErrors(File mergedReport, File reportLocation) {
+        NodeList messages = selectNodes(mergedReport, "/sca/file/message");
+        int messageCount = messages.getLength();
 
-        if (errorNumber == 0) {
-            return null;
+        int errorCount = countPriority(messages, "1");
+        int warnCount = countPriority(messages, "2");
+        int infoCount = countPriority(messages, "3");
+
+        if (messageCount == 0) {
+            return;
         }
-        StringBuilder result = new StringBuilder();
-        result.append("Code Analysis Tool has found ").append(errorNumber).append(" error(s)! \n");
-        result.append("Please fix the errors and rerun the build. \n");
-        result.append("Errors list: \n");
 
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node currentNode = nodes.item(i);
+        String format = String.format("Code Analysis Tool has found: \n %d error(s)! \n %d warning(s) \n %d info(s)", errorCount, warnCount, infoCount);
+        report(maxLevel(errorCount, warnCount, infoCount), format);
+
+        for (int i = 0; i < messages.getLength(); i++) {
+            Node currentNode = messages.item(i);
             if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element messageNode = (Element) currentNode;
-                String message = messageNode.getAttribute("message");
-                String tool = messageNode.getAttribute("tool");
-                String line = messageNode.getAttribute("line");
+                String priority = messageNode.getAttribute("priority");
 
                 Element fileNode = ((Element) messageNode.getParentNode());
                 String fileName = fileNode.getAttribute("name");
+                String line = messageNode.getAttribute("line");
+                String message = messageNode.getAttribute("message").trim();
 
-                String logTemplate = "ERROR found by %s: %s:%s %s \n";
-                String log = String.format(logTemplate, tool, fileName, line, message);
-                result.append(log);
+                String logTemplate = "%s:[%s]\n%s";
+                String log = String.format(logTemplate, fileName, line, message);
+                report(priority, log);
             }
         }
-        result.append("Detailed report can be found at: file:///").append(reportLocation).append("\n");
-        return result.toString();
+        getLog().info("Detailed report can be found at: file:///" + reportLocation);
+    }
 
+    private String maxLevel(int errorCount, int warnCount, int infoCount) {
+        if (errorCount > 0){
+            return "1";
+        } else if (warnCount > 0){
+            return "2";
+        } else {
+            return "3";
+        }
+    }
+
+    private int countPriority(NodeList messages, String priority) {
+        int count = 0;
+        for (int i = 0; i < messages.getLength(); i++) {
+            Node currentNode = messages.item(i);
+            if (currentNode.getNodeType() != Node.ELEMENT_NODE) {
+                 continue;
+            }
+            Element messageNode = (Element) currentNode;
+
+            if (priority.equals(messageNode.getAttribute("priority"))){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private void checkForErrors(File secondMergeResult, File reportLocation) throws MojoFailureException {
+        int numberOfErrors = selectNodes(secondMergeResult, "/sca/file/message[@priority=1]").getLength();
+
+        if (numberOfErrors > 0) {
+            throw new MojoFailureException(String.format("\n" +
+                "Code Analysis Tool has found %d error(s)! \n" +
+                "Please fix the errors and rerun the build. \n", selectNodes(secondMergeResult, "/sca/file/message[@priority=1]").getLength()));
+        }
+    }
+
+    private void report(String priority, String log) {
+        switch (priority) {
+            case "1":
+                getLog().error(log);
+                break;
+            case "2":
+                getLog().warn(log);
+                break;
+            case "3":
+            default:
+                getLog().debug(log);
+        }
     }
 
     private void generateSummaryByBundle(File htmlOutputFileName, File secondMergeResult) {
@@ -322,7 +369,6 @@ public class ReportUtility extends AbstractMojo {
         try {
             File summaryReport = new File(summaryReportDirectory, SUMMARY_BUNLES_FILE_NAME);
             if (!summaryReport.exists()) {
-
                 InputStream inputStream = Thread.currentThread().getContextClassLoader()
                         .getResourceAsStream(REPORT_SUBDIR + "/" + SUMMARY_TEMPLATE_FILE_NAME);
 
@@ -353,7 +399,6 @@ public class ReportUtility extends AbstractMojo {
         } catch (IOException e) {
             logger.warn("Can't read or write to summary report. The summary report might be incomplete!", e);
         }
-
     }
 
     private void generateSummaryByRules(final File htmlOutputFileName, final File mergedReport) {
@@ -393,7 +438,5 @@ public class ReportUtility extends AbstractMojo {
                     file.getAbsolutePath(), e);
             return new EmptyNodeList();
         }
-
     }
-
 }
