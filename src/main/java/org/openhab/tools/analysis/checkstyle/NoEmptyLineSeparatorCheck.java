@@ -169,9 +169,12 @@ public class NoEmptyLineSeparatorCheck extends AbstractCheck {
                 return isCaseGroupFollowing ? nextCaseGroup.getFirstChild() : null;
             }
             case TokenTypes.CASE_GROUP: {
-                // Each group ends with a list, null check is not needed
                 DetailAST slistAST = ast.findFirstToken(TokenTypes.SLIST);
-                return findRightCurlyInBlock(slistAST);
+                if (slistAST != null) {
+                    return findRightCurlyInBlock(slistAST);
+                } else {
+                    return findRightCurlyInBlock(ast);
+                }
             }
             default:
                 return findRightCurlyInBlock(ast);

@@ -162,6 +162,11 @@ public class NoEmptyLineSeparatorCheckTest extends AbstractStaticCheckTest {
         verifyJavaFile("MutlitpleEmptyLinesInSwitchWithCases.java", expectedMessages);
     }
 
+    @Test
+    public void verifyValidEmptyDefault() throws Exception {
+        verifyJavaFileNoErrors("ValidEmptyDefaultDefinition.java");
+    }
+
     private void verifyJavaFile(String testFileName, String[] expectedMessages) throws Exception {
         String absolutePathToTestFile = getPath(TEST_DIRECTORY_NAME + "/" + testFileName);
         verify(config, absolutePathToTestFile, expectedMessages);
