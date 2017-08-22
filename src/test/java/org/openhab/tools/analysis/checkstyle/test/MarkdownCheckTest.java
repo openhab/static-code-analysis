@@ -25,8 +25,8 @@ import org.junit.Test;
  *
  * @author Erdoan Hadzhiyusein - Initial implementation
  */
-public class MarkDownCheckTest extends AbstractStaticCheckTest {
-    private static final String README_MD_CHECK_TEST_DIRECTORY_NAME = "markDownCheckTest";
+public class MarkdownCheckTest extends AbstractStaticCheckTest {
+    private static final String README_MD_CHECK_TEST_DIRECTORY_NAME = "markdownCheckTest";
     private static final String ADDED_README_IN_BUILD_PROPERTIES_MSG = "README.MD file must not be added to the bin.includes property";
     private static final String ADDED_DOC_FOLDER_IN_BUILD_PROPERTIES_MSG = "The doc folder must not be added to the bin.includes property";
     private DefaultConfiguration config;

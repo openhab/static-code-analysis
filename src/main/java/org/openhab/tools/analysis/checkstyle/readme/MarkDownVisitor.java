@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Erdoan Hadzhiyusein - Initial contribution
  */
-class MarkDownVisitor extends AbstractVisitor {
+class MarkdownVisitor extends AbstractVisitor {
 
     private static final String EMPTY_LINE_AFTER_HEADER_MSG = "Missing an empty line after the Markdown header ('#').";
     private static final String EMPTY_LINE_BEFORE_LIST_MSG = "The line before a Markdown list must be empty.";
@@ -42,7 +42,7 @@ class MarkDownVisitor extends AbstractVisitor {
     private static final String EMPTY_LINE_AFTER_CODE_MSG = "The line after code formatting section must be empty.";
     private static final String EMPTY_CODE_BLOCK_WARNING = "There is an empty or unclosed code formatting section. Please correct it.";
     private static final String HEADER_AT_END_OF_FILE = "There is a header at the end of the Markdown file. Please consider adding some content below.";
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(MarkdownVisitor.class);
 
     /**
      * This field stores the line number where the processing of the source is up to.
@@ -59,7 +59,7 @@ class MarkDownVisitor extends AbstractVisitor {
     private File file;
     private List<String> lines;
 
-    public MarkDownVisitor(MarkdownVisitorCallback callBack, File file, List<String> lines) {
+    public MarkdownVisitor(MarkdownVisitorCallback callBack, File file, List<String> lines) {
         this.callback = callBack;
         this.file = file;
         this.lines = lines;
@@ -188,7 +188,7 @@ class MarkDownVisitor extends AbstractVisitor {
     }
 
     private int getListLenght(ListBlock listBlock) {
-        MarkDownListVisitor listVisitor = new MarkDownListVisitor();
+        MarkdownListVisitor listVisitor = new MarkdownListVisitor();
         listBlock.accept(listVisitor);
         return listVisitor.getListLenght();
     }

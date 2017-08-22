@@ -122,7 +122,7 @@ public class MarkdownCheck extends AbstractStaticCheck {
                 }
             };
             LinkedList<String> linesList= new LinkedList<String>(Arrays.asList(lines));
-            MarkDownVisitor visitor = new MarkDownVisitor(callBack, file, linesList);
+            MarkdownVisitor visitor = new MarkdownVisitor(callBack, file, linesList);
             readmeMarkdownNode.accept(visitor);
         } catch (IOException e) {
             logger.error(README_IO_ERROR_MESSAGE, file.getAbsolutePath(), e);

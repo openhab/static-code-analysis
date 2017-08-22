@@ -55,7 +55,7 @@
     <property name="severity" value="error" />
   </module>
   
-  <module name="org.openhab.tools.analysis.checkstyle.readme.MarkDownCheck">
+  <module name="org.openhab.tools.analysis.checkstyle.readme.MarkdownCheck">
     <property name="severity" value="warning" />
   </module>  
   

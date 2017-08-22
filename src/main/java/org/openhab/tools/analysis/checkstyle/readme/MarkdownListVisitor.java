@@ -18,7 +18,7 @@ import org.commonmark.node.Node;
  * 
  * @author Erdoan Hadzhiyusein - Initial contribution
  */
-public class MarkDownListVisitor extends AbstractVisitor {
+public class MarkdownListVisitor extends AbstractVisitor {
     private int listLenght;
 
     /**
