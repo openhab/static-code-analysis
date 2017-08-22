@@ -8,7 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,6 +67,10 @@ public class ManifestExternalLibrariesCheck extends AbstractExternalLibrariesChe
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
+        if (!file.getName().equals(MANIFEST_FILE_NAME)) {
+            return;
+        }
+
         final String rootFolderPath = file.getParentFile().getParentFile().getAbsolutePath();
         final String buildPropertiesPath = rootFolderPath + File.separator + "build.properties";
         final String libFolderPath = rootFolderPath + File.separator + LIB_FOLDER_NAME;
