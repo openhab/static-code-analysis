@@ -8,7 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -58,6 +58,9 @@ public class OutsideOfLibExternalLibrariesCheck extends AbstractExternalLibrarie
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
+        if (!file.getName().equals(BUILD_PROPERTIES_FILE_NAME)) {
+            return;
+        }
         File bundleDirectory = file.getParentFile();
         checkBundleForOutOfPlaceJarFiles(bundleDirectory, LIB_FOLDER_NAME);
     }
