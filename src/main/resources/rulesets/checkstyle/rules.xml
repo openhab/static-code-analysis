@@ -54,7 +54,11 @@
   <module name="org.openhab.tools.analysis.checkstyle.OutsideOfLibExternalLibrariesCheck">
     <property name="severity" value="error" />
   </module>
-
+  
+  <module name="org.openhab.tools.analysis.checkstyle.readme.MarkDownCheck">
+    <property name="severity" value="warning" />
+  </module>  
+  
   <module name="org.openhab.tools.analysis.checkstyle.MavenPomderivedInClasspathCheck">
     <property name="severity" value="warning" />
   </module>

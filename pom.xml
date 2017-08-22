@@ -31,6 +31,8 @@
     <org.jsoup.version>1.7.1</org.jsoup.version>
     <pde.core.version>3.11.1</pde.core.version>
     <sat.version>0.2.0</sat.version>
+    <commonmark.version>0.9.0</commonmark.version>
+    <maven.surefire.plugin.version>2.12.4</maven.surefire.plugin.version>
   </properties>
 
   <distributionManagement>
@@ -133,10 +135,20 @@
       <artifactId>org.eclipse.pde.core</artifactId>
       <version>${pde.core.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.atlassian.commonmark</groupId>
+      <artifactId>commonmark</artifactId>
+      <version>${commonmark.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.plugin.version}</version>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-eclipse-plugin</artifactId>
