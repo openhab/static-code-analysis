@@ -42,6 +42,18 @@
   <module name="org.openhab.tools.analysis.checkstyle.ExportInternalPackageCheck">
     <property name="severity" value="error" />
   </module>
+    
+  <module name="org.openhab.tools.analysis.checkstyle.ManifestExternalLibrariesCheck">
+    <property name="severity" value="error" />
+  </module>
+  
+  <module name="org.openhab.tools.analysis.checkstyle.BuildPropertiesExternalLibrariesCheck">
+    <property name="severity" value="error" />
+  </module>
+  
+  <module name="org.openhab.tools.analysis.checkstyle.OutsideOfLibExternalLibrariesCheck">
+    <property name="severity" value="error" />
+  </module>
 
   <module name="org.openhab.tools.analysis.checkstyle.MavenPomderivedInClasspathCheck">
     <property name="severity" value="warning" />
