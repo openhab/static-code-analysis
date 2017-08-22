@@ -207,7 +207,7 @@ class MarkdownVisitor extends AbstractVisitor {
      * This method processes list blocks in the specified Markdown file.
      * 
      * @param borders - an object containing first and last line of the visited list block node also the count of list
-     *            items {@link MarkDownListBounds}
+     *            items {@link MarkdownListBounds}
      */
     private void markDownListProcessing(String firstLineOfList,String lastLineOfList,int listLenght) {
         int listStartingLineNumber = 0;

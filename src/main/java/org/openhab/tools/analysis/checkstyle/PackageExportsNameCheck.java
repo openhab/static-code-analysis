@@ -53,6 +53,8 @@ public class PackageExportsNameCheck extends AbstractStaticCheck {
 
     /**
      * Sets the configuration property for source directories.
+     * 
+     * @param sourceDirectories - source directories
      */
     public void setSourceDirectories(String[] sourceDirectories) {
         this.sourceDirectories = sourceDirectories;
@@ -60,6 +62,8 @@ public class PackageExportsNameCheck extends AbstractStaticCheck {
 
     /**
      * Sets the configuration property for excluding packages.
+     * 
+     * @param excludePackages - excluded packages
      */
     public void setExcludedPackages(String[] excludePackages) {
         this.excludedPackages = excludePackages;
