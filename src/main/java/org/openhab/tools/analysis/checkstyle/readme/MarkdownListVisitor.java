@@ -14,7 +14,7 @@ import org.commonmark.node.ListItem;
 import org.commonmark.node.Node;
 
 /**
- * This visitor is used in the {@link MarkDownVisitor} to get the count of list items in a Markdown list.
+ * This visitor is used in the {@link MarkdownVisitor} to get the count of list items in a Markdown list.
  * 
  * @author Erdoan Hadzhiyusein - Initial contribution
  */
