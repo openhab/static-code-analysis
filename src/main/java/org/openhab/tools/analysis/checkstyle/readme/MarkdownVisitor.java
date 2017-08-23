@@ -118,7 +118,7 @@ class MarkdownVisitor extends AbstractVisitor {
     /**
      * Processes FencedCodeBlock nodes the parser returns.
      * 
-     * @param codeBlock - multiline String containing the literal of the code block
+     * @param codeBlock - multiLine String containing the literal of the code block
      */
     private void validateCodeSection(String codeBlock) {
         int codeStartingLineNumber = 0;
@@ -206,8 +206,9 @@ class MarkdownVisitor extends AbstractVisitor {
     /**
      * This method processes list blocks in the specified Markdown file.
      * 
-     * @param borders - an object containing first and last line of the visited list block node also the count of list
-     *            items {@link MarkdownListBounds}
+     * @param firstLineOfList - the literal of the first list item
+     * @param lastLineOfList - the literal of the last list item
+     * @param listLenght - the number of list items (note that they can be multiLine)
      */
     private void markDownListProcessing(String firstLineOfList,String lastLineOfList,int listLenght) {
         int listStartingLineNumber = 0;
