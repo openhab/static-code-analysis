@@ -90,7 +90,8 @@
   <module name="org.openhab.tools.analysis.checkstyle.RequiredFilesCheck">
      <property name="severity" value="error" />
      <property name="extensions" value="${checkstyle.requiredFilesCheck.extensions}" default="html,properties,xml,MF" />
-     <property name="requiredFiles" value="${checkstyle.requiredFilesCheck.files}" default="about.html,build.properties,pom.xml,MANIFEST.MF" />
+     <!-- Relative path to the root directory of the module-->
+     <property name="requiredFiles" value="${checkstyle.requiredFilesCheck.files}" default="about.html,build.properties,pom.xml,META-INF/MANIFEST.MF" />
   </module>
    
   <module name="org.openhab.tools.analysis.checkstyle.BuildPropertiesCheck">
