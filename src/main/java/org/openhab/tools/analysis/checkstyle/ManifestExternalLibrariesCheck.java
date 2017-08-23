@@ -57,8 +57,7 @@ public class ManifestExternalLibrariesCheck extends AbstractExternalLibrariesChe
             classpathEntries.replaceAll(String::trim);
 
             // Binaries, compiled from the bundle sources are excluded. We will check only external binaries.
-            classpathEntries.remove(".");
-
+            classpathEntries.removeIf(x -> !x.contains(".jar"));
             return classpathEntries;
         } else {
             return Collections.emptyList();
