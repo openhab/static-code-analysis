@@ -97,6 +97,14 @@ public class ManifestExternalLibrariesCheckTest extends AbstractStaticCheckTest 
         verifyManifest(getManifestFilePath(BUNDLE_WITH_SPACES_IN_MANIFEST), warningMessages);
     }
 
+    @Test
+    public void shouldNotLogWhenBundleHasVariousBundleClasspathEntries() throws Exception {
+        final String VALID_BUNDLE_WITH_JAR_FILES_IN_BUILD_PROPERTIES = MAIN_DIRECTORY + File.separator
+                + "bundleWithVariousBundleClasspathEntries" + File.separator + "META-INF";
+        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        verifyManifest(getManifestFilePath(VALID_BUNDLE_WITH_JAR_FILES_IN_BUILD_PROPERTIES), warningMessages);
+    }
+
     private String getManifestFilePath(String bundlePath) throws IOException {
         return getPath(bundlePath + File.separator + TEST_FILE_NAME);
     }

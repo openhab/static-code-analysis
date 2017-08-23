@@ -11,6 +11,7 @@ package org.openhab.tools.analysis.checkstyle.test;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.OutsideOfLibExternalLibrariesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
@@ -31,6 +32,7 @@ public class OutsideOfLibExternalLibrariesCheckTest extends AbstractStaticCheckT
             OutsideOfLibExternalLibrariesCheck.class);
     private static String TEST_FILE_NAME = "build.properties";
     private static final String MAIN_DIRECTORY = "outsideOfLibExternalLibrariesCheck";
+    private static DefaultConfiguration config;
 
     @Override
     protected DefaultConfiguration createCheckerConfig(Configuration config) {
@@ -38,6 +40,14 @@ public class OutsideOfLibExternalLibrariesCheckTest extends AbstractStaticCheckT
         configParent.addChild(config);
 
         return configParent;
+    }
+
+    @BeforeClass
+    public static void setUpClass() {
+        config = createCheckConfig(OutsideOfLibExternalLibrariesCheck.class);
+
+        String ignoredDirectoriesValue = "bin,target";
+        config.addAttribute("ignoredDirectories", ignoredDirectoriesValue);
     }
 
     @Test
@@ -57,7 +67,7 @@ public class OutsideOfLibExternalLibrariesCheckTest extends AbstractStaticCheckT
     }
 
     private void verifyBuildProperties(String filePath, String[] warningMessages) throws Exception {
-        verify(CONFIGURATION, filePath, warningMessages);
+        verify(config, filePath, warningMessages);
     }
 
     private String getBuildPropertiesPath(String bundlePath) throws IOException {
