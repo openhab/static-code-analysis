@@ -31,11 +31,12 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * Tests for {@link RequiredFilesCheck}
  *
  * @author Petar Valchev
- *
+ * @author Svilen Valkanov - Use relative path for required files
  */
 public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
+    private static final String MANIFEST_RELATIVE_PATH_NAME = META_INF_DIRECTORY_NAME + File.separator
+            + MANIFEST_FILE_NAME;
     private static final String TEST_DIRECTORY_NAME = "requiredFilesCheckTest";
-
     private static final String MISSING_FILE_MSG = "Missing %s file.";
 
     private static DefaultConfiguration config;
@@ -49,7 +50,7 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
         config.addAttribute("extensions", extenstionsPropertyValue);
 
         String requiredFilesPropertyValue = String.format("%s,%s,%s,%s,%s", ABOUT_HTML_FILE_NAME,
-                BUILD_PROPERTIES_FILE_NAME, POM_XML_FILE_NAME, MANIFEST_FILE_NAME, README_MD_FILE_NAME);
+                BUILD_PROPERTIES_FILE_NAME, POM_XML_FILE_NAME, MANIFEST_RELATIVE_PATH_NAME, README_MD_FILE_NAME);
         config.addAttribute("requiredFiles", requiredFilesPropertyValue);
     }
 
@@ -88,7 +89,7 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testMissingManifestMfFile() throws Exception {
-        verifyDirectory("missing_manifest_mf_directory", MANIFEST_FILE_NAME,
+        verifyDirectory("missing_manifest_mf_directory", MANIFEST_RELATIVE_PATH_NAME,
                 String.format(MISSING_FILE_MSG, MANIFEST_FILE_NAME));
     }
 
@@ -114,11 +115,11 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
 
         Map<String, List<String>> expectedViolations = new HashMap<>();
 
-        addExpectedViolation(expectedViolations, MANIFEST_FILE_NAME);
-        addExpectedViolation(expectedViolations, ABOUT_HTML_FILE_NAME);
-        addExpectedViolation(expectedViolations, BUILD_PROPERTIES_FILE_NAME);
-        addExpectedViolation(expectedViolations, POM_XML_FILE_NAME);
-        addExpectedViolation(expectedViolations, README_MD_FILE_NAME);
+        addExpectedViolation(expectedViolations, MANIFEST_RELATIVE_PATH_NAME, MANIFEST_FILE_NAME);
+        addExpectedViolation(expectedViolations, ABOUT_HTML_FILE_NAME, ABOUT_HTML_FILE_NAME);
+        addExpectedViolation(expectedViolations, BUILD_PROPERTIES_FILE_NAME, BUILD_PROPERTIES_FILE_NAME);
+        addExpectedViolation(expectedViolations, POM_XML_FILE_NAME, POM_XML_FILE_NAME);
+        addExpectedViolation(expectedViolations, README_MD_FILE_NAME, README_MD_FILE_NAME);
 
         verify(createChecker(config), testFiles, expectedViolations);
     }
@@ -132,7 +133,6 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
 
     private void verifyDirectory(String testDirectoryName, String fileName, String expectedMessage) throws Exception {
         File[] testFiles = getFilesForDirectory(testDirectoryName);
-
         String testDirectoryAbsolutePath = getDirectoryAbsolutePath(testDirectoryName);
         String messageFilePath = testDirectoryAbsolutePath + File.separator + fileName;
 
@@ -146,9 +146,9 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
         verify(createChecker(config), testFiles, messageFilePath, expectedMessages);
     }
 
-    private void addExpectedViolation(Map<String, List<String>> expectedViolations, String fileName) {
+    private void addExpectedViolation(Map<String, List<String>> expectedViolations, String filePath, String fileName) {
         String[] expectedMessages = generateExpectedMessages(0, String.format(MISSING_FILE_MSG, fileName));
-        expectedViolations.put(File.separator + fileName, Arrays.asList(expectedMessages));
+        expectedViolations.put(File.separator + filePath, Arrays.asList(expectedMessages));
     }
 
     private File[] getFilesForDirectory(String directoryName) throws IOException {
