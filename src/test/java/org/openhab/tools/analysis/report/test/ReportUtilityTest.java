@@ -91,6 +91,7 @@ public class ReportUtilityTest {
         subject.setFailOnError(false);
         subject.setSummaryReport(null);
         subject.setTargetDirectory(new File(TARGET_ABSOLUTE_DIR));
+        subject.setReportInMaven(true);
 
         subject.execute();
 
