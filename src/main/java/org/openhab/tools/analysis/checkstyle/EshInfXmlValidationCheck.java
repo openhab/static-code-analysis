@@ -8,11 +8,14 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.text.MessageFormat;
@@ -30,6 +33,8 @@ import javax.xml.validation.Validator;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractEshInfXmlCheck;
+import org.openhab.tools.analysis.utils.CachingHttpClient;
+import org.openhab.tools.analysis.utils.ContentReceviedCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -43,11 +48,12 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * Check if all files from ESH-INF are included in the build.properties file.
  *
  * @author Aleksandar Kovachev - Initial implementation
- * @author Svlien Valkanov - Some code refactoring and cleanup, added check for the build.properties file
+ * @author Svlien Valkanov - Some code refactoring and cleanup,
+ *         added check for the build.properties file,
+ *         download schema files only once
  *
  */
 public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
-
     private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `ESH-INF/` value to the bin.includes property.";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -58,6 +64,10 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
     private String thingSchema;
     private String bindingSchema;
     private String configSchema;
+
+    private static Schema thingSchemaFile;
+    private static Schema bindingSchemaFile;
+    private static Schema configSchemaFile;
 
     /**
      * Sets the configuration property for the thing schema file.
@@ -88,6 +98,32 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
 
     public EshInfXmlValidationCheck() {
         setFileExtensions(XML_EXTENSION, PROPERTIES_EXTENSION);
+    }
+
+    @Override
+    public void beginProcessing(String charset) {
+        ContentReceviedCallback<Schema> callback = new ContentReceviedCallback<Schema>() {
+            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+            @Override
+            public Schema transform(byte[] content) {
+                try {
+                    InputStream is = new ByteArrayInputStream(content);
+                    return schemaFactory.newSchema(new StreamSource(is));
+                } catch (SAXException e) {
+                    logger.error("Unable to parse schema ", e);
+                    return null;
+                }
+            }
+        };
+
+        CachingHttpClient<Schema> cachingClient = new CachingHttpClient<>(callback);
+
+        bindingSchemaFile = getXSD(bindingSchema, cachingClient);
+        thingSchemaFile = getXSD(thingSchema, cachingClient);
+        configSchemaFile = getXSD(configSchema, cachingClient);
+
+        super.beginProcessing(charset);
     }
 
     @Override
@@ -130,19 +166,19 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
     @Override
     protected void checkConfigFile(File xmlFile) throws CheckstyleException {
         addToEshFiles(xmlFile);
-        validateXmlAgainstSchema(xmlFile, configSchema);
+        validateXmlAgainstSchema(xmlFile, configSchemaFile);
     }
 
     @Override
     protected void checkBindingFile(File xmlFile) throws CheckstyleException {
         addToEshFiles(xmlFile);
-        validateXmlAgainstSchema(xmlFile, bindingSchema);
+        validateXmlAgainstSchema(xmlFile, bindingSchemaFile);
     }
 
     @Override
     protected void checkThingTypeFile(File xmlFile) throws CheckstyleException {
         addToEshFiles(xmlFile);
-        validateXmlAgainstSchema(xmlFile, thingSchema);
+        validateXmlAgainstSchema(xmlFile, thingSchemaFile);
     }
 
     private void processBuildProperties(File file) throws CheckstyleException {
@@ -153,16 +189,11 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
         }
     }
 
-    private void validateXmlAgainstSchema(File xmlFile, String schemaPath) {
-        URL schemaURL = getSchemaURL(schemaPath);
-        if (schemaURL != null) {
+    private void validateXmlAgainstSchema(File xmlFile, Schema schema) {
+        if (schema != null) {
             try {
-                SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-                Schema schema = schemaFactory.newSchema(schemaURL);
-
                 Validator validator = schema.newValidator();
                 validator.validate(new StreamSource(xmlFile));
-
             } catch (SAXParseException exception) {
                 String message = exception.getMessage();
                 // Removing the type of the logged message (For example - "cvc-complex-type.2.4.b: ...").
@@ -173,27 +204,7 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
                 logger.error("Problem occurred while parsing the file {}", xmlFile.getName(), e);
             }
         } else {
-            logger.warn("Unable to reach {}. XML validation will be skipped.", schemaPath);
-        }
-    }
-
-    private URL getSchemaURL(String schemaPath) {
-        HttpURLConnection connection = null;
-        try {
-            URL url = new URL(schemaPath);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("HEAD");
-            int responseCode = connection.getResponseCode();
-            if (responseCode != 200) {
-                return null;
-            }
-            return url;
-        } catch (IOException e) {
-            return null;
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
+            logger.warn("XML validation will be skipped as the schema file download failed.");
         }
     }
 
@@ -209,5 +220,16 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
         Path bundlePath = filePath.getParent().getParent().getParent();
         Path relativePath = bundlePath.relativize(filePath);
         eshInfFiles.put(relativePath, xmlFile);
+    }
+
+    private Schema getXSD(String schemaUrlString, CachingHttpClient<Schema> client) {
+        try {
+            URL schemaUrl = new URL(schemaUrlString);
+            return client.get(schemaUrl);
+        } catch (IOException e) {
+            logger.error("Unable to get XSD file {} : {}", schemaUrlString, e.getMessage(), e);
+            return null;
+        }
+
     }
 }

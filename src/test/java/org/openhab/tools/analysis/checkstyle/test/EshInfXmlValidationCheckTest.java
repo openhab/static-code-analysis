@@ -12,7 +12,6 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ESH_INF_D
 
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -23,6 +22,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.EshInfXmlValidationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
+import org.openhab.tools.analysis.utils.CachingHttpClient;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import com.puppycrawl.tools.checkstyle.api.Configuration;
@@ -66,17 +66,11 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
     private boolean isResourceAvailable;
 
     @Before
-    public void setUp() {
+    public void checkConnection() {
         try {
-            // Thing schema is used only for probe
             URL url = new URL(THING_SCHEMA_URL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("HEAD");
-            int responseCode = connection.getResponseCode();
-            if (responseCode != 200) {
-                isResourceAvailable = false;
-            }
-            isResourceAvailable = true;
+            CachingHttpClient<String> cachingClient = new CachingHttpClient<>(c -> new String(c));
+            isResourceAvailable = cachingClient.get(url) != null;
         } catch (IOException e) {
             isResourceAvailable = false;
         }

@@ -8,14 +8,16 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ABOUT_HTML_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BIN_INCLUDES_PROPERTY_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.HTML_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.jsoup.Jsoup;
@@ -23,6 +25,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+import org.openhab.tools.analysis.utils.CachingHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,19 +65,16 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
 
     @Override
     public void beginProcessing(String charset) {
-        InputStream validAboutHtmlInputStream = null;
+        CachingHttpClient<String> cachingClient = new CachingHttpClient<>(data -> new String(data));
+
         try {
             URL url = new URL(validAboutHtmlFileURL);
-            validAboutHtmlInputStream = url.openStream();
             // get the content of a valid about.html file,
             // so that we can compare the processed about.html
             // files with it
-            validAboutHtmlFileContent = IOUtils.toString(validAboutHtmlInputStream);
+            validAboutHtmlFileContent = cachingClient.get(url);
         } catch (IOException e) {
-            logger.error("An exception was thrown, while trying to read the about.html url: {}. {} {}",
-                    validAboutHtmlFileURL, SUSPEND_CHECKS_MSG, e.getMessage());
-        } finally {
-            IOUtils.closeQuietly(validAboutHtmlInputStream);
+            logger.error("Unable to get about.html file from {} : {}", validAboutHtmlFileURL, e.getMessage(), e);
         }
     }
 
@@ -90,11 +90,15 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
             if (!isAboutHtmlIncluded) {
                 log(0, MISSING_ABOUT_HTML_IN_BUILD_PROPERTIES_MSG, file.getPath());
             }
-        } else if (validAboutHtmlFileContent != null && ABOUT_HTML_FILE_NAME.equals(fileName)) {
+        } else if (ABOUT_HTML_FILE_NAME.equals(fileName)) {
             if (!isEmpty(file)) {
-                Document fileDocument = parseHTMLDocumentFromFile(file);
-                checkLicenseHeader(fileDocument);
-                checkLicenseParagraph(fileDocument);
+                if (validAboutHtmlFileContent != null) {
+                    Document fileDocument = parseHTMLDocumentFromFile(file);
+                    checkLicenseHeader(fileDocument);
+                    checkLicenseParagraph(fileDocument);
+                } else {
+                    logger.warn("About.html validation will be skipped as the about.html file download failed");
+                }
             } else {
                 log(0, "Empty about.html file. " + VALID_ABOUT_HTML_FILE_LINK_MSG + validAboutHtmlFileURL);
             }
