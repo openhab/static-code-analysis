@@ -119,6 +119,9 @@ public class ReportUtility extends AbstractMojo {
 
     private static final String REPORT_SUBDIR = "report";
 
+    @Parameter(property = "report.in.maven", defaultValue = "true")
+    private boolean reportInMaven;
+
     // XSLT files that are used to create the merged report, located in the resources folder
     private static final String CREATE_HTML_XSLT = REPORT_SUBDIR + "/create_html.xslt";
     private static final String MERGE_XSLT = REPORT_SUBDIR + "/merge.xslt";
@@ -154,6 +157,10 @@ public class ReportUtility extends AbstractMojo {
 
     public void setSummaryReport(File summaryReport) {
         this.summaryReportDirectory = summaryReport;
+    }
+
+    public void setReportInMaven(boolean reportInMaven) {
+        this.reportInMaven = reportInMaven;
     }
 
     @Override
@@ -216,8 +223,10 @@ public class ReportUtility extends AbstractMojo {
                 generateSummaryByRules(htmlOutputFileName, mergedReport);
             }
 
-            // 8. Report errors and warnings
-            reportWarningsAndErrors(mergedReport, htmlOutputFileName);
+            // 8. Report errors and warnings in Maven
+            if (reportInMaven) {
+                reportWarningsAndErrors(mergedReport, htmlOutputFileName);
+            }
 
             // 9. Fail the build if the option is enabled and high priority warnings are found
             if (failOnError) {
@@ -286,7 +295,8 @@ public class ReportUtility extends AbstractMojo {
             return;
         }
 
-        String format = String.format("Code Analysis Tool has found: \n %d error(s)! \n %d warning(s) \n %d info(s)", errorCount, warnCount, infoCount);
+        String format = String.format("Code Analysis Tool has found: \n %d error(s)! \n %d warning(s) \n %d info(s)",
+                errorCount, warnCount, infoCount);
         report(maxLevel(errorCount, warnCount, infoCount), format);
 
         for (int i = 0; i < messages.getLength(); i++) {
@@ -309,9 +319,9 @@ public class ReportUtility extends AbstractMojo {
     }
 
     private String maxLevel(int errorCount, int warnCount, int infoCount) {
-        if (errorCount > 0){
+        if (errorCount > 0) {
             return "1";
-        } else if (warnCount > 0){
+        } else if (warnCount > 0) {
             return "2";
         } else {
             return "3";
@@ -323,11 +333,11 @@ public class ReportUtility extends AbstractMojo {
         for (int i = 0; i < messages.getLength(); i++) {
             Node currentNode = messages.item(i);
             if (currentNode.getNodeType() != Node.ELEMENT_NODE) {
-                 continue;
+                continue;
             }
             Element messageNode = (Element) currentNode;
 
-            if (priority.equals(messageNode.getAttribute("priority"))){
+            if (priority.equals(messageNode.getAttribute("priority"))) {
                 count++;
             }
         }
@@ -338,9 +348,10 @@ public class ReportUtility extends AbstractMojo {
         int numberOfErrors = selectNodes(secondMergeResult, "/sca/file/message[@priority=1]").getLength();
 
         if (numberOfErrors > 0) {
-            throw new MojoFailureException(String.format("\n" +
-                "Code Analysis Tool has found %d error(s)! \n" +
-                "Please fix the errors and rerun the build. \n", selectNodes(secondMergeResult, "/sca/file/message[@priority=1]").getLength()));
+            throw new MojoFailureException(String.format(
+                    "\n" + "Code Analysis Tool has found %d error(s)! \n"
+                            + "Please fix the errors and rerun the build. \n",
+                    selectNodes(secondMergeResult, "/sca/file/message[@priority=1]").getLength()));
         }
     }
 
