@@ -12,7 +12,6 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ABOUT_HTM
 
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.junit.Assume;
@@ -20,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.AboutHtmlCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
+import org.openhab.tools.analysis.utils.CachingHttpClient;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import com.puppycrawl.tools.checkstyle.api.Configuration;
@@ -53,12 +53,8 @@ public class AboutHtmlCheckTest extends AbstractStaticCheckTest {
     public void setUp() {
         try {
             URL url = new URL(VALID_ABOUT_HTML_FILE_URL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setInstanceFollowRedirects(false);
-            connection.setRequestMethod("HEAD");
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                availableResourceURL = true;
-            }
+            CachingHttpClient<String> cachingClient = new CachingHttpClient<>(c -> new String(c));
+            availableResourceURL = cachingClient.get(url) != null;
         } catch (IOException e) {
             availableResourceURL = false;
         }

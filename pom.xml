@@ -34,6 +34,7 @@
     <sat.version>0.2.0</sat.version>
     <commonmark.version>0.9.0</commonmark.version>
     <maven.surefire.plugin.version>2.12.4</maven.surefire.plugin.version>
+    <jetty.server.version>9.3.14.v20161028</jetty.server.version>
   </properties>
 
   <distributionManagement>
@@ -146,6 +147,12 @@
       <groupId>com.atlassian.commonmark</groupId>
       <artifactId>commonmark</artifactId>
       <version>${commonmark.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <version>${jetty.server.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
