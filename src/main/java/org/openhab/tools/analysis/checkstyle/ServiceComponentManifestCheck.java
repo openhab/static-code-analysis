@@ -8,7 +8,12 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OSGI_INF_DIRECTORY_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,11 +31,11 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -48,7 +53,7 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
     private static final String WILDCARD = "*";
     private static final String SERVICE_COMPONENT_HEADER = "Service-Component";
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Log logger = LogFactory.getLog(this.getClass());
 
     private List<String> manifestServiceComponents = new ArrayList<>();
     private List<String> componentXmlFiles = new ArrayList<>();
@@ -67,8 +72,10 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
     private IBuild buildPropertiesFile;
 
     public ServiceComponentManifestCheck() {
-        logger.debug("Executing {}: Check if all the declarative services are included in the {}",
+        String message = MessageFormat.format(
+                "Executing {0}: Check if all the declarative services are included in the {1}",
                 this.getClass().getName(), MANIFEST_FILE_NAME);
+        logger.debug(message);
         setFileExtensions(MANIFEST_EXTENSION, XML_EXTENSION, PROPERTIES_EXTENSION);
     }
 
@@ -114,7 +121,7 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
             buildPropertiesFile = parseBuildProperties(file);
             buildPropertiesPath = file.getPath();
         } catch (CheckstyleException e) {
-            logger.error("Problem occurred while parsing the file {}", file.getPath(), e);
+            logger.error("Problem occurred while parsing the file " + file.getPath(), e);
         }
     }
 
@@ -143,9 +150,8 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
 
             for (Path path : componentXmlRelativePaths) {
                 logMessage(buildPropertiesPath, 0, BUILD_PROPERTIES_FILE_NAME,
-                        MessageFormat.format(
-                                "The service component {0} isn`t included in the build.properties file."
-                                        + " Good approach is to include all files by adding `OSGI-INF/` value to the bin.includes property.",
+                        MessageFormat.format("The service component {0} isn`t included in the build.properties file."
+                                + " Good approach is to include all files by adding `OSGI-INF/` value to the bin.includes property.",
                                 path));
             }
         }
@@ -279,9 +285,8 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
                         // if the parent directory of the service is not
                         // OSGI-INF
                         logMessage(serviceComponentHeaderLineNumber,
-                                String.format(
-                                        "Incorrect directory for services - %s. "
-                                                + "The best practice is services metadata files to be placed directly in OSGI-INF directory.",
+                                String.format("Incorrect directory for services - %s. "
+                                        + "The best practice is services metadata files to be placed directly in OSGI-INF directory.",
                                         serviceComponentParentDirectoryName));
                     }
 
@@ -292,15 +297,14 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
                         manifestServiceComponents.add(serviceComponentName);
                     } else {
                         logMessage(serviceComponentHeaderLineNumber,
-                                String.format(
-                                        "The service %s is with invalid extension."
-                                                + "Only XML metadata files for services description are expected in the OSGI-INF directory.",
+                                String.format("The service %s is with invalid extension."
+                                        + "Only XML metadata files for services description are expected in the OSGI-INF directory.",
                                         serviceComponentName));
                     }
                 }
             }
         } catch (IOException e) {
-            logger.error("Problem occurred while parsing the file {}", file.getPath(), e);
+            logger.error("Problem occurred while parsing the file " + file.getPath(), e);
         }
     }
 

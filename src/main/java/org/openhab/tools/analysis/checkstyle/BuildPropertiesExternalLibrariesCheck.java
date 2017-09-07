@@ -8,7 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,10 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractExternalLibrariesCheck;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -37,7 +38,7 @@ public class BuildPropertiesExternalLibrariesCheck extends AbstractExternalLibra
     private static final String FILES_NEED_TO_BE_IN_A_LIB_FOLDER = "All jar files need to be placed inside a lib folder.";
     private static final String JAR_PRESENT_IN_BUILD_PROPERTIES_NOT_IN_LIB = "The file %s is present in the build properties but not in the lib folder.";
     private static final String JAR_PRESENT_IN_LIB_NOT_IN_BUILD_PROPERTIES = "The jar file %s is present in the lib folder but is not present in the build properties";
-    private static final Logger logger = LoggerFactory.getLogger(BuildPropertiesExternalLibrariesCheck.class);
+    private static final Log logger = LogFactory.getLog(BuildPropertiesExternalLibrariesCheck.class);
 
     public BuildPropertiesExternalLibrariesCheck() {
         // build.properties will not be explicitly processed by the check.

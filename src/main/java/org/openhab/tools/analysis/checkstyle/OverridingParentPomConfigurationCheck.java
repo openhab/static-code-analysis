@@ -8,7 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
 
 import java.io.File;
 
@@ -16,9 +17,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -34,7 +35,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
     private static final String POM_CONFIGURATION_EXPRESSION = "/project//*[@combine.self='override']/@combine.self";
 
-    private final Logger logger = LoggerFactory.getLogger(OverridingParentPomConfigurationCheck.class);
+    private final Log logger = LogFactory.getLog(OverridingParentPomConfigurationCheck.class);
 
     public OverridingParentPomConfigurationCheck() {
         setFileExtensions(XML_EXTENSION);

@@ -9,8 +9,11 @@
 package org.openhab.tools.analysis.checkstyle.readme;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.maven.shared.utils.StringUtils;
 import org.commonmark.node.AbstractVisitor;
 import org.commonmark.node.BulletList;
@@ -24,13 +27,11 @@ import org.commonmark.node.OrderedList;
 import org.commonmark.node.Paragraph;
 import org.commonmark.node.Text;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This visitor processes headers, lists and code sections and logs errors when
  * needed.
- * 
+ *
  * @author Erdoan Hadzhiyusein - Initial contribution
  */
 class MarkdownVisitor extends AbstractVisitor {
@@ -42,7 +43,7 @@ class MarkdownVisitor extends AbstractVisitor {
     private static final String EMPTY_LINE_AFTER_CODE_MSG = "The line after code formatting section must be empty.";
     private static final String EMPTY_CODE_BLOCK_WARNING = "There is an empty or unclosed code formatting section. Please correct it.";
     private static final String HEADER_AT_END_OF_FILE = "There is a header at the end of the Markdown file. Please consider adding some content below.";
-    private final Logger logger = LoggerFactory.getLogger(MarkdownVisitor.class);
+    private final Log logger = LogFactory.getLog(MarkdownVisitor.class);
 
     /**
      * This field stores the line number where the processing of the source is up to.
@@ -77,7 +78,7 @@ class MarkdownVisitor extends AbstractVisitor {
     /**
      * This method processes the Headings in the README which the Markdown
      * parser returns.
-     * 
+     *
      * @param headerValue - a String containing the literal of found Heading node
      */
     private void validateHeader(String headerValue) {
@@ -86,7 +87,7 @@ class MarkdownVisitor extends AbstractVisitor {
             headerLineNumber = callback.findLineNumber(lines, headerValue, currentLinePointer);
             boolean isInvalidHeaderValue = headerLineNumber == -1;
             if (isInvalidHeaderValue) {
-                logger.error("A header cannot be processed properly: {}", headerValue);
+                logger.error("A header cannot be processed properly: " + headerValue);
             } else {
                 currentLinePointer = headerLineNumber;
                 boolean isHeaderAtEndOfFile = headerLineNumber == lines.size();
@@ -100,8 +101,10 @@ class MarkdownVisitor extends AbstractVisitor {
                 }
             }
         } else {
-            logger.warn("Occurred an error while processing the Markdown file {}. The header value is null.",
+            String message = MessageFormat.format(
+                    "Occurred an error while processing the Markdown file {0}. The header value is null.",
                     file.getAbsolutePath());
+            logger.warn(message);
         }
     }
 
@@ -117,7 +120,7 @@ class MarkdownVisitor extends AbstractVisitor {
 
     /**
      * Processes FencedCodeBlock nodes the parser returns.
-     * 
+     *
      * @param codeBlock - multiLine String containing the literal of the code block
      */
     private void validateCodeSection(String codeBlock) {
@@ -140,7 +143,7 @@ class MarkdownVisitor extends AbstractVisitor {
                 currentLinePointer = codeEndingLineNumber;
                 verifyAfterCodeSection(codeEndingLineNumber);
             } else {
-                logger.error("A code section wasn't processed properly! {}", codeBlock);
+                logger.error("A code section wasn't processed properly! " + codeBlock);
             }
         } else {
             callback.log(currentLinePointer, EMPTY_CODE_BLOCK_WARNING);
@@ -173,7 +176,7 @@ class MarkdownVisitor extends AbstractVisitor {
 
     /**
      * Common method for processing visited {@link BulletList } and {@link OrderedList}
-     * 
+     *
      * @param listBlock - a block type which is common parent of {@link BulletList } and {@link OrderedList}
      */
     private void processListBlock(ListBlock listBlock) {
@@ -205,15 +208,15 @@ class MarkdownVisitor extends AbstractVisitor {
 
     /**
      * This method processes list blocks in the specified Markdown file.
-     * 
+     *
      * @param firstLineOfList - the literal of the first list item
      * @param lastLineOfList - the literal of the last list item
      * @param listLenght - the number of list items (note that they can be multiLine)
      */
-    private void markDownListProcessing(String firstLineOfList,String lastLineOfList,int listLenght) {
+    private void markDownListProcessing(String firstLineOfList, String lastLineOfList, int listLenght) {
         int listStartingLineNumber = 0;
         int listEndingLineNumber = 0;
-        listStartingLineNumber = callback.findLineNumber(lines,firstLineOfList, currentLinePointer);
+        listStartingLineNumber = callback.findLineNumber(lines, firstLineOfList, currentLinePointer);
         // in case findLineNumber returns -1
         if (listStartingLineNumber >= 0) {
             if (listStartingLineNumber == 1) {
@@ -228,12 +231,12 @@ class MarkdownVisitor extends AbstractVisitor {
                     verifyLineBeforeListBlock(listStartingLineNumber);
                     verifyLineAfterListBlock(listEndingLineNumber);
                 } else {
-                    logger.error("A list ending cannot be processed properly: {}", lastLineOfList);
+                    logger.error("A list ending cannot be processed properly: " + lastLineOfList);
                 }
             }
 
         } else {
-            logger.error("A list starting cannot be processed properly: {}", firstLineOfList);
+            logger.error("A list starting cannot be processed properly: " + firstLineOfList);
         }
     }
 
@@ -260,7 +263,7 @@ class MarkdownVisitor extends AbstractVisitor {
 
     /**
      * If there is a specific type of header or list item this method recursively gets its literal
-     * 
+     *
      * @param node - The node that is being processed to get its literal
      * @return - returns null if the literal wasn't processed properly
      */
@@ -294,7 +297,7 @@ class MarkdownVisitor extends AbstractVisitor {
      * The first child represents the first list item in the list block. Then recursively check if there are
      * any child nodes of this item and get the literal of it. Recursion is needed because there could be lists with
      * different structure and formatting.
-     * 
+     *
      * @param node - the listblock which first line is wanted
      * @return - returns the literal of the first line in the list
      **/
@@ -316,7 +319,7 @@ class MarkdownVisitor extends AbstractVisitor {
      * The last child represents the last list item in the list block. Then recursively check if there are
      * any child nodes of this item and get the literal of it. Recursion is needed because there could be lists with
      * different structure and formatting.
-     * 
+     *
      * @param node - the listblock of which last line is wanted
      * @return - returns the literal of the last line in the list
      **/

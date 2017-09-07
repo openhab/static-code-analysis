@@ -17,9 +17,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhab.tools.analysis.checkstyle.api.AbstractEshInfXmlCheck;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -43,7 +43,7 @@ public class EshInfXmlUsageCheck extends AbstractEshInfXmlCheck {
     private static final String MESSAGE_UNUSED_URI_CONFIGURATION = "Unused configuration reference with uri - {0}";
     private static final String MESSAGE_UNUSED_BRIDGE = "Unused bridge reference with id - {0}";
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Log logger = LogFactory.getLog(this.getClass());
 
     private Map<String, File> allConfigDescriptionRefs = new HashMap<>();
     private Map<String, File> allConfigDescriptions = new HashMap<>();
@@ -115,8 +115,10 @@ public class EshInfXmlUsageCheck extends AbstractEshInfXmlCheck {
         try {
             nodes = (NodeList) xpathExpression.evaluate(document, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
-            logger.error("Problem occurred while evaluating the expression {} on the {} file.", expression,
-                    xmlFile.getName(), e);
+            String message = MessageFormat.format(
+                    "Problem occurred while evaluating the expression {0} on the {1} file.", expression,
+                    xmlFile.getName());
+            logger.error(message, e);
         }
         return nodes;
     }

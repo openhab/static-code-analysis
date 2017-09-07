@@ -8,14 +8,15 @@
  */
 package org.openhab.tools.analysis.checkstyle.api;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ESH_INF_DIRECTORY;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
 
 import java.io.File;
 import java.text.MessageFormat;
 
 import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -37,7 +38,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
 
     private static final String MESSAGE_EMPTY_FILE = "The file {0} should not be empty.";
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Log logger = LogFactory.getLog(this.getClass());
 
     public AbstractEshInfXmlCheck() {
         setFileExtensions(XML_EXTENSION);
@@ -45,7 +46,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
 
     @Override
     public void beginProcessing(String charset) {
-        logger.debug("Executing the {}", this.getClass().getSimpleName());
+        logger.debug("Executing the " + this.getClass().getSimpleName());
     }
 
     @Override
