@@ -25,6 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.commonmark.node.Block;
 import org.commonmark.node.FencedCodeBlock;
 import org.commonmark.node.Heading;
@@ -35,8 +37,6 @@ import org.commonmark.parser.Parser;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -48,7 +48,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * <li>missing empty lines before and after code sections.
  * <li>missing empty lines before and after lists.
  * </ul>
- * 
+ *
  * Checks the build.properties for:
  * <ul>
  * <li>the README.MD shouldn't be added in build.properties.
@@ -63,9 +63,9 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 public class MarkdownCheck extends AbstractStaticCheck {
     private static final String ADDED_README_FILE_IN_BUILD_PROPERTIES_MSG = "README.MD file must not be added to the bin.includes property";
     private static final String ADDED_DOC_FOLDER_IN_BUILD_PROPERTIES_MSG = "The doc folder must not be added to the bin.includes property";
-    private static final String README_IO_ERROR_MESSAGE = "An exception was caught during processing markdown readme file {}";
+    private static final String README_IO_ERROR_MESSAGE = "An exception was caught during processing markdown readme file ";
     private static final String DOC_FOLDER_NAME = "doc";
-    private final Logger logger = LoggerFactory.getLogger(MarkdownCheck.class);
+    private final Log logger = LogFactory.getLog(MarkdownCheck.class);
 
     public MarkdownCheck() {
         setFileExtensions(MARKDONW_EXTENSION, PROPERTIES_EXTENSION);
@@ -108,7 +108,7 @@ public class MarkdownCheck extends AbstractStaticCheck {
         try {
             Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
             Node readmeMarkdownNode = parser.parseReader(reader);
-            
+
             // CallBack is used in order to use the protected methods of the AbstractStaticCheck in the Visitor
             MarkdownVisitorCallback callBack = new MarkdownVisitorCallback() {
                 @Override
@@ -121,11 +121,11 @@ public class MarkdownCheck extends AbstractStaticCheck {
                     MarkdownCheck.this.log(line, message);
                 }
             };
-            LinkedList<String> linesList= new LinkedList<String>(Arrays.asList(lines));
+            LinkedList<String> linesList = new LinkedList<String>(Arrays.asList(lines));
             MarkdownVisitor visitor = new MarkdownVisitor(callBack, file, linesList);
             readmeMarkdownNode.accept(visitor);
         } catch (IOException e) {
-            logger.error(README_IO_ERROR_MESSAGE, file.getAbsolutePath(), e);
+            logger.error(README_IO_ERROR_MESSAGE + file.getAbsolutePath(), e);
         }
     }
 

@@ -30,13 +30,13 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractEshInfXmlCheck;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
 import org.openhab.tools.analysis.utils.ContentReceviedCallback;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -56,7 +56,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
     private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `ESH-INF/` value to the bin.includes property.";
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Log logger = LogFactory.getLog(this.getClass());
 
     private Map<Path, File> eshInfFiles = new HashMap<>();
     private IBuild buildPropertiesFile;
@@ -134,7 +134,7 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-        logger.debug("Processing the {}", file.getName());
+        logger.debug("Processing the " + file.getName());
 
         if (file.getName().equals(BUILD_PROPERTIES_FILE_NAME)) {
             processBuildProperties(file);
@@ -185,7 +185,7 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
         try {
             buildPropertiesFile = parseBuildProperties(file);
         } catch (CheckstyleException e) {
-            logger.error("Problem occurred while parsing the file {}", file.getPath(), e);
+            logger.error("Problem occurred while parsing the file " + file.getPath(), e);
         }
     }
 
@@ -201,7 +201,7 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
                 int lineNumber = exception.getLineNumber();
                 log(lineNumber, message, xmlFile.getPath());
             } catch (IOException | SAXException e) {
-                logger.error("Problem occurred while parsing the file {}", xmlFile.getName(), e);
+                logger.error("Problem occurred while parsing the file " + xmlFile.getName(), e);
             }
         } else {
             logger.warn("XML validation will be skipped as the schema file download failed.");
@@ -227,7 +227,8 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
             URL schemaUrl = new URL(schemaUrlString);
             return client.get(schemaUrl);
         } catch (IOException e) {
-            logger.error("Unable to get XSD file {} : {}", schemaUrlString, e.getMessage(), e);
+            String message = MessageFormat.format("Unable to get XSD file {0} : {1}", schemaUrlString, e.getMessage());
+            logger.error(message, e);
             return null;
         }
 

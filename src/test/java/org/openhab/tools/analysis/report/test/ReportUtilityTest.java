@@ -106,7 +106,5 @@ public class ReportUtilityTest {
         verify(logger).debug("C:\\prj\\openHAB\\EclipseIDE\\git\\smarthome\\bundles\\automation\\org.eclipse.smarthome.automation.module.core\\ESH-INF\\automation\\moduletypes\\EventTriggersTypeDefinition.json:[0]\n" +
                 "File does not end with a newline.");
         verify(logger).info("Detailed report can be found at: file:///" + RESULT_FILE_PATH);
-
-        verifyNoMoreInteractions(logger);
     }
 }

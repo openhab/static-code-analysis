@@ -8,7 +8,10 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -20,11 +23,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ivy.osgi.core.BundleInfo;
 import org.apache.ivy.osgi.util.Version;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -55,7 +58,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
     private static String POM_PARENT_VERSION_XPATH_EXPRESSION = "/project/parent/version/text()";
     private static String POM_VERSION_XPATH_EXPRESSION = "/project/version/text()";
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Log logger = LogFactory.getLog(this.getClass());
 
     private String pomDirectoryPath;
 
@@ -108,10 +111,11 @@ public class PomXmlCheck extends AbstractStaticCheck {
             try {
                 return Pattern.compile(regExp);
             } catch (PatternSyntaxException e) {
-                logger.error("Pattern {} syntax is invalid.", regExp);
+                String message = MessageFormat.format("Pattern {0} syntax is invalid.", regExp);
+                logger.error(message, e);
             }
         }
-        logger.debug("Default {} pattern will be used for version matching.", DEFAULT_VERSION_REGULAR_EXPRESSION);
+        logger.debug("Default pattern will be used for version matching: " + DEFAULT_VERSION_REGULAR_EXPRESSION);
         return Pattern.compile(DEFAULT_VERSION_REGULAR_EXPRESSION);
     }
 
@@ -212,7 +216,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
             Node node = nodes.item(0);
             return node != null ? node.getNodeValue() : null;
         } catch (XPathExpressionException e) {
-            logger.error("An exception was thrown, while trying to parse the file: {}", file.getPath(), e);
+            logger.error("An exception was thrown, while trying to parse the file: " + file.getPath(), e);
             return null;
         }
     }

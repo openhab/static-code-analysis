@@ -16,9 +16,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -35,7 +35,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 public class MavenPomderivedInClasspathCheck extends AbstractStaticCheck {
     private static final String POMDERIVED_EXPRESSION = "/classpath/classpathentry/attributes/attribute[@name='maven.pomderived' and @value='true']/@name";
 
-    private final Logger logger = LoggerFactory.getLogger(MavenPomderivedInClasspathCheck.class);
+    private final Log logger = LogFactory.getLog(MavenPomderivedInClasspathCheck.class);
 
     public MavenPomderivedInClasspathCheck() {
         setFileExtensions(CLASSPATH_EXTENSION);

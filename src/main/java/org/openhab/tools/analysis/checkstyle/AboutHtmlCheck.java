@@ -17,7 +17,10 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIE
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.jsoup.Jsoup;
@@ -26,8 +29,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -48,7 +49,7 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
     private static final String PARAGRAPH_TAG = "p";
     private static final String HEADER_3_TAG = "h3";
 
-    private final Logger logger = LoggerFactory.getLogger(AboutHtmlCheck.class);
+    private final Log logger = LogFactory.getLog(AboutHtmlCheck.class);
 
     private String validAboutHtmlFileContent;
 
@@ -74,7 +75,9 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
             // files with it
             validAboutHtmlFileContent = cachingClient.get(url);
         } catch (IOException e) {
-            logger.error("Unable to get about.html file from {} : {}", validAboutHtmlFileURL, e.getMessage(), e);
+            String message = MessageFormat.format("Unable to get about.html file from {0} : {1}", validAboutHtmlFileURL,
+                    e.getMessage());
+            logger.error(message, e);
         }
     }
 
@@ -114,7 +117,9 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
                 return binIncludes != null && binIncludes.contains(value);
 
             } catch (CheckstyleException e) {
-                logger.error("Error occured while processing {} file", BUILD_PROPERTIES_FILE_NAME, e);
+                String message = MessageFormat.format("Error occured while processing {0} file",
+                        BUILD_PROPERTIES_FILE_NAME);
+                logger.error(message, e);
             }
         }
         return false;

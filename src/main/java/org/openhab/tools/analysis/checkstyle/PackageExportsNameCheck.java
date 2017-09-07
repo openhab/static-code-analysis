@@ -25,10 +25,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ivy.osgi.core.BundleInfo;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -46,14 +46,14 @@ public class PackageExportsNameCheck extends AbstractStaticCheck {
 
     private static final String PACKAGE_PATTERN = "[a-zA-Z0-9\\._-]*";
 
-    private final Logger logger = LoggerFactory.getLogger(PackageExportsNameCheck.class);
+    private final Log logger = LogFactory.getLog(PackageExportsNameCheck.class);
 
     private String[] sourceDirectories;
     private String[] excludedPackages;
 
     /**
      * Sets the configuration property for source directories.
-     * 
+     *
      * @param sourceDirectories - source directories
      */
     public void setSourceDirectories(String[] sourceDirectories) {
@@ -62,7 +62,7 @@ public class PackageExportsNameCheck extends AbstractStaticCheck {
 
     /**
      * Sets the configuration property for excluding packages.
-     * 
+     *
      * @param excludePackages - excluded packages
      */
     public void setExcludedPackages(String[] excludePackages) {

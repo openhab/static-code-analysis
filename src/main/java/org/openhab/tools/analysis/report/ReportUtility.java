@@ -44,6 +44,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -68,8 +69,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.dom4j.dom.DOMNodeHelper.EmptyNodeList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -143,8 +142,6 @@ public class ReportUtility extends AbstractMojo {
     private static final String EMPTY = "";
 
     private TransformerFactory transformerFactory;
-
-    private final Logger logger = LoggerFactory.getLogger(ReportUtility.class);
 
     // Setters will be used in the test
     public void setTargetDirectory(File targetDirectory) {
@@ -243,7 +240,7 @@ public class ReportUtility extends AbstractMojo {
     private void run(final String xslt, final File input, final File output, final String param, final File value) {
         FileOutputStream outputStream = null;
         try {
-            logger.debug("{}  > {} {} {} >  {}", input, xslt, param, value, output);
+            getLog().debug(MessageFormat.format("{0}  > {1} {2} {3} >  {4}", input, xslt, param, value, output));
 
             // Process the Source into a Transformer Object
             final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(xslt);
@@ -263,15 +260,15 @@ public class ReportUtility extends AbstractMojo {
             // Transform the XML Source to a Result
             transformer.transform(xmlSource, outputTarget);
         } catch (IOException e) {
-            logger.error("IOException occcurred ", e);
+            getLog().error("IOException occcurred ", e);
         } catch (TransformerException e) {
-            logger.error("TransformerException occcurred ", e);
+            getLog().error("TransformerException occcurred ", e);
         } finally {
             if (null != outputStream) {
                 try {
                     outputStream.close();
                 } catch (final IOException e) {
-                    logger.error("{}", e.getMessage());
+                    getLog().error(e.getMessage());
                 }
             }
         }
@@ -279,7 +276,7 @@ public class ReportUtility extends AbstractMojo {
 
     private void deleteFile(File file) {
         if (!file.delete()) {
-            logger.error("Unable to delete file {}", file.getAbsolutePath());
+            getLog().error("Unable to delete file " + file.getAbsolutePath());
         }
     }
 
@@ -373,7 +370,7 @@ public class ReportUtility extends AbstractMojo {
         NodeList nodes = selectNodes(secondMergeResult, "/sca/file/message");
         int messagesNumber = nodes.getLength();
         if (messagesNumber == 0) {
-            logger.info("Empty report will not be appended to the summary report.");
+            getLog().info("Empty report will not be appended to the summary report.");
             return;
         }
 
@@ -406,9 +403,9 @@ public class ReportUtility extends AbstractMojo {
 
             reportContent = reportContent.replace("<tr></tr>", row);
             FileUtils.writeStringToFile(summaryReport, reportContent);
-            logger.info("Individual report appended to summary report.");
+            getLog().info("Individual report appended to summary report.");
         } catch (IOException e) {
-            logger.warn("Can't read or write to summary report. The summary report might be incomplete!", e);
+            getLog().warn("Can't read or write to summary report. The summary report might be incomplete!", e);
         }
     }
 
@@ -430,7 +427,7 @@ public class ReportUtility extends AbstractMojo {
                 deleteFile(tempMergedReport);
             }
         } catch (IOException e) {
-            logger.error("Unable to create or write to file {}", e.getMessage(), e);
+            getLog().error("Unable to create or write to file " + e.getMessage(), e);
         }
     }
 
@@ -445,8 +442,9 @@ public class ReportUtility extends AbstractMojo {
             XPathExpression expression = xPath.compile(xPathExpression);
             return (NodeList) expression.evaluate(document, XPathConstants.NODESET);
         } catch (Exception e) {
-            logger.warn("Can't select {} nodes from {}. Empty NodeList will be returned.", xPathExpression,
-                    file.getAbsolutePath(), e);
+            String message = MessageFormat.format("Can't select {0} nodes from {1}. Empty NodeList will be returned.",
+                    xPathExpression, file.getAbsolutePath());
+            getLog().warn(message, e);
             return new EmptyNodeList();
         }
     }

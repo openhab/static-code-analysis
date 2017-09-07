@@ -31,6 +31,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.server.Handler;
@@ -46,8 +48,6 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Tests for {@link CachingHttpClient}
@@ -64,7 +64,7 @@ public class CachingHttpClientTest {
     private static final int TEST_TIMEOUT = 1000;
     private static final String SERVER_RESPONSE = "content";
 
-    private static final Logger logger = LoggerFactory.getLogger(CachingHttpClientTest.class);
+    private static final Log logger = LogFactory.getLog(CachingHttpClientTest.class);
 
     private static Server server;
 
@@ -99,7 +99,7 @@ public class CachingHttpClientTest {
                 server.stop();
             }
         } catch (Exception e) {
-            logger.error("Unable to stop test server {} : {}", e.getMessage(), e);
+            logger.error("Unable to stop test server " + e.getMessage(), e);
         }
     }
 
