@@ -15,18 +15,12 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIE
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.README_MD_FILE_NAME;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.commonmark.node.Block;
 import org.commonmark.node.FencedCodeBlock;
 import org.commonmark.node.Heading;
@@ -63,9 +57,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 public class MarkdownCheck extends AbstractStaticCheck {
     private static final String ADDED_README_FILE_IN_BUILD_PROPERTIES_MSG = "README.MD file must not be added to the bin.includes property";
     private static final String ADDED_DOC_FOLDER_IN_BUILD_PROPERTIES_MSG = "The doc folder must not be added to the bin.includes property";
-    private static final String README_IO_ERROR_MESSAGE = "An exception was caught during processing markdown readme file ";
     private static final String DOC_FOLDER_NAME = "doc";
-    private final Log logger = LogFactory.getLog(MarkdownCheck.class);
 
     public MarkdownCheck() {
         setFileExtensions(MARKDONW_EXTENSION, PROPERTIES_EXTENSION);
@@ -78,7 +70,7 @@ public class MarkdownCheck extends AbstractStaticCheck {
                 checkBuildProperties(file);
                 break;
             case README_MD_FILE_NAME:
-                checkReadMe(file, fileText.toLinesArray());
+                checkReadMe(file, fileText);
                 break;
         }
     }
@@ -99,34 +91,30 @@ public class MarkdownCheck extends AbstractStaticCheck {
         }
     }
 
-    private void checkReadMe(File file, String[] lines) {
+    private void checkReadMe(File file, FileText fileText) {
         // Don't need all block types visited that's why only these are enabled
         Set<Class<? extends Block>> enabledBlockTypes = new HashSet<>(
                 Arrays.asList(Heading.class, ListBlock.class, FencedCodeBlock.class, IndentedCodeBlock.class));
         Parser parser = Parser.builder().enabledBlockTypes(enabledBlockTypes).build();
 
-        try {
-            Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
-            Node readmeMarkdownNode = parser.parseReader(reader);
+        Node readmeMarkdownNode = parser.parse(fileText.getFullText().toString());
+        String[] lines = fileText.toLinesArray();
+        // CallBack is used in order to use the protected methods of the AbstractStaticCheck in the Visitor
+        MarkdownVisitorCallback callBack = new MarkdownVisitorCallback() {
+            @Override
+            public int findLineNumber(List<String> fileContent, String searchedText, int startLineNumber) {
 
-            // CallBack is used in order to use the protected methods of the AbstractStaticCheck in the Visitor
-            MarkdownVisitorCallback callBack = new MarkdownVisitorCallback() {
-                @Override
-                public int findLineNumber(List<String> fileContent, String searchedText, int startLineNumber) {
-                    return MarkdownCheck.this.findLineNumber(lines, searchedText, startLineNumber);
-                }
+                return MarkdownCheck.this.findLineNumber(lines, searchedText, startLineNumber);
+            }
 
-                @Override
-                public void log(int line, String message) {
-                    MarkdownCheck.this.log(line, message);
-                }
-            };
-            LinkedList<String> linesList = new LinkedList<String>(Arrays.asList(lines));
-            MarkdownVisitor visitor = new MarkdownVisitor(callBack, file, linesList);
-            readmeMarkdownNode.accept(visitor);
-        } catch (IOException e) {
-            logger.error(README_IO_ERROR_MESSAGE + file.getAbsolutePath(), e);
-        }
+            @Override
+            public void log(int line, String message) {
+                MarkdownCheck.this.log(line, message);
+            }
+        };
+        LinkedList<String> linesList = new LinkedList<String>(Arrays.asList(lines));
+        MarkdownVisitor visitor = new MarkdownVisitor(callBack, file, linesList);
+        readmeMarkdownNode.accept(visitor);
     }
 
     /**
