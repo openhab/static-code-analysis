@@ -12,7 +12,6 @@ package org.openhab.tools.analysis.checkstyle.api;
  * Contains constants used in the implementation of checks and tests for them
  *
  * @author Svilen Valkanov
- *
  */
 public class CheckConstants {
     // File extensions
@@ -22,6 +21,7 @@ public class CheckConstants {
     public static final String MANIFEST_EXTENSION = "MF";
     public static final String CLASSPATH_EXTENSION = "classpath";
     public static final String MARKDONW_EXTENSION = "md";
+    public static final String JAVA_EXTENSION = "java";
 
     // File names
     public static final String BUILD_PROPERTIES_FILE_NAME = "build.properties";
