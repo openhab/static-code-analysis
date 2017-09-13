@@ -187,6 +187,10 @@
     <module name="org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck">
       <property name="severity" value="info"/>
     </module>
+    
+    <module name="org.openhab.tools.analysis.checkstyle.AvoidScheduleAtFixedRateCheck">
+        <property name="severity" value="warning" />
+    </module>
 
     <!-- Rules for Java Naming Convention -->
 
