@@ -8,7 +8,11 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BIN_INCLUDES_PROPERTY_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OUTPUT_PROPERTY_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.SOURCE_PROPERTY_NAME;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -101,14 +105,14 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
         String fileName = file.getName();
         if (fileName.equals(BUILD_PROPERTIES_FILE_NAME)) {
             if (!isEmpty(fileText)) {
-                processBuildProperties(fileText, fileText.toLinesArray());
+                processBuildProperties(fileText);
             } else {
                 log(0, EMPTY_FILE_MSG);
             }
         }
     }
 
-    private void processBuildProperties(FileText fileText, String[] lines) throws CheckstyleException {
+    private void processBuildProperties(FileText fileText) throws CheckstyleException {
         // We ignore the exceptions thrown by the parseBuildProperties() method. A corrupt build.properties file will
         // fail the Maven build in the compile phase, so we should not care about this case in the validate phase
         IBuild buildPropertiesFile = parseBuildProperties(fileText);
@@ -181,8 +185,8 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
      */
     private void logMissingValues(FileText fileText, String property, List<String> missingValues, String messsage) {
         for (String missingValue : missingValues) {
-            log(findLineNumber(fileText, property, 0), messsage + missingValue);
-
+            int lineNumber = findLineNumberSafe(fileText, property, 0, "Property line number not found.");
+            log(lineNumber, messsage + missingValue);
         }
     }
 

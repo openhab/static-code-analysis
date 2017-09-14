@@ -8,7 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
 
 import java.io.File;
 
@@ -62,10 +63,9 @@ public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
                     int lineNumber = 0;
 
                     for (int i = 0; i < nodes.getLength(); i++) {
-                        lineNumber = findLineNumber(fileText, nodes.item(i).getNodeValue(), lineNumber);
-                        if (lineNumber != -1) {
-                            log(lineNumber, "Avoid overriding a configuration inherited by the parent pom.");
-                        }
+                        String nodeValue = nodes.item(i).getNodeValue();
+                        lineNumber = findLineNumberSafe(fileText, nodeValue, lineNumber, "XML node line number not found.");
+                        log(lineNumber, "Avoid overriding a configuration inherited by the parent pom.");
                     }
                 }
             }

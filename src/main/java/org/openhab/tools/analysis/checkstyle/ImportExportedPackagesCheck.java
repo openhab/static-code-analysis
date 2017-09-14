@@ -8,6 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.EXPORT_PACKAGE_HEADER_NAME;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
 
 import java.io.File;
@@ -33,7 +34,6 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  */
 public class ImportExportedPackagesCheck extends AbstractStaticCheck {
     private static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package `{0}` is not imported";
-    private static final String EXPORT_PACKAGES_HEADER = "Export-Package:";
 
     private Log logger = LogFactory.getLog(this.getClass());
 
@@ -43,7 +43,8 @@ public class ImportExportedPackagesCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-        int lineToLog = findLineNumber(fileText, EXPORT_PACKAGES_HEADER, 0);
+        int lineToLog = findLineNumberSafe(fileText, EXPORT_PACKAGE_HEADER_NAME, 0,
+                EXPORT_PACKAGE_HEADER_NAME + " header line number not found.");
 
         try {
             Set<ExportPackage> exports = ManifestParser.parseManifest(file).getExports();

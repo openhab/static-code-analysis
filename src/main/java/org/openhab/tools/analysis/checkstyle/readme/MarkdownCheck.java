@@ -8,7 +8,11 @@
  */
 package org.openhab.tools.analysis.checkstyle.readme;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BIN_INCLUDES_PROPERTY_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MARKDONW_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.README_MD_FILE_NAME;
 
 import java.io.File;
 import java.util.Arrays;
@@ -24,6 +28,7 @@ import org.commonmark.node.Node;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+import org.openhab.tools.analysis.checkstyle.api.NoResultException;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -92,8 +97,8 @@ public class MarkdownCheck extends AbstractStaticCheck {
         // CallBack is used in order to use the protected methods of the AbstractStaticCheck in the Visitor
         MarkdownVisitorCallback callBack = new MarkdownVisitorCallback() {
             @Override
-            public int findLineNumber(FileText fileContent, String searchedText, int startLineNumber) {
-
+            public int findLineNumber(FileText fileContent, String searchedText, int startLineNumber)
+                    throws NoResultException {
                 return MarkdownCheck.this.findLineNumber(fileText, searchedText, startLineNumber);
             }
 
@@ -102,7 +107,6 @@ public class MarkdownCheck extends AbstractStaticCheck {
                 MarkdownCheck.this.log(line, message);
             }
         };
-
         MarkdownVisitor visitor = new MarkdownVisitor(callBack, fileText);
         readmeMarkdownNode.accept(visitor);
     }
