@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Properties;
 import java.util.Set;
@@ -26,6 +27,8 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.input.CharSequenceInputStream;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ivy.osgi.core.BundleInfo;
 import org.apache.ivy.osgi.core.ManifestParser;
 import org.commonmark.node.Block;
@@ -48,25 +51,29 @@ import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
 /**
  * Provides common functionality for different static code analysis checks
  *
- * @author Svilen Valkanov - Initial contribution
+ * @author Svilen Valkanov - Initial contribution, add Exception to findLineNumber method
  * @author Mihaela Memova - Simplify findLineNumber method
  * @author Velin Yordanov - Used FileText instead of File to avoid unnecessary IO
  */
 public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
 
+    private Log logger = LogFactory.getLog(AbstractStaticCheck.class);
+
     /**
      * Finds the first occurrence of a text in a list of text lines representing the file content and
      * returns the line number, where the text was found
+     *
      *
      * @param fileContent - represents the text content
      * @param searchedText - the text that we are looking for
      * @param startLineNumber - the line number from which the search starts exclusive, to start the
      *            search of the beginning of the text the startLineNumber should be 0
      * @return the number of the line starting from 1, where the searched text occurred for the first
-     *         time, or -1 if
-     *         no match was found
+     *         time
+     * @throws NoResultException when no match was found
      */
-    protected int findLineNumber(FileText fileContent, String searchedText, int startLineNumber) {
+    protected int findLineNumber(FileText fileContent, String searchedText, int startLineNumber)
+            throws NoResultException {
         for (int lineNumber = startLineNumber; lineNumber < fileContent.size(); lineNumber++) {
             String line = fileContent.get(lineNumber);
             if (line.contains(searchedText)) {
@@ -74,7 +81,33 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
                 return lineNumber + 1;
             }
         }
-        return -1;
+        String message = MessageFormat.format(
+                "`{0}` was not found in the file {1} starting from line `{2}`."
+                        + " Check if it is split between multiple lines or it is missing",
+                searchedText, fileContent.getFile().getAbsolutePath(), startLineNumber);
+        throw new NoResultException(message);
+    }
+
+    /**
+     * Finds the first occurrence of a text in a list of text lines representing the file content and
+     * returns the line number, where the text was found
+     *
+     * @param fileText - represents the content of a file
+     * @param searchedText - the text that we are looking for
+     * @param startLineNumber - the line number from which the search starts exclusive, to start the
+     *            search of the beginning of the text the startLineNumber should be 0
+     * @param warningMessage - message to be logged as warning in case no match is found
+     * @return the number of the line starting from 1, where the searched text occurred for the first
+     *         time, or 0 if no matches are found
+     */
+    protected int findLineNumberSafe(FileText fileText, String searchedText, int startLineNumber,
+            String warningMessage) {
+        try {
+            return findLineNumber(fileText, searchedText, startLineNumber);
+        } catch (NoResultException e) {
+            logger.warn(warningMessage + " Fall back to 0.", e);
+            return 0;
+        }
     }
 
     /**

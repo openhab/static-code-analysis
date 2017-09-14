@@ -67,7 +67,7 @@ public class AbstractManifestAttributeCheck extends AbstractStaticCheck {
 
         int lineNumber = 0;
         for (String bundleVendor : bundleVendors) {
-            lineNumber = findLineNumber(fileText, bundleVendor, lineNumber);
+            lineNumber = findLineNumberSafe(fileText, bundleVendor, lineNumber, "Bundle vendor line number not found.");
 
             if (tooMany) {
                 log(lineNumber, String.format("Only %d \"%s\" was expected.", maxOccurrences, attribute));

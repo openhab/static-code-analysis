@@ -8,7 +8,10 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
 
 import java.io.File;
 import java.io.IOException;
@@ -139,6 +142,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
 
     private void processPomXmlFile(FileText fileText) throws CheckstyleException {
         File file = fileText.getFile();
+
         File pomDirectory = file.getParentFile();
 
         // the pom directory path will be used in the finalization
@@ -159,8 +163,10 @@ public class PomXmlCheck extends AbstractStaticCheck {
             String parentPomArtifactIdValue = getNodeValue(parentPomFileText, POM_ARTIFACT_ID_XPATH_EXPRESSION);
             if (parentArtifactIdValue != null) {
                 if (!parentArtifactIdValue.equals(parentPomArtifactIdValue)) {
-                    int parentArtifactTagLine = findLineNumber(fileText, "parent", 0);
-                    int parentArtifactIdLine = findLineNumber(fileText, "artifactId", parentArtifactTagLine);
+                    int parentArtifactTagLine = findLineNumberSafe(fileText, "parent", 0, "Parent line number not found.");
+                    int parentArtifactIdLine = findLineNumberSafe(fileText, "artifactId", parentArtifactTagLine,
+                            "Parent artifact ID line number not found.");
+
                     String formattedMessage = MessageFormat.format(WRONG_PARENT_ARTIFACT_ID_MSG,
                             parentPomArtifactIdValue, parentArtifactIdValue);
                     log(parentArtifactIdLine, formattedMessage, file.getPath());
@@ -177,19 +183,24 @@ public class PomXmlCheck extends AbstractStaticCheck {
         }
         pomVersion = getVersion(versionNodeValue, pomVersionPattern);
 
-        // the version line will be preserved for finalization of the processing
-        String versionTagName = "version";
-        String versionLine = String.format("<%s>%s</%s>", versionTagName, versionNodeValue, versionTagName);
-        pomVersionLine = findLineNumber(fileText, versionLine, 0);
+        if (pomVersion != null) {
+            // the version line will be preserved for finalization of the processing
+            String versionTagName = "version";
+            String versionLine = String.format("<%s>%s</%s>", versionTagName, versionNodeValue, versionTagName);
+            pomVersionLine = findLineNumberSafe(fileText, versionLine, 0, "Pom version line number not found");
+        }
 
         // get the artifactId from the pom.xml
         String artifactIdNodeValue = getNodeValue(fileText, POM_ARTIFACT_ID_XPATH_EXPRESSION);
         pomArtifactId = artifactIdNodeValue;
 
-        // the artifact ID line will be used in the finalization as well
-        String artifactIdTagName = "artifactId";
-        String artifactIdLine = String.format("<%s>%s</%s>", artifactIdTagName, artifactIdNodeValue, artifactIdTagName);
-        pomArtifactIdLine = findLineNumber(fileText, artifactIdLine, 0);
+        if (pomArtifactId != null) {
+            // the artifact ID line will be used in the finalization as well
+            String artifactIdTagName = "artifactId";
+            String artifactIdLine = String.format("<%s>%s</%s>", artifactIdTagName, artifactIdNodeValue,
+                    artifactIdTagName);
+            pomArtifactIdLine = findLineNumberSafe(fileText, artifactIdLine, 0, "Pom artifact ID line number not found");
+        }
     }
 
     @Override

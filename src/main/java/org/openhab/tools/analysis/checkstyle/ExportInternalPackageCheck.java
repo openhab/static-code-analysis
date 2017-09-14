@@ -8,6 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.EXPORT_PACKAGE_HEADER_NAME;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
 
 import java.io.File;
@@ -40,7 +41,8 @@ public class ExportInternalPackageCheck extends AbstractStaticCheck {
         BundleInfo manifest = parseManifestFromFile(fileText);
         Set<?> exports = manifest.getExports();
 
-        int lineNumber = findLineNumber(fileText, "Export-Package:", 0);
+        int lineNumber = findLineNumberSafe(fileText, EXPORT_PACKAGE_HEADER_NAME, 0, "Header line number not found.");
+
         for (Object export : exports) {
             String packageName = export.toString();
             if (packageName.contains(".internal")) {

@@ -8,7 +8,13 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OSGI_INF_DIRECTORY_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.SERVICE_COMPONENT_HEADER_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,7 +52,6 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  */
 public class ServiceComponentManifestCheck extends AbstractStaticCheck {
     private static final String WILDCARD = "*";
-    private static final String SERVICE_COMPONENT_HEADER = "Service-Component";
 
     private final Log logger = LogFactory.getLog(this.getClass());
 
@@ -240,15 +245,9 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
         // log a message for every not included service in the manifest
         componentXmlFiles.removeAll(intersection);
         for (String service : componentXmlFiles) {
-            if (serviceComponentHeaderLineNumber == -1) {
-                // if there is no Service-Component header
-                logMessage(0, String.format("The service %s is not included in the MANIFEST.MF file. "
-                        + "Are you sure that there is no need to be included?", service));
-            } else {
-                logMessage(serviceComponentHeaderLineNumber,
-                        String.format("The service %s is not included in the MANIFEST.MF file. "
-                                + "Are you sure that there is no need to be included?", service));
-            }
+            logMessage(serviceComponentHeaderLineNumber,
+                    String.format("The service %s is not included in the MANIFEST.MF file. "
+                            + "Are you sure that there is no need to be included?", service));
         }
 
         // log a message for every service component definition,
@@ -262,15 +261,17 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
 
     private void verifyManifest(FileText fileText) {
         File file = fileText.getFile();
+
         manifestPath = file.getPath();
         try {
             Manifest manifest = new Manifest(new FileInputStream(file));
             Attributes attributes = manifest.getMainAttributes();
 
-            serviceComponentHeaderValue = attributes.getValue(SERVICE_COMPONENT_HEADER);
-            serviceComponentHeaderLineNumber = findLineNumber(fileText, SERVICE_COMPONENT_HEADER, 0);
+            serviceComponentHeaderValue = attributes.getValue(SERVICE_COMPONENT_HEADER_NAME);
 
             if (serviceComponentHeaderValue != null) {
+                serviceComponentHeaderLineNumber = findLineNumberSafe(fileText, SERVICE_COMPONENT_HEADER_NAME, 0,
+                        "Service component header line number not found.");
                 List<String> serviceComponentsList = Arrays.asList(serviceComponentHeaderValue.trim().split(","));
                 for (String serviceComponent : serviceComponentsList) {
                     // We assume that the defined service component refers to existing file

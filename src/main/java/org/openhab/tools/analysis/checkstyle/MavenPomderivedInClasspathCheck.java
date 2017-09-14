@@ -59,13 +59,12 @@ public class MavenPomderivedInClasspathCheck extends AbstractStaticCheck {
 
             if (nodes != null) {
                 int lineNumber = 0;
-
                 for (int i = 0; i < nodes.getLength(); i++) {
-                    lineNumber = findLineNumber(fileText, nodes.item(i).getNodeValue(), lineNumber);
-                    if (lineNumber != -1) {
-                        log(lineNumber, "The classpath file contains maven.pomderived attribute. "
-                                + "This attribute should be used only if you have problems downloading your maven dependencies.");
-                    }
+                    String nodeValue = nodes.item(i).getNodeValue();
+                    lineNumber = findLineNumberSafe(fileText, nodeValue, lineNumber, "XML node line number nof found.");
+
+                    log(lineNumber, "The classpath file contains maven.pomderived attribute. "
+                            + "This attribute should be used only if you have problems downloading your maven dependencies.");
                 }
             }
         }

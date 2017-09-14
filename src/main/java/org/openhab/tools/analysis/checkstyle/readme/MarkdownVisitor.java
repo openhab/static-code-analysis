@@ -25,6 +25,7 @@ import org.commonmark.node.OrderedList;
 import org.commonmark.node.Paragraph;
 import org.commonmark.node.Text;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+import org.openhab.tools.analysis.checkstyle.api.NoResultException;
 
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
@@ -82,11 +83,8 @@ class MarkdownVisitor extends AbstractVisitor {
     private void validateHeader(String headerValue) {
         if (headerValue != null) {
             int headerLineNumber;
-            headerLineNumber = callback.findLineNumber(fileText, headerValue, currentLinePointer);
-            boolean isInvalidHeaderValue = headerLineNumber == -1;
-            if (isInvalidHeaderValue) {
-                logger.error("A header cannot be processed properly: " + headerValue);
-            } else {
+            try {
+                headerLineNumber = callback.findLineNumber(fileText, headerValue, currentLinePointer);
                 currentLinePointer = headerLineNumber;
                 boolean isHeaderAtEndOfFile = headerLineNumber == fileText.size();
                 if (isHeaderAtEndOfFile) {
@@ -97,6 +95,8 @@ class MarkdownVisitor extends AbstractVisitor {
                         callback.log(headerLineNumber, EMPTY_LINE_AFTER_HEADER_MSG);
                     }
                 }
+            } catch (NoResultException e) {
+                logger.error("A header cannot be processed properly: " + headerValue, e);
             }
         } else {
             String message = MessageFormat.format(
@@ -129,9 +129,8 @@ class MarkdownVisitor extends AbstractVisitor {
         // have only one element
         String codeSectionLines[] = codeBlock.split("\\r?\\n");
         if (!StringUtils.isBlank(codeBlock)) {
-            codeStartingLineNumber = callback.findLineNumber(fileText, codeSectionLines[0], currentLinePointer);
-            // if findLineNumber returns -1
-            if (codeStartingLineNumber >= 0) {
+            try {
+                codeStartingLineNumber = callback.findLineNumber(fileText, codeSectionLines[0], currentLinePointer);
                 codeStartingLineNumber--;
                 currentLinePointer = codeStartingLineNumber;
                 // Start from the line above the code section
@@ -140,8 +139,8 @@ class MarkdownVisitor extends AbstractVisitor {
                 codeEndingLineNumber++;
                 currentLinePointer = codeEndingLineNumber;
                 verifyAfterCodeSection(codeEndingLineNumber);
-            } else {
-                logger.error("A code section wasn't processed properly! " + codeBlock);
+            } catch (NoResultException e) {
+                logger.error("A code section wasn't processed properly! " + codeBlock, e);
             }
         } else {
             callback.log(currentLinePointer, EMPTY_CODE_BLOCK_WARNING);
@@ -214,28 +213,27 @@ class MarkdownVisitor extends AbstractVisitor {
     private void markDownListProcessing(String firstLineOfList, String lastLineOfList, int listLenght) {
         int listStartingLineNumber = 0;
         int listEndingLineNumber = 0;
-        listStartingLineNumber = callback.findLineNumber(fileText, firstLineOfList, currentLinePointer);
-        // in case findLineNumber returns -1
-        if (listStartingLineNumber >= 0) {
-            if (listStartingLineNumber == 1) {
-                callback.log(listStartingLineNumber, EMPTY_LINE_BEFORE_LIST_MSG);
-            } else {
-                // pointer goes before the list ending to narrow the searching scope
-                // sometimes there could be 2 list items with same literal
-                currentLinePointer = listStartingLineNumber + listLenght - 2;
-                listEndingLineNumber = callback.findLineNumber(fileText, lastLineOfList, currentLinePointer);
-                if (listEndingLineNumber >= 0) {
-                    currentLinePointer = listEndingLineNumber;
-                    verifyLineBeforeListBlock(listStartingLineNumber);
-                    verifyLineAfterListBlock(listEndingLineNumber);
-                } else {
-                    logger.error("A list ending cannot be processed properly: " + lastLineOfList);
-                }
-            }
-
-        } else {
-            logger.error("A list starting cannot be processed properly: " + firstLineOfList);
+        try {
+            listStartingLineNumber = callback.findLineNumber(fileText, firstLineOfList, currentLinePointer);
+        } catch (NoResultException e) {
+            logger.error("A list starting cannot be processed properly: " + firstLineOfList, e);
         }
+        if (listStartingLineNumber == 1) {
+            callback.log(listStartingLineNumber, EMPTY_LINE_BEFORE_LIST_MSG);
+        } else {
+            // pointer goes before the list ending to narrow the searching scope
+            // sometimes there could be 2 list items with same literal
+            currentLinePointer = listStartingLineNumber + listLenght - 2;
+            try {
+                listEndingLineNumber = callback.findLineNumber(fileText, lastLineOfList, currentLinePointer);
+                currentLinePointer = listEndingLineNumber;
+                verifyLineBeforeListBlock(listStartingLineNumber);
+                verifyLineAfterListBlock(listEndingLineNumber);
+            } catch (NoResultException e) {
+                logger.error("A list ending cannot be processed properly: " + lastLineOfList, e);
+            }
+        }
+
     }
 
     private void verifyLineBeforeListBlock(int listStartingLineNumber) {

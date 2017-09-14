@@ -80,8 +80,10 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
         for (BundleRequirement importPackage : importPackages) {
             String importName = importPackage.getName();
             if (importPackage.getVersion() != null && !isIgnoredPackage(ignoreImportedPackages, importName)) {
-                lineNumber = findLineNumber(fileText, importName, lineNumber);
+                lineNumber = findLineNumberSafe(fileText, importName, lineNumber,
+                        "Imported package line number not found.");
                 log(lineNumber, String.format(VERSION_USED_MSG, importName));
+
             }
         }
 
@@ -90,7 +92,7 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
         for (BundleRequirement requiredBundle : requiredBundles) {
             if (requiredBundle.getVersion() != null) {
                 String name = requiredBundle.getName();
-                lineNumber = findLineNumber(fileText, name, lineNumber);
+                lineNumber = findLineNumberSafe(fileText, name, lineNumber, "Required bundle line number not found.");
                 log(lineNumber, String.format(VERSION_USED_MSG, name));
             }
         }
@@ -107,7 +109,8 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
             // and the package is not ignored from the configuration.
             if (!exportPackage.getVersion().equals(BundleInfo.DEFAULT_VERSION)
                     && !isIgnoredPackage(ignoreExportedPackages, exportedPackageName)) {
-                lineNumber = findLineNumber(fileText, exportedPackageName, lineNumber);
+                lineNumber = findLineNumberSafe(fileText, exportedPackageName, lineNumber,
+                        "Exported package line number not found.");
                 log(lineNumber, String.format(VERSION_USED_MSG, exportedPackageName));
             }
         }
