@@ -136,7 +136,7 @@
   </module>
   
   <module name="org.openhab.tools.analysis.checkstyle.PackageExportsNameCheck">
-    <property name="severity" value="warning" />
+    <property name="severity" value="error" />
     <property name="sourceDirectories" value="src/main/java" />
     <property name="excludedPackages" value=".*.internal.*" />
   </module>
