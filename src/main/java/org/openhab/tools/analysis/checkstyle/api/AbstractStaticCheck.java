@@ -9,15 +9,13 @@
 package org.openhab.tools.analysis.checkstyle.api;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,8 +25,12 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.io.input.CharSequenceInputStream;
 import org.apache.ivy.osgi.core.BundleInfo;
 import org.apache.ivy.osgi.core.ManifestParser;
+import org.commonmark.node.Block;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
 import org.eclipse.core.internal.filebuffers.SynchronizableDocument;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
@@ -40,6 +42,7 @@ import org.xml.sax.SAXException;
 
 import com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
 
 /**
@@ -47,7 +50,7 @@ import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
  *
  * @author Svilen Valkanov - Initial contribution
  * @author Mihaela Memova - Simplify findLineNumber method
- *
+ * @author Velin Yordanov - Used FileText instead of File to avoid unnecessary IO
  */
 public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
 
@@ -55,7 +58,7 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
      * Finds the first occurrence of a text in a list of text lines representing the file content and
      * returns the line number, where the text was found
      *
-     * @param fileContent - each element of the list represents a line from the file
+     * @param fileContent - represents the text content
      * @param searchedText - the text that we are looking for
      * @param startLineNumber - the line number from which the search starts exclusive, to start the
      *            search of the beginning of the text the startLineNumber should be 0
@@ -63,9 +66,9 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
      *         time, or -1 if
      *         no match was found
      */
-    protected int findLineNumber(String[] fileContent, String searchedText, int startLineNumber) {
-        for (int lineNumber = startLineNumber; lineNumber < fileContent.length; lineNumber++) {
-            String line = fileContent[lineNumber];
+    protected int findLineNumber(FileText fileContent, String searchedText, int startLineNumber) {
+        for (int lineNumber = startLineNumber; lineNumber < fileContent.size(); lineNumber++) {
+            String line = fileContent.get(lineNumber);
             if (line.contains(searchedText)) {
                 // The +1 is to compensate the 0-based list and the 1-based text file
                 return lineNumber + 1;
@@ -77,82 +80,72 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parses the content of the given file as an XML document.
      *
-     * @param file - the input file
+     * @param fileText - Represents the text contents of a file
      * @return DOM Document object
      * @throws CheckstyleException - if an error occurred while trying to parse the file
      */
-    protected Document parseDomDocumentFromFile(File file) throws CheckstyleException {
+    protected Document parseDomDocumentFromFile(FileText fileText) throws CheckstyleException {
         try {
             DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = domFactory.newDocumentBuilder();
-            Document document = builder.parse(file);
+            Document document = builder.parse(getInputStream(fileText));
             return document;
-
         } catch (ParserConfigurationException e) {
             throw new CheckstyleException("Serious configuration error occured while creating a DocumentBuilder.", e);
         } catch (SAXException e) {
-            throw new CheckstyleException("Unable to read from file: " + file.getAbsolutePath(), e);
+            throw new CheckstyleException("Unable to read from file: " + fileText.getFile().getAbsolutePath(), e);
         } catch (IOException e) {
-            throw new CheckstyleException("Unable to open file: " + file.getAbsolutePath(), e);
+            throw new CheckstyleException("Unable to open file: " + fileText.getFile().getAbsolutePath(), e);
         }
     }
 
     /**
      * Parses the content of the given Manifest file
      *
-     * @param file - the input file
+     * @param fileText - Represents the text contents of a file
      * @return Bundle info extracted from the bundle manifest
      * @throws CheckstyleException - if an error occurred while trying to parse the file
      */
-    protected BundleInfo parseManifestFromFile(File file) throws CheckstyleException {
+    protected BundleInfo parseManifestFromFile(FileText fileText) throws CheckstyleException {
         try {
-            BundleInfo info = ManifestParser.parseManifest(file);
+            BundleInfo info = ManifestParser.parseManifest(getInputStream(fileText));
             return info;
         } catch (IOException e) {
-            throw new CheckstyleException("Unable to read from file: " + file.getAbsolutePath(), e);
+            throw new CheckstyleException("Unable to read from file: " + fileText.getFile().getAbsolutePath(), e);
         } catch (ParseException e) {
-            throw new CheckstyleException("Unable to parse file:" + file.getAbsolutePath(), e);
+            throw new CheckstyleException("Unable to parse file:" + fileText.getFile().getAbsolutePath(), e);
         }
     }
 
     /**
      * Reads a properties list from a file
      *
-     * @param file - the input file
+     * @param fileText - Represents the text contents of a file
      * @return Properties object containing all the read properties
      * @throws CheckstyleException - if an error occurred while trying to parse the file
      */
-    protected Properties readPropertiesFromFile(File file) throws CheckstyleException {
-        String filePath = file.getAbsolutePath();
+    protected Properties readPropertiesFromFile(FileText fileText) throws CheckstyleException {
 
-        try (InputStream buildPropertiesInputStream = new FileInputStream(filePath)) {
+        try {
             Properties properties = new Properties();
-            properties.load(buildPropertiesInputStream);
+            properties.load(getInputStream(fileText));
             return properties;
         } catch (FileNotFoundException e) {
-            throw new CheckstyleException("File: " + file.getAbsolutePath() + " does not exist.", e);
+            throw new CheckstyleException("File: " + fileText.getFile().getAbsolutePath() + " does not exist.", e);
         } catch (IOException e) {
-            throw new CheckstyleException("Unable to read properties from: " + file.getAbsolutePath(), e);
+            throw new CheckstyleException("Unable to read properties from: " + fileText.getFile().getAbsolutePath(), e);
         }
     }
 
     /**
      * Parses the content of a given file as a HTML file
      *
-     * @param file - the input file
+     * @param fileText - Represents the text contents of a file
      * @return HTML Document representation of the file
-     * @throws CheckstyleException - if an error occurred while trying to parse the file
      */
-    protected org.jsoup.nodes.Document parseHTMLDocumentFromFile(File file) throws CheckstyleException {
-        try {
-            byte[] fileByteArray = Files.readAllBytes(file.toPath());
-            String fileContent = new String(fileByteArray);
-            org.jsoup.nodes.Document fileDocument = Jsoup.parse(fileContent);
-            return fileDocument;
-        } catch (IOException e) {
-            throw new CheckstyleException("Unable to read the content of the file" + file.getAbsolutePath(), e);
-        }
-
+    protected org.jsoup.nodes.Document parseHTMLDocumentFromFile(FileText fileText) {
+        String fileContent = fileText.getFullText().toString();
+        return Jsoup.parse(fileContent);
     }
 
     /**
@@ -175,18 +168,16 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parses the content of a given file as a build.properties file
      *
-     * @param file - the input file
+     * @param fileText - Represents the text contents of a file
      * @return IBuild representation of the file
      * @throws CheckstyleException - if an error occurred while trying to parse the file
      */
-    protected IBuild parseBuildProperties(File file) throws CheckstyleException {
+    protected IBuild parseBuildProperties(FileText fileText) throws CheckstyleException {
         IDocument document = new SynchronizableDocument();
         BuildModel buildModel = new BuildModel(document, false);
         try {
-            buildModel.load(new FileInputStream(file), true);
+            buildModel.load(getInputStream(fileText), true);
             return buildModel.getBuild();
-        } catch (FileNotFoundException e) {
-            throw new CheckstyleException("File: " + file.getAbsolutePath() + " does not exist.", e);
         } catch (CoreException e) {
             throw new CheckstyleException("Unable to read build.properties file", e);
         }
@@ -195,11 +186,11 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Checks whether a file is empty
      *
-     * @param file - the file to check
+     * @param fileText - Represents the text contents of a file
      * @return true if the file is empty, otherwise false
      */
-    protected boolean isEmpty(File file) {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+    protected boolean isEmpty(FileText fileText) {
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getInputStream(fileText)))) {
             if (bufferedReader.readLine() == null) {
                 return true;
             }
@@ -226,5 +217,21 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
         log(line, message, fileName);
         fireErrors(filePath);
         dispatcher.fireFileFinished(filePath);
+    }
+
+    /**
+     * Parsed the content of a markdown file.
+     *
+     * @param fileText - Represents the text contents of a file
+     * @param blockTypes - the enabled block types
+     * @return The markdown node
+     */
+    protected Node parseMarkdown(FileText fileText, Set<Class<? extends Block>> blockTypes) {
+        Parser parser = Parser.builder().enabledBlockTypes(blockTypes).build();
+        return parser.parse(fileText.getFullText().toString());
+    }
+
+    private InputStream getInputStream(FileText fileText) {
+        return new CharSequenceInputStream(fileText.getFullText(), fileText.getCharset());
     }
 }

@@ -8,17 +8,11 @@
  */
 package org.openhab.tools.analysis.checkstyle.readme;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BIN_INCLUDES_PROPERTY_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MARKDONW_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.README_MD_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import org.commonmark.node.Block;
@@ -27,7 +21,6 @@ import org.commonmark.node.Heading;
 import org.commonmark.node.IndentedCodeBlock;
 import org.commonmark.node.ListBlock;
 import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
@@ -67,18 +60,18 @@ public class MarkdownCheck extends AbstractStaticCheck {
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
         switch (file.getName()) {
             case BUILD_PROPERTIES_FILE_NAME:
-                checkBuildProperties(file);
+                checkBuildProperties(fileText);
                 break;
             case README_MD_FILE_NAME:
-                checkReadMe(file, fileText);
+                checkReadMe(fileText);
                 break;
         }
     }
 
-    private void checkBuildProperties(File file) throws CheckstyleException {
+    private void checkBuildProperties(FileText fileText) throws CheckstyleException {
         // The check will not log an errors if build properties file is missing
         // We have other check regarding this case - RequiredFilesCheck
-        IBuild buildPropertiesEntry = parseBuildProperties(file);
+        IBuild buildPropertiesEntry = parseBuildProperties(fileText);
         boolean isReadMeIncluded = checkBuildPropertiesEntry(buildPropertiesEntry, BIN_INCLUDES_PROPERTY_NAME,
                 README_MD_FILE_NAME);
         if (isReadMeIncluded) {
@@ -91,20 +84,17 @@ public class MarkdownCheck extends AbstractStaticCheck {
         }
     }
 
-    private void checkReadMe(File file, FileText fileText) {
+    private void checkReadMe(FileText fileText) {
         // Don't need all block types visited that's why only these are enabled
         Set<Class<? extends Block>> enabledBlockTypes = new HashSet<>(
                 Arrays.asList(Heading.class, ListBlock.class, FencedCodeBlock.class, IndentedCodeBlock.class));
-        Parser parser = Parser.builder().enabledBlockTypes(enabledBlockTypes).build();
-
-        Node readmeMarkdownNode = parser.parse(fileText.getFullText().toString());
-        String[] lines = fileText.toLinesArray();
+        Node readmeMarkdownNode = parseMarkdown(fileText, enabledBlockTypes);
         // CallBack is used in order to use the protected methods of the AbstractStaticCheck in the Visitor
         MarkdownVisitorCallback callBack = new MarkdownVisitorCallback() {
             @Override
-            public int findLineNumber(List<String> fileContent, String searchedText, int startLineNumber) {
+            public int findLineNumber(FileText fileContent, String searchedText, int startLineNumber) {
 
-                return MarkdownCheck.this.findLineNumber(lines, searchedText, startLineNumber);
+                return MarkdownCheck.this.findLineNumber(fileText, searchedText, startLineNumber);
             }
 
             @Override
@@ -112,8 +102,8 @@ public class MarkdownCheck extends AbstractStaticCheck {
                 MarkdownCheck.this.log(line, message);
             }
         };
-        LinkedList<String> linesList = new LinkedList<String>(Arrays.asList(lines));
-        MarkdownVisitor visitor = new MarkdownVisitor(callBack, file, linesList);
+
+        MarkdownVisitor visitor = new MarkdownVisitor(callBack, fileText);
         readmeMarkdownNode.accept(visitor);
     }
 

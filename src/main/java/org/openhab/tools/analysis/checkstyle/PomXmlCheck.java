@@ -8,12 +8,10 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -120,17 +118,17 @@ public class PomXmlCheck extends AbstractStaticCheck {
     }
 
     @Override
-    protected void processFiltered(File file, FileText lines) throws CheckstyleException {
+    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
         String fileName = file.getName();
         if (fileName.equals(POM_XML_FILE_NAME)) {
-            processPomXmlFile(file, lines.toLinesArray());
+            processPomXmlFile(fileText);
         } else if (fileName.equals(MANIFEST_FILE_NAME)) {
-            processManifestFile(file);
+            processManifestFile(fileText);
         }
     }
 
-    private void processManifestFile(File file) throws CheckstyleException {
-        BundleInfo bundleInfo = parseManifestFromFile(file);
+    private void processManifestFile(FileText fileText) throws CheckstyleException {
+        BundleInfo bundleInfo = parseManifestFromFile(fileText);
 
         Version version = bundleInfo.getVersion();
         // We need this in order to filter the "qualifier" for the Snapshot versions
@@ -139,20 +137,30 @@ public class PomXmlCheck extends AbstractStaticCheck {
         manifestBundleSymbolicName = bundleInfo.getSymbolicName();
     }
 
-    private void processPomXmlFile(File file, String[] lines) throws CheckstyleException {
+    private void processPomXmlFile(FileText fileText) throws CheckstyleException {
+        File file = fileText.getFile();
         File pomDirectory = file.getParentFile();
+
         // the pom directory path will be used in the finalization
         pomDirectoryPath = pomDirectory.getPath();
         File parentPom = new File(pomDirectory.getParentFile(), POM_XML_FILE_NAME);
 
         // The pom.xml must reference the correct parent pom (which is usually in the parent folder)
         if (parentPom.exists()) {
-            String parentArtifactIdValue = getNodeValue(file, POM_PARENT_ARTIFACT_ID_XPATH_EXPRESSION);
-            String parentPomArtifactIdValue = getNodeValue(parentPom, POM_ARTIFACT_ID_XPATH_EXPRESSION);
+            FileText parentPomFileText = null;
+            try {
+                parentPomFileText = new FileText(parentPom, "UTF-8");
+            } catch (IOException e) {
+                logger.error("Error in reading the pom file", e);
+                return;
+            }
+
+            String parentArtifactIdValue = getNodeValue(fileText, POM_PARENT_ARTIFACT_ID_XPATH_EXPRESSION);
+            String parentPomArtifactIdValue = getNodeValue(parentPomFileText, POM_ARTIFACT_ID_XPATH_EXPRESSION);
             if (parentArtifactIdValue != null) {
                 if (!parentArtifactIdValue.equals(parentPomArtifactIdValue)) {
-                    int parentArtifactTagLine = findLineNumber(lines, "parent", 0);
-                    int parentArtifactIdLine = findLineNumber(lines, "artifactId", parentArtifactTagLine);
+                    int parentArtifactTagLine = findLineNumber(fileText, "parent", 0);
+                    int parentArtifactIdLine = findLineNumber(fileText, "artifactId", parentArtifactTagLine);
                     String formattedMessage = MessageFormat.format(WRONG_PARENT_ARTIFACT_ID_MSG,
                             parentPomArtifactIdValue, parentArtifactIdValue);
                     log(parentArtifactIdLine, formattedMessage, file.getPath());
@@ -163,25 +171,25 @@ public class PomXmlCheck extends AbstractStaticCheck {
         }
 
         // get the version from the pom.xml
-        String versionNodeValue = getNodeValue(file, POM_VERSION_XPATH_EXPRESSION);
+        String versionNodeValue = getNodeValue(fileText, POM_VERSION_XPATH_EXPRESSION);
         if (versionNodeValue == null) {
-            versionNodeValue = getNodeValue(file, POM_PARENT_VERSION_XPATH_EXPRESSION);
+            versionNodeValue = getNodeValue(fileText, POM_PARENT_VERSION_XPATH_EXPRESSION);
         }
         pomVersion = getVersion(versionNodeValue, pomVersionPattern);
 
         // the version line will be preserved for finalization of the processing
         String versionTagName = "version";
         String versionLine = String.format("<%s>%s</%s>", versionTagName, versionNodeValue, versionTagName);
-        pomVersionLine = findLineNumber(lines, versionLine, 0);
+        pomVersionLine = findLineNumber(fileText, versionLine, 0);
 
         // get the artifactId from the pom.xml
-        String artifactIdNodeValue = getNodeValue(file, POM_ARTIFACT_ID_XPATH_EXPRESSION);
+        String artifactIdNodeValue = getNodeValue(fileText, POM_ARTIFACT_ID_XPATH_EXPRESSION);
         pomArtifactId = artifactIdNodeValue;
 
         // the artifact ID line will be used in the finalization as well
         String artifactIdTagName = "artifactId";
         String artifactIdLine = String.format("<%s>%s</%s>", artifactIdTagName, artifactIdNodeValue, artifactIdTagName);
-        pomArtifactIdLine = findLineNumber(lines, artifactIdLine, 0);
+        pomArtifactIdLine = findLineNumber(fileText, artifactIdLine, 0);
     }
 
     @Override
@@ -206,8 +214,8 @@ public class PomXmlCheck extends AbstractStaticCheck {
         }
     }
 
-    private String getNodeValue(File file, String versionExpression) throws CheckstyleException {
-        Document xmlDocument = parseDomDocumentFromFile(file);
+    private String getNodeValue(FileText fileText, String versionExpression) throws CheckstyleException {
+        Document xmlDocument = parseDomDocumentFromFile(fileText);
 
         XPathExpression xPathExpression = compileXPathExpression(versionExpression);
         try {
@@ -216,7 +224,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
             Node node = nodes.item(0);
             return node != null ? node.getNodeValue() : null;
         } catch (XPathExpressionException e) {
-            logger.error("An exception was thrown, while trying to parse the file: " + file.getPath(), e);
+            logger.error("An exception was thrown, while trying to parse the file: " + fileText.getFile().getPath(), e);
             return null;
         }
     }

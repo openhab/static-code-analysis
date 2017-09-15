@@ -8,8 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,10 +43,10 @@ public class ManifestExternalLibrariesCheck extends AbstractExternalLibrariesChe
         setFileExtensions(MANIFEST_EXTENSION);
     }
 
-    private List<String> getManifestJarFiles(File file) throws IOException {
+    private List<String> getManifestJarFiles(FileText fileText) throws IOException {
         BundleInfo manifest = null;
         try {
-            manifest = parseManifestFromFile(file);
+            manifest = parseManifestFromFile(fileText);
         } catch (CheckstyleException ex) {
             throw new IOException(COULD_NOT_OPEN_MANIFEST);
         }
@@ -77,7 +76,7 @@ public class ManifestExternalLibrariesCheck extends AbstractExternalLibrariesChe
 
         List<String> manifestJarFiles = Collections.emptyList();
         try {
-            manifestJarFiles = getManifestJarFiles(file);
+            manifestJarFiles = getManifestJarFiles(fileText);
         } catch (IOException e) {
             logger.error(COULD_NOT_OPEN_MANIFEST);
             return;

@@ -75,7 +75,7 @@ public class PackageExportsNameCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File manifestFile, FileText fileText) throws CheckstyleException {
-        BundleInfo bundleInfo = parseManifestFromFile(manifestFile);
+        BundleInfo bundleInfo = parseManifestFromFile(fileText);
         Set<String> uniqueManifestExports = bundleInfo.getExports().stream().map(export -> export.getName())
                 .collect(Collectors.toSet());
 

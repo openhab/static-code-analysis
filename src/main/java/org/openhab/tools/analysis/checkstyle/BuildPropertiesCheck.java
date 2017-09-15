@@ -100,24 +100,24 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
         String fileName = file.getName();
         if (fileName.equals(BUILD_PROPERTIES_FILE_NAME)) {
-            if (!isEmpty(file)) {
-                processBuildProperties(file, fileText.toLinesArray());
+            if (!isEmpty(fileText)) {
+                processBuildProperties(fileText, fileText.toLinesArray());
             } else {
                 log(0, EMPTY_FILE_MSG);
             }
         }
     }
 
-    private void processBuildProperties(File file, String[] lines) throws CheckstyleException {
+    private void processBuildProperties(FileText fileText, String[] lines) throws CheckstyleException {
         // We ignore the exceptions thrown by the parseBuildProperties() method. A corrupt build.properties file will
         // fail the Maven build in the compile phase, so we should not care about this case in the validate phase
-        IBuild buildPropertiesFile = parseBuildProperties(file);
+        IBuild buildPropertiesFile = parseBuildProperties(fileText);
 
         IBuildEntry binIncludesValue = buildPropertiesFile.getEntry(BIN_INCLUDES_PROPERTY_NAME);
         if (binIncludesValue != null) {
             List<String> missingValues = findMissingValues(binIncludesValue, expectedBinIncludesValues, true,
                     (a, b) -> a.containsAll(b));
-            logMissingValues(lines, BIN_INCLUDES_PROPERTY_NAME, missingValues, MISSING_BIN_INCLUDES_VALUE_MSG);
+            logMissingValues(fileText, BIN_INCLUDES_PROPERTY_NAME, missingValues, MISSING_BIN_INCLUDES_VALUE_MSG);
         } else {
             // bin.includes property is the single required property
             log(0, MISSING_BIN_INCLUDES_PROPERTY_MSG);
@@ -134,7 +134,7 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
             if (!possibleMissingValues.isEmpty()) {
                 List<String> valuesToLog = new ArrayList<String>();
                 valuesToLog.add("Any of " + possibleOutputValues.toString());
-                logMissingValues(lines, OUTPUT_PROPERTY_NAME, valuesToLog, MISSING_OUTPUT_VALUE_MSG);
+                logMissingValues(fileText, OUTPUT_PROPERTY_NAME, valuesToLog, MISSING_OUTPUT_VALUE_MSG);
             }
 
         }
@@ -142,11 +142,11 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
         IBuildEntry sourcePropertyValue = buildPropertiesFile.getEntry(SOURCE_PROPERTY_NAME);
         if (sourcePropertyValue != null) {
             // the build properties file is located directly in the base directory of the bundle
-            File bundleBaseDir = file.getParentFile();
+            File bundleBaseDir = fileText.getFile().getParentFile();
             removeNonExistingSourceDirs(bundleBaseDir);
             List<String> missingValues = findMissingValues(sourcePropertyValue, possibleSourceValues, false,
                     (a, b) -> a.containsAll(b));
-            logMissingValues(lines, SOURCE_PROPERTY_NAME, missingValues, MISSING_SRC_VALUE_MSG);
+            logMissingValues(fileText, SOURCE_PROPERTY_NAME, missingValues, MISSING_SRC_VALUE_MSG);
         }
     }
 
@@ -179,9 +179,9 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
      * @param missingValueMessage - message to be used, when a value is missing
      *
      */
-    private void logMissingValues(String[] lines, String property, List<String> missingValues, String messsage) {
+    private void logMissingValues(FileText fileText, String property, List<String> missingValues, String messsage) {
         for (String missingValue : missingValues) {
-            log(findLineNumber(lines, property, 0), messsage + missingValue);
+            log(findLineNumber(fileText, property, 0), messsage + missingValue);
 
         }
     }

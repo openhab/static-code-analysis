@@ -43,7 +43,7 @@ public class ImportExportedPackagesCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-        int lineToLog = findLineNumber(fileText.toLinesArray(), EXPORT_PACKAGES_HEADER, 0);
+        int lineToLog = findLineNumber(fileText, EXPORT_PACKAGES_HEADER, 0);
 
         try {
             Set<ExportPackage> exports = ManifestParser.parseManifest(file).getExports();

@@ -65,15 +65,14 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File manifestFile, FileText fileText) throws CheckstyleException {
-        BundleInfo manifest = parseManifestFromFile(manifestFile);
-        String[] lines = fileText.toLinesArray();
+        BundleInfo manifest = parseManifestFromFile(fileText);
 
-        checkVersionOfImportedPackages(manifest, lines);
+        checkVersionOfImportedPackages(manifest, fileText);
 
-        checkVersionOfExportedPackages(manifest, lines);
+        checkVersionOfExportedPackages(manifest, fileText);
     }
 
-    private void checkVersionOfImportedPackages(BundleInfo manifest, String[] lines) {
+    private void checkVersionOfImportedPackages(BundleInfo manifest, FileText fileText) {
         Set<BundleRequirement> requiredBundles = manifest.getRequires();
         Set<BundleRequirement> importPackages = manifest.getImports();
 
@@ -81,7 +80,7 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
         for (BundleRequirement importPackage : importPackages) {
             String importName = importPackage.getName();
             if (importPackage.getVersion() != null && !isIgnoredPackage(ignoreImportedPackages, importName)) {
-                lineNumber = findLineNumber(lines, importName, lineNumber);
+                lineNumber = findLineNumber(fileText, importName, lineNumber);
                 log(lineNumber, String.format(VERSION_USED_MSG, importName));
             }
         }
@@ -91,13 +90,13 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
         for (BundleRequirement requiredBundle : requiredBundles) {
             if (requiredBundle.getVersion() != null) {
                 String name = requiredBundle.getName();
-                lineNumber = findLineNumber(lines, name, lineNumber);
+                lineNumber = findLineNumber(fileText, name, lineNumber);
                 log(lineNumber, String.format(VERSION_USED_MSG, name));
             }
         }
     }
 
-    private void checkVersionOfExportedPackages(BundleInfo manifest, String[] lines) {
+    private void checkVersionOfExportedPackages(BundleInfo manifest, FileText fileText) {
         Set<ExportPackage> exports = manifest.getExports();
 
         int lineNumber = 0;
@@ -108,7 +107,7 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
             // and the package is not ignored from the configuration.
             if (!exportPackage.getVersion().equals(BundleInfo.DEFAULT_VERSION)
                     && !isIgnoredPackage(ignoreExportedPackages, exportedPackageName)) {
-                lineNumber = findLineNumber(lines, exportedPackageName, lineNumber);
+                lineNumber = findLineNumber(fileText, exportedPackageName, lineNumber);
                 log(lineNumber, String.format(VERSION_USED_MSG, exportedPackageName));
             }
         }

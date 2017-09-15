@@ -8,9 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -137,7 +135,7 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
         logger.debug("Processing the " + file.getName());
 
         if (file.getName().equals(BUILD_PROPERTIES_FILE_NAME)) {
-            processBuildProperties(file);
+            processBuildProperties(fileText);
         } else {
             super.processFiltered(file, fileText);
         }
@@ -164,28 +162,31 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
     }
 
     @Override
-    protected void checkConfigFile(File xmlFile) throws CheckstyleException {
+    protected void checkConfigFile(FileText xmlFileText) throws CheckstyleException {
+        File xmlFile = xmlFileText.getFile();
         addToEshFiles(xmlFile);
         validateXmlAgainstSchema(xmlFile, configSchemaFile);
     }
 
     @Override
-    protected void checkBindingFile(File xmlFile) throws CheckstyleException {
+    protected void checkBindingFile(FileText xmlFileText) throws CheckstyleException {
+        File xmlFile = xmlFileText.getFile();
         addToEshFiles(xmlFile);
         validateXmlAgainstSchema(xmlFile, bindingSchemaFile);
     }
 
     @Override
-    protected void checkThingTypeFile(File xmlFile) throws CheckstyleException {
+    protected void checkThingTypeFile(FileText xmlFileText) throws CheckstyleException {
+        File xmlFile = xmlFileText.getFile();
         addToEshFiles(xmlFile);
         validateXmlAgainstSchema(xmlFile, thingSchemaFile);
     }
 
-    private void processBuildProperties(File file) throws CheckstyleException {
+    private void processBuildProperties(FileText fileText) throws CheckstyleException {
         try {
-            buildPropertiesFile = parseBuildProperties(file);
+            buildPropertiesFile = parseBuildProperties(fileText);
         } catch (CheckstyleException e) {
-            logger.error("Problem occurred while parsing the file " + file.getPath(), e);
+            logger.error("Problem occurred while parsing the file " + fileText.getFile().getPath(), e);
         }
     }
 

@@ -8,8 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +44,7 @@ public class BuildPropertiesExternalLibrariesCheck extends AbstractExternalLibra
         setFileExtensions(PROPERTIES_EXTENSION);
     }
 
-    private List<String> getBuildPropertiesJarFiles(File buildProperties) {
+    private List<String> getBuildPropertiesJarFiles(FileText buildProperties) {
         List<String> buildPropertiesJarFiles = new ArrayList<>();
         try {
             for (String token : getBinIncludesTokens(buildProperties)) {
@@ -61,7 +60,7 @@ public class BuildPropertiesExternalLibrariesCheck extends AbstractExternalLibra
         return buildPropertiesJarFiles;
     }
 
-    private String[] getBinIncludesTokens(File buildProperties) throws IOException {
+    private String[] getBinIncludesTokens(FileText buildProperties) throws IOException {
         IBuildEntry binIncludes = null;
         try {
             binIncludes = parseBuildProperties(buildProperties).getEntry(BIN_INCLUDES);
@@ -99,7 +98,7 @@ public class BuildPropertiesExternalLibrariesCheck extends AbstractExternalLibra
         final File libDirectory = new File(rootFolderPath + File.separator + LIB_FOLDER_NAME);
         String[] binIncludes = null;
         try {
-            binIncludes = getBinIncludesTokens(file);
+            binIncludes = getBinIncludesTokens(fileText);
         } catch (IOException e) {
             logger.error(COULD_NOT_OPEN_BUILD_PROPERTIES);
             return;
@@ -117,7 +116,7 @@ public class BuildPropertiesExternalLibrariesCheck extends AbstractExternalLibra
             return;
         }
 
-        List<String> buildPropertiesJarFiles = getBuildPropertiesJarFiles(file);
+        List<String> buildPropertiesJarFiles = getBuildPropertiesJarFiles(fileText);
 
         if (containsFolder || !buildPropertiesJarFiles.isEmpty()) {
             if (!containsLib) {
