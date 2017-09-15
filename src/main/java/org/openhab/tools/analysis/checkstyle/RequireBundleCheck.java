@@ -8,10 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUNDLE_SYMBOLIC_NAME_HEADER_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.FRAGMENT_HOST_HEADER_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.REQUIRE_BUNDLE_HEADER_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,14 +72,14 @@ public class RequireBundleCheck extends AbstractStaticCheck {
 
             String requireBundleHeaderValue = attributes.getValue(REQUIRE_BUNDLE_HEADER_NAME);
             if (requireBundleHeaderValue != null && !testBundle) {
-                log(findLineNumber(fileText.toLinesArray(), requireBundleHeaderValue, 0),
+                log(findLineNumber(fileText, requireBundleHeaderValue, 0),
                         "The MANIFEST.MF file must not contain any Require-Bundle entries. "
                                 + "Instead, Import-Package must be used.");
             } else if (requireBundleHeaderValue != null && testBundle) {
                 String[] bundleNames = requireBundleHeaderValue.split(",");
                 for (String bundleName : bundleNames) {
                     if (!allowedRequireBundles.contains(bundleName)) {
-                        log(findLineNumber(fileText.toLinesArray(), requireBundleHeaderValue, 0),
+                        log(findLineNumber(fileText, requireBundleHeaderValue, 0),
                                 "The MANIFEST.MF file of a test fragment must not contain Require-Bundle entries other than "
                                         + getAllowedBundlesString() + ".");
                         break;

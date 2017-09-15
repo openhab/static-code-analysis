@@ -8,8 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.api;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ESH_INF_DIRECTORY;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -54,12 +53,13 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
         String fileName = file.getName();
 
         if (FilenameUtils.getExtension(fileName).equals(XML_EXTENSION)) {
-            processXmlFile(file);
+            processXmlFile(fileText);
         }
     }
 
-    private void processXmlFile(File xmlFile) throws CheckstyleException {
-        if (isEmpty(xmlFile)) {
+    private void processXmlFile(FileText xmlFileText) throws CheckstyleException {
+        File xmlFile = xmlFileText.getFile();
+        if (isEmpty(xmlFileText)) {
             log(0, MessageFormat.format(MESSAGE_EMPTY_FILE, xmlFile.getName()), xmlFile.getPath());
         } else {
 
@@ -69,15 +69,15 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
             if (isESHParentDirectory) {
                 switch (fileParentDirectory.getName()) {
                     case THING_DIRECTORY: {
-                        checkThingTypeFile(xmlFile);
+                        checkThingTypeFile(xmlFileText);
                         break;
                     }
                     case BINDING_DIRECTORY: {
-                        checkBindingFile(xmlFile);
+                        checkBindingFile(xmlFileText);
                         break;
                     }
                     case CONFIGURATION_DIRECTORY: {
-                        checkConfigFile(xmlFile);
+                        checkConfigFile(xmlFileText);
                         break;
                     }
                     default:
@@ -92,25 +92,25 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
     /**
      * Validate a .xml file located in the ESH-INF/config directory
      *
-     * @param xmlFile the file to validate
+     * @param xmlFileText - Represents the text contents of the xml file
      * @throws CheckstyleException when exception occurred during XML processing
      */
-    protected abstract void checkConfigFile(File xmlFile) throws CheckstyleException;
+    protected abstract void checkConfigFile(FileText xmlFileText) throws CheckstyleException;
 
     /**
      * Validate a .xml file located in the ESH-INF/binding directory
      *
-     * @param xmlFile the file to validate
+     * @param xmlFileText - Represents the text contents of the xml file
      * @throws CheckstyleException when exception occurred during XML processing
      */
-    protected abstract void checkBindingFile(File xmlFile) throws CheckstyleException;
+    protected abstract void checkBindingFile(FileText xmlFileText) throws CheckstyleException;
 
     /**
      * Validate a .xml file located in the ESH-INF/thing directory
      *
-     * @param xmlFile the file to validate
+     * @param xmlFileText - Represents the text contents of the xml file
      * @throws CheckstyleException when exception occurred during XML processing
      */
-    protected abstract void checkThingTypeFile(File xmlFile) throws CheckstyleException;
+    protected abstract void checkThingTypeFile(FileText xmlFileText) throws CheckstyleException;
 
 }

@@ -8,9 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.readme;
 
-import java.io.File;
 import java.text.MessageFormat;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,6 +25,8 @@ import org.commonmark.node.OrderedList;
 import org.commonmark.node.Paragraph;
 import org.commonmark.node.Text;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * This visitor processes headers, lists and code sections and logs errors when
@@ -57,13 +57,11 @@ class MarkdownVisitor extends AbstractVisitor {
      */
     private MarkdownVisitorCallback callback;
 
-    private File file;
-    private List<String> lines;
+    private FileText fileText;
 
-    public MarkdownVisitor(MarkdownVisitorCallback callBack, File file, List<String> lines) {
+    public MarkdownVisitor(MarkdownVisitorCallback callBack, FileText fileText) {
         this.callback = callBack;
-        this.file = file;
-        this.lines = lines;
+        this.fileText = fileText;
     }
 
     /**
@@ -84,17 +82,17 @@ class MarkdownVisitor extends AbstractVisitor {
     private void validateHeader(String headerValue) {
         if (headerValue != null) {
             int headerLineNumber;
-            headerLineNumber = callback.findLineNumber(lines, headerValue, currentLinePointer);
+            headerLineNumber = callback.findLineNumber(fileText, headerValue, currentLinePointer);
             boolean isInvalidHeaderValue = headerLineNumber == -1;
             if (isInvalidHeaderValue) {
                 logger.error("A header cannot be processed properly: " + headerValue);
             } else {
                 currentLinePointer = headerLineNumber;
-                boolean isHeaderAtEndOfFile = headerLineNumber == lines.size();
+                boolean isHeaderAtEndOfFile = headerLineNumber == fileText.size();
                 if (isHeaderAtEndOfFile) {
                     callback.log(headerLineNumber, HEADER_AT_END_OF_FILE);
                 } else {
-                    boolean isNextLineEmpty = StringUtils.isBlank(lines.get(headerLineNumber));
+                    boolean isNextLineEmpty = StringUtils.isBlank(fileText.get(headerLineNumber));
                     if (!isNextLineEmpty) {
                         callback.log(headerLineNumber, EMPTY_LINE_AFTER_HEADER_MSG);
                     }
@@ -103,7 +101,7 @@ class MarkdownVisitor extends AbstractVisitor {
         } else {
             String message = MessageFormat.format(
                     "Occurred an error while processing the Markdown file {0}. The header value is null.",
-                    file.getAbsolutePath());
+                    fileText.getFile().getAbsolutePath());
             logger.warn(message);
         }
     }
@@ -131,7 +129,7 @@ class MarkdownVisitor extends AbstractVisitor {
         // have only one element
         String codeSectionLines[] = codeBlock.split("\\r?\\n");
         if (!StringUtils.isBlank(codeBlock)) {
-            codeStartingLineNumber = callback.findLineNumber(lines, codeSectionLines[0], currentLinePointer);
+            codeStartingLineNumber = callback.findLineNumber(fileText, codeSectionLines[0], currentLinePointer);
             // if findLineNumber returns -1
             if (codeStartingLineNumber >= 0) {
                 codeStartingLineNumber--;
@@ -156,7 +154,7 @@ class MarkdownVisitor extends AbstractVisitor {
         } else {
             // -2 because the line before the code is occupied with code section opening- ```
             int lineBeforeCodeSection = codeStartingLineNumber - 2;
-            boolean isLineBeforeCodeSectionEmpty = StringUtils.isBlank(lines.get(lineBeforeCodeSection));
+            boolean isLineBeforeCodeSectionEmpty = StringUtils.isBlank(fileText.get(lineBeforeCodeSection));
             if (!isLineBeforeCodeSectionEmpty) {
                 callback.log(codeStartingLineNumber, EMPTY_LINE_BEFORE_CODE_MSG);
             }
@@ -164,11 +162,11 @@ class MarkdownVisitor extends AbstractVisitor {
     }
 
     private void verifyAfterCodeSection(int codeEndingLineNumber) {
-        boolean isCodeSectionAtEndOfFile = (codeEndingLineNumber == lines.size());
+        boolean isCodeSectionAtEndOfFile = (codeEndingLineNumber == fileText.size());
         // There is another check that logs errors if there is not an empty line at the end of file
         // named NewLineAtEndOfFileCheck
         if (!isCodeSectionAtEndOfFile) {
-            if (!StringUtils.isBlank(lines.get(codeEndingLineNumber))) {
+            if (!StringUtils.isBlank(fileText.get(codeEndingLineNumber))) {
                 callback.log(codeEndingLineNumber, EMPTY_LINE_AFTER_CODE_MSG);
             }
         }
@@ -216,7 +214,7 @@ class MarkdownVisitor extends AbstractVisitor {
     private void markDownListProcessing(String firstLineOfList, String lastLineOfList, int listLenght) {
         int listStartingLineNumber = 0;
         int listEndingLineNumber = 0;
-        listStartingLineNumber = callback.findLineNumber(lines, firstLineOfList, currentLinePointer);
+        listStartingLineNumber = callback.findLineNumber(fileText, firstLineOfList, currentLinePointer);
         // in case findLineNumber returns -1
         if (listStartingLineNumber >= 0) {
             if (listStartingLineNumber == 1) {
@@ -225,7 +223,7 @@ class MarkdownVisitor extends AbstractVisitor {
                 // pointer goes before the list ending to narrow the searching scope
                 // sometimes there could be 2 list items with same literal
                 currentLinePointer = listStartingLineNumber + listLenght - 2;
-                listEndingLineNumber = callback.findLineNumber(lines, lastLineOfList, currentLinePointer);
+                listEndingLineNumber = callback.findLineNumber(fileText, lastLineOfList, currentLinePointer);
                 if (listEndingLineNumber >= 0) {
                     currentLinePointer = listEndingLineNumber;
                     verifyLineBeforeListBlock(listStartingLineNumber);
@@ -242,7 +240,7 @@ class MarkdownVisitor extends AbstractVisitor {
 
     private void verifyLineBeforeListBlock(int listStartingLineNumber) {
         // Starting number is decreased with 2 lines because previous line is get and there is 0 indexation
-        boolean isPreviousLineEmpty = !StringUtils.isBlank(lines.get(listStartingLineNumber - 2));
+        boolean isPreviousLineEmpty = !StringUtils.isBlank(fileText.get(listStartingLineNumber - 2));
         if (isPreviousLineEmpty) {
             // the -1 is used when logging the error to mark the exact line which have to be empty
             callback.log(listStartingLineNumber - 1, EMPTY_LINE_BEFORE_LIST_MSG);
@@ -250,9 +248,9 @@ class MarkdownVisitor extends AbstractVisitor {
     }
 
     private void verifyLineAfterListBlock(int listEndingLineNumber) {
-        boolean isListAtEndOfFile = (listEndingLineNumber == lines.size());
+        boolean isListAtEndOfFile = (listEndingLineNumber == fileText.size());
         if (!isListAtEndOfFile) {
-            boolean isNextLineEmpty = StringUtils.isBlank(lines.get(listEndingLineNumber));
+            boolean isNextLineEmpty = StringUtils.isBlank(fileText.get(listEndingLineNumber));
             if (!isNextLineEmpty) {
                 callback.log(listEndingLineNumber, EMPTY_LINE_AFTER_LIST_MSG);
             }

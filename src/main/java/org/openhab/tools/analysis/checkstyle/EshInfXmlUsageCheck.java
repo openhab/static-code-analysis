@@ -24,6 +24,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Check for missing bridge-type or supported bridge-type-refs in the same file.<br>
@@ -71,43 +72,43 @@ public class EshInfXmlUsageCheck extends AbstractEshInfXmlCheck {
     }
 
     @Override
-    protected void checkConfigFile(File xmlFile) throws CheckstyleException {
+    protected void checkConfigFile(FileText xmlFileText) throws CheckstyleException {
         // The allowed values are described in the config description XSD
-        allConfigDescriptions.putAll(evaluateExpressionOnFile(xmlFile, CONFIG_DESCRIPTION_EXPRESSION));
+        allConfigDescriptions.putAll(evaluateExpressionOnFile(xmlFileText, CONFIG_DESCRIPTION_EXPRESSION));
     }
 
     @Override
-    protected void checkBindingFile(File xmlFile) throws CheckstyleException {
+    protected void checkBindingFile(FileText xmlFileText) throws CheckstyleException {
         // The allowed values are described in the binding XSD
-        allConfigDescriptionRefs.putAll(evaluateExpressionOnFile(xmlFile, CONFIG_DESCRIPTION_REF_EXPRESSION));
-        allConfigDescriptions.putAll(evaluateExpressionOnFile(xmlFile, CONFIG_DESCRIPTION_EXPRESSION));
+        allConfigDescriptionRefs.putAll(evaluateExpressionOnFile(xmlFileText, CONFIG_DESCRIPTION_REF_EXPRESSION));
+        allConfigDescriptions.putAll(evaluateExpressionOnFile(xmlFileText, CONFIG_DESCRIPTION_EXPRESSION));
     }
 
     @Override
-    protected void checkThingTypeFile(File xmlFile) throws CheckstyleException {
+    protected void checkThingTypeFile(FileText xmlFileText) throws CheckstyleException {
         // Process the files for all nodes below,
         // the allowed values are described in the thing description XSD
-        allSupportedBridges.putAll(evaluateExpressionOnFile(xmlFile, SUPPORTED_BRIDGE_TYPE_REF_EXPRESSION));
-        allBridgeTypes.putAll(evaluateExpressionOnFile(xmlFile, BRIDGE_TYPE_EXPRESSION));
-        allConfigDescriptionRefs.putAll(evaluateExpressionOnFile(xmlFile, CONFIG_DESCRIPTION_REF_EXPRESSION));
-        allConfigDescriptions.putAll(evaluateExpressionOnFile(xmlFile, CONFIG_DESCRIPTION_EXPRESSION));
+        allSupportedBridges.putAll(evaluateExpressionOnFile(xmlFileText, SUPPORTED_BRIDGE_TYPE_REF_EXPRESSION));
+        allBridgeTypes.putAll(evaluateExpressionOnFile(xmlFileText, BRIDGE_TYPE_EXPRESSION));
+        allConfigDescriptionRefs.putAll(evaluateExpressionOnFile(xmlFileText, CONFIG_DESCRIPTION_REF_EXPRESSION));
+        allConfigDescriptions.putAll(evaluateExpressionOnFile(xmlFileText, CONFIG_DESCRIPTION_EXPRESSION));
     }
 
-    private Map<String, File> evaluateExpressionOnFile(File xmlFile, String xPathExpression)
+    private Map<String, File> evaluateExpressionOnFile(FileText xmlFileText, String xPathExpression)
             throws CheckstyleException {
         Map<String, File> collection = new HashMap<>();
-        NodeList nodes = getNodes(xmlFile, xPathExpression);
+        NodeList nodes = getNodes(xmlFileText, xPathExpression);
 
         if (nodes != null) {
             for (int i = 0; i < nodes.getLength(); i++) {
-                collection.put(nodes.item(i).getNodeValue(), xmlFile);
+                collection.put(nodes.item(i).getNodeValue(), xmlFileText.getFile());
             }
         }
         return collection;
     }
 
-    private NodeList getNodes(File xmlFile, String expression) throws CheckstyleException {
-        Document document = parseDomDocumentFromFile(xmlFile);
+    private NodeList getNodes(FileText xmlFileText, String expression) throws CheckstyleException {
+        Document document = parseDomDocumentFromFile(xmlFileText);
 
         XPathExpression xpathExpression = compileXPathExpression(expression);
 
@@ -117,7 +118,7 @@ public class EshInfXmlUsageCheck extends AbstractEshInfXmlCheck {
         } catch (XPathExpressionException e) {
             String message = MessageFormat.format(
                     "Problem occurred while evaluating the expression {0} on the {1} file.", expression,
-                    xmlFile.getName());
+                    xmlFileText.getFile().getName());
             logger.error(message, e);
         }
         return nodes;

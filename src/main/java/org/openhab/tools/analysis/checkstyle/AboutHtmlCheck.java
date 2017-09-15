@@ -8,11 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ABOUT_HTML_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BIN_INCLUDES_PROPERTY_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.HTML_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,15 +84,15 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
         if (BUILD_PROPERTIES_FILE_NAME.equals(fileName)) {
             // The check will not log an error if build properties file is missing at all
             // We have other check for this case - RequiredFilesCheck
-            boolean isAboutHtmlIncluded = checkBuildPropertiesFile(file, BIN_INCLUDES_PROPERTY_NAME,
+            boolean isAboutHtmlIncluded = checkBuildPropertiesFile(fileText, BIN_INCLUDES_PROPERTY_NAME,
                     ABOUT_HTML_FILE_NAME);
             if (!isAboutHtmlIncluded) {
                 log(0, MISSING_ABOUT_HTML_IN_BUILD_PROPERTIES_MSG, file.getPath());
             }
         } else if (ABOUT_HTML_FILE_NAME.equals(fileName)) {
-            if (!isEmpty(file)) {
+            if (!isEmpty(fileText)) {
                 if (validAboutHtmlFileContent != null) {
-                    Document fileDocument = parseHTMLDocumentFromFile(file);
+                    Document fileDocument = parseHTMLDocumentFromFile(fileText);
                     checkLicenseHeader(fileDocument);
                     checkLicenseParagraph(fileDocument);
                 } else {
@@ -108,10 +104,11 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
         }
     }
 
-    private boolean checkBuildPropertiesFile(File file, String property, String value) throws CheckstyleException {
-        if (!isEmpty(file)) {
+    private boolean checkBuildPropertiesFile(FileText fileText, String property, String value)
+            throws CheckstyleException {
+        if (!isEmpty(fileText)) {
             try {
-                IBuild buildPropertiesFile = parseBuildProperties(file);
+                IBuild buildPropertiesFile = parseBuildProperties(fileText);
                 IBuildEntry binIncludes = buildPropertiesFile.getEntry(property);
 
                 return binIncludes != null && binIncludes.contains(value);

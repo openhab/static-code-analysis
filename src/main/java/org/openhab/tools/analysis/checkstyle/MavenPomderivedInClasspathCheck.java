@@ -43,11 +43,10 @@ public class MavenPomderivedInClasspathCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-
-        if (isEmpty(file)) {
+        if (isEmpty(fileText)) {
             log(0, "The .classpath file should not be empty.");
         } else {
-            Document document = parseDomDocumentFromFile(file);
+            Document document = parseDomDocumentFromFile(fileText);
 
             XPathExpression xpathExpression = compileXPathExpression(POMDERIVED_EXPRESSION);
 
@@ -60,10 +59,9 @@ public class MavenPomderivedInClasspathCheck extends AbstractStaticCheck {
 
             if (nodes != null) {
                 int lineNumber = 0;
-                String[] lines = fileText.toLinesArray();
 
                 for (int i = 0; i < nodes.getLength(); i++) {
-                    lineNumber = findLineNumber(lines, nodes.item(i).getNodeValue(), lineNumber);
+                    lineNumber = findLineNumber(fileText, nodes.item(i).getNodeValue(), lineNumber);
                     if (lineNumber != -1) {
                         log(lineNumber, "The classpath file contains maven.pomderived attribute. "
                                 + "This attribute should be used only if you have problems downloading your maven dependencies.");

@@ -8,8 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 
@@ -45,10 +44,10 @@ public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
 
         if (file.getName().equals(POM_XML_FILE_NAME)) {
-            if (isEmpty(file)) {
+            if (isEmpty(fileText)) {
                 log(0, "The pom.xml file should not be empty.");
             } else {
-                Document document = parseDomDocumentFromFile(file);
+                Document document = parseDomDocumentFromFile(fileText);
 
                 XPathExpression xpathExpression = compileXPathExpression(POM_CONFIGURATION_EXPRESSION);
 
@@ -62,10 +61,8 @@ public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
                 if (nodes != null) {
                     int lineNumber = 0;
 
-                    String[] fileContent = fileText.toLinesArray();
-
                     for (int i = 0; i < nodes.getLength(); i++) {
-                        lineNumber = findLineNumber(fileContent, nodes.item(i).getNodeValue(), lineNumber);
+                        lineNumber = findLineNumber(fileText, nodes.item(i).getNodeValue(), lineNumber);
                         if (lineNumber != -1) {
                             log(lineNumber, "Avoid overriding a configuration inherited by the parent pom.");
                         }

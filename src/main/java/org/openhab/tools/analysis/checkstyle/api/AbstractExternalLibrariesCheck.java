@@ -18,6 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.pde.core.build.IBuildEntry;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Abstract class that contains logic that is used by other external libraries checks.
@@ -56,9 +57,10 @@ public abstract class AbstractExternalLibrariesCheck extends AbstractStaticCheck
 
     private List<String> getExcludedJarFiles(String buildPropertiesPath) throws IOException {
         File buildProperties = new File(buildPropertiesPath);
+        FileText buildPropertiesFileText = new FileText(buildProperties, "UTF-8");
         IBuildEntry binExcludesEntry = null;
         try {
-            binExcludesEntry = parseBuildProperties(buildProperties).getEntry(BIN_EXCLUDES);
+            binExcludesEntry = parseBuildProperties(buildPropertiesFileText).getEntry(BIN_EXCLUDES);
         } catch (CheckstyleException ex) {
             throw new IOException(COULD_NOT_OPEN_BUILD_PROPERTIES);
         }

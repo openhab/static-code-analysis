@@ -46,7 +46,7 @@ public class AbstractManifestAttributeCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-        if (isEmpty(file)) {
+        if (isEmpty(fileText)) {
             // not our task to report
             return;
         }
@@ -67,7 +67,7 @@ public class AbstractManifestAttributeCheck extends AbstractStaticCheck {
 
         int lineNumber = 0;
         for (String bundleVendor : bundleVendors) {
-            lineNumber = findLineNumber(lines, bundleVendor, lineNumber);
+            lineNumber = findLineNumber(fileText, bundleVendor, lineNumber);
 
             if (tooMany) {
                 log(lineNumber, String.format("Only %d \"%s\" was expected.", maxOccurrences, attribute));

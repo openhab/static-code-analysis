@@ -64,7 +64,7 @@ public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testEmptyFile() throws Exception {
         int lineNumber = 0;
-        String[] expectedMessages = generateExpectedMessages(lineNumber, "File is empty!");
+        String[] expectedMessages = generateExpectedMessages(lineNumber, "Manifest file is empty!");
         verifyManifest("emptyManifest.MF", expectedMessages);
     }
 

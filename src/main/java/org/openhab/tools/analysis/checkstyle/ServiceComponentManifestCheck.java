@@ -8,12 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OSGI_INF_DIRECTORY_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -97,11 +92,11 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
         }
 
         if (file.getName().equals(MANIFEST_FILE_NAME)) {
-            verifyManifest(file, fileText.toLinesArray());
+            verifyManifest(fileText);
         }
 
         if (file.getName().equals(BUILD_PROPERTIES_FILE_NAME)) {
-            processBuildPropertiesFile(file);
+            processBuildPropertiesFile(fileText);
         }
     }
 
@@ -116,12 +111,12 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
         return result;
     }
 
-    private void processBuildPropertiesFile(File file) {
+    private void processBuildPropertiesFile(FileText fileText) {
         try {
-            buildPropertiesFile = parseBuildProperties(file);
-            buildPropertiesPath = file.getPath();
+            buildPropertiesFile = parseBuildProperties(fileText);
+            buildPropertiesPath = fileText.getFile().getPath();
         } catch (CheckstyleException e) {
-            logger.error("Problem occurred while parsing the file " + file.getPath(), e);
+            logger.error("Problem occurred while parsing the file " + buildPropertiesPath, e);
         }
     }
 
@@ -265,14 +260,15 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
         }
     }
 
-    private void verifyManifest(File file, String[] lines) {
+    private void verifyManifest(FileText fileText) {
+        File file = fileText.getFile();
         manifestPath = file.getPath();
         try {
             Manifest manifest = new Manifest(new FileInputStream(file));
             Attributes attributes = manifest.getMainAttributes();
 
             serviceComponentHeaderValue = attributes.getValue(SERVICE_COMPONENT_HEADER);
-            serviceComponentHeaderLineNumber = findLineNumber(lines, SERVICE_COMPONENT_HEADER, 0);
+            serviceComponentHeaderLineNumber = findLineNumber(fileText, SERVICE_COMPONENT_HEADER, 0);
 
             if (serviceComponentHeaderValue != null) {
                 List<String> serviceComponentsList = Arrays.asList(serviceComponentHeaderValue.trim().split(","));
