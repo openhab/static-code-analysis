@@ -61,8 +61,10 @@ public class OutsideOfLibExternalLibrariesCheckTest extends AbstractStaticCheckT
     public void shouldLogWhenThereAreJarFilesOutsideOfLibFolder() throws Exception {
         final String BUNDLE_WITH_JAR_FILES_OUTSIDE_OF_LIB_FOLDER = MAIN_DIRECTORY + File.separator
                 + "bundleWithJarFilesOutsideOfLib";
-        String message = "All jar files need to be placed inside a lib folder and added to MANIFEST.MF and build.properties";
-        String[] warningMessages = generateExpectedMessages(0, message);
+        final String JAR_PATH = getPath(BUNDLE_WITH_JAR_FILES_OUTSIDE_OF_LIB_FOLDER);
+        String message = "There is a jar outside of the lib folder %s" + File.separator + "%s";
+
+        String[] warningMessages = generateExpectedMessages(0, String.format(message, JAR_PATH, "test3.jar"));
         verifyBuildProperties(getBuildPropertiesPath(BUNDLE_WITH_JAR_FILES_OUTSIDE_OF_LIB_FOLDER), warningMessages);
     }
 
