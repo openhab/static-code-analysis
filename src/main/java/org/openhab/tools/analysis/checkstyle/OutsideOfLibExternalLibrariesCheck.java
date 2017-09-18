@@ -29,7 +29,8 @@ import edu.emory.mathcs.backport.java.util.Arrays;
  */
 public class OutsideOfLibExternalLibrariesCheck extends AbstractExternalLibrariesCheck {
     private List<String> ignoredDirectories;
-    private static final String JAR_FILES_NEED_TO_BE_PLACED_IN_A_LIB_FOLDER = "All jar files need to be placed inside a lib folder and added to MANIFEST.MF and build.properties";
+    private static final String JAR_FILES_NEED_TO_BE_PLACED_IN_A_LIB_FOLDER = "There is a jar outside of the lib folder %s"
+            + File.separator + "%s";
 
     public OutsideOfLibExternalLibrariesCheck() {
         setFileExtensions(PROPERTIES_EXTENSION);
@@ -49,7 +50,7 @@ public class OutsideOfLibExternalLibrariesCheck extends AbstractExternalLibrarie
                 }
 
                 if (name.endsWith(JAR_FILE_EXTENSION)) {
-                    log(0, JAR_FILES_NEED_TO_BE_PLACED_IN_A_LIB_FOLDER);
+                    log(0, String.format(JAR_FILES_NEED_TO_BE_PLACED_IN_A_LIB_FOLDER, dir.getAbsolutePath(), name));
                 }
 
                 return dir.isDirectory();
