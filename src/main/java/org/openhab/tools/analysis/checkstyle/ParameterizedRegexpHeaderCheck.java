@@ -102,7 +102,7 @@ public class ParameterizedRegexpHeaderCheck extends AbstractHeaderCheck {
 
             for (int i = 0; i < referenceHeaderLines.size(); i++) {
                 if (!isMatch(fileText.get(i), i)) {
-                    log(i + 1, MSG_MISMATCH, headerRegexps.get(i).pattern());
+                    log(i + 1, MessageFormat.format(MSG_MISMATCH, headerRegexps.get(i).pattern()));
                     break;
                 }
             }
