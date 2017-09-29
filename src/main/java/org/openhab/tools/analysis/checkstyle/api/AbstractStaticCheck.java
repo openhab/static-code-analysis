@@ -9,6 +9,7 @@
 package org.openhab.tools.analysis.checkstyle.api;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +27,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.io.input.CharSequenceInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ivy.osgi.core.BundleInfo;
@@ -265,6 +265,6 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     }
 
     private InputStream getInputStream(FileText fileText) {
-        return new CharSequenceInputStream(fileText.getFullText(), fileText.getCharset());
+        return new ByteArrayInputStream(fileText.getFullText().toString().getBytes(fileText.getCharset()));
     }
 }
