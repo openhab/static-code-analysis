@@ -8,8 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.JAVA_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -38,7 +37,7 @@ public class ParameterizedRegexpHeaderCheck extends AbstractHeaderCheck {
     public static final String DEFAULT_XML_START_COMMENT = "<!--";
 
     private static final String SEPARATOR = "\n";
-    private static final String MSG_MISMATCH = "Header line doesn't match pattern {0}";
+    private static final String MSG_MISMATCH = "Header line doesn''t match pattern {0}";
     private static final String MSG_MISSING = "Header is missing";
 
     /**
@@ -102,7 +101,7 @@ public class ParameterizedRegexpHeaderCheck extends AbstractHeaderCheck {
 
             for (int i = 0; i < referenceHeaderLines.size(); i++) {
                 if (!isMatch(fileText.get(i), i)) {
-                    log(i + 1, MessageFormat.format(MSG_MISMATCH, headerRegexps.get(i).pattern()));
+                    log(i + 1, MSG_MISMATCH, headerRegexps.get(i).pattern());
                     break;
                 }
             }

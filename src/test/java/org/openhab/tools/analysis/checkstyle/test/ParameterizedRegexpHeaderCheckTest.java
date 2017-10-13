@@ -26,7 +26,7 @@ import com.puppycrawl.tools.checkstyle.api.Configuration;
  * @author Svilen Valkanov - Initial contribution
  */
 public class ParameterizedRegexpHeaderCheckTest extends AbstractStaticCheckTest {
-    private static final String MSG_MISMATCH = "Header line doesn't match pattern {0}";
+    private static final String MSG_MISMATCH = "Header line doesn''t match pattern {0}";
     private static final String MSG_MISSING = "Header is missing";
 
     private static final String TEST_DIRECOTRY = "parameterizedRegexpHeaderCheckTest";
