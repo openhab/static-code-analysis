@@ -8,10 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +39,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  *
  * @author Petar Valchev - Initial implementation
  * @author Svilen Valkanov - Replaced headers, applied minor improvements, added check for parent pom ID
+ * @author Velin Yordanov - Enhanced the check. It can now check for a specific version.
  */
 public class PomXmlCheck extends AbstractStaticCheck {
     private static final String MISSING_VERSION_MSG = "Missing /project/version in the pom.xml file.";
@@ -53,11 +51,12 @@ public class PomXmlCheck extends AbstractStaticCheck {
     private static final String MISSING_PARENT_ARTIFACT_ID_MSG = "Missing /project/parent/artifactId of the parent pom";
     private static final String WRONG_PARENT_ARTIFACT_ID_MSG = "Wrong /project/parent/artifactId. Expected {0} but was {1}";
 
-    private static final String DEFAULT_VERSION_REGULAR_EXPRESSION = "^\\d+[.]\\d+[.]\\d+";
+    private static final String DEFAULT_VERSION_REGULAR_EXPRESSION = "^\\d+\\.\\d+\\.\\d+";
     private static final String POM_ARTIFACT_ID_XPATH_EXPRESSION = "/project/artifactId/text()";
     private static final String POM_PARENT_ARTIFACT_ID_XPATH_EXPRESSION = "/project/parent/artifactId/text()";
     private static String POM_PARENT_VERSION_XPATH_EXPRESSION = "/project/parent/version/text()";
     private static String POM_VERSION_XPATH_EXPRESSION = "/project/version/text()";
+    private static String INCORRECT_VERSION = "The manifest version did not match the requirements %s";
 
     private final Log logger = LogFactory.getLog(this.getClass());
 
@@ -137,6 +136,10 @@ public class PomXmlCheck extends AbstractStaticCheck {
         // We need this in order to filter the "qualifier" for the Snapshot versions
         manifestVersion = getVersion(version.toString(), manifestVersionPattern);
 
+        if (manifestVersion == null) {
+            log(0, String.format(INCORRECT_VERSION, manifestVersionRegularExpression));
+        }
+
         manifestBundleSymbolicName = bundleInfo.getSymbolicName();
     }
 
@@ -163,7 +166,8 @@ public class PomXmlCheck extends AbstractStaticCheck {
             String parentPomArtifactIdValue = getNodeValue(parentPomFileText, POM_ARTIFACT_ID_XPATH_EXPRESSION);
             if (parentArtifactIdValue != null) {
                 if (!parentArtifactIdValue.equals(parentPomArtifactIdValue)) {
-                    int parentArtifactTagLine = findLineNumberSafe(fileText, "parent", 0, "Parent line number not found.");
+                    int parentArtifactTagLine = findLineNumberSafe(fileText, "parent", 0,
+                            "Parent line number not found.");
                     int parentArtifactIdLine = findLineNumberSafe(fileText, "artifactId", parentArtifactTagLine,
                             "Parent artifact ID line number not found.");
 
@@ -199,7 +203,8 @@ public class PomXmlCheck extends AbstractStaticCheck {
             String artifactIdTagName = "artifactId";
             String artifactIdLine = String.format("<%s>%s</%s>", artifactIdTagName, artifactIdNodeValue,
                     artifactIdTagName);
-            pomArtifactIdLine = findLineNumberSafe(fileText, artifactIdLine, 0, "Pom artifact ID line number not found");
+            pomArtifactIdLine = findLineNumberSafe(fileText, artifactIdLine, 0,
+                    "Pom artifact ID line number not found");
         }
     }
 

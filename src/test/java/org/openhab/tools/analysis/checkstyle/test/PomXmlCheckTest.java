@@ -19,6 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.PomXmlCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
+import org.openhab.tools.analysis.checkstyle.api.CheckConstants;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import com.puppycrawl.tools.checkstyle.api.Configuration;
@@ -29,10 +30,11 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  *
  * @author Petar Valchev - Initial Implementation
  * @author Svilen Valkanov - Replaced headers, added new tests, verify absolute path instead of relative
+ * @author Velin Yordanov - Added new tests
  */
 public class PomXmlCheckTest extends AbstractStaticCheckTest {
     private static final String POM_XML_CHECK_TEST_DIRECTORY_NAME = "pomXmlCheckTest";
-    private static final String VERSION_REGULAR_EXPRESSION = "^\\d+[.]\\d+[.]\\d+";
+    private static final String VERSION_REGULAR_EXPRESSION = "^\\d+\\.\\d+\\.\\d+";
 
     private static final String MISSING_VERSION_MSG = "Missing /project/version in the pom.xml file.";
     private static final String MISSING_ARTIFACT_ID_MSG = "Missing /project/artifactId in the pom.xml file.";
@@ -42,6 +44,8 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
             + "The artifactId should match the bundle symbolic name in the MANIFEST.MF file.";
     private static final String MISSING_PARENT_ARTIFACT_ID_MSG = "Missing /project/parent/artifactId of the parent pom";
     private static final String WRONG_PARENT_ARTIFACT_ID_MSG = "Wrong /project/parent/artifactId. Expected {0} but was {1}";
+    private static final String MANIFEST_REGEX = "^2\\.1\\.0";
+    private static String INCORRECT_VERSION = "The manifest version did not match the requirements %s";
 
     private static DefaultConfiguration config;
 
@@ -49,7 +53,7 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
     public static void setUpClass() {
         config = createCheckConfig(PomXmlCheck.class);
         config.addAttribute("pomVersionRegularExpression", VERSION_REGULAR_EXPRESSION);
-        config.addAttribute("manifestVersionRegularExpression", VERSION_REGULAR_EXPRESSION);
+        config.addAttribute("manifestVersionRegularExpression", MANIFEST_REGEX);
     }
 
     @Test
@@ -98,6 +102,21 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
         verify(createChecker(config), testFileAbsolutePath, ArrayUtils.EMPTY_STRING_ARRAY);
     }
 
+    @Test
+    public void testDifferentVersion() throws Exception {
+        verifyManifestFile("different_version_directory", 0, String.format(INCORRECT_VERSION, MANIFEST_REGEX));
+    }
+
+    @Test
+    public void testDifferentManifestVersion() throws Exception {
+        verifyManifestFile("different_version_manifest_directory", 0, String.format(INCORRECT_VERSION, MANIFEST_REGEX));
+    }
+
+    @Test
+    public void testDifferentPomVersion() throws Exception {
+        verifyPomXmlFile("different_version_pom_directory", 9, WRONG_VERSION_MSG);
+    }
+
     @Override
     protected DefaultConfiguration createCheckerConfig(Configuration config) {
         DefaultConfiguration defaultConfiguration = new DefaultConfiguration("root");
@@ -106,17 +125,35 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verifyPomXmlFile(String testDirectoryName, int expectedLine, String expectedMessage) throws Exception {
-        String testDirectoryAbsolutePath = getPath(POM_XML_CHECK_TEST_DIRECTORY_NAME + "/" + testDirectoryName);
-        File testDirectory = new File(testDirectoryAbsolutePath);
+        File testDirectory = getTestDirectory(testDirectoryName);
         File[] testFiles = listFilesForDirectory(testDirectory, new ArrayList<File>());
         String testFilePath = testDirectory.getPath() + File.separator + POM_XML_FILE_NAME;
-        String[] expectedMessages;
-        if (expectedMessage != null) {
-            expectedMessages = generateExpectedMessages(expectedLine, expectedMessage);
-        } else {
-            expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
-        }
+        String[] expectedMessages = getExpectedMessages(expectedMessage, expectedLine);
 
         verify(createChecker(config), testFiles, testFilePath, expectedMessages);
+    }
+
+    private void verifyManifestFile(String testDirectoryName, int expectedLine, String expectedMessage)
+            throws Exception {
+        File testDirectory = getTestDirectory(testDirectoryName);
+        File[] testFiles = listFilesForDirectory(testDirectory, new ArrayList<File>());
+        String testFilePath = testDirectory.getPath() + File.separator + CheckConstants.META_INF_DIRECTORY_NAME
+                + File.separator + CheckConstants.MANIFEST_FILE_NAME;
+        String[] expectedMessages = getExpectedMessages(expectedMessage, expectedLine);
+
+        verify(createChecker(config), testFiles, testFilePath, expectedMessages);
+    }
+
+    private String[] getExpectedMessages(String expectedMessage, int expectedLine) {
+        if (expectedMessage != null) {
+            return generateExpectedMessages(expectedLine, expectedMessage);
+        } else {
+            return CommonUtils.EMPTY_STRING_ARRAY;
+        }
+    }
+
+    private File getTestDirectory(String testDirectoryName) throws Exception {
+        String testDirectoryAbsolutePath = getPath(POM_XML_CHECK_TEST_DIRECTORY_NAME + "/" + testDirectoryName);
+        return new File(testDirectoryAbsolutePath);
     }
 }
