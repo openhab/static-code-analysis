@@ -43,18 +43,21 @@ public class ImportExportedPackagesCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-        int lineToLog = findLineNumberSafe(fileText, EXPORT_PACKAGE_HEADER_NAME, 0,
-                EXPORT_PACKAGE_HEADER_NAME + " header line number not found.");
-
         try {
             Set<ExportPackage> exports = ManifestParser.parseManifest(file).getExports();
             Set<BundleRequirement> imports = ManifestParser.parseManifest(file).getImports();
 
-            for (ExportPackage export : exports) {
-                if (!isPackageImported(imports, export)) {
-                    log(lineToLog, MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, export.toString()));
+            if (!exports.isEmpty()) {
+                int lineToLog = findLineNumberSafe(fileText, EXPORT_PACKAGE_HEADER_NAME, 0,
+                        EXPORT_PACKAGE_HEADER_NAME + " header line number not found.");
+
+                for (ExportPackage export : exports) {
+                    if (!isPackageImported(imports, export)) {
+                        log(lineToLog, MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, export.toString()));
+                    }
                 }
             }
+
         } catch (IOException e) {
             logger.error("An error occured while processing the file " + file.getPath(), e);
         } catch (ParseException e) {

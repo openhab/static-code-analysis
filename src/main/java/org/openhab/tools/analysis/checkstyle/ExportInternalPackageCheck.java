@@ -41,14 +41,16 @@ public class ExportInternalPackageCheck extends AbstractStaticCheck {
         BundleInfo manifest = parseManifestFromFile(fileText);
         Set<?> exports = manifest.getExports();
 
-        int lineNumber = findLineNumberSafe(fileText, EXPORT_PACKAGE_HEADER_NAME, 0, "Header line number not found.");
+        if (!exports.isEmpty()) {
+            int lineNumber = findLineNumberSafe(fileText, EXPORT_PACKAGE_HEADER_NAME, 0,
+                    "Header line number not found.");
 
-        for (Object export : exports) {
-            String packageName = export.toString();
-            if (packageName.contains(".internal")) {
-                log(lineNumber, "Remove internal package export " + packageName, 0);
+            for (Object export : exports) {
+                String packageName = export.toString();
+                if (packageName.contains(".internal")) {
+                    log(lineNumber, "Remove internal package export " + packageName, 0);
+                }
             }
         }
-
     }
 }
