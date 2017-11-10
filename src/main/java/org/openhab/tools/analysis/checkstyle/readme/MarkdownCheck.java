@@ -8,17 +8,15 @@
  */
 package org.openhab.tools.analysis.checkstyle.readme;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BIN_INCLUDES_PROPERTY_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MARKDONW_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.README_MD_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
+import org.commonmark.internal.util.Escaping;
 import org.commonmark.node.Block;
 import org.commonmark.node.FencedCodeBlock;
 import org.commonmark.node.Heading;
@@ -29,6 +27,7 @@ import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 import org.openhab.tools.analysis.checkstyle.api.NoResultException;
+import org.openhab.tools.analysis.utils.LineFormatterFunction;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -94,12 +93,12 @@ public class MarkdownCheck extends AbstractStaticCheck {
         Set<Class<? extends Block>> enabledBlockTypes = new HashSet<>(
                 Arrays.asList(Heading.class, ListBlock.class, FencedCodeBlock.class, IndentedCodeBlock.class));
         Node readmeMarkdownNode = parseMarkdown(fileText, enabledBlockTypes);
+
         // CallBack is used in order to use the protected methods of the AbstractStaticCheck in the Visitor
         MarkdownVisitorCallback callBack = new MarkdownVisitorCallback() {
             @Override
-            public int findLineNumber(FileText fileContent, String searchedText, int startLineNumber)
-                    throws NoResultException {
-                return MarkdownCheck.this.findLineNumber(fileText, searchedText, startLineNumber);
+            public int findLineNumber(FileText fileContent, String searchedText, int startLineNumber, LineFormatterFunction lineFormatterFunction) throws NoResultException {
+                return MarkdownCheck.this.findLineNumberFormatted(fileText, searchedText, startLineNumber, lineFormatterFunction);
             }
 
             @Override
@@ -107,8 +106,37 @@ public class MarkdownCheck extends AbstractStaticCheck {
                 MarkdownCheck.this.log(line, message);
             }
         };
-        MarkdownVisitor visitor = new MarkdownVisitor(callBack, fileText);
+        MarkdownVisitor visitor = new MarkdownVisitor(callBack, fileText, new LineFormatterFunction() {
+
+            @Override
+            public String formatLine(String line) {
+                Pattern needsEscape = Pattern.compile("\\\\" + Escaping.ESCAPABLE);
+                if (needsEscape.matcher(line).find()) {
+                    return parseEscapedSymbols(line);
+                }
+                return line;
+            }
+        });
         readmeMarkdownNode.accept(visitor);
+    }
+
+    // When reading a line, parse its escaped special symbols, e.g: Parse 'a\_bc' as 'a_bc'.
+    private String parseEscapedSymbols(String line) {
+        StringBuilder escapedLine = new StringBuilder();
+        for (int index = 0; index < line.length(); index++) {
+            if (line.charAt(index) == '\\') {
+                Pattern escapable = Pattern.compile('^' + Escaping.ESCAPABLE);
+                if (index < line.length() - 1 && escapable.matcher(line.substring(index + 1, index + 2)).matches()) {
+                    escapedLine.append(line.substring(index + 1, index + 2));
+                    index++;
+                } else {
+                    escapedLine.append("\\");
+                }
+            } else {
+                escapedLine.append(line.charAt(index));
+            }
+        }
+        return escapedLine.toString();
     }
 
     /**

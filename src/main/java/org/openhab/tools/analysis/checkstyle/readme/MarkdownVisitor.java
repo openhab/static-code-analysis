@@ -26,6 +26,7 @@ import org.commonmark.node.Paragraph;
 import org.commonmark.node.Text;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 import org.openhab.tools.analysis.checkstyle.api.NoResultException;
+import org.openhab.tools.analysis.utils.LineFormatterFunction;
 
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
@@ -57,7 +58,7 @@ class MarkdownVisitor extends AbstractVisitor {
      * A callback is used in order to use the protected methods of {@link AbstractStaticCheck}
      */
     private MarkdownVisitorCallback callback;
-
+    private LineFormatterFunction lineFormatter;
     private FileText fileText;
 
     public MarkdownVisitor(MarkdownVisitorCallback callBack, FileText fileText) {
@@ -65,7 +66,12 @@ class MarkdownVisitor extends AbstractVisitor {
         this.fileText = fileText;
     }
 
-    /**
+    public MarkdownVisitor(MarkdownVisitorCallback callBack, FileText fileText, LineFormatterFunction lineFormatter) {
+        this(callBack, fileText);
+        this.lineFormatter = lineFormatter;
+    }
+
+     /**
      * Example of heading: #HomeMatic Binding
      */
     @Override
@@ -84,7 +90,7 @@ class MarkdownVisitor extends AbstractVisitor {
         if (headerValue != null) {
             int headerLineNumber;
             try {
-                headerLineNumber = callback.findLineNumber(fileText, headerValue, currentLinePointer);
+                headerLineNumber = callback.findLineNumber(fileText, headerValue, currentLinePointer, lineFormatter);
                 currentLinePointer = headerLineNumber;
                 boolean isHeaderAtEndOfFile = headerLineNumber == fileText.size();
                 if (isHeaderAtEndOfFile) {
@@ -130,7 +136,7 @@ class MarkdownVisitor extends AbstractVisitor {
         String codeSectionLines[] = codeBlock.split("\\r?\\n");
         if (!StringUtils.isBlank(codeBlock)) {
             try {
-                codeStartingLineNumber = callback.findLineNumber(fileText, codeSectionLines[0], currentLinePointer);
+                codeStartingLineNumber = callback.findLineNumber(fileText, codeSectionLines[0], currentLinePointer, lineFormatter);
                 codeStartingLineNumber--;
                 currentLinePointer = codeStartingLineNumber;
                 // Start from the line above the code section
@@ -214,7 +220,7 @@ class MarkdownVisitor extends AbstractVisitor {
         int listStartingLineNumber = 0;
         int listEndingLineNumber = 0;
         try {
-            listStartingLineNumber = callback.findLineNumber(fileText, firstLineOfList, currentLinePointer);
+            listStartingLineNumber = callback.findLineNumber(fileText, firstLineOfList, currentLinePointer, lineFormatter);
         } catch (NoResultException e) {
             logger.error("A list starting cannot be processed properly: " + firstLineOfList, e);
         }
@@ -225,11 +231,12 @@ class MarkdownVisitor extends AbstractVisitor {
             // sometimes there could be 2 list items with same literal
             currentLinePointer = listStartingLineNumber + listLenght - 2;
             try {
-                listEndingLineNumber = callback.findLineNumber(fileText, lastLineOfList, currentLinePointer);
+                listEndingLineNumber = callback.findLineNumber(fileText, lastLineOfList, currentLinePointer,  lineFormatter);
                 currentLinePointer = listEndingLineNumber;
                 verifyLineBeforeListBlock(listStartingLineNumber);
                 verifyLineAfterListBlock(listEndingLineNumber);
             } catch (NoResultException e) {
+                callback.log(listStartingLineNumber, "Unable to process the last line of the list that starts on line: " + listStartingLineNumber);
                 logger.error("A list ending cannot be processed properly: " + lastLineOfList, e);
             }
         }
