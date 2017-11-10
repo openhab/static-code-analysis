@@ -5,9 +5,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.openhab.tools</groupId>
-  <artifactId>static-code-analysis</artifactId>
+  <artifactId>static-code-analysis-pom</artifactId>
   <version>0.4.0-SNAPSHOT</version>
-  <packaging>maven-plugin</packaging>
+  <packaging>pom</packaging>
 
   <name>Static Code Analysis Tool</name>
   <description>Tool that aggregates reports of PMD, Checkstyle and FindBugs</description>
@@ -16,6 +16,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.eclipse.version>2.10</maven.eclipse.version>
     <junit.version>4.11</junit.version>
+    <commons.io.version>2.4</commons.io.version>
+    <commons.lang.version>2.6</commons.lang.version>
     <mockito.version>2.8.47</mockito.version>
     <maven.resources.version>2.4</maven.resources.version>
     <pmd.version>5.8.1</pmd.version>
@@ -33,6 +35,7 @@
     <commonmark.version>0.9.0</commonmark.version>
     <maven.surefire.plugin.version>2.12.4</maven.surefire.plugin.version>
     <jetty.server.version>9.3.14.v20161028</jetty.server.version>
+    <saxon.version>9.1.0.8</saxon.version>
   </properties>
 
   <distributionManagement>
@@ -42,106 +45,6 @@
           <uniqueVersion>false</uniqueVersion>
       </repository>
   </distributionManagement>
-
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- Analysis tools -->
-    <dependency>
-      <groupId>net.sourceforge.pmd</groupId>
-      <artifactId>pmd-xml</artifactId>
-      <version>${pmd.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.pmd</groupId>
-      <artifactId>pmd-java</artifactId>
-      <version>${pmd.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.pmd</groupId>
-      <artifactId>pmd-test</artifactId>
-      <version>${pmd.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.puppycrawl.tools</groupId>
-      <artifactId>checkstyle</artifactId>
-      <version>${checkstyle.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.puppycrawl.tools</groupId>
-      <artifactId>checkstyle</artifactId>
-      <version>${checkstyle.version}</version>
-      <type>test-jar</type>
-    </dependency>
-    <dependency>
-      <groupId>com.github.spotbugs</groupId>
-      <artifactId>spotbugs</artifactId>
-      <version>${spotbugs.version}</version>
-    </dependency>
-
-    <!-- Maven Plugin dependencies -->
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-plugin-api</artifactId>
-      <version>${maven.plugin.api.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.plugin-tools</groupId>
-      <artifactId>maven-plugin-annotations</artifactId>
-      <version>${maven.plugin.annotations.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-plugin-plugin</artifactId>
-      <version>${maven.plugin.plugin.version}</version>
-    </dependency>
-
-    <!-- MOJO Executor -->
-    <dependency>
-        <groupId>org.twdata.maven</groupId>
-        <artifactId>mojo-executor</artifactId>
-        <version>${mojo.executor.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.ivy</groupId>
-      <artifactId>ivy</artifactId>
-      <version>${org.apache.ivy.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jsoup</groupId>
-      <artifactId>jsoup</artifactId>
-      <version>${org.jsoup.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.pde</groupId>
-      <artifactId>org.eclipse.pde.core</artifactId>
-      <version>${pde.core.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>${mockito.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.atlassian.commonmark</groupId>
-      <artifactId>commonmark</artifactId>
-      <version>${commonmark.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-server</artifactId>
-      <version>${jetty.server.version}</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
 
   <build>
     <plugins>
@@ -186,48 +89,7 @@
             <version>2.4.3-01</version>
           </dependency>
         </dependencies>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>${maven.resources.version}</version>
-        <executions>
-          <execution>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/resources/metadata/findbugs</directory>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-plugin-plugin</artifactId>
-        <version>${maven.plugin.plugin.version}</version>
-        <executions>
-          <execution>
-            <id>default-addPluginArtifactMetadata</id>
-            <phase>package</phase>
-            <goals>
-              <goal>addPluginArtifactMetadata</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>default-descriptor</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>descriptor</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+      </plugin>         
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -287,6 +149,26 @@
       </plugin>
     </plugins>
   </build>
+  
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+  <modules>
+    <module>custom-checks</module>
+    <module>sat-plugin</module>
+  </modules>
   
   <pluginRepositories>
     <pluginRepository>
