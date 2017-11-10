@@ -40,6 +40,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.internal.core.text.build.BuildModel;
 import org.jsoup.Jsoup;
+import org.openhab.tools.analysis.utils.LineFormatterFunction;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -54,10 +55,44 @@ import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
  * @author Svilen Valkanov - Initial contribution, add Exception to findLineNumber method
  * @author Mihaela Memova - Simplify findLineNumber method
  * @author Velin Yordanov - Used FileText instead of File to avoid unnecessary IO
+ * @author Lyubomir Papazov - Add method findLineNumberFormatted that takes a callback function that formats each line
  */
 public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
 
     private Log logger = LogFactory.getLog(AbstractStaticCheck.class);
+
+    /**
+     * Finds the first occurrence of a text in a list of text lines representing the file content and
+     * returns the line number, where the text was found
+     *
+     *
+     * @param fileContent - represents the text content
+     * @param searchedText - the text that we are looking for
+     * @param startLineNumber - the line number from which the search starts exclusive, to start the
+     *            search of the beginning of the text the startLineNumber should be 0
+     * @param lineFormatterFunction - a callback function to format the line before trying to find the searched text
+     * @return the number of the line starting from 1, where the searched text occurred for the first
+     *         time
+     * @throws NoResultException when no match was found
+     */
+    protected int findLineNumberFormatted(FileText fileContent, String searchedText, int startLineNumber,
+            LineFormatterFunction lineFormatterFunction) throws NoResultException {
+        for (int lineNumber = startLineNumber; lineNumber < fileContent.size(); lineNumber++) {
+            String line = fileContent.get(lineNumber);
+
+            line = lineFormatterFunction.formatLine(line);
+
+            if (line.contains(searchedText)) {
+                // The +1 is to compensate the 0-based list and the 1-based text file
+                return lineNumber + 1;
+            }
+        }
+        String message = MessageFormat.format(
+                "`{0}` was not found in the file {1} starting from line `{2}`."
+                        + " Check if it is split between multiple lines or it is missing",
+                searchedText, fileContent.getFile().getAbsolutePath(), startLineNumber);
+        throw new NoResultException(message);
+    }
 
     /**
      * Finds the first occurrence of a text in a list of text lines representing the file content and
@@ -74,18 +109,7 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
      */
     protected int findLineNumber(FileText fileContent, String searchedText, int startLineNumber)
             throws NoResultException {
-        for (int lineNumber = startLineNumber; lineNumber < fileContent.size(); lineNumber++) {
-            String line = fileContent.get(lineNumber);
-            if (line.contains(searchedText)) {
-                // The +1 is to compensate the 0-based list and the 1-based text file
-                return lineNumber + 1;
-            }
-        }
-        String message = MessageFormat.format(
-                "`{0}` was not found in the file {1} starting from line `{2}`."
-                        + " Check if it is split between multiple lines or it is missing",
-                searchedText, fileContent.getFile().getAbsolutePath(), startLineNumber);
-        throw new NoResultException(message);
+        return findLineNumberFormatted(fileContent, searchedText, startLineNumber, s -> s);
     }
 
     /**
