@@ -123,7 +123,7 @@
     <property name="severity" value="error" />
     <property name="thingSchema" value="http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd" />
     <property name="bindingSchema" value="http://www.eclipse.org/smarthome/schemas/binding-1.0.0.xsd" />
-    <property name="configSchema" value="https://www.eclipse.org/smarthome/schemas/config-description-1.0.0.xsd" />
+    <property name="configSchema" value="http://www.eclipse.org/smarthome/schemas/config-description-1.0.0.xsd" />
   </module>
   
   <module name="org.openhab.tools.analysis.checkstyle.EshInfXmlUsageCheck">
