@@ -62,11 +62,17 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * </ul>
  *
  * @author Svilen Valkanov - Initial contribution
+ * @author Tanya Georgieva - Added check for switch statement without braces
  */
 public class NoEmptyLineSeparatorCheck extends AbstractCheck {
 
     private static final String MSG_LINE_AFTER_OPENING_BRACE_EMPTY = "Remove empty line after opening brace";
     private static final String MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY = "Remove empty line before closing brace";
+    private static final String MSG_FOR_EMPTY_LINE = "Remove empty line";
+
+    private boolean isCaseGroupWithoutBraces = false;
+    private boolean isCaseGroupWithoutListOfStatements = false;
+    private boolean isCaseGroupWithBraces = false;
 
     @Override
     public int[] getDefaultTokens() {
@@ -118,15 +124,68 @@ public class NoEmptyLineSeparatorCheck extends AbstractCheck {
                 // The block is a one liner
                 return;
             }
-
             int lineAfterLeftCurly = leftCurlyLine + 1;
             int lineBeforeRightCurly = rightCurlyLine - 1;
 
             if (isBlank(lineAfterLeftCurly)) {
-                log(lineAfterLeftCurly, MSG_LINE_AFTER_OPENING_BRACE_EMPTY);
+                if (isCaseGroupWithoutBraces) {
+                    boolean isLineAfterOpeningBrace = lineAfterLeftCurly == lineBeforeRightCurly;
+                    /*
+                     * if the case clause is without braces the empty line could be after the return
+                     * and we should not log warning message
+                     *
+                     * case 1:
+                     * ....return number;
+                     * (empty line)
+                     */
+                    boolean isEmptyLineWithWarningForCaseGroup = !(isLineAfterOpeningBrace
+                            && (isCaseGroupWithBraces || isCaseGroupWithoutListOfStatements));
+                    /*
+                     * if the case clause is without braces the empty line could be after the colon(:)
+                     * we should log warning message
+                     *
+                     * case 1:
+                     * (empty line)
+                     * ....return number;
+                     */
+                    if (isEmptyLineWithWarningForCaseGroup) {
+                        log(lineAfterLeftCurly, MSG_FOR_EMPTY_LINE);
+                    }
+                } else {
+                    /*
+                     * if the case clause is with braces the line after the opening brace could be empty or
+                     * the line after opening brace for other list of statements
+                     *
+                     * case 1: {
+                     * (empty line)
+                     * ....int number
+                     * }
+                     *
+                     * public void method(){
+                     * (empty line)
+                     * .....
+                     */
+                    log(lineAfterLeftCurly, MSG_LINE_AFTER_OPENING_BRACE_EMPTY);
+                }
             }
+            boolean isLineBeforeClosingBrace = lineAfterLeftCurly < lineBeforeRightCurly;
+            /*
+             * if the case clause is with braces the line before the closing one could be empty or
+             * the line before the closing brace for other list of statements
+             *
+             * case 1: {
+             * .....int number
+             * (empty line)
+             * }
+             * (empty line)
+             * default:
+             * (empty line)
+             * }(closing brace of switch definition)
+             */
+            boolean isLineBeforeClosingBraceEmpty = isBlank(lineBeforeRightCurly) && isLineBeforeClosingBrace
+                    && !isCaseGroupWithoutBraces;
 
-            if (isBlank(lineBeforeRightCurly) && (lineAfterLeftCurly < lineBeforeRightCurly)) {
+            if (isLineBeforeClosingBraceEmpty) {
                 log(lineBeforeRightCurly, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY);
             }
         }
@@ -142,14 +201,12 @@ public class NoEmptyLineSeparatorCheck extends AbstractCheck {
         switch (ast.getType()) {
             case TokenTypes.LITERAL_CASE:
             case TokenTypes.LITERAL_DEFAULT: {
-                DetailAST nextCase = ast.getParent().getNextSibling();
-                boolean isCaseGroupFollowing = nextCase != null && nextCase.getType() == TokenTypes.CASE_GROUP;
-                return isCaseGroupFollowing ? ast : null;
+                DetailAST nextNode = ast.getParent().getNextSibling();
+                return (nextNode != null) ? ast : null;
             }
             default:
                 return findLeftCurlyInBlock(ast);
         }
-
     }
 
     /**
@@ -162,17 +219,50 @@ public class NoEmptyLineSeparatorCheck extends AbstractCheck {
         switch (ast.getType()) {
             case TokenTypes.LITERAL_DEFAULT:
             case TokenTypes.LITERAL_CASE: {
-                // cases are nested in case groups, we are searching for the case in the next group
-                DetailAST nextCaseGroup = ast.getParent().getNextSibling();
-                boolean isCaseGroupFollowing = nextCaseGroup != null
-                        && nextCaseGroup.getType() == TokenTypes.CASE_GROUP;
-                return isCaseGroupFollowing ? nextCaseGroup.getFirstChild() : null;
+                /*
+                 * cases are nested in case groups(a group of case clauses),
+                 * we are searching for the case in the next case group or
+                 * for the next SLIST(a list of statements) if there is no case group after the current one
+                 */
+                DetailAST nextNode = ast.getParent().getNextSibling();
+
+                if (nextNode != null) {
+                    DetailAST nextCaseClause = nextNode.getFirstChild();
+                    DetailAST nextSlist = ast.getNextSibling();
+                    DetailAST getNextSlist = nextSlist != null ? nextSlist : nextNode;
+                    DetailAST getNextCaseClause = nextCaseClause != null ? nextCaseClause : getNextSlist;
+                    return getNextCaseClause;
+                }
             }
             case TokenTypes.CASE_GROUP: {
                 DetailAST slistAST = ast.findFirstToken(TokenTypes.SLIST);
+
                 if (slistAST != null) {
+                    /*
+                     * if the current case group is not followed by node
+                     * of type SLIST(a list of statements) the case is without braces
+                     *
+                     * case 1:
+                     * ....int number
+                     */
+                    isCaseGroupWithoutBraces = slistAST.getFirstChild().getType() != TokenTypes.SLIST;
+                    /*
+                     * case 1: {
+                     * .....int number
+                     */
+                    isCaseGroupWithBraces = ast.getLineNo() == slistAST.getFirstChild().getLineNo();
                     return findRightCurlyInBlock(slistAST);
                 } else {
+                    /*
+                     * the current case group could be without list of statement
+                     * so the next node is another case group or
+                     * closing curly brace of the switch definition
+                     *
+                     * default:
+                     *
+                     * }
+                     */
+                    isCaseGroupWithoutListOfStatements = true;
                     return findRightCurlyInBlock(ast);
                 }
             }

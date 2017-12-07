@@ -195,9 +195,9 @@
     <module name="org.openhab.tools.analysis.checkstyle.AvoidScheduleAtFixedRateCheck">
         <property name="severity" value="warning" />
     </module>
-
+    
     <!-- Rules for Java Naming Convention -->
-
+    
     <module name="PackageName">
       <property name="format"
               value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
