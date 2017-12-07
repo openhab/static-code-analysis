@@ -18,7 +18,8 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 /**
  * Tests for {@link NoEmptyLineSeparatorCheck}
  *
- * @author Svilen Valkanov
+ * @author Svilen Valkanov - Initial contribution
+ * @author Tanya Georgieva - Added tests for switch statement without braces
  */
 public class NoEmptyLineSeparatorCheckTest extends AbstractStaticCheckTest {
 
@@ -26,8 +27,72 @@ public class NoEmptyLineSeparatorCheckTest extends AbstractStaticCheckTest {
 
     private static final String MSG_LINE_AFTER_OPENING_BRACE_EMPTY = "Remove empty line after opening brace";
     private static final String MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY = "Remove empty line before closing brace";
+    private static final String MSG_FOR_EMPTY_LINE = "Remove empty line";
 
     private static DefaultConfiguration config = createCheckConfig(NoEmptyLineSeparatorCheck.class);
+
+    @Test
+    public void verifyValidSwitchDefinitionWithoutBraces() throws Exception {
+        verifyJavaFileNoErrors("ValidSwitchDefinitionWithoutBraces.java");
+    }
+
+    @Test
+    public void verifyEmptyLineAfterInvalidDefaultCaseWithoutBraces() throws Exception {
+        verifyJavaFile("EmptyLineAfterInvalidDefaultCaseWithoutBraces.java", generateExpectedMessages(10,
+                MSG_FOR_EMPTY_LINE, 23, MSG_FOR_EMPTY_LINE, 27, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY));
+    }
+
+    @Test
+    public void verifyEmptyLineInSwitchDefinitionWithBraces() throws Exception {
+        String[] expectedMessages = generateExpectedMessages(11, MSG_FOR_EMPTY_LINE, 15,
+                MSG_LINE_AFTER_OPENING_BRACE_EMPTY, 17, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY, 19,
+                MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY);
+        verifyJavaFile("EmptyLineInSwitchDefinitionWithBraces.java", expectedMessages);
+    }
+
+    @Test
+    public void verifyInvalidSwitchDefinitionWithoutBrace() throws Exception {
+        verifyJavaFile("InvalidSwitchDefinitionWithoutBrace.java",
+                generateExpectedMessages(22, MSG_FOR_EMPTY_LINE, 24, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY));
+    }
+
+    @Test
+    public void verifyEmptyLineInDefaultCaseWithBraces() throws Exception {
+        String[] expectedMessages = generateExpectedMessages(6, MSG_LINE_AFTER_OPENING_BRACE_EMPTY, 8,
+                MSG_LINE_AFTER_OPENING_BRACE_EMPTY, 25, MSG_LINE_AFTER_OPENING_BRACE_EMPTY, 27,
+                MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY);
+        verifyJavaFile("EmptyLineInDefaultCaseWithBraces.java", expectedMessages);
+    }
+
+    @Test
+    public void verifyEmptyLineAfterDefaultCaseWithoutBracesAtTheEndOfSwitch() throws Exception {
+        verifyJavaFile("EmptyLineAfterDefaultCaseWithoutBracesAtTheEndOfSwitch.java",
+                generateExpectedMessages(23, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY));
+    }
+
+    @Test
+    public void verifyEmptyLineInValidSwitchDefinitionWithoutBraces() throws Exception {
+        verifyJavaFile("EmptyLineInValidSwitchDefinitionWithoutBraces.java",
+                generateExpectedMessages(25, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY));
+    }
+
+    @Test
+    public void verifyMultipleEmptyLinesInValidSwitchDefinitionWithoutBraces() throws Exception {
+        verifyJavaFile("MultipleEmptyLinesInValidSwitchDefinitionWithoutBraces.java",
+                generateExpectedMessages(22, MSG_FOR_EMPTY_LINE, 26, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY));
+    }
+
+    @Test
+    public void verifyEmptyLinesInValidSwitchDefinitionWithoutBracesWithoutDefault() throws Exception {
+        verifyJavaFile("EmptyLinesInValidSwitchDefinitionWithoutBracesWithoutDefault.java",
+                generateExpectedMessages(22, MSG_FOR_EMPTY_LINE, 24, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY));
+    }
+
+    @Test
+    public void verifyEmptyLineAfterInvalidCaseWithoutBraces() throws Exception {
+        verifyJavaFile("EmptyLineAfterInvalidCaseWithoutBraces.java",
+                generateExpectedMessages(22, MSG_FOR_EMPTY_LINE, 25, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY));
+    }
 
     @Test
     public void verifyValidMethodDefinitions() throws Exception {
@@ -139,12 +204,13 @@ public class NoEmptyLineSeparatorCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void verifyEmptyLineInCase() throws Exception {
-        verifyEmptyLineAfterOpeningBraces("EmptyLineInCase.java", 13);
+        String[] expectedMessages = generateExpectedMessages(13, MSG_FOR_EMPTY_LINE);
+        verifyJavaFile("EmptyLineInCase.java", expectedMessages);
     }
 
     @Test
     public void verifyEmptyLineInDefault() throws Exception {
-        verifyEmptyLineAfterOpeningBraces("EmptyLineInDefault.java", 23);
+        verifyJavaFileNoErrors("EmptyLineInDefault.java");
     }
 
     @Test
@@ -157,8 +223,8 @@ public class NoEmptyLineSeparatorCheckTest extends AbstractStaticCheckTest {
     @Test
     public void verifyMutlitpleEmptyLinesInSwitchWithCases() throws Exception {
         String[] expectedMessages = generateExpectedMessages(12, MSG_LINE_AFTER_OPENING_BRACE_EMPTY, 29,
-                MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY, 16, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY, 19,
-                MSG_LINE_AFTER_OPENING_BRACE_EMPTY, 27, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY);
+                MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY, 16, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY, 19, MSG_FOR_EMPTY_LINE,
+                27, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY);
         verifyJavaFile("MutlitpleEmptyLinesInSwitchWithCases.java", expectedMessages);
     }
 
