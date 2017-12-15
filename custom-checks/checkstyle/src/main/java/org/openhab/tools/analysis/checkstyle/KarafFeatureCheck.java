@@ -67,7 +67,7 @@ public class KarafFeatureCheck extends AbstractStaticCheck {
         if (POM_XML_FILE_NAME.equals(file.getName())) {
             String bundleId = getBundleId(fileText);
             if (bundleId == null) {
-                logger.error(this.getClass().getSimpleName()
+                logger.warn(this.getClass().getSimpleName()
                         + " will be skipped. Could not find Maven group ID (parent group ID) or artifact ID in "
                         + file.getAbsolutePath());
                 return;
@@ -77,7 +77,7 @@ public class KarafFeatureCheck extends AbstractStaticCheck {
 
             Path featurePath = resolveRecursively(file.toPath(), Paths.get(featureXmlPath));
             if (featurePath == null) {
-                logger.error(
+                logger.warn(
                         this.getClass().getSimpleName() + " will be skipped. Could not find file " + featureXmlPath);
                 return;
             }
