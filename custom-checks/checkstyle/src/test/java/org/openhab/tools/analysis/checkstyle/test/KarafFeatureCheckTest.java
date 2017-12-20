@@ -8,11 +8,10 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
-import static org.mockito.Mockito.times;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -95,7 +94,7 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
 
         org.mockito.Mockito.verify(handler, times(1)).publish(captor.capture());
 
-        assertThat(captor.getValue().getLevel(), is(Level.SEVERE));
+        assertThat(captor.getValue().getLevel(), is(Level.WARNING));
         assertThat(captor.getValue().getMessage(), startsWith(
                 "KarafFeatureCheck will be skipped. Could not find Maven group ID (parent group ID) or artifact ID in"));
     }
