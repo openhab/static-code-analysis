@@ -132,7 +132,7 @@
   
   <module name="org.openhab.tools.analysis.checkstyle.PomXmlCheck">
     <property name="severity" value="error" />
-    <property name="manifestVersionRegularExpression" value="${checkstyle.pomXmlCheck.currentVersionRegex}" default="^2\.2\.0"/>
+    <property name="manifestVersionRegularExpression" value="${checkstyle.pomXmlCheck.currentVersionRegex}" default="^2\.3\.0"/>
   </module>
   
   <module name="org.openhab.tools.analysis.checkstyle.PackageExportsNameCheck">
