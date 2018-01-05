@@ -206,6 +206,11 @@
         <property name="severity" value="warning" />
     </module>
     
+    <module name="org.openhab.tools.analysis.checkstyle.JavadocMethodStyleCheck">
+      <property name="severity" value="info"/>
+      <property name="allowMissingPropertyJavadoc" value="true"/>
+    </module>
+
     <!-- Rules for Java Naming Convention -->
     
     <module name="PackageName">
