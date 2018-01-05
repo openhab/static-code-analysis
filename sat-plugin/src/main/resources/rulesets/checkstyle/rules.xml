@@ -68,6 +68,11 @@
   <module name="org.openhab.tools.analysis.checkstyle.OverridingParentPomConfigurationCheck">
     <property name="severity" value="warning" />
   </module>
+  
+  <module name="org.openhab.tools.analysis.checkstyle.OnlyTabIdentationInXmlFilesCheck">
+    <property name="severity" value="warning" />
+    <property name="onlyShowFirstWarning" value="true" />
+  </module>
 
   <module name="org.openhab.tools.analysis.checkstyle.RequireBundleCheck">
       <property name="severity" value="error" />
