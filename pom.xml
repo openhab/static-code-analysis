@@ -4,12 +4,12 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.openhab.tools</groupId>
-  <artifactId>static-code-analysis-pom</artifactId>
+  <groupId>org.openhab.tools.sat</groupId>
+  <artifactId>pom</artifactId>
   <version>0.4.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Static Code Analysis Tool</name>
+  <name>Static Code Analysis Tool Parent Pom</name>
   <description>Tool that aggregates reports of PMD, Checkstyle and FindBugs</description>
 
   <properties>
