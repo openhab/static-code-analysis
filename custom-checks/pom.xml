@@ -5,13 +5,14 @@
   <modelVersion>4.0.0</modelVersion>
 
    <parent>
-    <groupId>org.openhab.tools</groupId>
-    <artifactId>static-code-analysis-pom</artifactId>
+    <groupId>org.openhab.tools.sat</groupId>
+    <artifactId>pom</artifactId>
     <version>0.4.0-SNAPSHOT</version>
   </parent>
     
-  <groupId>org.openhab.tools</groupId>
-  <artifactId>custom-checks</artifactId>
+  <groupId>org.openhab.tools.sat.custom-checks</groupId>
+  <artifactId>pom</artifactId>
+  
   <name>Static Code Analysis Custom Checks</name>
   
   <modules>
