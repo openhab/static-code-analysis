@@ -150,6 +150,10 @@
     <property name="severity" value="${checkstyle.karafFeatureCheck.severity}" default="ignore" />
     <property name="featureXmlPath" value="${checkstyle.karafFeatureCheck.featureXmlPath}" default="features/openhab-addons/src/main/feature/feature.xml" />
   </module>
+  
+  <module name="org.openhab.tools.analysis.checkstyle.AnnotationDependencyCheck">
+    <property name="severity" value="warning" />
+  </module>
 
   <module name="TreeWalker">
     <!-- See http://checkstyle.sourceforge.net/config_coding.html#IllegalThrows -->
