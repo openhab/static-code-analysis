@@ -11,8 +11,8 @@ Add the following profiles to your pom.xml:
       <pluginManagement>
         <plugins>
           <plugin>
-            <groupId>org.openhab.tools</groupId>
-            <artifactId>static-code-analysis</artifactId>
+            <groupId>org.openhab.tools.sat</groupId>
+            <artifactId>sat-plugin</artifactId>
             <version>${sat.version}</version>
             <executions>
               <execution>
@@ -40,8 +40,8 @@ Add the following profiles to your pom.xml:
     <build>
       <plugins>
         <plugin>
-            <groupId>org.openhab.tools</groupId>
-            <artifactId>static-code-analysis</artifactId>
+            <groupId>org.openhab.tools.sat</groupId>
+            <artifactId>sat-plugin</artifactId>
         </plugin>
       </plugins>
     </build>
@@ -68,14 +68,14 @@ The summary report can be found in the root target directory:
 
 The Static Analysis tool includes several goals:
 
-- [pmd](#static-code-analysispmd);
-- [checkstyle](#static-code-analysischeckstyle);
-- [findbugs](#static-code-analysisfindbugs);
-- [report](#static-code-analysisreport).
+- [pmd](#sat-pluginpmd);
+- [checkstyle](#sat-plugincheckstyle);
+- [findbugs](#sat-pluginfindbugs);
+- [report](#sat-pluginreport).
 
 Below you can find detailed information what each goal does and how it can be configured.
 
-### static-code-analysis:pmd
+### sat-plugin:pmd
 
 Description:
     Executes the `maven-pmd-plugin` goal `pmd` with a ruleset file and configuration properties
@@ -88,7 +88,7 @@ Parameters:
 | **maven.pmd.version** | String | The version of the maven-pmd-plugin that will be used (Default value is **3.7**)|
 | **pmdPlugins** | List<Dependency> | A list with artifacts that contain additional checks for PMD |
 
-### static-code-analysis:checkstyle
+### sat-plugin:checkstyle
 
 Description:
     Executes the `maven-checkstyle-plugin` goal `checkstyle` with a ruleset file and configuration properties
@@ -103,7 +103,7 @@ Parameters:
 | **checkstylePlugins** | List<Dependency> | A list with artifacts that contain additional checks for Checkstyle |
 | **checkstyleProperties** | String | Relative path of the properties file to use in the ruleset to configure specific checks |
 
-### static-code-analysis:findbugs
+### sat-plugin:findbugs
 
 Description:
     Executes the `spotbugs-maven-plugin` goal `findbugs` with a  ruleset file and configuration properties
@@ -120,7 +120,7 @@ Parameters:
 | **findbugsPlugins** | List<Dependency> | A list with artifacts that contain additional detectors/patterns for FindBugs |
 | **findbugs.slf4j.version** | String | The version of the findbugs-slf4j plugin that will be used (default value is **1.2.4**)|
 
-### static-code-analysis:report
+### sat-plugin:report
 
 Description:
     Transforms the results from FindBugs, Checkstyle and PMD into a single HTML Report with XSLT
@@ -144,8 +144,8 @@ If you want to use a custom set of rules you will have to set the configuration 
 
 ```
   <plugin>
-    <groupId>org.openhab.tools</groupId>
-    <artifactId>static-code-analysis</artifactId>
+    <groupId>org.openhab.tools.sat</groupId>
+    <artifactId>sat-plugin</artifactId>
     <configuration>
       <checkstyleRuleset>build-tools/checkstyle/binding.xml</checkstyleRuleset>
       <checkstyleFilter>build-tools/checkstyle/suppressions.xml</checkstyleFilter>
