@@ -80,7 +80,7 @@ public class PmdChecker extends AbstractChecker {
                 element("targetDirectory", userProps.getProperty("pmd.custom.targetDirectory")),
                 element("rulesets", element("ruleset", rulesetLocation)));
 
-        pmdPlugins.add(dependency("org.openhab.tools.custom-checks", "org.openhab.tools.custom-checks.pmd", plugin.getVersion()));
+        pmdPlugins.add(dependency("org.openhab.tools.sat.custom-checks", "pmd", plugin.getVersion()));
         pmdPlugins.add(dependency("net.sourceforge.pmd", "pmd-core", PMD_VERSION));
         pmdPlugins.add(dependency("net.sourceforge.pmd", "pmd-java", PMD_VERSION));
         pmdPlugins.add(dependency("net.sourceforge.pmd", "pmd-javascript", PMD_VERSION));
