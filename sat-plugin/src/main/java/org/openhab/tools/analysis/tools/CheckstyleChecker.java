@@ -113,7 +113,7 @@ public class CheckstyleChecker extends AbstractChecker {
             userProps.setProperty(CHECKSTYLE_RULE_SET_PROPERTIES_PROPERTY, rulesetProperties);
         }
 
-        checkstylePlugins.add(dependency("org.openhab.tools.custom-checks", "org.openhab.tools.custom-checks.checkstyle", plugin.getVersion()));
+        checkstylePlugins.add(dependency("org.openhab.tools.sat.custom-checks", "checkstyle", plugin.getVersion()));
         // Maven may load an older version, if no version is specified
         checkstylePlugins.add(dependency("com.puppycrawl.tools", "checkstyle", "8.1"));
         checkstylePlugins.forEach(logDependency());

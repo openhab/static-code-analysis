@@ -157,7 +157,7 @@ public class FindBugsChecker extends AbstractChecker {
         String outputDir = userProps.getProperty("findbugs.report.dir");
 
         // The tool itself is a FindBugs plugin
-        findbugsPlugins.add(dependency("org.openhab.tools.custom-checks", "org.openhab.tools.custom-checks.findbugs", plugin.getVersion()));
+        findbugsPlugins.add(dependency("org.openhab.tools.sat.custom-checks", "findbugs", plugin.getVersion()));
         // Add dependency to the findbugs-slf4j plugin
         findbugsPlugins.add(dependency("jp.skypencil.findbugs.slf4j", "bug-pattern", findBugsSlf4jPluginVersion));
         findbugsPlugins.forEach(logDependency());
