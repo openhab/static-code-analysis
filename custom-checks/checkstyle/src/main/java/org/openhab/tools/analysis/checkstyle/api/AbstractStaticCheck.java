@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,9 +30,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ivy.osgi.core.BundleInfo;
 import org.apache.ivy.osgi.core.ManifestParser;
-import org.commonmark.node.Block;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
 import org.eclipse.core.internal.filebuffers.SynchronizableDocument;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
@@ -47,6 +43,9 @@ import com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
 import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
+import com.vladsch.flexmark.ast.Node;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.options.MutableDataSet;
 
 /**
  * Provides common functionality for different static code analysis checks
@@ -256,11 +255,11 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
      * Parsed the content of a markdown file.
      *
      * @param fileText - Represents the text contents of a file
-     * @param blockTypes - the enabled block types
+     * @param parsingOptions - parsing options
      * @return The markdown node
      */
-    protected Node parseMarkdown(FileText fileText, Set<Class<? extends Block>> blockTypes) {
-        Parser parser = Parser.builder().enabledBlockTypes(blockTypes).build();
+    protected Node parseMarkdown(FileText fileText, MutableDataSet parsingOptions) {
+        Parser parser = Parser.builder(parsingOptions).build();
         return parser.parse(fileText.getFullText().toString());
     }
 

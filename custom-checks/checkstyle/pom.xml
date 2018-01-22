@@ -48,9 +48,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.atlassian.commonmark</groupId>
-      <artifactId>commonmark</artifactId>
-      <version>${commonmark.version}</version>
+        <groupId>com.vladsch.flexmark</groupId>
+        <artifactId>flexmark-all</artifactId>
+        <version>${flexmark.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.ivy</groupId>

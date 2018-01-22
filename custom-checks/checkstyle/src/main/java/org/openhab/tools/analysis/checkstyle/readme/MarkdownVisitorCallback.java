@@ -9,9 +9,6 @@
 package org.openhab.tools.analysis.checkstyle.readme;
 
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
-import org.openhab.tools.analysis.checkstyle.api.NoResultException;
-
-import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * This Interface is used to make a callback in {@link MarkdownCheck}.
@@ -19,18 +16,6 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * @author Erdoan Hadzhiyusein - Initial contribution
  */
 public interface MarkdownVisitorCallback {
-    /**
-     * This method is implemented in The {@link MarkdownCheck} class calling the protected findLineNumber() of
-     * {@link AbstractStaticCheck}.
-     *
-     * @param fileContent - the file content represented in a list
-     * @param searchedText - the searched text in the source
-     * @param startLineNumber - the line number to start the search from
-     * @throws NoResultException when no match was found
-     * @return - returns the line number in the source file
-     */
-    public int findLineNumber(FileText fileContent, String searchedText, int startLineNumber) throws NoResultException;
-
     /**
      * This method is implemented in The {@link MarkdownCheck} class calling the protected log() of
      * {@link AbstractStaticCheck}.
