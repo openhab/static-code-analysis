@@ -61,7 +61,7 @@
     <org.jsoup.version>1.7.1</org.jsoup.version>
     <pde.core.version>3.11.1</pde.core.version>
     <sat.version>0.3.0</sat.version>
-    <commonmark.version>0.9.0</commonmark.version>
+    <flexmark.version>0.28.6</flexmark.version>
     <maven.surefire.plugin.version>2.12.4</maven.surefire.plugin.version>
     <jetty.server.version>9.3.14.v20161028</jetty.server.version>
     <saxon.version>9.1.0.8</saxon.version>
