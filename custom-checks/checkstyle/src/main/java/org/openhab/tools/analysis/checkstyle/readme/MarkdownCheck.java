@@ -15,23 +15,16 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIE
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.README_MD_FILE_NAME;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.commonmark.node.Block;
-import org.commonmark.node.FencedCodeBlock;
-import org.commonmark.node.Heading;
-import org.commonmark.node.IndentedCodeBlock;
-import org.commonmark.node.ListBlock;
-import org.commonmark.node.Node;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
-import org.openhab.tools.analysis.checkstyle.api.NoResultException;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
+import com.vladsch.flexmark.ast.Node;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.options.MutableDataSet;
 
 /**
  * Checks the README.md files for:
@@ -51,6 +44,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * info</a>
  *
  * @author Erdoan Hadzhiyusein - Initial contribution
+ * @author Lyubomir Papazov - Change the Markdown parser to flexmark
  */
 public class MarkdownCheck extends AbstractStaticCheck {
     private static final String ADDED_README_FILE_IN_BUILD_PROPERTIES_MSG = "README.MD file must not be added to the bin.includes property";
@@ -90,25 +84,21 @@ public class MarkdownCheck extends AbstractStaticCheck {
     }
 
     private void checkReadMe(FileText fileText) {
-        // Don't need all block types visited that's why only these are enabled
-        Set<Class<? extends Block>> enabledBlockTypes = new HashSet<>(
-                Arrays.asList(Heading.class, ListBlock.class, FencedCodeBlock.class, IndentedCodeBlock.class));
-        Node readmeMarkdownNode = parseMarkdown(fileText, enabledBlockTypes);
-        // CallBack is used in order to use the protected methods of the AbstractStaticCheck in the Visitor
+
+        MutableDataSet options = new MutableDataSet();
+        // By setting this option to true, the parser provides line numbers in the original markdown text for each node
+        options.set(Parser.TRACK_DOCUMENT_LINES, true);
+
+        Node readmeMarkdownNode = parseMarkdown(fileText, options);
+        // CallBack is used in order to use the protected log method of the AbstractStaticCheck in the Visitor
         MarkdownVisitorCallback callBack = new MarkdownVisitorCallback() {
             @Override
-            public int findLineNumber(FileText fileContent, String searchedText, int startLineNumber)
-                    throws NoResultException {
-                return MarkdownCheck.this.findLineNumber(fileText, searchedText, startLineNumber);
-            }
-
-            @Override
             public void log(int line, String message) {
-                MarkdownCheck.this.log(line, message);
+                MarkdownCheck.this.log(line + 1, message);
             }
         };
         MarkdownVisitor visitor = new MarkdownVisitor(callBack, fileText);
-        readmeMarkdownNode.accept(visitor);
+        visitor.visit(readmeMarkdownNode);
     }
 
     /**

@@ -10,20 +10,23 @@ package org.openhab.tools.analysis.checkstyle.test;
 
 import static com.puppycrawl.tools.checkstyle.utils.CommonUtils.EMPTY_STRING_ARRAY;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.README_MD_FILE_NAME;
-import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
-import org.openhab.tools.analysis.checkstyle.readme.MarkdownCheck;
-import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
+
 import java.io.File;
 import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
+import org.openhab.tools.analysis.checkstyle.readme.MarkdownCheck;
+
+import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
+import com.puppycrawl.tools.checkstyle.api.Configuration;
 
 /**
  * Tests for {@link MarkdownCheck}
  *
  * @author Erdoan Hadzhiyusein - Initial implementation
+ * @author Lyubomir Papazov - Added more tests
  */
 public class MarkdownCheckTest extends AbstractStaticCheckTest {
     private static final String README_MD_CHECK_TEST_DIRECTORY_NAME = "markdownCheckTest";
@@ -42,7 +45,6 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
         verifyMarkDownFile("testHeader", expectedMessages);
     }
 
-    
     @Test
     public void testForbiddNodeVisit() throws Exception {
         verifyMarkDownFile("testForbiddenNodeVisit", noMessagesExpected());
@@ -55,7 +57,8 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void headerAtEndOfFile() throws Exception {
-        String[] expectedMessages = generateExpectedMessages(6, "There is a header at the end of the Markdown file. Please consider adding some content below.");
+        String[] expectedMessages = generateExpectedMessages(6,
+                "There is a header at the end of the Markdown file. Please consider adding some content below.");
         verifyMarkDownFile("testHeaderAtEndOfFile", expectedMessages);
     }
 
@@ -66,7 +69,7 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testEmptyLineBeforeList() throws Exception {
-        String[] expectedMessages = generateExpectedMessages(1, "The line before a Markdown list must be empty.");
+        String[] expectedMessages = generateExpectedMessages(2, "The line before a Markdown list must be empty.");
         verifyMarkDownFile("testEmptyLineBeforeList", expectedMessages);
     }
 
@@ -84,6 +87,31 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testCodeFormattedListBlock() throws Exception {
         verifyMarkDownFile("testCodeFormattedListBlock", noMessagesExpected());
+    }
+
+    @Test
+    public void testEscapedAsterisk() throws Exception {
+        verifyMarkDownFile("testEscapedAsterisk", noMessagesExpected());
+    }
+
+    @Test
+    public void testEscapedUnderscore() throws Exception {
+        verifyMarkDownFile("testEscapedUnderscore", noMessagesExpected());
+    }
+
+    @Test
+    public void testEscapedBrackets() throws Exception {
+        verifyMarkDownFile("testEscapedBrackets", noMessagesExpected());
+    }
+
+    @Test
+    public void testEscapedCopyrightSymbol() throws Exception {
+        verifyMarkDownFile("testEscapedCopyrightSymbol", noMessagesExpected());
+    }
+
+    @Test
+    public void testEscapedHeader() throws Exception {
+        verifyMarkDownFile("testEscapedHeader", noMessagesExpected());
     }
 
     @Test
@@ -128,12 +156,27 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testCodeSectionLineNumberError() throws Exception {
-        verifyMarkDownFile("testCodeSectionLineNumberError",noMessagesExpected());
+        verifyMarkDownFile("testCodeSectionLineNumberError", noMessagesExpected());
+    }
+
+    @Test
+    public void testListFirstLineSameAsParagraph() throws Exception {
+        verifyMarkDownFile("testListFirstLineSameAsParagraph", noMessagesExpected());
+    }
+
+    @Test
+    public void testListBeginingSameAsAnotherLineBegining() throws Exception {
+        verifyMarkDownFile("testListBeginingSameAsAnotherLineBegining", noMessagesExpected());
+    }
+
+    @Test
+    public void testListLastLineSameAsParagraph() throws Exception {
+        verifyMarkDownFile("testListLastLineSameAsParagraph", noMessagesExpected());
     }
 
     @Test
     public void testEmptyCodeSection() throws Exception {
-        String[] expectedMessages = generateExpectedMessages(1,
+        String[] expectedMessages = generateExpectedMessages(3,
                 "There is an empty or unclosed code formatting section. Please correct it.");
         verifyMarkDownFile("testEmptyCodeSection", expectedMessages);
     }
@@ -209,8 +252,14 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
         verifyBuildProperties(expectedMessages, testDirectoryName);
     }
 
+    @Test
+    public void testOpenhabBindingExec() throws Exception {
+        String testDirectoryName = "org.openhab.binding.exec";
+        verifyMarkDownFile(testDirectoryName, noMessagesExpected());
+    }
+
     private void verifyBuildProperties(String[] expectedMessages, String testDirectoryName)
-            throws IOException, Exception { 
+            throws IOException, Exception {
         String testDirectoryAbsolutePath = getPath(README_MD_CHECK_TEST_DIRECTORY_NAME + File.separator + testDirectoryName);
         String messageFilePath = testDirectoryAbsolutePath + File.separator + "build.properties";
         verify(createChecker(config), messageFilePath, expectedMessages);
