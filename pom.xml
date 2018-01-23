@@ -11,6 +11,35 @@
 
   <name>Static Code Analysis Tool Parent Pom</name>
   <description>Tool that aggregates reports of PMD, Checkstyle and FindBugs</description>
+  <url>https://github.com/openhab/static-code-analysis</url>
+
+  <licenses>
+      <license>
+          <name>EPL 1.0</name>
+          <url>http://opensource.org/licenses/EPL-1.0</url>
+      </license>
+  </licenses>
+
+  <organization>
+      <name>openhab.org</name>
+      <url>http://www.openhab.org</url>
+  </organization>
+
+	<developers>
+		<developer>
+			<name>Svilen Valkanov</name>
+			<email>svilen.valkanov@musala.com</email>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:git@github.com:openhab/static-code-analysis.git</connection>
+		<developerConnection>scm:git:git@github.com:openhab/static-code-analysis.git</developerConnection>
+		<url>git@github.com:openhab/static-code-analysis.git</url>
+	</scm>
+	<issueManagement>
+		<system>github</system>
+		<url>https://github.com/openhab/static-code-analysis/issues</url>
+	</issueManagement>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
