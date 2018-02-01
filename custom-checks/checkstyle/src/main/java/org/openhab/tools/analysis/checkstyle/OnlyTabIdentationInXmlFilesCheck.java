@@ -12,48 +12,81 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTEN
 
 import java.io.File;
 
+import org.apache.commons.lang.StringUtils;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
- * Checks whether whitespace characters are use instead of tabs in xml files 
+ * Checks whether whitespace characters are use instead of tabs in xml files
  * indentations and generates warnings in such cases.
- * 
+ *
  * @author Lyubomir Papazov - initial contribution
+ * @author Kristina Simova - Removed REGEX and changed the way we look for indentation
  *
  */
 public class OnlyTabIdentationInXmlFilesCheck extends AbstractStaticCheck {
 
-    private static final String PATTERN_TO_BE_FOLLOWED = "^\\t*[<].*";
+    private static final String TAB_CHARACTER = "\t";
     private static final String WARNING_MESSAGE = "There were whitespace characters used for indentation. Please use tab characters instead";
     private boolean onlyShowFirstWarning;
-    
-    
+
     public OnlyTabIdentationInXmlFilesCheck() {
         setFileExtensions(XML_EXTENSION);
     }
-    
-    public void setOnlyShowFirstWarning(Boolean showFirstExceptionOnly)
-    {
+
+    public void setOnlyShowFirstWarning(Boolean showFirstExceptionOnly) {
         this.onlyShowFirstWarning = showFirstExceptionOnly;
     }
-    
+
     @Override
     protected void processFiltered(File file, FileText fileText) {
         processXmlTabIdentationCheck(fileText);
     }
-    
+
     private void processXmlTabIdentationCheck(FileText fileText) {
         for (int lineNumber = 0; lineNumber < fileText.size(); lineNumber++) {
             String line = fileText.get(lineNumber);
-            if (!line.matches(PATTERN_TO_BE_FOLLOWED)) {
-                //log the 1-based index of the file
-                log(lineNumber + 1, WARNING_MESSAGE);
+            // if line is empty and does not contain only tabs for indentation
+            if (line.trim().isEmpty() && !doesLineContainOnlyTabs(line)) {
                 if (onlyShowFirstWarning) {
+                    logMessage(lineNumber);
                     return;
+                }
+                logMessage(lineNumber);
+                continue;
+            }
+            int indexNonWhitespaceCharacter = line.indexOf(line.trim());
+            if (indexNonWhitespaceCharacter > 0) {
+                // we get the part of the line before the first non whitespace character
+                String lineBeforeCharacter = line.substring(0, indexNonWhitespaceCharacter);
+                if (!doesLineContainOnlyTabs(lineBeforeCharacter)) {
+                    if (onlyShowFirstWarning) {
+                        logMessage(lineNumber);
+                        return;
+                    }
+                    logMessage(lineNumber);
                 }
             }
         }
+    }
+
+    /**
+     * Checks if line contains only tabs used for indentation
+     *
+     * @param lineBeforeCharacter the String before the first non whitespace character
+     * @return true if line contains only tabs for indentation, false otherwise
+     */
+    private boolean doesLineContainOnlyTabs(String lineBeforeCharacter) {
+        return StringUtils.containsOnly(lineBeforeCharacter, TAB_CHARACTER);
+    }
+
+    /**
+     * Logs the warning message
+     *
+     * @param lineNumber the line number where the message should be logged
+     */
+    private void logMessage(int lineNumber) {
+        log(lineNumber + 1, WARNING_MESSAGE);
     }
 }
