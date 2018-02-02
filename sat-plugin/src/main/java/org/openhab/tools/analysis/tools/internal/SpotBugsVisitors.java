@@ -17,13 +17,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * A JAXB model of the FindBugs visitors XML file
+ * A JAXB model of the SpotBugs visitors XML file
  *
  * @author Svilen Valkanov
  *
  */
 @XmlRootElement(name = "visitors")
-public class FindBugsVisitors {
+public class SpotBugsVisitors {
 
     @XmlElement
     List<String> visitor = new ArrayList<String>();
