@@ -258,6 +258,11 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
         verifyMarkDownFile(testDirectoryName, noMessagesExpected());
     }
 
+    @Test
+    public void testHeaderCreatedByDashesOnNextRow() throws Exception {
+        verifyMarkDownFile("testHeaderCreatedByDashesOnNextRow", noMessagesExpected());
+    }
+
     private void verifyBuildProperties(String[] expectedMessages, String testDirectoryName)
             throws IOException, Exception {
         String testDirectoryAbsolutePath = getPath(README_MD_CHECK_TEST_DIRECTORY_NAME + File.separator + testDirectoryName);
