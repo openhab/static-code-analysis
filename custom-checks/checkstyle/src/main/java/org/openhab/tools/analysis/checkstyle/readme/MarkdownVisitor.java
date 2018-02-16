@@ -57,7 +57,7 @@ class MarkdownVisitor extends NodeVisitorBase {
      * Example of heading: #HomeMatic Binding
      */
     public void visit(Heading heading) {
-        validateHeadingPosition(heading.getLineNumber());
+        validateHeadingPosition(heading.getEndLineNumber());
     }
 
     private void validateHeadingPosition(int zeroBasedHeaderLineNumber) {
