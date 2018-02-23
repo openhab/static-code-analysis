@@ -248,5 +248,8 @@
     <module name="StaticVariableName">
       <property name="severity" value="info" />
     </module>
+    <module name="MemberName">
+      <property name="severity" value="info" />
+    </module>
   </module>
 </module>
