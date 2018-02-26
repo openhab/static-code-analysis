@@ -217,7 +217,7 @@
     
     <module name="org.openhab.tools.analysis.checkstyle.AuthorContributionDescriptionCheck">
        <property name="severity" value="warning"/>
-       <property name="requiredContributionDescriptions" value="initial contribution"/>
+       <property name="requiredContributionDescriptions" value="Initial contribution"/>
        <property name="checkInnerUnits" value="false"/>
     </module>
 
@@ -234,6 +234,8 @@
       <property name="severity" value="info" />
     </module>
     <module name="MethodName">
+        <property name="format"
+            value="^\_?[a-z][a-zA-Z0-9]*$"/>
       <property name="severity" value="info" />
     </module>
     <module name="ConstantName">
