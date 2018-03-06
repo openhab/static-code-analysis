@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.utils;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -82,20 +84,25 @@ public final class SatCheckUtils {
     /**
      * Method that searches for all direct and indirect children nodes of a given type and returns them
      *
-     * @param requiredNodes list of the required nodes
      * @param ast the ast
-     * @param type the token type to match
-     * @return list of the required nodes
+     * @param types the token types to match
+     * @return collection of the required nodes
      */
-    public static List<DetailAST> getAllNodesOfType(LinkedList<DetailAST> requiredNodes, DetailAST ast, int type) {
+    public static Collection<DetailAST> getAllNodesOfType(DetailAST ast, int... types) {
+        Collection<DetailAST> nodes = new ArrayList<>();
         if (ast == null) {
-            return new LinkedList<>();
+            return nodes;
         }
-        if (ast.getType() == type) {
-            requiredNodes.add(ast);
+        
+        for(int type : types) {
+            if (ast.getType() == type) {
+                nodes.add(ast);
+                break;
+            }
         }
-        getAllNodesOfType(requiredNodes, ast.getFirstChild(), type);
-        getAllNodesOfType(requiredNodes, ast.getNextSibling(), type);
-        return requiredNodes;
+        
+        nodes.addAll(getAllNodesOfType(ast.getFirstChild(), types));
+        nodes.addAll(getAllNodesOfType(ast.getNextSibling(), types));
+        return nodes;
     }
 }
