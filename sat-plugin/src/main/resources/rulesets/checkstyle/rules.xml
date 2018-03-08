@@ -69,7 +69,7 @@
     <property name="severity" value="warning" />
   </module>
   
-  <module name="org.openhab.tools.analysis.checkstyle.OnlyTabIdentationInXmlFilesCheck">
+  <module name="org.openhab.tools.analysis.checkstyle.OnlyTabIndentationInXmlFilesCheck">
     <property name="severity" value="warning" />
     <property name="onlyShowFirstWarning" value="true" />
   </module>
