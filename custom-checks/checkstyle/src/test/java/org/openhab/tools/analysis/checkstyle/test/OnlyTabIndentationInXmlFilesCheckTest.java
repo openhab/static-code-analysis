@@ -14,7 +14,7 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openhab.tools.analysis.checkstyle.OnlyTabIdentationInXmlFilesCheck;
+import org.openhab.tools.analysis.checkstyle.OnlyTabIndentationInXmlFilesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.checkstyle.api.CheckConstants;
 
@@ -28,15 +28,15 @@ import com.puppycrawl.tools.checkstyle.api.Configuration;
  * @author Lyubomir Papazov - initial contribution
  * @author Kristina Simova - Added tests
  */
-public class OnlyTabIdentationInXmlFilesCheckTest extends AbstractStaticCheckTest {
+public class OnlyTabIndentationInXmlFilesCheckTest extends AbstractStaticCheckTest {
 
     private static final String WHITESPACE_USAGE_WARNING = "There were whitespace characters used for indentation. Please use tab characters instead";
-    private static final String TABIDENT_CHECK_TEST_DIRECTORY_NAME = "onlyTabIdentationInXmlFilesCheck";
+    private static final String TABIDENT_CHECK_TEST_DIRECTORY_NAME = "onlyTabIndentationInXmlFilesCheck";
     private DefaultConfiguration config;
 
     @Before
     public void setUpClass() {
-        config = createCheckConfig(OnlyTabIdentationInXmlFilesCheck.class);
+        config = createCheckConfig(OnlyTabIndentationInXmlFilesCheck.class);
     }
 
     @Test
