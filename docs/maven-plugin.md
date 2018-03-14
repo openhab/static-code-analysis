@@ -85,6 +85,7 @@ Parameters:
 | Name | Type| Description |
 | ------ | ------| -------- |
 | **pmdRuleset** | String | Relative path of the XML configuration to use. If not set the default ruleset file will be used |
+| **pmdFilter** | String | Relative path of a suppression.properties file that lists classes and rules to be excluded from failures. If not set no classes and no rules will be excluded |
 | **maven.pmd.version** | String | The version of the maven-pmd-plugin that will be used (Default value is **3.7**)|
 | **pmdPlugins** | List<Dependency> | A list with artifacts that contain additional checks for PMD |
 
@@ -150,6 +151,7 @@ If you want to use a custom set of rules you will have to set the configuration 
       <checkstyleRuleset>build-tools/checkstyle/binding.xml</checkstyleRuleset>
       <checkstyleFilter>build-tools/checkstyle/suppressions.xml</checkstyleFilter>
       <pmdRuleset>build-tools/pmd/binding.xml</pmdRuleset>
+      <pmdFilter>build-tools/pmd/suppressions.properties</pmdFilter>
       <spotbugsInclude>build-tools/spotbugs/binding.xml</spotbugsInclude>
       <spotbugsExclude>build-tools/spotbugs/exclude.xml</spotbugsExclude>
       <spotbugsRuleset>build-tools/spotbugs/visitors.xml</spotbugsRuleset>

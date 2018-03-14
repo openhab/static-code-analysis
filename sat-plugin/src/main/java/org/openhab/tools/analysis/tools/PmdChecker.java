@@ -36,12 +36,21 @@ public class PmdChecker extends AbstractChecker {
 
     private static final String DEFAULT_RULESET_XML = "rulesets/pmd/rules.xml";
 
+    private static final String DEFAULT_FILTER_XML = "rulesets/pmd/suppressions.properties";
+
     /**
      * Relative path of the XML configuration to use. If not set the default ruleset file will be used -
      * {@link #DEFAULT_RULESET_XML}
      */
     @Parameter(property = "pmd.ruleset")
     protected String pmdRuleset;
+
+    /**
+     * Relative path of the suppressions XML file to use. If not set the default filter file will be used
+     * - {@link #DEFAULT_FILTER_XML}
+     */
+    @Parameter(property = "pmd.excludeFromFailureFile")
+    protected String pmdFilter;
 
     /**
      * The version of the maven-pmd-plugin that will be used
@@ -70,6 +79,10 @@ public class PmdChecker extends AbstractChecker {
         Log log = getLog();
 
         Properties userProps = loadPropertiesFromFile(PMD_PROPERTIES_FILE);
+
+        String excludeFromFailureLocation = getLocation(pmdFilter, DEFAULT_FILTER_XML);
+        log.debug("Exclude filter file location is " + excludeFromFailureLocation);
+        userProps.setProperty("pmd.excludeFromFailureFile", excludeFromFailureLocation);
 
         String rulesetLocation = getLocation(pmdRuleset, DEFAULT_RULESET_XML);
         log.debug("Ruleset location is " + rulesetLocation);
