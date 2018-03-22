@@ -13,6 +13,12 @@
 
 <module name="Checker">
 
+  <!-- Allow to skip parsing of files, see https://github.com/checkstyle/checkstyle/issues/5629#issuecomment-375126473 -->
+  <!-- Add default to skip unhandled Java 9 sources -->
+  <module name="BeforeExecutionExclusionFileFilter">
+    <property name="fileNamePattern" value="${checkstyle.beforeExecutionExclusionFileFilter.fileNamePattern}" default="module\-info\.java$" />
+  </module>
+
   <!-- Rules for Code Formatting -->
   <module name="FileTabCharacter">
     <property name="severity" value="error" />
