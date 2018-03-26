@@ -91,7 +91,7 @@ public class PmdChecker extends AbstractChecker {
         // so they have to be set direct in the configuration
         Xpp3Dom configuration = configuration(
                 element("targetDirectory", userProps.getProperty("pmd.custom.targetDirectory")),
-                element("includes", userProps.getProperty("pmd.custom.includes")),
+                element("compileSourceRoots", userProps.getProperty("pmd.custom.compileSourceRoots")),
                 element("rulesets", element("ruleset", rulesetLocation)));
 
         pmdPlugins.add(dependency("org.openhab.tools.sat.custom-checks", "pmd", plugin.getVersion()));
