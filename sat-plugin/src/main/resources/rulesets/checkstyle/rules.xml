@@ -160,7 +160,12 @@
   <module name="org.openhab.tools.analysis.checkstyle.AnnotationDependencyCheck">
     <property name="severity" value="warning" />
   </module>
-
+ 
+  <module name="org.openhab.tools.analysis.checkstyle.CompactProfileCheck">
+    <property name="severity" value="error" />
+    <property name="maximumProfile" value="compact2"/>
+  </module> 
+ 
   <module name="TreeWalker">
     <!-- See http://checkstyle.sourceforge.net/config_coding.html#IllegalThrows -->
     <module name="IllegalThrows">
