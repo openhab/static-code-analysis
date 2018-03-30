@@ -163,8 +163,7 @@ public class CompactProfileCheck extends AbstractStaticCheck {
                                     maximumProfile));
                         }
                     } catch (IllegalArgumentException e) {
-                        logger.error("Unknown Java profile " + profileString,
-                                e);
+                        logger.debug("Dependency to '" + dependingPackage + "' will be skipped as there is no profile information : " + profileString);
                     }
                 }
             }
@@ -200,8 +199,11 @@ public class CompactProfileCheck extends AbstractStaticCheck {
 
         // Enums implement comparable in the order in which the constants are
         // declared
-        COMPACT_PROFILE_1("compact1"), COMPACT_PROFILE_2(
-                "compact2"), COMPACT_PROFILE_3("compact3"), FULL_SE("Full JRE");
+        NOT_FOUND("not found"),
+        COMPACT_PROFILE_1("compact1"),
+        COMPACT_PROFILE_2("compact2"),
+        COMPACT_PROFILE_3("compact3"),
+        FULL_SE("Full JRE");
 
         private String representation;
 
