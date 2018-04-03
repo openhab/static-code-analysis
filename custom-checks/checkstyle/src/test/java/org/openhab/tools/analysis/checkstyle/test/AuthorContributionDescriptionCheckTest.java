@@ -28,7 +28,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  */
 public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckTest {
 
-    private static final String EXPECTED_WARNING_MESSAGE_FIRST_AUTHOR_DESCRIPTION = "First javadoc author should have \"Initial contribution\", \"Initial contribution and API\" contribution description.";
+    private static final String EXPECTED_WARNING_MESSAGE_FIRST_AUTHOR_DESCRIPTION = "First javadoc author should have \"Initial contribution\" contribution description.";
     private static final String EXPECTED_WARNING_MESSAGE_OTHER_AUTHOR_DESCRIPTION = "Javadoc author should not have empty contribution description.";
     private static final String TEST_DIRECTORY_NAME = "authorContributionDescriptionCheckTest";
 
@@ -37,7 +37,7 @@ public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckT
      * corresponding properties defined in rulesets.checkstyle/rules.xml file
      */
     private static final String ATTRIBUTE_REQUIRED_DESCRIPTIONS_NAME = "requiredContributionDescriptions";
-    private static final String ATTRIBUTE_REQUIRED_DESCRIPTIONS_VALUE = "Initial contribution,Initial contribution and API";
+    private static final String ATTRIBUTE_REQUIRED_DESCRIPTIONS_VALUE = "Initial contribution";
     private static final String ATTRIBUTE_CHECK_UNITS_NAME = "checkInnerUnits";
 
     private Map<Integer, String> lineNumberToWarningMessageExpected;

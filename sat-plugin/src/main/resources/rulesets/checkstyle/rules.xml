@@ -223,7 +223,7 @@
     
     <module name="org.openhab.tools.analysis.checkstyle.AuthorContributionDescriptionCheck">
        <property name="severity" value="warning"/>
-       <property name="requiredContributionDescriptions" value="initial contribution"/>
+       <property name="requiredContributionDescriptions" value="Initial contribution"/>
        <property name="checkInnerUnits" value="false"/>
     </module>
 
