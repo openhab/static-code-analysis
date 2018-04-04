@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Queue;
 
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
+import com.puppycrawl.tools.checkstyle.api.FullIdent;
+import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 import com.puppycrawl.tools.checkstyle.utils.CheckUtils;
 
 /**
@@ -97,5 +99,26 @@ public final class SatCheckUtils {
         getAllNodesOfType(requiredNodes, ast.getFirstChild(), type);
         getAllNodesOfType(requiredNodes, ast.getNextSibling(), type);
         return requiredNodes;
+    }
+    
+    /**
+     * Returns the full package name of the parsed file
+     * 
+     * @param root the root of the AST
+     * @return the package declaration of the parsed file
+     */
+    public static String getPackageDeclaration(DetailAST root) {
+        DetailAST packageNode = getPackageNode(root);
+        final DetailAST nameAST = packageNode.getLastChild().getPreviousSibling();
+        final FullIdent full = FullIdent.createFullIdent(nameAST);
+        return full.getText();
+    }
+    
+    private static DetailAST getPackageNode(DetailAST node) {
+        if (node.getType() == TokenTypes.PACKAGE_DEF) {
+            return node;
+        } else {
+            return getPackageNode(node.getNextSibling());
+        }
     }
 }
