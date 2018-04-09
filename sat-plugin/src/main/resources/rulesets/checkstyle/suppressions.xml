@@ -23,5 +23,5 @@
     <suppress files=".+org.openhab.voice.voicerss.+" checks="PackageExportsNameCheck"/>
     <!--  Allow the usage of scheduleAtFixedRate in FadingWiFiLEDDriver class  -->
     <suppress files=".+org.openhab.binding.wifiled.handler.FadingWiFiLEDDriver.java" checks="AvoidScheduleAtFixedRateCheck"/>
-	<suppress files=".+\\pom\.xml" checks="OnlyTabIndentationInXmlFilesCheck"/>
+    <suppress files=".+[\\/]pom\.xml" checks="OnlyTabIndentationInXmlFilesCheck"/>
 </suppressions>
