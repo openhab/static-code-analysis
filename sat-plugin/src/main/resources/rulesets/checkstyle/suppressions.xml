@@ -24,4 +24,5 @@
     <!--  Allow the usage of scheduleAtFixedRate in FadingWiFiLEDDriver class  -->
     <suppress files=".+org.openhab.binding.wifiled.handler.FadingWiFiLEDDriver.java" checks="AvoidScheduleAtFixedRateCheck"/>
     <suppress files=".+[\\/]pom\.xml" checks="OnlyTabIndentationInXmlFilesCheck"/>
+    <suppress files=".+[\\/]OSGI-INF[\\/]org.openhab.+\.xml" checks="OnlyTabIndentationInXmlFilesCheck|NewlineAtEndOfFileCheck"/>
 </suppressions>

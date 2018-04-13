@@ -76,7 +76,7 @@
   </module>
   
   <module name="org.openhab.tools.analysis.checkstyle.OnlyTabIndentationInXmlFilesCheck">
-    <property name="severity" value="warning" />
+    <property name="severity" value="error" />
     <property name="onlyShowFirstWarning" value="true" />
   </module>
 
