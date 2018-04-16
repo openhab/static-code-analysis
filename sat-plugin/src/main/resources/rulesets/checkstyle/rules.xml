@@ -99,6 +99,10 @@
     <property name="severity" value="warning" />
     <property name="allowedValues" value="JavaSE-1.8"/>
   </module>
+  
+   <module name="org.openhab.tools.analysis.checkstyle.ManifestLineLengthCheck">
+  	<property name="severity" value="warning" />
+  </module>
 
   <module name="org.openhab.tools.analysis.checkstyle.RequiredFilesCheck">
      <property name="severity" value="error" />
