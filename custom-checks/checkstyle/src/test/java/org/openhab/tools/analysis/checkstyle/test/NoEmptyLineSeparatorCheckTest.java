@@ -23,13 +23,16 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  */
 public class NoEmptyLineSeparatorCheckTest extends AbstractStaticCheckTest {
 
-    private static final String TEST_DIRECTORY_NAME = "noEmptyLineSeparatorCheck";
-
     private static final String MSG_LINE_AFTER_OPENING_BRACE_EMPTY = "Remove empty line after opening brace";
     private static final String MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY = "Remove empty line before closing brace";
     private static final String MSG_FOR_EMPTY_LINE = "Remove empty line";
 
-    private static DefaultConfiguration config = createCheckConfig(NoEmptyLineSeparatorCheck.class);
+    private static DefaultConfiguration config = createModuleConfig(NoEmptyLineSeparatorCheck.class);
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/noEmptyLineSeparatorCheck";
+    }
 
     @Test
     public void verifyValidSwitchDefinitionWithoutBraces() throws Exception {
@@ -234,7 +237,7 @@ public class NoEmptyLineSeparatorCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verifyJavaFile(String testFileName, String[] expectedMessages) throws Exception {
-        String absolutePathToTestFile = getPath(TEST_DIRECTORY_NAME + "/" + testFileName);
+        String absolutePathToTestFile = getPath(testFileName);
         verify(config, absolutePathToTestFile, expectedMessages);
     }
 

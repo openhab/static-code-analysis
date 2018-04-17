@@ -16,7 +16,6 @@ import org.openhab.tools.analysis.checkstyle.RequireBundleCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -35,10 +34,15 @@ public class RequireBundleCheckTest extends AbstractStaticCheckTest {
 
     @BeforeClass
     public static void setUpClass() {
-        config = createCheckConfig(RequireBundleCheck.class);
+        config = createModuleConfig(RequireBundleCheck.class);
 
         String allowedRequireBundles = String.format("%s,%s,%s", "org.junit", "org.hamcrest", "org.mockito");
         config.addAttribute("allowedRequireBundles", allowedRequireBundles);
+    }
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/requireBundleCheckTest";
     }
 
     @Test
@@ -66,18 +70,9 @@ public class RequireBundleCheckTest extends AbstractStaticCheckTest {
         verifyManifest("invalid_test_manifest_directory", "INVALID_TEST_MANIFEST.MF", 13, REQUIRE_BUNDLE_TEST_USED_MSG);
     }
 
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration defaultConfiguration = new DefaultConfiguration("root");
-        defaultConfiguration.addChild(config);
-        return defaultConfiguration;
-    }
-
     private void verifyManifest(String testDirectoryName, String testFileName, int expectedLine, String expectedMessage)
             throws Exception {
-        String requireBundleCheckTestDirectory = "requireBundleCheckTest/";
-        String manifestRelativePath = requireBundleCheckTestDirectory + File.separator + testDirectoryName
-                + File.separator + testFileName;
+        String manifestRelativePath = testDirectoryName + File.separator + testFileName;
         String manifestAbsolutePath = getPath(manifestRelativePath);
 
         String[] expectedMessages = null;

@@ -20,7 +20,6 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.checkstyle.readme.MarkdownCheck;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 
 /**
  * Tests for {@link MarkdownCheck}
@@ -29,7 +28,6 @@ import com.puppycrawl.tools.checkstyle.api.Configuration;
  * @author Lyubomir Papazov - Added more tests
  */
 public class MarkdownCheckTest extends AbstractStaticCheckTest {
-    private static final String README_MD_CHECK_TEST_DIRECTORY_NAME = "markdownCheckTest";
     private static final String ADDED_README_IN_BUILD_PROPERTIES_MSG = "README.MD file must not be added to the bin.includes property";
     private static final String ADDED_DOC_FOLDER_IN_BUILD_PROPERTIES_MSG = "The doc folder must not be added to the bin.includes property";
     private DefaultConfiguration config;
@@ -37,6 +35,11 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
     @Before
     public void setUpClass() {
         createValidConfig();
+    }
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/markdownCheckTest";
     }
 
     @Test
@@ -265,27 +268,20 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
 
     private void verifyBuildProperties(String[] expectedMessages, String testDirectoryName)
             throws IOException, Exception {
-        String testDirectoryAbsolutePath = getPath(README_MD_CHECK_TEST_DIRECTORY_NAME + File.separator + testDirectoryName);
+        String testDirectoryAbsolutePath = getPath(testDirectoryName);
         String messageFilePath = testDirectoryAbsolutePath + File.separator + "build.properties";
         verify(createChecker(config), messageFilePath, expectedMessages);
     }
 
     private void createValidConfig() {
-        config = createCheckConfig(MarkdownCheck.class);
+        config = createModuleConfig(MarkdownCheck.class);
     }
-
+    
     private void verifyMarkDownFile(String testDirectoryName, String[] expectedMessages) throws Exception {
-        String testDirectoryRelativePath = README_MD_CHECK_TEST_DIRECTORY_NAME + File.separator + testDirectoryName
+        String testDirectoryRelativePath =  testDirectoryName
                 + File.separator + README_MD_FILE_NAME;
         String testDirectoryAbsolutePath = getPath(testDirectoryRelativePath);
         String messageFilePath = testDirectoryAbsolutePath;
         verify(createChecker(config), testDirectoryAbsolutePath, messageFilePath, expectedMessages);
-    }
-
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration defaultConfiguration = new DefaultConfiguration("root");
-        defaultConfiguration.addChild(config);
-        return defaultConfiguration;
     }
 }

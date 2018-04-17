@@ -9,10 +9,9 @@
 package org.openhab.tools.analysis.checkstyle.api;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import com.puppycrawl.tools.checkstyle.BaseCheckTestSupport;
+import com.puppycrawl.tools.checkstyle.AbstractModuleTestSupport;
 
 /**
  * Base test class for static code analysis checks
@@ -20,23 +19,11 @@ import com.puppycrawl.tools.checkstyle.BaseCheckTestSupport;
  * @author Svilen Valkanov - Initial contribution
  * @author Petar Valchev - Implement method to get the path in the expected format from checkstyle
  */
-public abstract class AbstractStaticCheckTest extends BaseCheckTestSupport {
-
-    /**
-     * Resolves absolute path to a resource
-     *
-     * @param relativePathToFile - relative path to src/test/resources/checks/checkstyle . It should
-     *            be "/" separated path.
-     * @return absolute path or null if the string can not be parsed as URI
-     */
-    @Override
-    protected String getPath(String relativePathToFile) throws IOException {
-        return new File("src/test/resources/checkstyle/" + relativePathToFile).getCanonicalPath();
-    }
+public abstract class AbstractStaticCheckTest extends AbstractModuleTestSupport {
 
     /**
      * Generates message that can be used in the
-     * {@link BaseCheckTestSupport} verify methods.
+     * {@link AbstractModuleTestSupport} verify methods.
      *
      * @param arguments - a set of line number and message pairs
      * @return String[] in the format used from checkstyle to verify the logged messages

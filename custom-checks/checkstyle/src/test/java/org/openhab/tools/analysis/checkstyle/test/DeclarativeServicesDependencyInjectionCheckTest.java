@@ -21,10 +21,14 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
  *
  */
 public class DeclarativeServicesDependencyInjectionCheckTest extends AbstractStaticCheckTest {
-    private static final String TEST_RESOURCES_DIR = "declarativeServicesDependencyInjectionTest";
 
     private static final String SERVICE_TRACKER_USED = "Avoid using ServiceTracker for dependency injection, consider using Declarative Services";
     private static final String SERVICE_CUSTOMIZER_IMPLEMENTED = "Avoid using ServiceTrackerCustomizer for dependency injection, consider using Declarative Services";
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/declarativeServicesDependencyInjectionTest";
+    }
 
     @Test
     public void testServiceTrackerInjection() throws Exception {
@@ -66,11 +70,10 @@ public class DeclarativeServicesDependencyInjectionCheckTest extends AbstractSta
     }
 
     private void verifyFile(String testFileName, String[] expectedMessages) throws Exception {
-        DefaultConfiguration config = createCheckConfig(DeclarativeServicesDependencyInjectionCheck.class);
+        DefaultConfiguration config = createModuleConfig(DeclarativeServicesDependencyInjectionCheck.class);
 
-        String filePath = getPath(TEST_RESOURCES_DIR + "/" + testFileName);
+        String filePath = getPath(testFileName);
 
         verify(config, filePath, expectedMessages);
     }
-
 }

@@ -18,7 +18,6 @@ import org.openhab.tools.analysis.checkstyle.MavenPomderivedInClasspathCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -28,20 +27,16 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  *
  */
 public class MavenPomderivedInClasspathCheckTest extends AbstractStaticCheckTest {
-    private static final String TEST_DIRECTORY_NAME = "mavenPomDerivedInClasspathCheckTest";
-
     private static DefaultConfiguration config;
 
     @BeforeClass
     public static void createConfiguration() {
-        config = createCheckConfig(MavenPomderivedInClasspathCheck.class);
+        config = createModuleConfig(MavenPomderivedInClasspathCheck.class);
     }
 
     @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration configParent = new DefaultConfiguration("root");
-        configParent.addChild(config);
-        return configParent;
+    protected String getPackageLocation() {
+        return "checkstyle/mavenPomDerivedInClasspathCheckTest";
     }
 
     @Test
@@ -73,9 +68,7 @@ public class MavenPomderivedInClasspathCheckTest extends AbstractStaticCheckTest
     }
 
     private void verifyClasspath(String classpathDirectoryName, String[] expectedMessages) throws Exception {
-        String pomXmlAbsolutePath = getPath(
-                TEST_DIRECTORY_NAME + File.separator + classpathDirectoryName + File.separator + CLASSPATH_FILE_NAME);
+        String pomXmlAbsolutePath = getPath(classpathDirectoryName + File.separator + CLASSPATH_FILE_NAME);
         verify(config, pomXmlAbsolutePath, expectedMessages);
     }
-
 }

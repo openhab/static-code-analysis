@@ -20,7 +20,6 @@ import org.openhab.tools.analysis.checkstyle.EshInfXmlValidationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 
 /**
  * Test for {@link EshInfXmlValidationCheck}
@@ -31,12 +30,8 @@ import com.puppycrawl.tools.checkstyle.api.Configuration;
  */
 public class EshInfXmlUsageCheckTest extends AbstractStaticCheckTest {
 
-    private static final String TEST_CHECK_DIRECTORY = "eshInfXmlUsageCheckTest" + File.separator;
-
     private static final String RELATIVE_PATH_TO_THING = File.separator + ESH_INF_DIRECTORY + File.separator
             + EshInfXmlValidationCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
-    private static final String RELATIVE_PATH_TO_BINDING = File.separator + ESH_INF_DIRECTORY + File.separator
-            + EshInfXmlValidationCheck.BINDING_DIRECTORY + File.separator + "bind.xml";
     private static final String RELATIVE_PATH_TO_CONFIG = File.separator + ESH_INF_DIRECTORY + File.separator
             + EshInfXmlValidationCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
 
@@ -45,13 +40,11 @@ public class EshInfXmlUsageCheckTest extends AbstractStaticCheckTest {
     private static final String MESSAGE_UNUSED_URI_CONFIGURATION = "Unused configuration reference with uri - {0}";
     private static final String MESSAGE_UNUSED_BRIDGE = "Unused bridge reference with id - {0}";
 
-    private static final DefaultConfiguration CONFIGURATION = createCheckConfig(EshInfXmlUsageCheck.class);
+    private static final DefaultConfiguration CONFIGURATION = createModuleConfig(EshInfXmlUsageCheck.class);
 
     @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration configParent = new DefaultConfiguration("root");
-        configParent.addChild(config);
-        return configParent;
+    protected String getPackageLocation() {
+        return "checkstyle/eshInfXmlUsageCheckTest";
     }
 
     @Test
@@ -83,7 +76,7 @@ public class EshInfXmlUsageCheckTest extends AbstractStaticCheckTest {
 
     private void verifyWithPath(String testSubDirectory, String testFilePath, String[] expectedMessages)
             throws Exception {
-        String directoryPath = getPath(TEST_CHECK_DIRECTORY + testSubDirectory);
+        String directoryPath = getPath(testSubDirectory);
         File testDirectoryPath = new File(directoryPath);
 
         File[] testFiles = listFilesForFolder(testDirectoryPath, new ArrayList<File>());

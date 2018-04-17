@@ -24,31 +24,29 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 public class AvoidScheduleAtFixedRateCheckTest extends AbstractStaticCheckTest {
 
     private static final String WARNING_MESSAGE = "For periodically executed jobs that do not require a fixed rate scheduleWithFixedDelay should be preferred over scheduleAtFixedRate.";
-    private static final String TEST_DIRECTORY_NAME = "avoidScheduleAtFixedRateCheckTest";
 
-    Configuration config = createCheckConfig(AvoidScheduleAtFixedRateCheck.class);
+    private final Configuration config = createModuleConfig(AvoidScheduleAtFixedRateCheck.class);
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/avoidScheduleAtFixedRateCheckTest";
+    }
 
     @Test
     public void verifyScheduleAtFixedRateUsed() throws Exception {
-        verifyJavaFile("ScheduleAtFixedRateUsed.java", generateExpectedMessages(11, WARNING_MESSAGE));
+        final String[] expected = generateExpectedMessages(11, WARNING_MESSAGE);
+        verify(config, getPath("ScheduleAtFixedRateUsed.java"), expected);
     }
 
     @Test
     public void verifyNoScheduledExecutorMethods() throws Exception {
-        verifyJavaFileNoErrors("NoScheduledExecutorServiceMethods.java");
+        final String[] expected = CommonUtils.EMPTY_STRING_ARRAY;
+        verify(config, getPath("NoScheduledExecutorServiceMethods.java"), expected);
     }
 
     @Test
     public void verifyScheduleWithFixedDelay() throws Exception {
-        verifyJavaFileNoErrors("ValidScheduleWithFixedDelay.java");
-    }
-
-    private void verifyJavaFile(String testFileName, String[] expectedMessages) throws Exception {
-        String absolutePathToTestFile = getPath(TEST_DIRECTORY_NAME + "/" + testFileName);
-        verify(config, absolutePathToTestFile, expectedMessages);
-    }
-
-    private void verifyJavaFileNoErrors(String testFileName) throws Exception {
-        verifyJavaFile(testFileName, CommonUtils.EMPTY_STRING_ARRAY);
+        final String[] expected = CommonUtils.EMPTY_STRING_ARRAY;
+        verify(config, getPath("ValidScheduleWithFixedDelay.java"), expected);
     }
 }

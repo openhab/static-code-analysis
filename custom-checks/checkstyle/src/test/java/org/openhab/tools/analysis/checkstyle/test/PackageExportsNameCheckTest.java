@@ -18,7 +18,6 @@ import org.openhab.tools.analysis.checkstyle.PackageExportsNameCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -33,15 +32,19 @@ public class PackageExportsNameCheckTest extends AbstractStaticCheckTest {
             + " should be marked as \"internal\" if it is not exported.";
 
     private static final String MANIFEST_REALTIVE_PATH = META_INF_DIRECTORY_NAME + File.separator + MANIFEST_FILE_NAME;
-    private static final String TEST_DIRECTORY = "packageExportsNameCheckTest";
 
     private static DefaultConfiguration configuration;
 
     @BeforeClass
     public static void createConfiguration() {
-        configuration = createCheckConfig(PackageExportsNameCheck.class);
+        configuration = createModuleConfig(PackageExportsNameCheck.class);
         configuration.addAttribute("sourceDirectories", "src/main/java");
         configuration.addAttribute("excludedPackages", ".*.internal.*");
+    }
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/packageExportsNameCheckTest";
     }
 
     @Test
@@ -76,20 +79,12 @@ public class PackageExportsNameCheckTest extends AbstractStaticCheckTest {
         verifyWarningMessages("excluded_packages", expectedMessages);
     }
 
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration defaultConfiguration = new DefaultConfiguration("root");
-        defaultConfiguration.addChild(config);
-        return defaultConfiguration;
-    }
-
     private void verifyNoWarningMessages(String directory) throws Exception {
         verifyWarningMessages(directory, CommonUtils.EMPTY_STRING_ARRAY);
     }
 
     private void verifyWarningMessages(String directory, String[] messages) throws Exception {
-        String manifestFilePath = getPath(
-                TEST_DIRECTORY + File.separator + directory + File.separator + MANIFEST_REALTIVE_PATH);
+        String manifestFilePath = getPath(directory + File.separator + MANIFEST_REALTIVE_PATH);
 
         verify(configuration, manifestFilePath, messages);
     }

@@ -20,7 +20,6 @@ import org.openhab.tools.analysis.checkstyle.ServiceComponentManifestCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -34,7 +33,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  *
  */
 public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
-    private static final String CHECK_TEST_DIRECTORY = "serviceComponentManifestCheckTest";
     private static final String MANIFEST_RELATIVE_PATH = META_INF_DIRECTORY_NAME + File.separator + MANIFEST_FILE_NAME;
 
     private static final String BEST_APPROACH_MESSAGE = "A good approach is to use OSGI-INF/*.xml "
@@ -56,7 +54,12 @@ public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
 
     @BeforeClass
     public static void createConfiguration() {
-        config = createCheckConfig(ServiceComponentManifestCheck.class);
+        config = createModuleConfig(ServiceComponentManifestCheck.class);
+    }
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/serviceComponentManifestCheckTest";
     }
 
     @Test
@@ -203,13 +206,6 @@ public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
         verifyBuildProperties("missing_all_services_in_build_properties", expectedMessages);
     }
 
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration configParent = new DefaultConfiguration("root");
-        configParent.addChild(config);
-        return configParent;
-    }
-
     private void verifyServiceComponentHeader(String testDirectoryName, String[] expectedMessages) throws Exception {
         verify(MANIFEST_RELATIVE_PATH, testDirectoryName, expectedMessages);
     }
@@ -219,8 +215,7 @@ public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verify(String filePath, String testDirectoryName, String[] expectedMessages) throws Exception {
-        String testDirectoryPath = getPath(CHECK_TEST_DIRECTORY + File.separator + testDirectoryName);
-        File testDirectory = new File(testDirectoryPath);
+        File testDirectory = new File(getPath(testDirectoryName));
         String testFilePath = testDirectory.getPath() + File.separator + filePath;
         // All files are listed recursively
         File[] testFiles = FileUtils.listFiles(testDirectory, null, true).toArray(new File[] {});

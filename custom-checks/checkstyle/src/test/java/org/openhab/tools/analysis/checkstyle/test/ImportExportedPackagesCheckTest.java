@@ -8,7 +8,6 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import java.io.File;
 import java.text.MessageFormat;
 
 import org.junit.BeforeClass;
@@ -17,7 +16,6 @@ import org.openhab.tools.analysis.checkstyle.ImportExportedPackagesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -27,14 +25,18 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  *
  */
 public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
-    private static final String TEST_DIRECTORY_NAME = "importExportedPackagesCheckTest";
     private static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package `{0}` is not imported";
 
     private static DefaultConfiguration configuration;
 
     @BeforeClass
     public static void setUp() {
-        configuration = createCheckConfig(ImportExportedPackagesCheck.class);
+        configuration = createModuleConfig(ImportExportedPackagesCheck.class);
+    }
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/importExportedPackagesCheckTest";
     }
 
     @Test
@@ -85,14 +87,7 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
     }
 
     public void verifyManifestFile(String fileName, String[] warningMessages) throws Exception {
-        String filePath = getPath(TEST_DIRECTORY_NAME + File.separator + fileName);
+        String filePath = getPath(fileName);
         verify(configuration, filePath, warningMessages);
-    }
-
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration dc = new DefaultConfiguration("root");
-        dc.addChild(config);
-        return dc;
     }
 }

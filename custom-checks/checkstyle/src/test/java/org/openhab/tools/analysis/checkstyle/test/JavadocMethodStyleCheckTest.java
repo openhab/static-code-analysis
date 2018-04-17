@@ -8,8 +8,6 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import java.io.File;
-
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.JavadocMethodStyleCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
@@ -28,9 +26,13 @@ public class JavadocMethodStyleCheckTest extends AbstractStaticCheckTest {
     private static final String EXPECTED_MESSAGE_CONTAINS_DASH = "There should be no dash between the parameter name and the description in a Javadoc comment of a method or constructor.";
     private static final String EXPECTED_MESSAGE_EMPTY_LINES_BETWEEN_TAGS = "There should be no empty lines between tags in a Javadoc comment of a method or constructor.";
     private static final String EXPECTED_MESSAGE_PARAMETER_DESCRIPTION_NEWLINE = "The parameter description in a Javadoc comment of a method or constructor should not start on a new line.";
-    private static final String TEST_DIRECTORY_NAME = "javadocMethodStyleCheckTest";
 
-    private DefaultConfiguration configuration = createCheckConfig(JavadocMethodStyleCheck.class);
+    private DefaultConfiguration configuration = createModuleConfig(JavadocMethodStyleCheck.class);
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/javadocMethodStyleCheckTest";
+    }
 
     @Test
     public void testMethodJavadocWithDashBetweenParameterNameAndParameterDescription() throws Exception {
@@ -132,7 +134,7 @@ public class JavadocMethodStyleCheckTest extends AbstractStaticCheckTest {
     }
 
     private void checkFile(String fileName, String[] expectedMessages) throws Exception {
-        String filePath = getPath(TEST_DIRECTORY_NAME + File.separator + fileName);
+        String filePath = getPath(fileName);
         verify(configuration, filePath, expectedMessages);
     }
 }

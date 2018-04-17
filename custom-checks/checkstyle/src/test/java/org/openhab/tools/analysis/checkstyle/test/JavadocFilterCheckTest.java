@@ -8,8 +8,6 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import java.io.File;
-
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.JavadocFilterCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
@@ -25,6 +23,11 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  *
  */
 public class JavadocFilterCheckTest extends AbstractStaticCheckTest {
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/javadocFilterCheckTest";
+    }
     @Test
     public void testOuterClassWithJavadoc() throws Exception {
         int[] lineNumbers = new int[] { 10 };
@@ -48,12 +51,11 @@ public class JavadocFilterCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verifyJavadoc(String testFileName, boolean checkInnerClasses, int[] lineNumbers) throws Exception {
-        DefaultConfiguration config = createCheckConfig(JavadocFilterCheck.class);
+        DefaultConfiguration config = createModuleConfig(JavadocFilterCheck.class);
         String checkInnerClassesPropertyName = "checkInnerUnits";
         config.addAttribute(checkInnerClassesPropertyName, String.valueOf(checkInnerClasses));
 
-        String testDirectory = "javadocFilterCheckTest";
-        String filePath = getPath(testDirectory + File.separator + testFileName);
+        String filePath = getPath(testFileName);
 
         String[] expectedMessages = null;
         if (lineNumbers != null) {

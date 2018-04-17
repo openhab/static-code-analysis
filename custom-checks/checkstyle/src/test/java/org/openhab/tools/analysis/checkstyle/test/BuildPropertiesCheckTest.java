@@ -8,7 +8,10 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BIN_INCLUDES_PROPERTY_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OUTPUT_PROPERTY_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.SOURCE_PROPERTY_NAME;
 
 import java.io.File;
 
@@ -19,7 +22,6 @@ import org.openhab.tools.analysis.checkstyle.BuildPropertiesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -29,8 +31,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * @author Svilen Valkanov - Some minor fixes and improvements
  */
 public class BuildPropertiesCheckTest extends AbstractStaticCheckTest {
-    private static final String BUILD_PROPERTIES_CHECK_TEST_DIRECTORY_NAME = "buildPropertiesCheckTest";
-
     private static final String MISSING_PROPERTY_MSG = "Missing %s property in the %s file.";
     private static final String MISSING_VALUE_MSG = "Property  %s in the %s file is missing value: ";
     private static final String EMPTY_FILE_MSG = String.format("Empty %s file", BUILD_PROPERTIES_FILE_NAME);
@@ -45,13 +45,18 @@ public class BuildPropertiesCheckTest extends AbstractStaticCheckTest {
     private static final String MISSING_SRC_VALUE_MSG = String.format(MISSING_VALUE_MSG, SOURCE_PROPERTY_NAME,
             BUILD_PROPERTIES_FILE_NAME);
 
-    private static DefaultConfiguration config = createCheckConfig(BuildPropertiesCheck.class);
+    private static DefaultConfiguration config = createModuleConfig(BuildPropertiesCheck.class);
 
     @BeforeClass
     public static void setUpTest() {
         config.addAttribute("expectedBinIncludesValues", "META-INF/");
         config.addAttribute("possibleOutputValues", "target/classes,target/test-classes");
         config.addAttribute("possibleSourceValues", "src/main/java,src/main/resources,src/test/java,src/test/groovy");
+    }
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/buildPropertiesCheckTest";
     }
 
     @Test
@@ -93,18 +98,9 @@ public class BuildPropertiesCheckTest extends AbstractStaticCheckTest {
         verifyBuildPropertiesFile("empty_build_properties_file_directory", 0, EMPTY_FILE_MSG);
     }
 
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration defaultConfiguration = new DefaultConfiguration("root");
-        defaultConfiguration.addChild(config);
-        return defaultConfiguration;
-    }
-
     private void verifyBuildPropertiesFile(String testDirectoryName, int expectedLine, String expectedMessage)
             throws Exception {
-        String testDirectoryRelativePath = BUILD_PROPERTIES_CHECK_TEST_DIRECTORY_NAME + File.separator
-                + testDirectoryName;
-        String testDirectoryAbsolutePath = getPath(testDirectoryRelativePath);
+        String testDirectoryAbsolutePath = getPath(testDirectoryName);
         File testDirectory = new File(testDirectoryAbsolutePath);
         File[] filesToCheck = FileUtils.listFiles(testDirectory, null, true).toArray(new File[] {});
 

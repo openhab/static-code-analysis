@@ -8,7 +8,6 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import java.io.File;
 import java.text.MessageFormat;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -18,7 +17,6 @@ import org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 
 /**
  * Tests for {@link ParameterizedRegexpHeaderCheck}
@@ -29,7 +27,6 @@ public class ParameterizedRegexpHeaderCheckTest extends AbstractStaticCheckTest 
     private static final String MSG_MISMATCH = "Header line doesn''t match pattern {0}";
     private static final String MSG_MISSING = "Header is missing";
 
-    private static final String TEST_DIRECOTRY = "parameterizedRegexpHeaderCheckTest";
     private static final String TEST_JAVADOC_HEADER_PATTERN = "^/\\*\\*$\\n^ \\* Copyright \\(c\\) {0}-{1} by the respective copyright holders\\.$\\n^ \\*$";
     private static final String TEST_JAVA_COMMENT_HEADER_PATTERN = "^//$\\n^// Copyright \\(c\\) {0}-{1} by the respective copyright holders\\.$\\n^//$";
     private static final String TEST_XML_HEADER_PATTERN = "^<!-- Copyright \\(c\\) {0}-{1} by the respective copyright holders\\. -->$";
@@ -42,10 +39,8 @@ public class ParameterizedRegexpHeaderCheckTest extends AbstractStaticCheckTest 
     }
 
     @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration configParent = new DefaultConfiguration("root");
-        configParent.addChild(config);
-        return configParent;
+    protected String getPackageLocation() {
+        return "checkstyle/parameterizedRegexpHeaderCheckTest";
     }
 
     @Test
@@ -89,12 +84,12 @@ public class ParameterizedRegexpHeaderCheckTest extends AbstractStaticCheckTest 
     }
 
     private void verifyJavaFile(String name, String[] messages) throws Exception {
-        String path = getPath(TEST_DIRECOTRY + File.separator + name);
+        String path = getPath(name);
         verify(createChecker(config), path, messages);
     }
 
     private DefaultConfiguration createTestConfiguration(String headerPattern, String values, String headerFormat) {
-        DefaultConfiguration configuration = createCheckConfig(ParameterizedRegexpHeaderCheck.class);
+        DefaultConfiguration configuration = createModuleConfig(ParameterizedRegexpHeaderCheck.class);
         if (headerPattern != null) {
             configuration.addAttribute("header", headerPattern);
         }
