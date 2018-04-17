@@ -8,7 +8,6 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -30,7 +29,6 @@ public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckT
 
     private static final String EXPECTED_WARNING_MESSAGE_FIRST_AUTHOR_DESCRIPTION = "First javadoc author should have \"Initial contribution\" contribution description.";
     private static final String EXPECTED_WARNING_MESSAGE_OTHER_AUTHOR_DESCRIPTION = "Javadoc author should not have empty contribution description.";
-    private static final String TEST_DIRECTORY_NAME = "authorContributionDescriptionCheckTest";
 
     /**
      * The needed attributes for the configuration. They should be the same as their
@@ -44,10 +42,16 @@ public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckT
 
     private DefaultConfiguration configuration;
 
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/authorContributionDescriptionCheckTest";
+    }
+
     @Before
     public void setUp() {
         lineNumberToWarningMessageExpected = new TreeMap<>();
-        configuration = createCheckConfig(AuthorContributionDescriptionCheck.class);
+        configuration =  createModuleConfig(AuthorContributionDescriptionCheck.class);
         configuration.addAttribute(ATTRIBUTE_REQUIRED_DESCRIPTIONS_NAME, ATTRIBUTE_REQUIRED_DESCRIPTIONS_VALUE);
     }
 
@@ -273,7 +277,7 @@ public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckT
     }
 
     private void checkFileForAuthorContributionDescription(boolean checkInnerUnits, String fileName) throws Exception {
-        String filePath = getPath(TEST_DIRECTORY_NAME + File.separator + fileName);
+        String filePath = getPath(fileName);
         String[] expected = null;
 
         if (lineNumberToWarningMessageExpected.isEmpty()) {

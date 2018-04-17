@@ -22,7 +22,6 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -32,8 +31,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * @author Svilen Valkanov - Added test for about.html file missing in build.properties
  */
 public class AboutHtmlCheckTest extends AbstractStaticCheckTest {
-    private static final String ABOUT_HTML_CHECK_TEST_DIRECTORY_NAME = "aboutHtmlCheckTest";
-
     private static final String VALID_ABOUT_HTML_FILE_URL = "https://raw.githubusercontent.com/openhab/openhab2-addons/master/src/etc/about.html";
 
     private static final String VALID_ABOUT_HTML_FILE_LINK_MSG = "Here is an example of a valid about.html file: "
@@ -48,6 +45,11 @@ public class AboutHtmlCheckTest extends AbstractStaticCheckTest {
     private DefaultConfiguration config;
 
     private boolean availableResourceURL = false;
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/aboutHtmlCheckTest";
+    }
 
     @Before
     public void setUp() {
@@ -140,7 +142,7 @@ public class AboutHtmlCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testMissingValidAboutHtmlFile() throws Exception {
-        config = createCheckConfig(AboutHtmlCheck.class);
+        config = createModuleConfig(AboutHtmlCheck.class);
         config.addAttribute("validAboutHtmlFileURL", "non.existent.url");
 
         String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
@@ -154,35 +156,22 @@ public class AboutHtmlCheckTest extends AbstractStaticCheckTest {
 
         String[] expectedMessages = generateExpectedMessages(0, MISSING_ABOUT_HTML_IN_BUILD_PROPERTIES_MSG);
         String testDirectoryName = "about_html_missing_in_build_properties";
+        File testDirectory = new File(getPath(testDirectoryName));
 
         // The message is logged for the build.properties file
-        String testDirectoryRelativePath = ABOUT_HTML_CHECK_TEST_DIRECTORY_NAME + File.separator + testDirectoryName;
-        String testDirectoryAbsolutePath = getPath(testDirectoryRelativePath);
-        File testDirectory = new File(testDirectoryAbsolutePath);
-
-        String messageFilePath = testDirectoryAbsolutePath + File.separator + "build.properties";
+        String messageFilePath = getPath(testDirectoryName) + File.separator + "build.properties";
 
         verify(createChecker(config), testDirectory.listFiles(), messageFilePath, expectedMessages);
     }
 
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration defaultConfiguration = new DefaultConfiguration("root");
-        defaultConfiguration.addChild(config);
-        return defaultConfiguration;
-    }
-
     private void createValidConfig() throws IOException {
-        config = createCheckConfig(AboutHtmlCheck.class);
+        config = createModuleConfig(AboutHtmlCheck.class);
         config.addAttribute("validAboutHtmlFileURL", VALID_ABOUT_HTML_FILE_URL);
     }
 
     private void verifyAboutHtmlFile(String testDirectoryName, String[] expectedMessages) throws Exception {
-        String testDirectoryRelativePath = ABOUT_HTML_CHECK_TEST_DIRECTORY_NAME + File.separator + testDirectoryName;
-        String testDirectoryAbsolutePath = getPath(testDirectoryRelativePath);
-        File testDirectory = new File(testDirectoryAbsolutePath);
-
-        String messageFilePath = testDirectoryAbsolutePath + File.separator + ABOUT_HTML_FILE_NAME;
+        File testDirectory = new File(getPath(testDirectoryName));
+        String messageFilePath = getPath(testDirectoryName) + File.separator + ABOUT_HTML_FILE_NAME;
 
         verify(createChecker(config), testDirectory.listFiles(), messageFilePath, expectedMessages);
     }

@@ -8,13 +8,12 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.TreeWalker;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.BundleVendorCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
+
+import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 
 /**
  * Tests for {@link BundleVendorCheck}
@@ -22,8 +21,7 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
  * @author Martin van Wingerden
  */
 public class BundleVendorCheckTest extends AbstractStaticCheckTest {
-    private static final String TEST_DIRECTORY = "correctOpenHABSpellingInManifestTest/";
-    private static final DefaultConfiguration checkConfig = createCheckConfig(BundleVendorCheck.class);
+    private static final DefaultConfiguration checkConfig = createModuleConfig(BundleVendorCheck.class);
 
     @BeforeClass
     public static void setUpClass() {
@@ -31,10 +29,8 @@ public class BundleVendorCheckTest extends AbstractStaticCheckTest {
     }
 
     @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration configParent = createCheckConfig(TreeWalker.class);
-        configParent.addChild(config);
-        return configParent;
+    protected String getPackageLocation() {
+        return "checkstyle/correctOpenHABSpellingInManifestTest";
     }
 
     @Test
@@ -95,7 +91,7 @@ public class BundleVendorCheckTest extends AbstractStaticCheckTest {
 
     private void verify(String fileName, String[] expectedMessages) throws Exception {
         verify(checkConfig,
-                getPath(TEST_DIRECTORY + fileName),
+                getPath(fileName),
                 expectedMessages
         );
     }

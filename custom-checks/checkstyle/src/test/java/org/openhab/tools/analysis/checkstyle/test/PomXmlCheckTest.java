@@ -22,7 +22,6 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.checkstyle.api.CheckConstants;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -33,7 +32,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * @author Velin Yordanov - Added new tests
  */
 public class PomXmlCheckTest extends AbstractStaticCheckTest {
-    private static final String POM_XML_CHECK_TEST_DIRECTORY_NAME = "pomXmlCheckTest";
     private static final String VERSION_REGULAR_EXPRESSION = "^\\d+\\.\\d+\\.\\d+";
 
     private static final String MISSING_VERSION_MSG = "Missing /project/version in the pom.xml file.";
@@ -51,9 +49,14 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
 
     @BeforeClass
     public static void setUpClass() {
-        config = createCheckConfig(PomXmlCheck.class);
+        config = createModuleConfig(PomXmlCheck.class);
         config.addAttribute("pomVersionRegularExpression", VERSION_REGULAR_EXPRESSION);
         config.addAttribute("manifestVersionRegularExpression", MANIFEST_REGEX);
+    }
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/pomXmlCheckTest";
     }
 
     @Test
@@ -98,7 +101,7 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testMasterPom() throws Exception {
-        String testFileAbsolutePath = getPath(POM_XML_CHECK_TEST_DIRECTORY_NAME + "/pom.xml");
+        String testFileAbsolutePath = getPath("pom.xml");
         verify(createChecker(config), testFileAbsolutePath, ArrayUtils.EMPTY_STRING_ARRAY);
     }
 
@@ -115,13 +118,6 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testDifferentPomVersion() throws Exception {
         verifyPomXmlFile("different_version_pom_directory", 9, WRONG_VERSION_MSG);
-    }
-
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration defaultConfiguration = new DefaultConfiguration("root");
-        defaultConfiguration.addChild(config);
-        return defaultConfiguration;
     }
 
     private void verifyPomXmlFile(String testDirectoryName, int expectedLine, String expectedMessage) throws Exception {
@@ -153,7 +149,7 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
     }
 
     private File getTestDirectory(String testDirectoryName) throws Exception {
-        String testDirectoryAbsolutePath = getPath(POM_XML_CHECK_TEST_DIRECTORY_NAME + "/" + testDirectoryName);
+        String testDirectoryAbsolutePath = getPath(testDirectoryName);
         return new File(testDirectoryAbsolutePath);
     }
 }

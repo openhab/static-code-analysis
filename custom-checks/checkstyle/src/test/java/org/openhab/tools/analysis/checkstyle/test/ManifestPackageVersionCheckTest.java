@@ -18,7 +18,6 @@ import org.openhab.tools.analysis.checkstyle.ManifestPackageVersionCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -35,16 +34,14 @@ public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
 
     @BeforeClass
     public static void createConfiguration() {
-        config = createCheckConfig(ManifestPackageVersionCheck.class);
+        config = createModuleConfig(ManifestPackageVersionCheck.class);
         config.addAttribute("ignoreImportedPackages", "org.apache.*, org.junit.*");
         config.addAttribute("ignoreExportedPackages", "org.eclipse.smarthome.tool.*");
     }
 
     @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration configParent = new DefaultConfiguration("root");
-        configParent.addChild(config);
-        return configParent;
+    protected String getPackageLocation() {
+        return "checkstyle/manifestPackageVersionCheckTest";
     }
 
     @Test
@@ -107,9 +104,7 @@ public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verifyManifest(String testFileDirectory, String[] expectedMessages) throws Exception {
-        String versionCheckTestDirectory = "manifestPackageVersionCheckTest";
-        String filePath = getPath(
-                versionCheckTestDirectory + File.separator + testFileDirectory + File.separator + MANIFEST_FILE_NAME);
+        String filePath = getPath(testFileDirectory + File.separator + MANIFEST_FILE_NAME);
 
         verify(config, filePath, expectedMessages);
     }

@@ -8,7 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
@@ -34,7 +35,6 @@ import org.openhab.tools.analysis.checkstyle.KarafFeatureCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 
 /**
  * Tests for {@link KarafFeatureCheck}
@@ -51,19 +51,16 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
     private ArgumentCaptor<LogRecord> captor;
 
     private static final String MSG_MISSING_BUNDLE_IN_FEATURE_XML = "Bundle with ID '{0}' must be added in {1}";
-    private static final String TEST_DIRECTORY = "karafFeatureCheck";
-    private static final DefaultConfiguration CONFIGURATION = createCheckConfig(KarafFeatureCheck.class);
-
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration configParent = new DefaultConfiguration("root");
-        configParent.addChild(config);
-        return configParent;
-    }
+    private static final DefaultConfiguration CONFIGURATION = createModuleConfig(KarafFeatureCheck.class);
 
     @BeforeClass
     public static void setUp() {
         CONFIGURATION.addAttribute("featureXmlPath", "feature/feature.xml");
+    }
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/karafFeatureCheck";
     }
 
     @Before
@@ -108,7 +105,7 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
 
     private void verify(String fileDirectory, String[] expectedMessages) throws Exception {
         verify(CONFIGURATION,
-                getPath(TEST_DIRECTORY + File.separator + fileDirectory + File.separator + POM_XML_FILE_NAME),
+                getPath(fileDirectory + File.separator + POM_XML_FILE_NAME),
                 expectedMessages);
     }
 }

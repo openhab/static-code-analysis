@@ -18,7 +18,6 @@ import org.openhab.tools.analysis.checkstyle.OverridingParentPomConfigurationChe
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -28,20 +27,16 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  *
  */
 public class OverridingParentPomConfigurationCheckTest extends AbstractStaticCheckTest {
-    private static final String TEST_DIRECTORY_NAME = "overridingParentPomConfigurationCheckTest";
-
     private static DefaultConfiguration config;
 
     @BeforeClass
     public static void createConfiguration() {
-        config = createCheckConfig(OverridingParentPomConfigurationCheck.class);
+        config = createModuleConfig(OverridingParentPomConfigurationCheck.class);
     }
 
     @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration configParent = new DefaultConfiguration("root");
-        configParent.addChild(config);
-        return configParent;
+    protected String getPackageLocation() {
+        return "checkstyle/overridingParentPomConfigurationCheckTest";
     }
 
     @Test
@@ -66,8 +61,7 @@ public class OverridingParentPomConfigurationCheckTest extends AbstractStaticChe
     }
 
     private void verifyPom(String pomDirectoryName, String[] expectedMessages) throws Exception {
-        String pomXmlAbsolutePath = getPath(
-                TEST_DIRECTORY_NAME + File.separator + pomDirectoryName + File.separator + POM_XML_FILE_NAME);
+        String pomXmlAbsolutePath = getPath(pomDirectoryName + File.separator + POM_XML_FILE_NAME);
         verify(config, pomXmlAbsolutePath, expectedMessages);
     }
 }

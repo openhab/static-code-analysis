@@ -8,8 +8,6 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import java.io.File;
-
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.InheritDocCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
@@ -25,9 +23,13 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  */
 public class InheritDocCheckTest extends AbstractStaticCheckTest {
     private final static String LOG_MESSAGE = "Remove unnecessary inherit doc";
-    private final static String TEST_DIRECTORY_NAME = "inheritDocCheckTest";
 
-    Configuration config = createCheckConfig(InheritDocCheck.class);
+    Configuration config = createModuleConfig(InheritDocCheck.class);
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/inheritDocCheckTest";
+    }
 
     @Test
     public void shouldLogWhenThereIsAnEmptyInheritDoc() throws Exception {
@@ -55,7 +57,7 @@ public class InheritDocCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verifyJavadoc(String testFileName, String[] expectedMessages) throws Exception {
-        String absolutePathToTestFile = getPath(TEST_DIRECTORY_NAME + File.separator + testFileName);
+        String absolutePathToTestFile = getPath(testFileName);
         verify(config, absolutePathToTestFile, expectedMessages);
     }
 }

@@ -50,7 +50,7 @@
     <mockito.version>2.8.47</mockito.version>
     <maven.resources.version>2.4</maven.resources.version>
     <pmd.version>5.8.1</pmd.version>
-    <checkstyle.version>8.1</checkstyle.version>
+    <checkstyle.version>8.9</checkstyle.version>
     <spotbugs.version>3.1.2</spotbugs.version>
     <maven.plugin.api.version>3.1.1</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.5</maven.plugin.annotations.version>

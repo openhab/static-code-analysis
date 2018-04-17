@@ -1,7 +1,5 @@
 package org.openhab.tools.analysis.checkstyle.test;
 
-import java.io.File;
-
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.AuthorTagCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
@@ -18,6 +16,11 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 public class AuthorTagCheckTest extends AbstractStaticCheckTest {
 
     private static final String EXPECTED_WARNING_MESSAGE = "An author tag is missing";
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/authorTagCheckTest";
+    }
 
     @Test
     public void testOuterClassWithNoAuthorTag() throws Exception {
@@ -85,7 +88,7 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
     private void checkFileForAuthorTags(boolean checkInnerUnits, String fileName, Integer... warningLine)
             throws Exception {
 
-        String filePath = getPath("authorTagCheckTest"+ File.separator + fileName);
+        String filePath = getPath(fileName);
         String[] expected = null;
         if (warningLine.length > 0) {
             expected = new String[warningLine.length];
@@ -102,7 +105,7 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
 
     private DefaultConfiguration createConfiguration(boolean checkInnerUnits) {
 
-        DefaultConfiguration configuration = createCheckConfig(AuthorTagCheck.class);
+        DefaultConfiguration configuration = createModuleConfig(AuthorTagCheck.class);
         /*
          * Modify the configuration with the needed attributes and message. They
          * should be the same as their corresponding properties defined in

@@ -25,7 +25,6 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -36,8 +35,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  *
  */
 public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
-
-    private static final String TEST_CHECK_DIRECTORY = "eshInfXmlValidationCheckTest" + File.separator;
 
     private static final String RELATIVE_PATH_TO_THING = File.separator + ESH_INF_DIRECTORY + File.separator
             + EshInfXmlValidationCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
@@ -54,13 +51,18 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
     private static final String MESSAGE_EMPTY_FILE = "The file {0} should not be empty.";
     private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `ESH-INF/` value to the bin.includes property.";
 
-    private static final DefaultConfiguration CONFIGURATION = createCheckConfig(EshInfXmlValidationCheck.class);
+    private static final DefaultConfiguration CONFIGURATION = createModuleConfig(EshInfXmlValidationCheck.class);
 
     @BeforeClass
     public static void createConfiguration() {
         CONFIGURATION.addAttribute("thingSchema", THING_SCHEMA_URL);
         CONFIGURATION.addAttribute("bindingSchema", BINDING_SCHEMA_URL);
         CONFIGURATION.addAttribute("configSchema", CONFIG_SCHEMA_URL);
+    }
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/eshInfXmlValidationCheckTest";
     }
 
     private boolean isResourceAvailable;
@@ -74,13 +76,6 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
         } catch (IOException e) {
             isResourceAvailable = false;
         }
-    }
-
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration configParent = new DefaultConfiguration("root");
-        configParent.addChild(config);
-        return configParent;
     }
 
     @Test
@@ -206,7 +201,7 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     private void verifyWithPath(String testSubDirectory, String testFilePath, String[] expectedMessages)
             throws Exception {
-        String directoryPath = getPath(TEST_CHECK_DIRECTORY + testSubDirectory);
+        String directoryPath = getPath(testSubDirectory);
         File testDirectoryPath = new File(directoryPath);
 
         File[] testFiles = listFilesForFolder(testDirectoryPath, new ArrayList<File>());

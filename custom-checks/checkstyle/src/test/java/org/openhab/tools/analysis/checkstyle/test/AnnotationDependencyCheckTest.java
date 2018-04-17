@@ -8,14 +8,11 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import java.io.File;
-
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.AnnotationDependencyCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -26,15 +23,13 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  */
 public class AnnotationDependencyCheckTest extends AbstractStaticCheckTest {
 
-    private static final String TEST_DIRECTORY_NAME = "annotationDependencyCheckTest";
     private static final String EXPECTED_WARNING_MESSAGE = "Every bundle should have optional Import-Package dependency to org.eclipse.jdt.annotation.";
-    private static DefaultConfiguration checkConfiguration = createCheckConfig(AnnotationDependencyCheck.class);
+
+    private static DefaultConfiguration checkConfiguration = createModuleConfig(AnnotationDependencyCheck.class);
 
     @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration configuration) {
-        DefaultConfiguration defaultConfiguration = new DefaultConfiguration("root");
-        defaultConfiguration.addChild(configuration);
-        return defaultConfiguration;
+    protected String getPackageLocation() {
+        return "checkstyle/annotationDependencyCheckTest";
     }
 
     @Test
@@ -58,7 +53,8 @@ public class AnnotationDependencyCheckTest extends AbstractStaticCheckTest {
     }
 
     private void checkFile(String fileName, String... expectedMessages) throws Exception {
-        String filePath = getPath(TEST_DIRECTORY_NAME + File.separator + fileName);
+        String filePath = getPath(fileName);
         verify(checkConfiguration, filePath, expectedMessages);
     }
+
 }

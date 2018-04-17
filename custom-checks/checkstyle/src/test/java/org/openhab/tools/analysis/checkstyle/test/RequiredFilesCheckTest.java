@@ -24,7 +24,6 @@ import org.openhab.tools.analysis.checkstyle.RequiredFilesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -36,14 +35,13 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
     private static final String MANIFEST_RELATIVE_PATH_NAME = META_INF_DIRECTORY_NAME + File.separator
             + MANIFEST_FILE_NAME;
-    private static final String TEST_DIRECTORY_NAME = "requiredFilesCheckTest";
     private static final String MISSING_FILE_MSG = "Missing %s file.";
 
     private static DefaultConfiguration config;
 
     @BeforeClass
     public static void setUpClass() {
-        config = createCheckConfig(RequiredFilesCheck.class);
+        config = createModuleConfig(RequiredFilesCheck.class);
 
         String extenstionsPropertyValue = String.format("%s,%s,%s,%s,%s", HTML_EXTENSION, PROPERTIES_EXTENSION,
                 XML_EXTENSION, MANIFEST_EXTENSION, MARKDONW_EXTENSION);
@@ -52,6 +50,11 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
         String requiredFilesPropertyValue = String.format("%s,%s,%s,%s,%s", ABOUT_HTML_FILE_NAME,
                 BUILD_PROPERTIES_FILE_NAME, POM_XML_FILE_NAME, MANIFEST_RELATIVE_PATH_NAME, README_MD_FILE_NAME);
         config.addAttribute("requiredFiles", requiredFilesPropertyValue);
+    }
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/requiredFilesCheckTest";
     }
 
     @Test
@@ -124,16 +127,9 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
         verify(createChecker(config), testFiles, expectedViolations);
     }
 
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration defaultConfiguration = new DefaultConfiguration("root");
-        defaultConfiguration.addChild(config);
-        return defaultConfiguration;
-    }
-
     private void verifyDirectory(String testDirectoryName, String fileName, String expectedMessage) throws Exception {
         File[] testFiles = getFilesForDirectory(testDirectoryName);
-        String testDirectoryAbsolutePath = getDirectoryAbsolutePath(testDirectoryName);
+        String testDirectoryAbsolutePath = getPath(testDirectoryName);
         String messageFilePath = testDirectoryAbsolutePath + File.separator + fileName;
 
         String[] expectedMessages;
@@ -152,15 +148,9 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
     }
 
     private File[] getFilesForDirectory(String directoryName) throws IOException {
-        String directoryAbsolutePath = getDirectoryAbsolutePath(directoryName);
+        String directoryAbsolutePath = getPath(directoryName);
         File directory = new File(directoryAbsolutePath);
         File[] files = listFilesForDirectory(directory, new ArrayList<File>());
         return files;
-    }
-
-    private String getDirectoryAbsolutePath(String directoryName) throws IOException {
-        String directoryRelativePath = TEST_DIRECTORY_NAME + File.separator + directoryName;
-        String directoryAbsolutePath = getPath(directoryRelativePath);
-        return directoryAbsolutePath;
     }
 }

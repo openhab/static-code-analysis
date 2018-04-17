@@ -8,16 +8,12 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import java.io.File;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.ExportInternalPackageCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.TreeWalker;
-import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
 
 /**
@@ -28,20 +24,16 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  *
  */
 public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
-    private static final String TEST_DIRECTORY_NAME = "exportInternalPackageCheckTest";
-
     private static DefaultConfiguration config;
-
-    @Override
-    protected DefaultConfiguration createCheckerConfig(Configuration config) {
-        DefaultConfiguration configParent = createCheckConfig(TreeWalker.class);
-        configParent.addChild(config);
-        return configParent;
-    }
 
     @BeforeClass
     public static void setUpClass() {
-        config = createCheckConfig(ExportInternalPackageCheck.class);
+        config = createModuleConfig(ExportInternalPackageCheck.class);
+    }
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/exportInternalPackageCheckTest";
     }
 
     @Test
@@ -84,8 +76,7 @@ public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verifyManifest(String fileName, String[] expectedMessages) throws Exception {
-        String testFileRelativePath = TEST_DIRECTORY_NAME + File.separator + fileName;
-        String testFileAbsolutePath = getPath(testFileRelativePath);
+        String testFileAbsolutePath = getPath(fileName);
         verify(config, testFileAbsolutePath, expectedMessages);
     }
 }
