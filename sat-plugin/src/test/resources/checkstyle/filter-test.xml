@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<!--
+    Checkstyle configuration that checks if a bundle is matching the Coding Guidelines in the Eclipse SmartHome project.
+
+    For more information about the guidelines see - http://www.eclipse.org/smarthome/documentation/development/guidelines.html.
+
+    Note that some of the required checks may be provided by some of the other plugins used in the Static Code Analysis tool.
+ -->
+
+<module name="Checker">
+  <!-- Rules for Code Formatting -->
+  <module name="FileTabCharacter">
+    <property name="severity" value="error" />
+    <property name="fileExtensions" value="java"/>
+    <type value="java"/>
+  </module>
+
+  <module name="org.openhab.tools.analysis.checkstyle.ExportInternalPackageCheck">
+    <property name="severity" value="error" />
+    <type value="manifest"/>
+  </module>
+  
+  <module name="org.openhab.tools.analysis.checkstyle.ExportInternalPackageCheck">
+    <property name="severity" value="error" />
+    <type value="manifest"/>
+  </module>
+    
+  <module name="org.openhab.tools.analysis.checkstyle.ManifestExternalLibrariesCheck">
+    <property name="severity" value="error" />
+    <type value="manifest"/>
+  </module>
+  
+  <module name="org.openhab.tools.analysis.checkstyle.BuildPropertiesExternalLibrariesCheck">
+    <property name="severity" value="error" />
+    <type value="manifest"/>
+  </module>
+</module>

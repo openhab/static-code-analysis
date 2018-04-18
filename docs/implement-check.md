@@ -37,6 +37,7 @@ You will have to consider several things before adding your check there.
 - you can add your check as a child of the `Checker` module or as a child of the `TreeWalker` module. If you are extending `com.puppycrawl.tools.checkstyle.api.AbstractCheck`, you should choose `TreeWalker`, otherwise `Checker`;
 - add a severity property for your check. Keep in mind that a severity of `error` **will brake the build** if a problem is found by your check, so use this wisely;
 - if you have some others configuration properties in your check, include them as well. 
+- you need to add type properties to the check. The type is determined by what the check processes and could be one or many of the following: java, xml, classpath, properties, markdown, manifest, html
 
 ## Add Tests For The New Checks
 
