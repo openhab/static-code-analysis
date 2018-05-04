@@ -23,7 +23,7 @@ public class ClasspathTest extends SimpleAggregatorTst {
     // How to implement PMD rule test - https://pmd.github.io/pmd-5.4.1/customizing/rule-guidelines.html
     @Override
     @Before
-    protected void setUp() {
+    public void setUp() {
         addRule("src/test/resources/pmd/ruleset/classpath.xml", "AvoidMavenPomderivedInClasspath");
     }
 }
