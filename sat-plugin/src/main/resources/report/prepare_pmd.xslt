@@ -36,29 +36,30 @@
  *
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:pmdns="http://pmd.sourceforge.net/report/2.0.0"
 	xmlns:functx="http://www.functx.com" version="2.0">
 
 	<xsl:output method="xml" indent="yes" encoding="ISO-8859-1" />
 
 	<xsl:template match="/">
 		<sca>
-			<xsl:for-each select="//pmd">
+			<xsl:for-each select="//pmdns:pmd">
 				<xsl:apply-templates />
 			</xsl:for-each>
 		</sca>
 	</xsl:template>
 
- 	<xsl:template match="file">
-		 <xsl:variable name="package_tmp" select="./violation/@package" />
+ 	<xsl:template match="pmdns:file">
+		 <xsl:variable name="package_tmp" select="./pmdns:violation/@package" />
 	     <xsl:variable name="package" select="distinct-values($package_tmp)" />	     
-	     <xsl:variable name="class_tmp" select="./violation/@class" />
+	     <xsl:variable name="class_tmp" select="./pmdns:violation/@class" />
 	     <xsl:variable name="class" select="distinct-values($class_tmp)" />
 		<file name="{$package}.{$class}.java">
 			<xsl:apply-templates select="node()" />
 		</file>
 	</xsl:template>
 
-	<xsl:template match="violation">
+	<xsl:template match="pmdns:violation">
 		<message>
 			<xsl:attribute name="tool">pmd</xsl:attribute>
 			<xsl:attribute name="line"><xsl:value-of select="@beginline" /></xsl:attribute>

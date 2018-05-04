@@ -55,7 +55,7 @@ public class PmdChecker extends AbstractChecker {
     /**
      * The version of the maven-pmd-plugin that will be used
      */
-    @Parameter(property = "maven.pmd.version", defaultValue = "3.8")
+    @Parameter(property = "maven.pmd.version", defaultValue = "3.9.0")
     private String mavenPmdVersion;
 
     /**
@@ -64,7 +64,7 @@ public class PmdChecker extends AbstractChecker {
     @Parameter
     private List<Dependency> pmdPlugins = new ArrayList<>();
 
-    private static final String PMD_VERSION = "5.8.1";
+    private static final String PMD_VERSION = "6.2.0";
     /**
      * Location of the properties files that contains configuration options for the maven-pmd-plugin
      */

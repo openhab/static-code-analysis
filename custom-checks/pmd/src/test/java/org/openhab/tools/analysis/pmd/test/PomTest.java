@@ -22,7 +22,7 @@ public class PomTest extends SimpleAggregatorTst {
 
     @Override
     @Before
-    protected void setUp() {
+    public void setUp() {
         addRule("src/test/resources/pmd/ruleset/pom.xml", "AvoidOverridingParentPomConfiguration");
     }
 }
