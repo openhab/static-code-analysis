@@ -104,13 +104,17 @@
   	<property name="severity" value="warning" />
   </module>
 
+  <module name="org.openhab.tools.analysis.checkstyle.TrailingWhitespacesCheck">
+    <property name="severity" value="warning" />
+  </module>
+
   <module name="org.openhab.tools.analysis.checkstyle.RequiredFilesCheck">
      <property name="severity" value="error" />
      <property name="extensions" value="${checkstyle.requiredFilesCheck.extensions}" default="html,properties,xml,MF" />
      <!-- Relative path to the root directory of the module-->
      <property name="requiredFiles" value="${checkstyle.requiredFilesCheck.files}" default="about.html,build.properties,pom.xml,META-INF/MANIFEST.MF" />
   </module>
-   
+
   <module name="org.openhab.tools.analysis.checkstyle.BuildPropertiesCheck">
     <property name="severity" value="warning" />
     <!-- Other bin.includes values will be checked from a specific Checks (e.g.ServiceComponentManifestCheck) -->
