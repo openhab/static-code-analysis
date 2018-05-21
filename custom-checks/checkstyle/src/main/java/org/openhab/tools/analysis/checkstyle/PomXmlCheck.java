@@ -13,9 +13,7 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
+import java.util.Optional;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -27,7 +25,6 @@ import org.apache.ivy.osgi.core.BundleInfo;
 import org.apache.ivy.osgi.util.Version;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
@@ -38,8 +35,11 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * the ones in the MANIFEST.MF
  *
  * @author Petar Valchev - Initial implementation
- * @author Svilen Valkanov - Replaced headers, applied minor improvements, added check for parent pom ID
- * @author Velin Yordanov - Enhanced the check. It can now check for a specific version.
+ * @author Svilen Valkanov - Replaced headers, applied minor improvements, added
+ *         check for parent pom ID
+ * @author Velin Yordanov - The check can now verify that the pom version is the
+ *         same as the parent pom version if checkPomVersion property is set to
+ *         true and also removed the version regex property.
  */
 public class PomXmlCheck extends AbstractStaticCheck {
     private static final String MISSING_VERSION_MSG = "Missing /project/version in the pom.xml file.";
@@ -51,12 +51,11 @@ public class PomXmlCheck extends AbstractStaticCheck {
     private static final String MISSING_PARENT_ARTIFACT_ID_MSG = "Missing /project/parent/artifactId of the parent pom";
     private static final String WRONG_PARENT_ARTIFACT_ID_MSG = "Wrong /project/parent/artifactId. Expected {0} but was {1}";
 
-    private static final String DEFAULT_VERSION_REGULAR_EXPRESSION = "^\\d+\\.\\d+\\.\\d+";
     private static final String POM_ARTIFACT_ID_XPATH_EXPRESSION = "/project/artifactId/text()";
     private static final String POM_PARENT_ARTIFACT_ID_XPATH_EXPRESSION = "/project/parent/artifactId/text()";
-    private static String POM_PARENT_VERSION_XPATH_EXPRESSION = "/project/parent/version/text()";
-    private static String POM_VERSION_XPATH_EXPRESSION = "/project/version/text()";
-    private static String INCORRECT_VERSION = "The manifest version did not match the requirements %s";
+    private static final String POM_PARENT_VERSION_XPATH_EXPRESSION = "/project/parent/version/text()";
+    private static final String POM_VERSION_XPATH_EXPRESSION = "/project/version/text()";
+    private static final String DIFFERENT_POM_VERSION = "The pom version is different from the parent pom version";
 
     private final Log logger = LogFactory.getLog(this.getClass());
 
@@ -69,54 +68,17 @@ public class PomXmlCheck extends AbstractStaticCheck {
     private String pomArtifactId;
     private int pomArtifactIdLine;
     private String manifestBundleSymbolicName;
+    private Document parentPomXmlDocument;
+    private String parentPomPath;
+    private String pomPath;
+    private boolean checkPomVersion;
 
-    private String pomVersionRegularExpression;
-    private String manifestVersionRegularExpression;
-
-    private Pattern manifestVersionPattern;
-    private Pattern pomVersionPattern;
+    public void setCheckPomVersions(boolean value) {
+        checkPomVersion = value;
+    }
 
     public PomXmlCheck() {
         setFileExtensions(XML_EXTENSION, MANIFEST_EXTENSION);
-    }
-
-    /**
-     * Sets a configuration property for a regular expression,
-     * that must match the version in the pom.xml file
-     *
-     * @param pomVersionRegularExpression regex that matches the pom.xml version
-     */
-    public void setPomVersionRegularExpression(String pomVersionRegularExpression) {
-        this.pomVersionRegularExpression = pomVersionRegularExpression;
-    }
-
-    /**
-     * Sets a configuration property for a regular expression,
-     * that must match the bundle version in the MANIFEST.MF file
-     *
-     * @param manifestVersionRegularExpression regex that matches the MANIFEST.MF version
-     */
-    public void setManifestVersionRegularExpression(String manifestVersionRegularExpression) {
-        this.manifestVersionRegularExpression = manifestVersionRegularExpression;
-    }
-
-    @Override
-    public void beginProcessing(String charset) {
-        pomVersionPattern = compilePattern(pomVersionRegularExpression);
-        manifestVersionPattern = compilePattern(manifestVersionRegularExpression);
-    }
-
-    private Pattern compilePattern(String regExp) {
-        if (regExp != null) {
-            try {
-                return Pattern.compile(regExp);
-            } catch (PatternSyntaxException e) {
-                String message = MessageFormat.format("Pattern {0} syntax is invalid.", regExp);
-                logger.error(message, e);
-            }
-        }
-        logger.debug("Default pattern will be used for version matching: " + DEFAULT_VERSION_REGULAR_EXPRESSION);
-        return Pattern.compile(DEFAULT_VERSION_REGULAR_EXPRESSION);
     }
 
     @Override
@@ -134,10 +96,10 @@ public class PomXmlCheck extends AbstractStaticCheck {
 
         Version version = bundleInfo.getVersion();
         // We need this in order to filter the "qualifier" for the Snapshot versions
-        manifestVersion = getVersion(version.toString(), manifestVersionPattern);
+        manifestVersion = version.withoutQualifier().toString();
 
         if (manifestVersion == null) {
-            log(0, String.format(INCORRECT_VERSION, manifestVersionRegularExpression));
+            log(0, "Manifest version is missing");
         }
 
         manifestBundleSymbolicName = bundleInfo.getSymbolicName();
@@ -145,34 +107,60 @@ public class PomXmlCheck extends AbstractStaticCheck {
 
     private void processPomXmlFile(FileText fileText) throws CheckstyleException {
         File file = fileText.getFile();
-
+        pomPath = file.getPath();
         File pomDirectory = file.getParentFile();
+        Document pomXmlDocument = parseDomDocumentFromFile(fileText);
+        String pomXmlPath = fileText.getFile().getPath();
 
         // the pom directory path will be used in the finalization
         pomDirectoryPath = pomDirectory.getPath();
         File parentPom = new File(pomDirectory.getParentFile(), POM_XML_FILE_NAME);
 
-        // The pom.xml must reference the correct parent pom (which is usually in the parent folder)
+        // get the version from the pom.xml
+        getPomVersion(pomXmlDocument, pomXmlPath).ifPresent(value -> {
+            pomVersion = value;
+            // the version line will be preserved for finalization of the processing
+            String versionTagName = "version";
+            String versionLine = String.format("<%s>%s</%s>", versionTagName, value, versionTagName);
+            pomVersionLine = findLineNumberSafe(fileText, versionLine, 0, "Pom version line number not found");
+        });
+
+        // get the artifactId from the pom.xml
+        getNodeValue(pomXmlDocument, POM_ARTIFACT_ID_XPATH_EXPRESSION, pomXmlPath).ifPresent(value -> {
+            pomArtifactId = value;
+            // the artifact ID line will be used in the finalization as well
+            String artifactIdTagName = "artifactId";
+            String artifactIdLine = String.format("<%s>%s</%s>", artifactIdTagName, value, artifactIdTagName);
+            pomArtifactIdLine = findLineNumberSafe(fileText, artifactIdLine, 0,
+                    "Pom artifact ID line number not found");
+        });
+
+        // The pom.xml must reference the correct parent pom (which is usually in the
+        // parent folder)
         if (parentPom.exists()) {
-            FileText parentPomFileText = null;
-            try {
-                parentPomFileText = new FileText(parentPom, "UTF-8");
-            } catch (IOException e) {
-                logger.error("Error in reading the pom file", e);
+            Optional<Document> maybeDocument = getParsedPom(parentPom);
+            if (!maybeDocument.isPresent()) {
                 return;
             }
 
-            String parentArtifactIdValue = getNodeValue(fileText, POM_PARENT_ARTIFACT_ID_XPATH_EXPRESSION);
-            String parentPomArtifactIdValue = getNodeValue(parentPomFileText, POM_ARTIFACT_ID_XPATH_EXPRESSION);
-            if (parentArtifactIdValue != null) {
-                if (!parentArtifactIdValue.equals(parentPomArtifactIdValue)) {
+            parentPomXmlDocument = maybeDocument.get();
+            parentPomPath = parentPom.getPath();
+            Optional<String> maybeParentArtifactIdValue = getNodeValue(pomXmlDocument,
+                    POM_PARENT_ARTIFACT_ID_XPATH_EXPRESSION, pomXmlPath);
+            Optional<String> maybeParentPomArtifactIdValue = getNodeValue(parentPomXmlDocument,
+                    POM_ARTIFACT_ID_XPATH_EXPRESSION, parentPomPath);
+
+            if (maybeParentArtifactIdValue.isPresent() && maybeParentPomArtifactIdValue.isPresent()) {
+                String parentPomArtifactIdValue = maybeParentArtifactIdValue.get();
+                String parentArtifactIdValue = maybeParentPomArtifactIdValue.get();
+                if (!parentPomArtifactIdValue.equals(parentArtifactIdValue)) {
                     int parentArtifactTagLine = findLineNumberSafe(fileText, "parent", 0,
                             "Parent line number not found.");
                     int parentArtifactIdLine = findLineNumberSafe(fileText, "artifactId", parentArtifactTagLine,
                             "Parent artifact ID line number not found.");
 
-                    String formattedMessage = MessageFormat.format(WRONG_PARENT_ARTIFACT_ID_MSG,
-                            parentPomArtifactIdValue, parentArtifactIdValue);
+                    String formattedMessage = MessageFormat.format(WRONG_PARENT_ARTIFACT_ID_MSG, parentArtifactIdValue,
+                            parentPomArtifactIdValue);
                     log(parentArtifactIdLine, formattedMessage, file.getPath());
                 }
             } else {
@@ -180,32 +168,6 @@ public class PomXmlCheck extends AbstractStaticCheck {
             }
         }
 
-        // get the version from the pom.xml
-        String versionNodeValue = getNodeValue(fileText, POM_VERSION_XPATH_EXPRESSION);
-        if (versionNodeValue == null) {
-            versionNodeValue = getNodeValue(fileText, POM_PARENT_VERSION_XPATH_EXPRESSION);
-        }
-        pomVersion = getVersion(versionNodeValue, pomVersionPattern);
-
-        if (pomVersion != null) {
-            // the version line will be preserved for finalization of the processing
-            String versionTagName = "version";
-            String versionLine = String.format("<%s>%s</%s>", versionTagName, versionNodeValue, versionTagName);
-            pomVersionLine = findLineNumberSafe(fileText, versionLine, 0, "Pom version line number not found");
-        }
-
-        // get the artifactId from the pom.xml
-        String artifactIdNodeValue = getNodeValue(fileText, POM_ARTIFACT_ID_XPATH_EXPRESSION);
-        pomArtifactId = artifactIdNodeValue;
-
-        if (pomArtifactId != null) {
-            // the artifact ID line will be used in the finalization as well
-            String artifactIdTagName = "artifactId";
-            String artifactIdLine = String.format("<%s>%s</%s>", artifactIdTagName, artifactIdNodeValue,
-                    artifactIdTagName);
-            pomArtifactIdLine = findLineNumberSafe(fileText, artifactIdLine, 0,
-                    "Pom artifact ID line number not found");
-        }
     }
 
     @Override
@@ -213,12 +175,38 @@ public class PomXmlCheck extends AbstractStaticCheck {
         compareProperties(pomVersion, manifestVersion, pomVersionLine, WRONG_VERSION_MSG, MISSING_VERSION_MSG);
         compareProperties(pomArtifactId, manifestBundleSymbolicName, pomArtifactIdLine, WRONG_ARTIFACT_ID_MSG,
                 MISSING_ARTIFACT_ID_MSG);
+        if (checkPomVersion) {
+            try {
+                checkVersions();
+            } catch (CheckstyleException e) {
+                logger.error("An error occurred while processing poms", e);
+            }
+        }
+    }
+
+    private Optional<String> getPomVersion(Document pomXmlDocument, String filePath) throws CheckstyleException {
+        Optional<String> maybeVersionNodeValue = getNodeValue(pomXmlDocument, POM_VERSION_XPATH_EXPRESSION, filePath);
+        if (!maybeVersionNodeValue.isPresent()) {
+            return getNodeValue(pomXmlDocument, POM_PARENT_VERSION_XPATH_EXPRESSION, filePath);
+        }
+
+        return maybeVersionNodeValue;
+    }
+
+    private void checkVersions() throws CheckstyleException {
+        if (parentPomXmlDocument != null) {
+            getPomVersion(parentPomXmlDocument, parentPomPath).ifPresent(value -> {
+                if (!value.equals(pomVersion)) {
+                    logMessage(pomPath, 0, POM_XML_FILE_NAME, DIFFERENT_POM_VERSION);
+                }
+            });
+        }
     }
 
     private void compareProperties(String pomProperty, String manifestProperty, int wrongPropertyLine,
             String wrongPropertyMessage, String missingPropertyMessage) {
         if (pomProperty != null) {
-            if (manifestProperty != null && !pomProperty.equals(manifestProperty)) {
+            if (manifestProperty != null && !pomProperty.contains(manifestProperty)) {
                 logMessage(pomDirectoryPath + File.separator + POM_XML_FILE_NAME, wrongPropertyLine, POM_XML_FILE_NAME,
                         wrongPropertyMessage);
             }
@@ -230,31 +218,27 @@ public class PomXmlCheck extends AbstractStaticCheck {
         }
     }
 
-    private String getNodeValue(FileText fileText, String versionExpression) throws CheckstyleException {
-        Document xmlDocument = parseDomDocumentFromFile(fileText);
-
+    private Optional<String> getNodeValue(Document xmlDocument, String versionExpression, String filePath)
+            throws CheckstyleException {
         XPathExpression xPathExpression = compileXPathExpression(versionExpression);
         try {
             Object result = xPathExpression.evaluate(xmlDocument, XPathConstants.NODESET);
             NodeList nodes = (NodeList) result;
-            Node node = nodes.item(0);
-            return node != null ? node.getNodeValue() : null;
+            return nodes.getLength() > 0 ? Optional.of(nodes.item(0).getTextContent()) : Optional.empty();
         } catch (XPathExpressionException e) {
-            logger.error("An exception was thrown, while trying to parse the file: " + fileText.getFile().getPath(), e);
-            return null;
+            logger.error("An exception was thrown, while trying to parse the file: " + filePath, e);
+            return Optional.empty();
         }
     }
 
-    private String getVersion(String versionValue, Pattern pattern) {
-        if (versionValue != null) {
-            Matcher matcher = pattern.matcher(versionValue);
-            String version = null;
-            if (matcher.find()) {
-                version = matcher.group();
-            }
-            return version;
-        } else {
-            return null;
+    private Optional<Document> getParsedPom(File pom) throws CheckstyleException {
+        FileText parentPomFileText = null;
+        try {
+            parentPomFileText = new FileText(pom, "UTF-8");
+        } catch (IOException e) {
+            logger.error("Error in reading the file", e);
         }
+
+        return Optional.ofNullable(parseDomDocumentFromFile(parentPomFileText));
     }
 }

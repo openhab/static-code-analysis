@@ -14,12 +14,10 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.PomXmlCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
-import org.openhab.tools.analysis.checkstyle.api.CheckConstants;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
@@ -28,12 +26,11 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  * Tests for {@link PomXmlCheck}
  *
  * @author Petar Valchev - Initial Implementation
- * @author Svilen Valkanov - Replaced headers, added new tests, verify absolute path instead of relative
+ * @author Svilen Valkanov - Replaced headers, added new tests, verify absolute
+ *         path instead of relative
  * @author Velin Yordanov - Added new tests
  */
 public class PomXmlCheckTest extends AbstractStaticCheckTest {
-    private static final String VERSION_REGULAR_EXPRESSION = "^\\d+\\.\\d+\\.\\d+";
-
     private static final String MISSING_VERSION_MSG = "Missing /project/version in the pom.xml file.";
     private static final String MISSING_ARTIFACT_ID_MSG = "Missing /project/artifactId in the pom.xml file.";
     private static final String WRONG_VERSION_MSG = "Wrong /project/parent/version in the pom.xml file. "
@@ -42,16 +39,14 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
             + "The artifactId should match the bundle symbolic name in the MANIFEST.MF file.";
     private static final String MISSING_PARENT_ARTIFACT_ID_MSG = "Missing /project/parent/artifactId of the parent pom";
     private static final String WRONG_PARENT_ARTIFACT_ID_MSG = "Wrong /project/parent/artifactId. Expected {0} but was {1}";
-    private static final String MANIFEST_REGEX = "^2\\.1\\.0";
-    private static String INCORRECT_VERSION = "The manifest version did not match the requirements %s";
+    private static final String DIFFERENT_POM_VERSION = "The pom version is different from the parent pom version";
 
     private static DefaultConfiguration config;
 
     @BeforeClass
     public static void setUpClass() {
         config = createModuleConfig(PomXmlCheck.class);
-        config.addAttribute("pomVersionRegularExpression", VERSION_REGULAR_EXPRESSION);
-        config.addAttribute("manifestVersionRegularExpression", MANIFEST_REGEX);
+        config.addAttribute("checkPomVersions", "true");
     }
 
     @Override
@@ -61,32 +56,43 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testValidPom() throws Exception {
-        verifyPomXmlFile("valid_pom_xml_directory", 0, null);
+        verifyPomXmlFile("valid_pom_xml_directory", CommonUtil.EMPTY_STRING_ARRAY);
     }
 
     @Test
     public void testInvalidVersionInPom() throws Exception {
-        verifyPomXmlFile("invalid_version_in_pom_xml_directory", 9, WRONG_VERSION_MSG);
+        verifyPomXmlFile("invalid_version_in_pom_xml_directory",
+                generateExpectedMessages(9, WRONG_VERSION_MSG, 0, DIFFERENT_POM_VERSION));
     }
 
     @Test
     public void testInvalidartifactIdInPom() throws Exception {
-        verifyPomXmlFile("invalid_artifactId_in_pom_xml_directory", 14, WRONG_ARTIFACT_ID_MSG);
+        verifyPomXmlFile("invalid_artifactId_in_pom_xml_directory",
+                generateExpectedMessages(14, WRONG_ARTIFACT_ID_MSG));
     }
 
     @Test
     public void testMissingVersionInPom() throws Exception {
-        verifyPomXmlFile("missing_version_in_pom_xml_directory", 0, MISSING_VERSION_MSG);
+        verifyPomXmlFile("missing_version_in_pom_xml_directory",
+                generateExpectedMessages(0, MISSING_VERSION_MSG, 0, DIFFERENT_POM_VERSION));
+    }
+
+    @Test
+    public void shouldLogWhenPomHasDifferentVersionThanParentPom() throws Exception {
+        verifyPomXmlFile("pom_xml_with_different_version_than_parent",
+                generateExpectedMessages(0, DIFFERENT_POM_VERSION));
     }
 
     @Test
     public void testMissingArtifactIdInPom() throws Exception {
-        verifyPomXmlFile("missing_artifactId_in_pom_xml_directory", 0, MISSING_ARTIFACT_ID_MSG);
+        verifyPomXmlFile("missing_artifactId_in_pom_xml_directory",
+                generateExpectedMessages(0, MISSING_ARTIFACT_ID_MSG));
     }
 
     @Test
     public void testMissingParentPomId() throws Exception {
-        verifyPomXmlFile("missing_parent_pom_id_directory", 0, MISSING_PARENT_ARTIFACT_ID_MSG);
+        verifyPomXmlFile("missing_parent_pom_id_directory",
+                generateExpectedMessages(0, MISSING_PARENT_ARTIFACT_ID_MSG));
     }
 
     @Test
@@ -96,56 +102,33 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
         int parentPomIdlineNumber = 8;
         String formattedMessage = MessageFormat.format(WRONG_PARENT_ARTIFACT_ID_MSG, expectedParentPomId,
                 actualParentPomId);
-        verifyPomXmlFile("invalid_parent_pom_id_directory", parentPomIdlineNumber, formattedMessage);
+        verifyPomXmlFile("invalid_parent_pom_id_directory",
+                generateExpectedMessages(parentPomIdlineNumber, formattedMessage));
     }
 
     @Test
     public void testMasterPom() throws Exception {
         String testFileAbsolutePath = getPath("pom.xml");
-        verify(createChecker(config), testFileAbsolutePath, ArrayUtils.EMPTY_STRING_ARRAY);
-    }
-
-    @Test
-    public void testDifferentVersion() throws Exception {
-        verifyManifestFile("different_version_directory", 0, String.format(INCORRECT_VERSION, MANIFEST_REGEX));
+        verify(createChecker(config), testFileAbsolutePath, CommonUtil.EMPTY_STRING_ARRAY);
     }
 
     @Test
     public void testDifferentManifestVersion() throws Exception {
-        verifyManifestFile("different_version_manifest_directory", 0, String.format(INCORRECT_VERSION, MANIFEST_REGEX));
+        verifyPomXmlFile("different_version_manifest_directory", generateExpectedMessages(9, WRONG_VERSION_MSG));
     }
 
     @Test
     public void testDifferentPomVersion() throws Exception {
-        verifyPomXmlFile("different_version_pom_directory", 9, WRONG_VERSION_MSG);
+        verifyPomXmlFile("different_version_pom_directory",
+                generateExpectedMessages(9, WRONG_VERSION_MSG, 0, DIFFERENT_POM_VERSION));
     }
 
-    private void verifyPomXmlFile(String testDirectoryName, int expectedLine, String expectedMessage) throws Exception {
+    private void verifyPomXmlFile(String testDirectoryName, String[] expectedMessages) throws Exception {
         File testDirectory = getTestDirectory(testDirectoryName);
         File[] testFiles = listFilesForDirectory(testDirectory, new ArrayList<File>());
         String testFilePath = testDirectory.getPath() + File.separator + POM_XML_FILE_NAME;
-        String[] expectedMessages = getExpectedMessages(expectedMessage, expectedLine);
 
         verify(createChecker(config), testFiles, testFilePath, expectedMessages);
-    }
-
-    private void verifyManifestFile(String testDirectoryName, int expectedLine, String expectedMessage)
-            throws Exception {
-        File testDirectory = getTestDirectory(testDirectoryName);
-        File[] testFiles = listFilesForDirectory(testDirectory, new ArrayList<File>());
-        String testFilePath = testDirectory.getPath() + File.separator + CheckConstants.META_INF_DIRECTORY_NAME
-                + File.separator + CheckConstants.MANIFEST_FILE_NAME;
-        String[] expectedMessages = getExpectedMessages(expectedMessage, expectedLine);
-
-        verify(createChecker(config), testFiles, testFilePath, expectedMessages);
-    }
-
-    private String[] getExpectedMessages(String expectedMessage, int expectedLine) {
-        if (expectedMessage != null) {
-            return generateExpectedMessages(expectedLine, expectedMessage);
-        } else {
-            return CommonUtil.EMPTY_STRING_ARRAY;
-        }
     }
 
     private File getTestDirectory(String testDirectoryName) throws Exception {
