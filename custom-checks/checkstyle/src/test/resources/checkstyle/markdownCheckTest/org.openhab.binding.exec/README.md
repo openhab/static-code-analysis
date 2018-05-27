@@ -48,7 +48,7 @@ whereby
      - the name of an Item
      - `exec-input`, denoting the current State of the input Channel of the `command` Thing
      - `exec-time`, denoting the current date (as java.util.Date)     
-- <transform> is any valid [Transformation](https://docs.openhab.org/addons/transformations.html) service expression, e.g. REGEX((.*?)). <transform> is mandatory for the `exec-time` key
+- <transform> is any valid [Transformation](https://www.openhab.org/docs/configuration/transformations.html) service expression, e.g. REGEX((.*?)). <transform> is mandatory for the `exec-time` key
 - <formatter> is a formatting string using the well known syntax of the [java.util.Formatter](http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax) class
 
 At runtime the binding will grab the value of the <key>, transform it with the <transform> expression, and finally format the transformation result using the <formatter> format. For example,
