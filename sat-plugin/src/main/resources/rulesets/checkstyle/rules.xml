@@ -60,7 +60,7 @@
   
   <module name="org.openhab.tools.analysis.checkstyle.OutsideOfLibExternalLibrariesCheck">
     <property name="severity" value="error" />
-    <property name="ignoredDirectories" value="target,bin" />
+    <property name="ignoredDirectories" value="${checkstyle.outsideOfLibExternalLibrariesCheck.ignoredDirectories}" default="target,bin" />
   </module>
   
   <module name="org.openhab.tools.analysis.checkstyle.readme.MarkdownCheck">
