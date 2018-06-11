@@ -25,26 +25,26 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * @author Kristina Simova - Removed REGEX and changed the way we look for indentation
  *
  */
-public class OnlyTabIndentationInXmlFilesCheck extends AbstractStaticCheck {
+public class OnlyTabIndentationCheck extends AbstractStaticCheck {
 
     private static final String TAB_CHARACTER = "\t";
     private static final String WARNING_MESSAGE = "There were whitespace characters used for indentation. Please use tab characters instead";
     private boolean onlyShowFirstWarning;
 
-    public OnlyTabIndentationInXmlFilesCheck() {
-        setFileExtensions(XML_EXTENSION);
-    }
-
     public void setOnlyShowFirstWarning(Boolean showFirstExceptionOnly) {
         this.onlyShowFirstWarning = showFirstExceptionOnly;
+    }
+    
+    public void setFileTypes(String[] value) {
+        setFileExtensions(value);
     }
 
     @Override
     protected void processFiltered(File file, FileText fileText) {
-        processXmlTabIdentationCheck(fileText);
+        processTabIdentationCheck(fileText);
     }
 
-    private void processXmlTabIdentationCheck(FileText fileText) {
+    private void processTabIdentationCheck(FileText fileText) {
         for (int lineNumber = 0; lineNumber < fileText.size(); lineNumber++) {
             String line = fileText.get(lineNumber);
             // if line is empty and does not contain only tabs for indentation
