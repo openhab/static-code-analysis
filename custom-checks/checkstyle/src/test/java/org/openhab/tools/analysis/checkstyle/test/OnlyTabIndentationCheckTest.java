@@ -12,7 +12,7 @@ import static com.puppycrawl.tools.checkstyle.utils.CommonUtils.EMPTY_STRING_ARR
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openhab.tools.analysis.checkstyle.OnlyTabIndentationInXmlFilesCheck;
+import org.openhab.tools.analysis.checkstyle.OnlyTabIndentationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
@@ -24,14 +24,15 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
  * @author Lyubomir Papazov - initial contribution
  * @author Kristina Simova - Added tests
  */
-public class OnlyTabIndentationInXmlFilesCheckTest extends AbstractStaticCheckTest {
+public class OnlyTabIndentationCheckTest extends AbstractStaticCheckTest {
 
     private static final String WHITESPACE_USAGE_WARNING = "There were whitespace characters used for indentation. Please use tab characters instead";
     private DefaultConfiguration config;
 
     @Before
     public void setUpClass() {
-        config = createModuleConfig(OnlyTabIndentationInXmlFilesCheck.class);
+        config = createModuleConfig(OnlyTabIndentationCheck.class);
+        config.addAttribute("fileTypes", "xml,json");
     }
 
     @Override
@@ -42,6 +43,17 @@ public class OnlyTabIndentationInXmlFilesCheckTest extends AbstractStaticCheckTe
     @Test
     public void testOneLineXmlFile() throws Exception {
         verifyXmlTabIdentation("WhiteSpacesNotUsedBeforeOpeningTags.xml", noMessagesExpected());
+    }
+    
+    @Test
+    public void testValidJson() throws Exception {
+        verifyTabIdentation("validJson.json", noMessagesExpected(), false);
+    }
+    
+    @Test
+    public void testBadlyFormattedJson() throws Exception {
+        String[] expectedMessages = generateExpectedMessages(7, WHITESPACE_USAGE_WARNING);
+        verifyTabIdentation("badlyFormattedJson.json", expectedMessages, false);
     }
 
     @Test
@@ -59,13 +71,13 @@ public class OnlyTabIndentationInXmlFilesCheckTest extends AbstractStaticCheckTe
     @Test
     public void testManyIncorrectLinesShowAllWarnings() throws Exception {
         String[] expectedMessages = generateExpectedMessages(5, WHITESPACE_USAGE_WARNING, 6, WHITESPACE_USAGE_WARNING);
-        verifyXmlTabIdentation("WhiteSpaceUsedBeforeOpeningTagInManyLines.xml", expectedMessages, false);
+        verifyTabIdentation("WhiteSpaceUsedBeforeOpeningTagInManyLines.xml", expectedMessages, false);
     }
 
     @Test
     public void testXmlWithEmptyLinesAndComments() throws Exception {
         String fileName = "BasicModuleHandlerFactory.xml";
-        verifyXmlTabIdentation(fileName, noMessagesExpected(), false);
+        verifyTabIdentation(fileName, noMessagesExpected(), false);
     }
 
     @Test
@@ -76,19 +88,19 @@ public class OnlyTabIndentationInXmlFilesCheckTest extends AbstractStaticCheckTe
                 WHITESPACE_USAGE_WARNING, 11, WHITESPACE_USAGE_WARNING, 13, WHITESPACE_USAGE_WARNING, 17,
                 WHITESPACE_USAGE_WARNING, 18, WHITESPACE_USAGE_WARNING, 19, WHITESPACE_USAGE_WARNING, 20,
                 WHITESPACE_USAGE_WARNING, 21, WHITESPACE_USAGE_WARNING, 22, WHITESPACE_USAGE_WARNING);
-        verifyXmlTabIdentation(fileName, expectedMessages, false);
+        verifyTabIdentation(fileName, expectedMessages, false);
     }
 
     @Test
     public void testXmlWithOnlyTabsForIndentation() throws Exception {
         String fileName = "binding.xml";
-        verifyXmlTabIdentation(fileName, noMessagesExpected(), false);
+        verifyTabIdentation(fileName, noMessagesExpected(), false);
     }
 
     @Test
     public void testAnotherXmlWithOnlyTabsForIndentation() throws Exception {
         String fileName = "thing-types.xml";
-        verifyXmlTabIdentation(fileName, noMessagesExpected(), false);
+        verifyTabIdentation(fileName, noMessagesExpected(), false);
     }
 
     @Test
@@ -101,7 +113,7 @@ public class OnlyTabIndentationInXmlFilesCheckTest extends AbstractStaticCheckTe
                 WHITESPACE_USAGE_WARNING, 33, WHITESPACE_USAGE_WARNING, 39, WHITESPACE_USAGE_WARNING, 40,
                 WHITESPACE_USAGE_WARNING, 41, WHITESPACE_USAGE_WARNING, 42, WHITESPACE_USAGE_WARNING, 59,
                 WHITESPACE_USAGE_WARNING, 60, WHITESPACE_USAGE_WARNING, 61, WHITESPACE_USAGE_WARNING);
-        verifyXmlTabIdentation(fileName, expectedMessages, false);
+        verifyTabIdentation(fileName, expectedMessages, false);
     }
 
     @Test
@@ -111,7 +123,7 @@ public class OnlyTabIndentationInXmlFilesCheckTest extends AbstractStaticCheckTe
                 12, WHITESPACE_USAGE_WARNING, 13, WHITESPACE_USAGE_WARNING, 15, WHITESPACE_USAGE_WARNING, 16,
                 WHITESPACE_USAGE_WARNING, 17, WHITESPACE_USAGE_WARNING, 18, WHITESPACE_USAGE_WARNING, 19,
                 WHITESPACE_USAGE_WARNING, 20, WHITESPACE_USAGE_WARNING, 22, WHITESPACE_USAGE_WARNING);
-        verifyXmlTabIdentation(fileName, expectedMessages, false);
+        verifyTabIdentation(fileName, expectedMessages, false);
     }
 
     private String[] noMessagesExpected() {
@@ -119,7 +131,7 @@ public class OnlyTabIndentationInXmlFilesCheckTest extends AbstractStaticCheckTe
         return expectedMessages;
     }
 
-    private void verifyXmlTabIdentation(String fileName, String[] expectedMessages, boolean onlyShowFirstWarning)
+    private void verifyTabIdentation(String fileName, String[] expectedMessages, boolean onlyShowFirstWarning)
             throws Exception {
         String testFileAbsolutePath = getPath(fileName);
         String messageFilePath = testFileAbsolutePath;
@@ -132,6 +144,6 @@ public class OnlyTabIndentationInXmlFilesCheckTest extends AbstractStaticCheckTe
     }
 
     private void verifyXmlTabIdentation(String fileName, String[] expectedMessages) throws Exception {
-        verifyXmlTabIdentation(fileName, expectedMessages, true);
+        verifyTabIdentation(fileName, expectedMessages, true);
     }
 }
