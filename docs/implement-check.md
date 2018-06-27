@@ -10,7 +10,7 @@ Helpful links when writing a custom check for the first time may be:
 
 In this guide we will use the Checkstyle API, because it is easy to use, supports different file extensions and languages. 
 
-If you haven't set up the IDE for openHAB, please visit the [openHAB IDE Setup page](http://docs.openhab.org/developers/development/ide.html). 
+If you haven't set up the IDE for openHAB, please visit the [openHAB IDE Setup page](https://www.openhab.org/docs/developer/development/ide.html). 
 
 ## Create an Eclipse project
 
@@ -62,7 +62,7 @@ This is a two step process. Firstly execute `mvn clean install` from the root of
 
 The second step is to execute `mvn clean install -Dsat.version=x.y.z-SNAPSHOT` from the root of the `openhab2-addons` repository.
 
-Take a look at the log as it is described in the [openHAB documentation](http://docs.openhab.org/developers/development/bindings.html#static-code-analysis).
+Take a look at the log as it is described in the [openHAB documentation](https://www.openhab.org/docs/developer/development/bindings.html#static-code-analysis).
 
 ## Still need additional help ?
 
