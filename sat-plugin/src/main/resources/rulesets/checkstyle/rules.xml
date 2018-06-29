@@ -75,10 +75,10 @@
     <property name="severity" value="warning" />
   </module>
   
-  <module name="org.openhab.tools.analysis.checkstyle.OnlyTabIndentationCheck">
+  <module name="org.openhab.tools.analysis.checkstyle.IndentationCheck">
     <property name="severity" value="error" />
     <property name="onlyShowFirstWarning" value="true" />
-    <property name="fileTypes" value="${checkstyle.onlyTabIndentationCheck.fileTypes}" default="xml,json"/>
+    <property name="fileExtensionsToIndentation" value="${checkstyle.OnlyTabIndentationCheck.fileExtensionsToIndentation}" default="xml-tabs,json-tabs"/>
   </module>
 
   <module name="org.openhab.tools.analysis.checkstyle.RequireBundleCheck">
