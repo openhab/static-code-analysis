@@ -67,5 +67,10 @@
       <artifactId>org.eclipse.pde.core</artifactId>
       <version>${pde.core.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.eclipse.jdt</groupId>
+      <artifactId>org.eclipse.jdt.annotation</artifactId>
+      <version>${jdt-annotations.version}</version>
+    </dependency>
   </dependencies>
 </project>
