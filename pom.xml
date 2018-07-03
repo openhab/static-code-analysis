@@ -51,7 +51,7 @@
     <maven.resources.version>2.4</maven.resources.version>
     <pmd.version>6.2.0</pmd.version>
     <checkstyle.version>8.9</checkstyle.version>
-    <spotbugs.version>3.1.2</spotbugs.version>
+    <spotbugs.version>3.1.5</spotbugs.version>
     <maven.plugin.api.version>3.1.1</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.5</maven.plugin.annotations.version>
     <maven.plugin.plugin.version>3.5</maven.plugin.plugin.version>
