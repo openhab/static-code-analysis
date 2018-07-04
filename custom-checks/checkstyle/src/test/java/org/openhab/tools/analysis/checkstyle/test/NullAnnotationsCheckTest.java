@@ -8,8 +8,6 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import java.io.File;
-
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.NullAnnotationsCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
@@ -28,11 +26,15 @@ public class NullAnnotationsCheckTest extends AbstractStaticCheckTest {
     private static final String EXPECTED_WARNING_MESSAGE_MISSING_CLASS_ANNOTATION = "Classes/Interfaces should be annotated with @NonNullByDefault";
     private static final String EXPECTED_WARNING_MESSAGE_NONNULL_ANNOTATION = "There is no need for a @NonNull annotation because it is set as default. Only @Nullable should be used";
 
-    private static final String TEST_DIRECTORY_NAME = "nullAnnotationsCheckTest";
-
     private static final String ATTRIBUTE_NAME = "checkInnerUnits";
 
-    private DefaultConfiguration configuration = createCheckConfig(NullAnnotationsCheck.class);
+    private DefaultConfiguration configuration = createModuleConfig(NullAnnotationsCheck.class);
+
+
+    @Override
+    protected String getPackageLocation() {
+        return "checkstyle/nullAnnotationsCheckTest";
+    }
 
     @Test
     public void testClassWithNoAnnotation() throws Exception {
@@ -133,7 +135,7 @@ public class NullAnnotationsCheckTest extends AbstractStaticCheckTest {
     }
 
     private void checkFile(String fileName, boolean checkInnerUnits, String... expectedMessages) throws Exception {
-        String filePath = getPath(TEST_DIRECTORY_NAME + File.separator + fileName);
+        String filePath = getPath(fileName);
         configuration.addAttribute(ATTRIBUTE_NAME, String.valueOf(checkInnerUnits));
         verify(configuration, filePath, expectedMessages);
     }
