@@ -166,6 +166,10 @@
     <property name="severity" value="warning" />
   </module>
 
+  <module name="org.openhab.tools.analysis.checkstyle.ThingHandlerSetLabelCheck">
+    <property name="severity" value="warning" />
+  </module>
+
   <module name="TreeWalker">
     <!-- See http://checkstyle.sourceforge.net/config_coding.html#IllegalThrows -->
     <module name="IllegalThrows">
