@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import org.openhab.tools.analysis.checkstyle.api.MeasuredAbstractCheck;
+
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
@@ -21,7 +23,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * @author Lyubomir Papazov - Initial Contribution
  *
  */
-public class AvoidScheduleAtFixedRateCheck extends AbstractCheck {
+public class AvoidScheduleAtFixedRateCheck extends MeasuredAbstractCheck {
 
     private static final String WARNING_MESSAGE = "For periodically executed jobs that do not require a fixed rate scheduleWithFixedDelay should be preferred over scheduleAtFixedRate.";
     private static final String METHOD_TO_BE_AVOIDED = "scheduleAtFixedRate";

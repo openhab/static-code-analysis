@@ -14,6 +14,7 @@ import java.util.List;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.tools.analysis.checkstyle.api.MeasuredAbstractCheck;
 import org.openhab.tools.analysis.utils.SatCheckUtils;
 
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
@@ -33,7 +34,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * @author Kristina Simova - Initial contribution
  *
  */
-public class NullAnnotationsCheck extends AbstractCheck {
+public class NullAnnotationsCheck extends MeasuredAbstractCheck {
 
     private List<String> imports = new ArrayList<String>();
 

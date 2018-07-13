@@ -21,13 +21,15 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
- * Abstract class for checks that will validate .xml files located in the ESH-INF directory.
+ * Abstract class for checks that will validate .xml files located in the
+ * ESH-INF directory.
  *
- * More information can be found
- * <a href="https://eclipse.org/smarthome/documentation/development/bindings/xml-reference.html">here</a>
+ * More information can be found <a href=
+ * "https://eclipse.org/smarthome/documentation/development/bindings/xml-reference.html">here</a>
  *
  * @author Aleksandar Kovachev - Initial implementation
- * @author Svlien Valkanov - Some code refactoring and cleanup, added check for the build.properties file
+ * @author Svlien Valkanov - Some code refactoring and cleanup, added check for
+ *         the build.properties file
  *
  */
 public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
@@ -45,6 +47,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
 
     @Override
     public void beginProcessing(String charset) {
+        super.beginProcessing(charset);
         logger.debug("Executing the " + this.getClass().getSimpleName());
     }
 
@@ -68,22 +71,23 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
 
             if (isESHParentDirectory) {
                 switch (fileParentDirectory.getName()) {
-                    case THING_DIRECTORY: {
-                        checkThingTypeFile(xmlFileText);
-                        break;
-                    }
-                    case BINDING_DIRECTORY: {
-                        checkBindingFile(xmlFileText);
-                        break;
-                    }
-                    case CONFIGURATION_DIRECTORY: {
-                        checkConfigFile(xmlFileText);
-                        break;
-                    }
-                    default:
-                        // Other directories like l18n are allowed, but they are not object of this check, so they will
-                        // be skipped
-                        break;
+                case THING_DIRECTORY: {
+                    checkThingTypeFile(xmlFileText);
+                    break;
+                }
+                case BINDING_DIRECTORY: {
+                    checkBindingFile(xmlFileText);
+                    break;
+                }
+                case CONFIGURATION_DIRECTORY: {
+                    checkConfigFile(xmlFileText);
+                    break;
+                }
+                default:
+                    // Other directories like l18n are allowed, but they are not object of this
+                    // check, so they will
+                    // be skipped
+                    break;
                 }
             }
         }
@@ -92,24 +96,30 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
     /**
      * Validate a .xml file located in the ESH-INF/config directory
      *
-     * @param xmlFileText - Represents the text contents of the xml file
-     * @throws CheckstyleException when exception occurred during XML processing
+     * @param xmlFileText
+     *            - Represents the text contents of the xml file
+     * @throws CheckstyleException
+     *             when exception occurred during XML processing
      */
     protected abstract void checkConfigFile(FileText xmlFileText) throws CheckstyleException;
 
     /**
      * Validate a .xml file located in the ESH-INF/binding directory
      *
-     * @param xmlFileText - Represents the text contents of the xml file
-     * @throws CheckstyleException when exception occurred during XML processing
+     * @param xmlFileText
+     *            - Represents the text contents of the xml file
+     * @throws CheckstyleException
+     *             when exception occurred during XML processing
      */
     protected abstract void checkBindingFile(FileText xmlFileText) throws CheckstyleException;
 
     /**
      * Validate a .xml file located in the ESH-INF/thing directory
      *
-     * @param xmlFileText - Represents the text contents of the xml file
-     * @throws CheckstyleException when exception occurred during XML processing
+     * @param xmlFileText
+     *            - Represents the text contents of the xml file
+     * @throws CheckstyleException
+     *             when exception occurred during XML processing
      */
     protected abstract void checkThingTypeFile(FileText xmlFileText) throws CheckstyleException;
 

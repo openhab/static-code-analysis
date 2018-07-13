@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import org.openhab.tools.analysis.checkstyle.api.MeasuredAbstractCheck;
+
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.FullIdent;
@@ -22,7 +24,7 @@ import com.puppycrawl.tools.checkstyle.utils.CheckUtils;
  * @author Svilen Valkanov
  *
  */
-public class DeclarativeServicesDependencyInjectionCheck extends AbstractCheck {
+public class DeclarativeServicesDependencyInjectionCheck extends MeasuredAbstractCheck {
 
     public static final String SERVICE_TRACKER_CLASS_NAME = "org.osgi.util.tracker.ServiceTracker";
     public static final String SERVICE_CUSTOMIZER_CLASS_NAME = "org.osgi.util.tracker.ServiceTrackerCustomizer";

@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openhab.tools.analysis.checkstyle.api.MeasuredAbstractCheck;
+
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.FileContents;
@@ -56,7 +58,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * @author Kristina Simova - Initial contribution
  *
  */
-public class JavadocMethodStyleCheck extends AbstractCheck {
+public class JavadocMethodStyleCheck extends MeasuredAbstractCheck {
 
     private static final Pattern CONTAINS_DASH_PATTERN = CommonUtils
             .createPattern("@(throws|exception|param|return){1}\\s+(\\w+)?\\s*\\-+");

@@ -130,6 +130,7 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
         verifyManifestWildcardDeclaredServiceComponents();
         verifyManifestExplicitlyDeclaredServices();
         verifyBuildPropertiesFile();
+        super.finishProcessing();
     }
 
     private void verifyBuildPropertiesFile() {

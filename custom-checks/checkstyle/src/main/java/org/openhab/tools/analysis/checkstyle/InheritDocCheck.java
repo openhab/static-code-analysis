@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import org.openhab.tools.analysis.checkstyle.api.MeasuredAbstractCheck;
+
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
@@ -21,7 +23,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * @author Velin Yordanov - initial contribution
  *
  */
-public class InheritDocCheck extends AbstractCheck {
+public class InheritDocCheck extends MeasuredAbstractCheck {
     private static final String INHERIT_DOC = "{@inheritDoc}";
     private static final String LOG_MESSAGE = "Remove unnecessary inherit doc";
 

@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import org.openhab.tools.analysis.checkstyle.api.MeasuredAbstractCheck;
+
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
@@ -64,7 +66,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * @author Svilen Valkanov - Initial contribution
  * @author Tanya Georgieva - Added check for switch statement without braces
  */
-public class NoEmptyLineSeparatorCheck extends AbstractCheck {
+public class NoEmptyLineSeparatorCheck extends MeasuredAbstractCheck {
 
     private static final String MSG_LINE_AFTER_OPENING_BRACE_EMPTY = "Remove empty line after opening brace";
     private static final String MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY = "Remove empty line before closing brace";

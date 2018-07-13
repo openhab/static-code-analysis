@@ -10,9 +10,19 @@ package org.openhab.tools.analysis.tools;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -22,9 +32,11 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
+import com.google.common.collect.Lists;
+
 /**
- * Executes the
- * <a href="https://maven.apache.org/components/plugins/maven-checkstyle-plugin/">maven-checkstyle-
+ * Executes the <a href=
+ * "https://maven.apache.org/components/plugins/maven-checkstyle-plugin/">maven-checkstyle-
  * plugin</a> with a predefined ruleset file and configuration properties
  *
  * @author Svilen Valkanov
@@ -34,15 +46,15 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 public class CheckstyleChecker extends AbstractChecker {
 
     /**
-     * Relative path of the XML configuration to use. If not set the default ruleset file will be used -
-     * {@link #DEFAULT_RULE_SET_XML}
+     * Relative path of the XML configuration to use. If not set the default ruleset
+     * file will be used - {@link #DEFAULT_RULE_SET_XML}
      */
     @Parameter(property = "checkstyle.ruleset")
     protected String checkstyleRuleset;
 
     /**
-     * Relative path of the suppressions XML file to use. If not set the default filter file will be used
-     * - {@link #DEFAULT_FILTER_XML}
+     * Relative path of the suppressions XML file to use. If not set the default
+     * filter file will be used - {@link #DEFAULT_FILTER_XML}
      */
     @Parameter(property = "checkstyle.filter")
     protected String checkstyleFilter;
@@ -60,7 +72,8 @@ public class CheckstyleChecker extends AbstractChecker {
     private List<Dependency> checkstylePlugins = new ArrayList<>();
 
     /**
-     * Relative path of the properties file to use in the ruleset to configure specific checks
+     * Relative path of the properties file to use in the ruleset to configure
+     * specific checks
      */
     @Parameter(property = "checkstyle.ruleset.properties")
     private String checkstyleProperties;
@@ -79,16 +92,17 @@ public class CheckstyleChecker extends AbstractChecker {
     // Default configuration file
     private static final String DEFAULT_RULE_SET_XML = "rulesets/checkstyle/rules.xml";
     private static final String DEFAULT_FILTER_XML = "rulesets/checkstyle/suppressions.xml";
+    private static final String MEASUREMENTS_SPLIT = " : ";
 
     /**
-     * This is a property in the maven-checkstyle-plugin that is used to describe the location of the
-     * ruleset file used from the plugin.
+     * This is a property in the maven-checkstyle-plugin that is used to describe
+     * the location of the ruleset file used from the plugin.
      */
     private static final String CHECKSTYLE_RULE_SET_PROPERTY = "checkstyle.config.location";
 
     /**
-     * This is a property in the maven-checkstyle-plugin that is used to describe the location of the
-     * suppressions file used from the plugin.
+     * This is a property in the maven-checkstyle-plugin that is used to describe
+     * the location of the suppressions file used from the plugin.
      */
     private static final String CHECKSTYLE_SUPPRESSION_PROPERTY = "checkstyle.suppressions.location";
 
@@ -123,8 +137,42 @@ public class CheckstyleChecker extends AbstractChecker {
         executeCheck(MAVEN_CHECKSTYLE_PLUGIN_GROUP_ID, MAVEN_CHECKSTYLE_PLUGIN_ARTIFACT_ID, checkstyleMavenVersion,
                 MAVEN_CHECKSTYLE_PLUGIN_GOAL, config, checkstylePlugins);
 
-        log.debug("Checkstyle execution has been finished.");
+        calculateAverageMeasurements();
 
+        log.debug("Checkstyle execution has been finished.");
+    }
+
+    private void calculateAverageMeasurements() {
+        try {
+            Stream<String> lines = Files.lines(Paths.get("measurements.txt"));
+            Map<String, Collection<Long>> checksToMeasurements = new HashMap<>();
+            lines.map(x -> x.split(MEASUREMENTS_SPLIT)).forEach(x -> {
+                String checkName = x[0];
+                Long measuredTime = Long.parseLong(x[1]);
+                if (checksToMeasurements.containsKey(checkName)) {
+                    checksToMeasurements.get(checkName).add(measuredTime);
+                } else {
+                    checksToMeasurements.put(checkName, Lists.newArrayList(measuredTime));
+                }
+            });
+            
+            lines.close();
+
+            Collection<String> avarages = checksToMeasurements.entrySet().stream().map(x -> {
+                String key = x.getKey();
+                Collection<Long> measurements = x.getValue();
+                double value = measurements.stream().mapToLong(t->t).sum() / measurements.size();
+                return key + ';' + Math.round(value);
+            }).collect(Collectors.toList());
+
+            new File("measurements.txt").deleteOnExit();
+            try (PrintWriter writer = new PrintWriter("avarages.csv")) {
+                writer.println("Check name;Time,ms");
+                avarages.forEach(writer::println);
+            }
+        } catch (IOException e) {
+            getLog().error("Error in opening measurements.txt file", e);
+        }
     }
 
 }

@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,8 +31,8 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
- * Checks if an about.html file is valid.
- * Verifies if the about.html file is added to the build.properties file
+ * Checks if an about.html file is valid. Verifies if the about.html file is
+ * added to the build.properties file
  *
  * @author Petar Valchev - Initial Implementation
  * @author Svilen Valkanov - Add check for inclusion in build.properties file
@@ -62,6 +63,7 @@ public class AboutHtmlCheck extends AbstractStaticCheck {
 
     @Override
     public void beginProcessing(String charset) {
+        super.beginProcessing(charset);
         CachingHttpClient<String> cachingClient = new CachingHttpClient<>(data -> new String(data));
 
         try {

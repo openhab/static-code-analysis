@@ -9,13 +9,18 @@
 package org.openhab.tools.analysis.checkstyle.api;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -50,26 +55,49 @@ import com.vladsch.flexmark.util.options.MutableDataSet;
 /**
  * Provides common functionality for different static code analysis checks
  *
- * @author Svilen Valkanov - Initial contribution, add Exception to findLineNumber method
+ * @author Svilen Valkanov - Initial contribution, add Exception to
+ *         findLineNumber method
  * @author Mihaela Memova - Simplify findLineNumber method
- * @author Velin Yordanov - Used FileText instead of File to avoid unnecessary IO
+ * @author Velin Yordanov - Used FileText instead of File to avoid unnecessary
+ *         IO
  */
 public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
-
     private Log logger = LogFactory.getLog(AbstractStaticCheck.class);
+    private long startTime;
+    private long methodTime;
 
+    public void beginProcessing(String charset) {
+        startTime = System.nanoTime();
+    }
+
+    public void finishProcessing() {
+        methodTime = (System.nanoTime() - startTime) / 1000000;
+        try (FileWriter writer = new FileWriter("measurements.txt",true);
+                BufferedWriter bufferedWriter = new BufferedWriter(writer)) {
+            bufferedWriter.append(this.getClass().getSimpleName() + " : " + methodTime);
+            bufferedWriter.newLine();
+        } catch (IOException e) {
+            logger.error("Error in writing to or creating measurements.txt", e);
+        }
+    }
+    
     /**
-     * Finds the first occurrence of a text in a list of text lines representing the file content and
-     * returns the line number, where the text was found
+     * Finds the first occurrence of a text in a list of text lines representing the
+     * file content and returns the line number, where the text was found
      *
      *
-     * @param fileContent - represents the text content
-     * @param searchedText - the text that we are looking for
-     * @param startLineNumber - the line number from which the search starts exclusive, to start the
-     *            search of the beginning of the text the startLineNumber should be 0
-     * @return the number of the line starting from 1, where the searched text occurred for the first
-     *         time
-     * @throws NoResultException when no match was found
+     * @param fileContent
+     *            - represents the text content
+     * @param searchedText
+     *            - the text that we are looking for
+     * @param startLineNumber
+     *            - the line number from which the search starts exclusive, to start
+     *            the search of the beginning of the text the startLineNumber should
+     *            be 0
+     * @return the number of the line starting from 1, where the searched text
+     *         occurred for the first time
+     * @throws NoResultException
+     *             when no match was found
      */
     protected int findLineNumber(FileText fileContent, String searchedText, int startLineNumber)
             throws NoResultException {
@@ -88,16 +116,21 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     }
 
     /**
-     * Finds the first occurrence of a text in a list of text lines representing the file content and
-     * returns the line number, where the text was found
+     * Finds the first occurrence of a text in a list of text lines representing the
+     * file content and returns the line number, where the text was found
      *
-     * @param fileText - represents the content of a file
-     * @param searchedText - the text that we are looking for
-     * @param startLineNumber - the line number from which the search starts exclusive, to start the
-     *            search of the beginning of the text the startLineNumber should be 0
-     * @param warningMessage - message to be logged as warning in case no match is found
-     * @return the number of the line starting from 1, where the searched text occurred for the first
-     *         time, or 0 if no matches are found
+     * @param fileText
+     *            - represents the content of a file
+     * @param searchedText
+     *            - the text that we are looking for
+     * @param startLineNumber
+     *            - the line number from which the search starts exclusive, to start
+     *            the search of the beginning of the text the startLineNumber should
+     *            be 0
+     * @param warningMessage
+     *            - message to be logged as warning in case no match is found
+     * @return the number of the line starting from 1, where the searched text
+     *         occurred for the first time, or 0 if no matches are found
      */
     protected int findLineNumberSafe(FileText fileText, String searchedText, int startLineNumber,
             String warningMessage) {
@@ -112,9 +145,11 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parses the content of the given file as an XML document.
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText
+     *            - Represents the text contents of a file
      * @return DOM Document object
-     * @throws CheckstyleException - if an error occurred while trying to parse the file
+     * @throws CheckstyleException
+     *             - if an error occurred while trying to parse the file
      */
     protected Document parseDomDocumentFromFile(FileText fileText) throws CheckstyleException {
         try {
@@ -134,9 +169,11 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parses the content of the given Manifest file
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText
+     *            - Represents the text contents of a file
      * @return Bundle info extracted from the bundle manifest
-     * @throws CheckstyleException - if an error occurred while trying to parse the file
+     * @throws CheckstyleException
+     *             - if an error occurred while trying to parse the file
      */
     protected BundleInfo parseManifestFromFile(FileText fileText) throws CheckstyleException {
         try {
@@ -152,9 +189,11 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Reads a properties list from a file
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText
+     *            - Represents the text contents of a file
      * @return Properties object containing all the read properties
-     * @throws CheckstyleException - if an error occurred while trying to parse the file
+     * @throws CheckstyleException
+     *             - if an error occurred while trying to parse the file
      */
     protected Properties readPropertiesFromFile(FileText fileText) throws CheckstyleException {
 
@@ -172,7 +211,8 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parses the content of a given file as a HTML file
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText
+     *            - Represents the text contents of a file
      * @return HTML Document representation of the file
      */
     protected org.jsoup.nodes.Document parseHTMLDocumentFromFile(FileText fileText) {
@@ -183,9 +223,11 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Compiles an XPathExpression
      *
-     * @param expresion - the XPath expression
+     * @param expresion
+     *            - the XPath expression
      * @return compiled XPath expression
-     * @throws CheckstyleException if an error occurred during the compilation
+     * @throws CheckstyleException
+     *             if an error occurred during the compilation
      */
     protected XPathExpression compileXPathExpression(String expresion) throws CheckstyleException {
         XPathFactory factory = XPathFactory.newInstance();
@@ -200,9 +242,11 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parses the content of a given file as a build.properties file
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText
+     *            - Represents the text contents of a file
      * @return IBuild representation of the file
-     * @throws CheckstyleException - if an error occurred while trying to parse the file
+     * @throws CheckstyleException
+     *             - if an error occurred while trying to parse the file
      */
     protected IBuild parseBuildProperties(FileText fileText) throws CheckstyleException {
         IDocument document = new SynchronizableDocument();
@@ -218,7 +262,8 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Checks whether a file is empty
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText
+     *            - Represents the text contents of a file
      * @return true if the file is empty, otherwise false
      */
     protected boolean isEmpty(FileText fileText) {
@@ -233,15 +278,20 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     }
 
     /**
-     * Adds an entry in the report using the {@link MessageDispatcher}.
-     * Can be used in the {@link #finishProcessing()} where the {@link #log(int, String, Object...)}
-     * methods can't be used as the entries logged by them won't be included in the report.
+     * Adds an entry in the report using the {@link MessageDispatcher}. Can be used
+     * in the {@link #finishProcessing()} where the
+     * {@link #log(int, String, Object...)} methods can't be used as the entries
+     * logged by them won't be included in the report.
      *
-     * @param filePath the absolute path to the file. Although a relative path can be used,
-     *            it is not recommended as it will make filtering harder
-     * @param line the line that will be added in the report
-     * @param fileName the name the file
-     * @param message the message that will be logged
+     * @param filePath
+     *            the absolute path to the file. Although a relative path can be
+     *            used, it is not recommended as it will make filtering harder
+     * @param line
+     *            the line that will be added in the report
+     * @param fileName
+     *            the name the file
+     * @param message
+     *            the message that will be logged
      */
     protected void logMessage(String filePath, int line, String fileName, String message) {
         MessageDispatcher dispatcher = getMessageDispatcher();
@@ -254,8 +304,10 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parsed the content of a markdown file.
      *
-     * @param fileText - Represents the text contents of a file
-     * @param parsingOptions - parsing options
+     * @param fileText
+     *            - Represents the text contents of a file
+     * @param parsingOptions
+     *            - parsing options
      * @return The markdown node
      */
     protected Node parseMarkdown(FileText fileText, MutableDataSet parsingOptions) {

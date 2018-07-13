@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
+import org.openhab.tools.analysis.checkstyle.api.MeasuredAbstractCheck;
 
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
@@ -30,7 +31,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  * @author Kristina Simova - Initial contribution
  *
  */
-public class AuthorContributionDescriptionCheck extends AbstractCheck {
+public class AuthorContributionDescriptionCheck extends MeasuredAbstractCheck {
 
     /**
      * Indicates whether the inner classes/interfaces/enumerations (briefly
