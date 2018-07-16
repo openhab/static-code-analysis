@@ -30,6 +30,7 @@ public class CheckConstants {
     public static final String POM_XML_FILE_NAME = "pom.xml";
     public static final String CLASSPATH_FILE_NAME = ".classpath";
     public static final String README_MD_FILE_NAME = "README.md";
+    public static final String INTERNAL_PACKAGE = ".internal";
 
     // Directory names
     public static final String OSGI_INF_DIRECTORY_NAME = "OSGI-INF";
