@@ -57,6 +57,11 @@
   <module name="org.openhab.tools.analysis.checkstyle.BuildPropertiesExternalLibrariesCheck">
     <property name="severity" value="error" />
   </module>
+  <module name="org.openhab.tools.analysis.checkstyle.ImportedPackagesInManifestCheck">
+    <property name="ignoredPackages" value="${checkstyle.importedPackagesInManifestCheck.ignoredPackages}" default="java,org.xml,org,w3c,javax"/>
+    <property name="notRequiredPackages" value="${checkstyle.importedPackagesInManifestCheck.notRequiredPackages}"/>
+    <property name="severity" value="warning" />
+  </module>
   
   <module name="org.openhab.tools.analysis.checkstyle.OutsideOfLibExternalLibrariesCheck">
     <property name="severity" value="error" />
