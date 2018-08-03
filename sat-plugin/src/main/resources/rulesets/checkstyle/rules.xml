@@ -237,6 +237,10 @@
       <property name="checkInnerUnits" value="true"/>
     </module>
 
+    <module name="org.openhab.tools.analysis.checkstyle.ExceptionLastParameterCheck">
+      <property name="severity" value="warning"/>
+    </module>
+
     <!-- Rules for Java Naming Convention -->
     
     <module name="PackageName">
