@@ -126,7 +126,7 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
         int lineNumber = 18;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                "Invalid content was found starting with element item-type. One of {category, tags, state, event, config-description, config-description-ref} is expected.");
+                "Invalid content was found starting with element item-type. One of {category, tags, state, event, autoUpdatePolicy, config-description, config-description-ref} is expected.");
         verifyWithPath("sequenceChannelTypeCheck", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 
