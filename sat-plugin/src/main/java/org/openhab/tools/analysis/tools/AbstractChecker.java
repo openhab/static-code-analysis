@@ -8,6 +8,8 @@
  */
 package org.openhab.tools.analysis.tools;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -29,6 +31,9 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.dom4j.Document;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 import org.twdata.maven.mojoexecutor.MojoExecutor;
 
 /**
@@ -49,6 +54,12 @@ public abstract class AbstractChecker extends AbstractMojo {
     private BuildPluginManager pluginManager;
 
     /**
+     * If set to true no checks will be executed
+     */
+    @Parameter(property = "sat.skip", alias = "skip")
+    protected boolean isSkipEnabled;
+
+    /**
      * The Plugin Descriptor
      */
     @Parameter(defaultValue = "${plugin}", readonly = true, required = true)
@@ -57,9 +68,11 @@ public abstract class AbstractChecker extends AbstractMojo {
     /**
      * Loads properties from file into the Maven user properties
      *
-     * @param relativePath - relative path to the properties file
+     * @param relativePath
+     *            - relative path to the properties file
      * @return - the loaded properties
-     * @throws MojoExecutionException - when the properties file can not be found or loaded
+     * @throws MojoExecutionException
+     *             - when the properties file can not be found or loaded
      */
     protected Properties loadPropertiesFromFile(String relativePath) throws MojoExecutionException {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(relativePath);
@@ -91,16 +104,27 @@ public abstract class AbstractChecker extends AbstractMojo {
     /**
      * Executes a Maven plugin using the {@link MojoExecutor}
      *
-     * @param groupId - groupId of the plugin
-     * @param artifactId - artifactId of the plugin
-     * @param version - version of the plugin
-     * @param goal - plugin goal to be executed
-     * @param configuration - configuration of the plugin
-     * @param dependencies - plugin dependencies
-     * @throws MojoExecutionException - If there are any exceptions locating or executing the MOJO
+     * @param groupId
+     *            - groupId of the plugin
+     * @param artifactId
+     *            - artifactId of the plugin
+     * @param version
+     *            - version of the plugin
+     * @param goal
+     *            - plugin goal to be executed
+     * @param configuration
+     *            - configuration of the plugin
+     * @param dependencies
+     *            - plugin dependencies
+     * @throws MojoExecutionException
+     *             - If there are any exceptions locating or executing the MOJO
      */
     protected void executeCheck(String groupId, String artifactId, String version, String goal, Xpp3Dom configuration,
             List<Dependency> dependencies) throws MojoExecutionException {
+        if (isSkipEnabled) {
+            getLog().debug("Skipping all checks due to skip property set to true");
+            return;
+        }
         Plugin plugin = MojoExecutor.plugin(groupId, artifactId, version, dependencies);
 
         MojoExecutor.executeMojo(plugin, goal, configuration,
@@ -108,14 +132,18 @@ public abstract class AbstractChecker extends AbstractMojo {
     }
 
     /**
-     * Gets the location of a resource, external or internal. If {@code externalRelativePath} is given, it
-     * will try to get the path to this file, otherwise will get the {@link URL} to the {@code internalRelativePath}
+     * Gets the location of a resource, external or internal. If
+     * {@code externalRelativePath} is given, it will try to get the path to this
+     * file, otherwise will get the {@link URL} to the {@code internalRelativePath}
      *
-     * @param externalRelativePath - relative path to the execution directory of a resource not included in the current
-     *            project
-     * @param internalRelativePath - relative path of a resource included in the current project
+     * @param externalRelativePath
+     *            - relative path to the execution directory of a resource not
+     *            included in the current project
+     * @param internalRelativePath
+     *            - relative path of a resource included in the current project
      * @return location of a resource (absolute path or url)
-     * @throws MojoExecutionException - if error occurs while trying to get the location
+     * @throws MojoExecutionException
+     *             - if error occurs while trying to get the location
      */
     protected String getLocation(String externalRelativePath, String internalRelativePath)
             throws MojoExecutionException {
@@ -138,5 +166,24 @@ public abstract class AbstractChecker extends AbstractMojo {
     protected Consumer<? super Dependency> logDependency() {
         return d -> getLog().info("Adding dependency to " + d.getArtifactId() + ":" + d.getVersion());
     }
-
+    
+    /**
+     * 
+     * @param location - The location where you want the xml generated
+     * @param document - The document representing the xml we want generated
+     * @throws FileNotFoundException -  if the file exists but is a directory rather than a regular file, does not exist but cannot be created, or cannot be opened for any other reason
+     * @throws IOException - if there is a problem writing the file
+     */
+    protected void writeXml(String location, Document document) throws FileNotFoundException, IOException {
+      //Unfortunately XMLWriter does not implement AutoClosable so it cannot be used with try with resources.
+        XMLWriter writer = null;
+        try (FileOutputStream stream = new FileOutputStream(location)) {
+            writer = new XMLWriter(stream, OutputFormat.createPrettyPrint());
+            writer.write(document);
+        } finally {
+            if(writer != null) {
+                writer.close();
+            }                
+        }
+    }
 }

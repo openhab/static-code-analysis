@@ -88,6 +88,8 @@ Parameters:
 | **pmdFilter** | String | Relative path of a suppression.properties file that lists classes and rules to be excluded from failures. If not set no classes and no rules will be excluded |
 | **maven.pmd.version** | String | The version of the maven-pmd-plugin that will be used (Default value is **3.7**)|
 | **pmdPlugins** | List<Dependency> | A list with artifacts that contain additional checks for PMD |
+|**skip.pmd**|boolean|If set to true pmd checks will not be executed|
+|**skippedCategories**|Collection<String>|A collection of all categories that will be skipped during the execution of PMD. If not set all categories of checks will be executed. The categories are part of the official [PMD API](https://github.com/pmd/pmd/wiki/Rule-Categories).|
 
 ### sat-plugin:checkstyle
 
@@ -103,6 +105,8 @@ Parameters:
 | **maven.checkstyle.version** | String | The version of the maven-checkstyle-plugin that will be used (default value is **2.17**)|
 | **checkstylePlugins** | List<Dependency> | A list with artifacts that contain additional checks for Checkstyle |
 | **checkstyleProperties** | String | Relative path of the properties file to use in the ruleset to configure specific checks |
+|**skip.checkstyle**|boolean|If set to true no checkstyle checks will be executed.|
+|**skippedFileTypes**|Collection<String>|A collection of all the file types that will be skipped during the execution of checkstyle.If not set all checks are executed. If a check has multiple types and contains one of the skipped types it will be skipped.
 
 ### sat-plugin:spotbugs
 
@@ -120,6 +124,7 @@ Parameters:
 | **spotbugs.version** | String | The version of SpotBugs that will be used (default value is **3.1.1**)|
 | **spotbugsPlugins** | List<Dependency> | A list with artifacts that contain additional detectors/patterns for SpotBugs |
 | **findbugs.slf4j.version** | String | The version of the findbugs-slf4j plugin that will be used (default value is **1.2.4**)|
+|**skipSpotbugs**|boolean|If set to true all spotbugs checks will be skipped.|
 
 ### sat-plugin:report
 
@@ -170,7 +175,29 @@ The `visitors.xml` contains a list with SpotBugs visitors (bug detectors) and ha
   ...
 <visitors/>
 ```
+In order to skip certain types of checkstyle checks you need to add the ```skippedFileTypes``` property to the configuration or you can use ```-Dcheckstyle.skippedFileTypes``` The available types are : **java, xml, classpath, properties, markdown, manifest, html**:
+```
+<plugin>
+    <groupId>org.openhab.tools.sat</groupId>
+    <artifactId>sat-plugin</artifactId>
+    <version>${sat.version}</version>
+    <configuration>
+		<skippedFileTypes>manifest,properties</skippedFileTypes>
+    </configuration>
+</plugin>
+```
 
+In order to skip certain types of PMD categories you need to add the ```skippedCategories``` property to the configuration or you can add the categories with ```-Dpmd.skippedCategories```
+```
+<plugin>
+    <groupId>org.openhab.tools.sat</groupId>
+    <artifactId>sat-plugin</artifactId>
+    <version>${sat.version}</version>
+    <configuration>
+		<skippedCategories>design</skippedCategories>
+    </configuration>
+</plugin>
+```
 ### Individual plugin customization
 
 Each of the Maven plugins that are used (for SpotBugs, Checkstyle and PMD) are configured by setting user properties that are located in the `src/main/resources/configuration` directory.

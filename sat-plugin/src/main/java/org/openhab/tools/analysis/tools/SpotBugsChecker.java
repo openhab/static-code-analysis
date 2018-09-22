@@ -78,6 +78,12 @@ public class SpotBugsChecker extends AbstractChecker {
      */
     @Parameter(property = "spotbugs.exclude")
     private String spotbugsExclude;
+    
+    /**
+     * If set to true all spotbugs checks will be skipped.
+     */
+    @Parameter(property = "skip.spotbugs")
+    private boolean isSpotbugsSkipped;
 
     /**
      * The version of the spotbugs-maven-plugin that will be used
@@ -135,11 +141,20 @@ public class SpotBugsChecker extends AbstractChecker {
      * run. The bug detectors are specified by their class names, without any package qualification.
      */
     private static final String SPOTBUGS_VISITORS_PROPERTY = "spotbugs.visitors";
+    
+    public void setIsSpotbugsSkipped(boolean value) {
+        this.isSpotbugsSkipped = value;
+    }
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
 
+        if(isSpotbugsSkipped) {
+            log.debug("Skipping all spotbugs checks due to skipSpotbugs property set to true");
+            return;
+        }
+        
         Properties userProps = loadPropertiesFromFile(SPOTBUGS_PROPERTIES_FILE);
 
         // Load the include filter file
