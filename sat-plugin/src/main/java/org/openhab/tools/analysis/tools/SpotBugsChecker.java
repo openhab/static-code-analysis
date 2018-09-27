@@ -27,7 +27,6 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -82,7 +81,7 @@ public class SpotBugsChecker extends AbstractChecker {
     /**
      * The version of the spotbugs-maven-plugin that will be used
      */
-    @Parameter(property = "maven.spotbugs.version", defaultValue = "3.1.7")
+    @Parameter(property = "maven.spotbugs.version", defaultValue = "3.1.6")
     private String spotbugsMavenPluginVersion;
 
     /**
@@ -94,7 +93,7 @@ public class SpotBugsChecker extends AbstractChecker {
     /**
      * The version of the spotbugs that will be used
      */
-    @Parameter(property = "spotbugs.version", defaultValue = "3.1.2")
+    @Parameter(property = "spotbugs.version", defaultValue = "3.1.7")
     private String spotBugsVersion;
 
     /**
@@ -137,7 +136,7 @@ public class SpotBugsChecker extends AbstractChecker {
     private static final String SPOTBUGS_VISITORS_PROPERTY = "spotbugs.visitors";
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoExecutionException {
         Log log = getLog();
 
         Properties userProps = loadPropertiesFromFile(SPOTBUGS_PROPERTIES_FILE);
@@ -152,7 +151,7 @@ public class SpotBugsChecker extends AbstractChecker {
         log.debug("Filter location is " + excludeLocation);
         userProps.setProperty(SPOTBUGS_EXCLUDE_FILTER_USER_PROPERTY, excludeLocation);
 
-        String visitors = getVisitorsString(spotbugsRuleset, DEFAULT_VISITORS_XML);
+        String visitors = getVisitorsString(spotbugsRuleset);
         log.debug("SpotBugs visitors " + visitors);
         userProps.setProperty(SPOTBUGS_VISITORS_PROPERTY, visitors);
         String outputDir = userProps.getProperty("spotbugs.report.dir");
@@ -192,15 +191,15 @@ public class SpotBugsChecker extends AbstractChecker {
                 pluginList.add(element);
             }
         }
-        return new Element("plugins", pluginList.toArray(new Element[pluginList.size()]));
+        return new Element("plugins", pluginList.toArray(new Element[0]));
     }
 
-    private Element createPlugin(String groudId, String artifactId, String version) {
-        return element("plugin", element("groupId", groudId), element("artifactId", artifactId),
+    private Element createPlugin(String groupId, String artifactId, String version) {
+        return element("plugin", element("groupId", groupId), element("artifactId", artifactId),
                 element("version", version));
     }
 
-    private String getVisitorsString(String externalLocation, String defaultLocaiton) throws MojoExecutionException {
+    private String getVisitorsString(String externalLocation) {
         // Get the XML file as a Stream
         InputStream stream = null;
         if (externalLocation != null) {
@@ -214,17 +213,15 @@ public class SpotBugsChecker extends AbstractChecker {
                 getLog().warn("Unable to find file " + resolvedPath.toString());
             }
         } else {
-            stream = this.getClass().getClassLoader().getResourceAsStream(defaultLocaiton);
-
-        }
+            stream = this.getClass().getClassLoader().getResourceAsStream(SpotBugsChecker.DEFAULT_VISITORS_XML);        }
 
         // Serialize the content
         JAXBContext context;
         try {
             context = JAXBContext.newInstance(SpotBugsVisitors.class);
-            Unmarshaller unmarschaller = context.createUnmarshaller();
+            Unmarshaller unmarshaller = context.createUnmarshaller();
 
-            SpotBugsVisitors visitors = (SpotBugsVisitors) unmarschaller.unmarshal(stream);
+            SpotBugsVisitors visitors = (SpotBugsVisitors) unmarshaller.unmarshal(stream);
             return visitors.toString();
         } catch (JAXBException e) {
             getLog().warn("Unable to load SpotBugs visitors", e);
