@@ -12,7 +12,7 @@ import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.FullIdent;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
-import com.puppycrawl.tools.checkstyle.utils.CheckUtils;
+import com.puppycrawl.tools.checkstyle.utils.CheckUtil;
 
 /**
  * Checks if Declarative Service is used for dependency injection in OSGi. A message is logged if
@@ -91,7 +91,7 @@ public class DeclarativeServicesDependencyInjectionCheck extends AbstractCheck {
     }
 
     private String getType(DetailAST classNode) {
-        FullIdent fullType = CheckUtils.createFullType(classNode);
+        FullIdent fullType = CheckUtil.createFullType(classNode);
         return fullType.getText();
     }
 

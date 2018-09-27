@@ -64,7 +64,7 @@ public class PmdChecker extends AbstractChecker {
     @Parameter
     private List<Dependency> pmdPlugins = new ArrayList<>();
 
-    private static final String PMD_VERSION = "6.2.0";
+    private static final String PMD_VERSION = "6.7.0";
     /**
      * Location of the properties files that contains configuration options for the maven-pmd-plugin
      */

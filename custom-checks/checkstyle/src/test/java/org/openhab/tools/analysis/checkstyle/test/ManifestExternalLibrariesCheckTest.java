@@ -16,7 +16,7 @@ import org.openhab.tools.analysis.checkstyle.ManifestExternalLibrariesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Test for the {@link ManifestExternalLibrariesCheck}
@@ -36,7 +36,7 @@ public class ManifestExternalLibrariesCheckTest extends AbstractStaticCheckTest 
 
     @Test
     public void shouldNotLogWhenBundleIsValid() throws Exception {
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("validBundle")), warningMessages);
     }
 
@@ -56,7 +56,7 @@ public class ManifestExternalLibrariesCheckTest extends AbstractStaticCheckTest 
 
     @Test
     public void shouldNotLogWhenThereAreNoExternalLibraries() throws Exception {
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithoutExternalLibraries")), warningMessages);
     }
 
@@ -69,19 +69,19 @@ public class ManifestExternalLibrariesCheckTest extends AbstractStaticCheckTest 
 
     @Test
     public void shouldNotLogWhenThereAreExcludedFiles() throws Exception {
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithExcludedFiles")), warningMessages);
     }
 
     @Test
     public void shouldNotLogWhenThereAreSpacesInManifest() throws Exception {
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithSpacesInManifest")), warningMessages);
     }
 
     @Test
     public void shouldNotLogWhenBundleHasVariousBundleClasspathEntries() throws Exception {
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithVariousBundleClasspathEntries")), warningMessages);
     }
 

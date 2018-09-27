@@ -22,7 +22,7 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.checkstyle.api.CheckConstants;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link PomXmlCheck}
@@ -144,7 +144,7 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
         if (expectedMessage != null) {
             return generateExpectedMessages(expectedLine, expectedMessage);
         } else {
-            return CommonUtils.EMPTY_STRING_ARRAY;
+            return CommonUtil.EMPTY_STRING_ARRAY;
         }
     }
 

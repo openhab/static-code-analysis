@@ -13,7 +13,7 @@ import org.openhab.tools.analysis.checkstyle.NullAnnotationsCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link NullAnnotationsCheck}
@@ -48,7 +48,7 @@ public class NullAnnotationsCheckTest extends AbstractStaticCheckTest {
     public void testClassWithProperAnnotation() throws Exception {
         String fileName = "AnnotatedClass.java";
         boolean checkInnerUnits = false;
-        checkFile(fileName, checkInnerUnits, CommonUtils.EMPTY_STRING_ARRAY);
+        checkFile(fileName, checkInnerUnits, CommonUtil.EMPTY_STRING_ARRAY);
     }
 
     @Test

@@ -7,7 +7,7 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import com.google.common.utils;
 
 import com.puppycrawl.tools.checkstyle.api.Configuration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 public class ForbiddenPackageUsageCheckTest extends AbstractStaticCheckTest {
     Configuration config = createModuleConfig(ForbiddenPackageUsageCheck.class);
@@ -19,7 +19,7 @@ public class ForbiddenPackageUsageCheckTest extends AbstractStaticCheckTest {
     
     @Test
     public void shouldNotLogWhenThereIsNoForbiddenPackageUsage() throws Exception {
-        verifyClass("validFile.java", CommonUtils.EMPTY_STRING_ARRAY);
+        verifyClass("validFile.java", CommonUtil.EMPTY_STRING_ARRAY);
     }
     
     private void verifyClass(String testFileName, String[] expectedMessages) throws Exception {

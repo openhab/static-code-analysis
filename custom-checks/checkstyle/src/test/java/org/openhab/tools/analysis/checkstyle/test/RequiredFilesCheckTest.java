@@ -24,7 +24,7 @@ import org.openhab.tools.analysis.checkstyle.RequiredFilesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link RequiredFilesCheck}
@@ -136,7 +136,7 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
         if (expectedMessage != null) {
             expectedMessages = generateExpectedMessages(0, expectedMessage);
         } else {
-            expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+            expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
         }
 
         verify(createChecker(config), testFiles, messageFilePath, expectedMessages);

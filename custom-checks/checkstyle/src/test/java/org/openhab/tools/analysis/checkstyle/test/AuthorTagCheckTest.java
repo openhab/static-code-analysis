@@ -5,7 +5,7 @@ import org.openhab.tools.analysis.checkstyle.AuthorTagCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link AuthorTagCheck}
@@ -96,7 +96,7 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
                 expected[i] = warningLine[i] + ": " + EXPECTED_WARNING_MESSAGE;
             }
         } else {
-            expected = CommonUtils.EMPTY_STRING_ARRAY;
+            expected = CommonUtil.EMPTY_STRING_ARRAY;
         }
 
         DefaultConfiguration configuration = createConfiguration(checkInnerUnits);

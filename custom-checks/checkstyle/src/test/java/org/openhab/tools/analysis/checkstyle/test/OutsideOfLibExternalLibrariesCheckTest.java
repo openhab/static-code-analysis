@@ -17,7 +17,7 @@ import org.openhab.tools.analysis.checkstyle.OutsideOfLibExternalLibrariesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link OutsideOfLibExternalLibrariesCheck}
@@ -46,7 +46,7 @@ public class OutsideOfLibExternalLibrariesCheckTest extends AbstractStaticCheckT
 
     @Test
     public void shouldNotLogBundleIsValid() throws Exception {
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyBuildProperties(getBuildPropertiesPath("validBundle"), warningMessages);
     }
 

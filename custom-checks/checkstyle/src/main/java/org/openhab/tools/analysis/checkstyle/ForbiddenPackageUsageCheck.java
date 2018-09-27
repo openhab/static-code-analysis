@@ -16,8 +16,8 @@ import java.util.Map;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
-import com.puppycrawl.tools.checkstyle.utils.CheckUtils;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CheckUtil;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * A check that verifies that there are no forbidden packages in use.
@@ -43,7 +43,7 @@ public class ForbiddenPackageUsageCheck extends AbstractCheck {
 
     @Override
     public int[] getRequiredTokens() {
-        return CommonUtils.EMPTY_INT_ARRAY;
+        return CommonUtil.EMPTY_INT_ARRAY;
     }
 
     /**
@@ -69,7 +69,7 @@ public class ForbiddenPackageUsageCheck extends AbstractCheck {
     }
 
     public void visitToken(DetailAST ast) {
-        importsToLineNumbers.put(CheckUtils.createFullType(ast).getText(), ast.getLineNo());
+        importsToLineNumbers.put(CheckUtil.createFullType(ast).getText(), ast.getLineNo());
     }
 
     public void finishTree(DetailAST ast) {

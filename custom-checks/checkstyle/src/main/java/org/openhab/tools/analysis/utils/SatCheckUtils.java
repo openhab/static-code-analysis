@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Queue;
 
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
-import com.puppycrawl.tools.checkstyle.utils.CheckUtils;
+import com.puppycrawl.tools.checkstyle.utils.CheckUtil;
 
 /**
  * Class that contains utility methods for checks.
@@ -31,7 +31,7 @@ public final class SatCheckUtils {
      * @return the fully qualified name as a String
      */
     public static String createFullyQualifiedName(DetailAST typeAST) {
-        return CheckUtils.createFullType(typeAST).getText();
+        return CheckUtil.createFullType(typeAST).getText();
     }
 
     /**

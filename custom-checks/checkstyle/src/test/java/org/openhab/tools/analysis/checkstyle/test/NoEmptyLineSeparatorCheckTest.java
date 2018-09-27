@@ -13,7 +13,7 @@ import org.openhab.tools.analysis.checkstyle.NoEmptyLineSeparatorCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link NoEmptyLineSeparatorCheck}
@@ -242,7 +242,7 @@ public class NoEmptyLineSeparatorCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verifyJavaFileNoErrors(String testFileName) throws Exception {
-        verifyJavaFile(testFileName, CommonUtils.EMPTY_STRING_ARRAY);
+        verifyJavaFile(testFileName, CommonUtil.EMPTY_STRING_ARRAY);
     }
 
     private void verifyEmptyLineAfterOpeningBraces(String testFileName, int line) throws Exception {
