@@ -76,6 +76,10 @@ public class PmdChecker extends AbstractChecker {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
+        if (!shouldAnalyseModule()) {
+            return;
+        }
+
         Log log = getLog();
 
         Properties userProps = loadPropertiesFromFile(PMD_PROPERTIES_FILE);
