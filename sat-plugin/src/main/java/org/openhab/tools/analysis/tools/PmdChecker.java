@@ -36,6 +36,8 @@ public class PmdChecker extends AbstractChecker {
 
     private static final String DEFAULT_RULESET_XML = "rulesets/pmd/rules.xml";
 
+    private static final String CUSTOM_RULESET_XML = "rulesets/pmd/customrules.xml";
+
     private static final String DEFAULT_FILTER_XML = "rulesets/pmd/suppressions.properties";
 
     /**
@@ -84,16 +86,19 @@ public class PmdChecker extends AbstractChecker {
         log.debug("Exclude filter file location is " + excludeFromFailureLocation);
         userProps.setProperty("pmd.excludeFromFailureFile", excludeFromFailureLocation);
 
-        String rulesetLocation = getLocation(pmdRuleset, DEFAULT_RULESET_XML);
-        log.debug("Ruleset location is " + rulesetLocation);
+        String defaultRulesetLocation = getLocation(pmdRuleset, DEFAULT_RULESET_XML);
+        log.debug("Default ruleset location is " + defaultRulesetLocation);
+
+        String customRulesetLocation = getLocation(pmdRuleset, CUSTOM_RULESET_XML);
+        log.debug("Custom ruleset location is " + customRulesetLocation);
 
         // These configuration properties are not exposed from the maven-pmd-plugin as user properties,
         // so they have to be set direct in the configuration
         Xpp3Dom configuration = configuration(
                 element("targetDirectory", userProps.getProperty("pmd.custom.targetDirectory")),
                 element("compileSourceRoots", userProps.getProperty("pmd.custom.compileSourceRoots")),
-                element("rulesets", element("ruleset", rulesetLocation)));
-
+                element("rulesets", element("ruleset", defaultRulesetLocation),
+                                    element("ruleset", customRulesetLocation)));
         pmdPlugins.add(dependency("org.openhab.tools.sat.custom-checks", "pmd", plugin.getVersion()));
         pmdPlugins.add(dependency("net.sourceforge.pmd", "pmd-core", PMD_VERSION));
         pmdPlugins.add(dependency("net.sourceforge.pmd", "pmd-java", PMD_VERSION));
