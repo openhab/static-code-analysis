@@ -66,29 +66,6 @@
    <rule ref="category/java/errorprone.xml/CompareObjectsWithEquals">
     <priority>3</priority>
   </rule>
-  <rule ref="category/java/errorprone.xml/AvoidLosingExceptionInformation">
-    <priority>2</priority>
-  </rule>
-
-  <!-- https://pmd.github.io/pmd-6.2.0/pmd_rules_java_codestyle.html#avoidfinallocalvariable -->
-  <rule ref="category/java/codestyle.xml/AvoidFinalLocalVariable">
-    <priority>2</priority>
-  </rule>
-  <rule ref="category/java/codestyle.xml/ShortVariable">
-    <priority>3</priority>
-  </rule>
-  <rule ref="category/java/codestyle.xml/SuspiciousConstantFieldName">
-    <priority>2</priority>
-  </rule>
-  <rule ref="category/java/codestyle.xml/UnnecessaryConstructor">
-    <priority>2</priority>
-  </rule>
-  <rule ref="category/java/codestyle.xml/UnnecessaryModifier">
-    <priority>3</priority>
-  </rule>
-  <rule ref="category/java/codestyle.xml/UselessQualifiedThis">
-    <priority>3</priority>
-  </rule>
   
   <!-- See https://pmd.github.io/pmd-6.2.0/pmd_rules_java_multithreading.html -->
   <rule ref="category/java/multithreading.xml/DontCallThreadRun">
@@ -108,13 +85,7 @@
   <rule ref="category/java/bestpractices.xml/SystemPrintln">
     <priority>2</priority>
   </rule>
-  <rule ref="category/java/bestpractices.xml/LooseCoupling">
-    <priority>2</priority>
-  </rule>
-  <rule ref="category/java/bestpractices.xml/PositionLiteralsFirstInComparisons">
-    <priority>2</priority>
-  </rule>
-
+  
   <!-- See https://pmd.github.io/pmd-6.2.0/pmd_rules_java_design.html -->
   <rule ref="category/java/design.xml/AvoidThrowingRawExceptionTypes">
     <priority>2</priority>
@@ -131,9 +102,6 @@
   
   <!-- See https://pmd.github.io/pmd-6.2.0/pmd_rules_java_performance.html -->
   <rule ref="category/java/performance.xml/AvoidArrayLoops">
-    <priority>3</priority>
-  </rule>
-  <rule ref="category/java/performance.xml/RedundantFieldInitializer">
     <priority>3</priority>
   </rule>
 </ruleset>
