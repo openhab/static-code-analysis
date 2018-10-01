@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
@@ -29,6 +30,7 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.openhab.tools.analysis.changes.FindChangedBundlesMojo;
 import org.twdata.maven.mojoexecutor.MojoExecutor;
 
 /**
@@ -44,6 +46,9 @@ public abstract class AbstractChecker extends AbstractMojo {
 
     @Parameter(defaultValue = "${session}", readonly = true)
     protected MavenSession mavenSession;
+
+    @Parameter(property = "onlyCheckChanged")
+    protected Boolean onlyCheckChanged;
 
     @Component
     private BuildPluginManager pluginManager;
@@ -128,6 +133,27 @@ public abstract class AbstractChecker extends AbstractMojo {
             URL url = this.getClass().getClassLoader().getResource(internalRelativePath);
             return url.toString();
         }
+    }
+
+    /**
+     * If the onlyCheckChanged option is set to True, then the method checks
+     * whether the current arfiactId is included in the comma separated list of
+     * {@link FindChangedBundlesMojo#AFFECTED_ARTIFACT_IDS_PROPERTY} and returns false if not
+     * If the onlyCheckChanged option is set to False, the module should be analyzed.
+     *
+     * @return whether the module should be analyzed or not
+     */
+    protected boolean shouldAnalyseModule() {
+        if (!onlyCheckChanged) {
+            return true;
+        }
+
+        String artifactIds = mavenProject.getProperties().getProperty(FindChangedBundlesMojo.AFFECTED_ARTIFACT_IDS_PROPERTY);
+        if (artifactIds == null) {
+            return false;
+        }
+
+        return Arrays.asList(artifactIds.split(",")).contains(mavenProject.getArtifactId());
     }
 
     /**

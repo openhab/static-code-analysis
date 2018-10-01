@@ -96,6 +96,10 @@ public class CheckstyleChecker extends AbstractChecker {
 
     @Override
     public void execute() throws MojoExecutionException {
+        if (!shouldAnalyseModule()) {
+            return;
+        }
+
         Log log = getLog();
         Properties userProps = loadPropertiesFromFile(CHECKSTYLE_PROPERTIES_FILE);
 
