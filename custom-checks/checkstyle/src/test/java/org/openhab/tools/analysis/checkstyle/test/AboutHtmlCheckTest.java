@@ -22,7 +22,7 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link AboutHtmlCheck}
@@ -66,7 +66,7 @@ public class AboutHtmlCheckTest extends AbstractStaticCheckTest {
     public void testValidAboutHtmlFile() throws Exception {
         createValidConfig();
 
-        String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
 
         verifyAboutHtmlFile("valid_about_html_directory", expectedMessages);
     }
@@ -145,7 +145,7 @@ public class AboutHtmlCheckTest extends AbstractStaticCheckTest {
         config = createModuleConfig(AboutHtmlCheck.class);
         config.addAttribute("validAboutHtmlFileURL", "non.existent.url");
 
-        String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
 
         verifyAboutHtmlFile("valid_about_html_directory", expectedMessages);
     }

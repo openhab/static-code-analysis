@@ -20,7 +20,7 @@ import org.openhab.tools.analysis.checkstyle.ServiceComponentManifestCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link ServiceComponentManifestCheck}
@@ -168,7 +168,7 @@ public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testCorrectlyIncludedServicesInManifest() throws Exception {
-        String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyServiceComponentHeader("correctly_included_services_in_manifest", expectedMessages);
     }
 

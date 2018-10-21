@@ -19,8 +19,8 @@ import org.openhab.tools.analysis.utils.SatCheckUtils;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
-import com.puppycrawl.tools.checkstyle.utils.CheckUtils;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CheckUtil;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Check that generates <b> WARNING </b> if: <br>
@@ -70,7 +70,7 @@ public class NullAnnotationsCheck extends AbstractCheck {
 
     @Override
     public int[] getRequiredTokens() {
-        return CommonUtils.EMPTY_INT_ARRAY;
+        return CommonUtil.EMPTY_INT_ARRAY;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class NullAnnotationsCheck extends AbstractCheck {
         int tokenType = ast.getType();
         switch (tokenType) {
             case TokenTypes.IMPORT:
-                String packageImport = CheckUtils.createFullType(ast).getText();
+                String packageImport = CheckUtil.createFullType(ast).getText();
                 imports.add(packageImport);
                 break;
             case TokenTypes.CLASS_DEF:
@@ -131,9 +131,9 @@ public class NullAnnotationsCheck extends AbstractCheck {
      */
     private boolean isAnnotationPresent(DetailAST ast) {
         List<DetailAST> annotations = SatCheckUtils.getAllChildrenNodesOfType(ast, TokenTypes.ANNOTATION);
-        for (DetailAST annotaionAST : annotations) {
+        for (DetailAST annotationAST : annotations) {
             // first child is '@' (the at-clause) and its sibling is the annotation name we are looking for
-            String annotationName = annotaionAST.getFirstChild().getNextSibling().getText();
+            String annotationName = annotationAST.getFirstChild().getNextSibling().getText();
             if (NONNULLBYDEFAULT_ANNOTATION.equals(annotationName)
                     && imports.contains(NonNullByDefault.class.getName())) {
                 return true;
@@ -148,7 +148,7 @@ public class NullAnnotationsCheck extends AbstractCheck {
      * @param ast the ast
      */
     private void checkForNonNullAnnotation(DetailAST ast) {
-        DetailAST atClause = CheckUtils.getFirstNode(ast);
+        DetailAST atClause = CheckUtil.getFirstNode(ast);
         String annotationName = atClause.getNextSibling().getText();
         if (NONNULL_ANNOTATION.equals(annotationName) && imports.contains(NonNull.class.getName())) {
             log(atClause.getLineNo(), WARNING_MESSAGE_NONNULL_ANNOTATION);

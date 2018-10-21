@@ -13,7 +13,7 @@ import org.openhab.tools.analysis.checkstyle.AvoidScheduleAtFixedRateCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.api.Configuration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link AvoidScheduleAtFixedRateCheck}
@@ -40,13 +40,13 @@ public class AvoidScheduleAtFixedRateCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void verifyNoScheduledExecutorMethods() throws Exception {
-        final String[] expected = CommonUtils.EMPTY_STRING_ARRAY;
+        final String[] expected = CommonUtil.EMPTY_STRING_ARRAY;
         verify(config, getPath("NoScheduledExecutorServiceMethods.java"), expected);
     }
 
     @Test
     public void verifyScheduleWithFixedDelay() throws Exception {
-        final String[] expected = CommonUtils.EMPTY_STRING_ARRAY;
+        final String[] expected = CommonUtil.EMPTY_STRING_ARRAY;
         verify(config, getPath("ValidScheduleWithFixedDelay.java"), expected);
     }
 }

@@ -16,7 +16,7 @@ import org.openhab.tools.analysis.checkstyle.BuildPropertiesExternalLibrariesChe
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Test for the {@link BuildPropertiesExternalLibrariesCheck}
@@ -35,14 +35,14 @@ public class BuildPropertiesExternalLibrariesCheckTest extends AbstractStaticChe
 
     @Test
     public void shouldNotLogWhenBundleIsValidFolder() throws Exception {
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyNoWarningMessages(warningMessages,
                 getBuildPropertiesPathForDirectory("validBundle"));
     }
 
     @Test
     public void shouldNotLogWhenBundleIsValidEntries() throws Exception {
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyNoWarningMessages(warningMessages,
                 getBuildPropertiesPathForDirectory("validBundleWithJarFilesInBuildProperties"));
     }
@@ -56,7 +56,7 @@ public class BuildPropertiesExternalLibrariesCheckTest extends AbstractStaticChe
 
     @Test
     public void shouldNotLogWhenBundleDoesNotContainExternalDependancies() throws Exception {
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyNoWarningMessages(warningMessages, getBuildPropertiesPathForDirectory("emptyBundle"));
     }
 
@@ -69,13 +69,13 @@ public class BuildPropertiesExternalLibrariesCheckTest extends AbstractStaticChe
 
     @Test
     public void shouldNotLogWhenThereAreExcludedJarFiles() throws Exception {
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyNoWarningMessages(warningMessages, getBuildPropertiesPathForDirectory("bundleWithExcludedFiles"));
     }
 
     @Test
     public void shouldNotLogWhenThereAreSpacesInBuildProperties() throws Exception {
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyNoWarningMessages(warningMessages, getBuildPropertiesPathForDirectory("bundleWithSpacesInBuildProperties"));
     }
 

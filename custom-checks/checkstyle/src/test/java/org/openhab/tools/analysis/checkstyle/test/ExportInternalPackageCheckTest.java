@@ -14,7 +14,7 @@ import org.openhab.tools.analysis.checkstyle.ExportInternalPackageCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link ExportInternalPackageCheck}
@@ -62,7 +62,7 @@ public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void noInternalPackageExported() throws Exception {
-        String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyManifest("noInternalPackageExported.MF", expectedMessages);
     }
 

@@ -13,7 +13,7 @@ import org.openhab.tools.analysis.checkstyle.JavadocMethodStyleCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link JavadocMethodStyleCheck}
@@ -120,7 +120,7 @@ public class JavadocMethodStyleCheckTest extends AbstractStaticCheckTest {
          * methods with missing parameter descriptions should not log anything
          * so we pass empty array
          */
-        checkFile(fileName, CommonUtils.EMPTY_STRING_ARRAY);
+        checkFile(fileName, CommonUtil.EMPTY_STRING_ARRAY);
     }
 
     @Test
@@ -130,7 +130,7 @@ public class JavadocMethodStyleCheckTest extends AbstractStaticCheckTest {
          * methods with proper parameter description should not log anything
          * so we pass empty array
          */
-        checkFile(fileName, CommonUtils.EMPTY_STRING_ARRAY);
+        checkFile(fileName, CommonUtil.EMPTY_STRING_ARRAY);
     }
 
     private void checkFile(String fileName, String[] expectedMessages) throws Exception {

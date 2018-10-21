@@ -20,8 +20,8 @@ import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.FileContents;
 import com.puppycrawl.tools.checkstyle.api.TextBlock;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
-import com.puppycrawl.tools.checkstyle.utils.CheckUtils;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CheckUtil;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Checks the javadoc comment of a method or constructor and generates a message if:
@@ -58,13 +58,13 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
  */
 public class JavadocMethodStyleCheck extends AbstractCheck {
 
-    private static final Pattern CONTAINS_DASH_PATTERN = CommonUtils
+    private static final Pattern CONTAINS_DASH_PATTERN = CommonUtil
             .createPattern("@(throws|exception|param|return){1}\\s+(\\w+)?\\s*\\-+");
 
-    private static final Pattern DESCRIPTION_ON_NEW_LINE_PATTERN = CommonUtils.createPattern(
+    private static final Pattern DESCRIPTION_ON_NEW_LINE_PATTERN = CommonUtil.createPattern(
             "@(throws|exception|param|return){1}\\s*(\\w+)?\\s*\\-*\\s*(\\*{1}(\\s*\\w+)+)", Pattern.MULTILINE);
 
-    private static final Pattern TAG_PATTERN = CommonUtils.createPattern("@(throws|exception|param|return){1}");
+    private static final Pattern TAG_PATTERN = CommonUtil.createPattern("@(throws|exception|param|return){1}");
 
     private static final String MESSAGE_DASH_BETWEEN_PARAM_NAME_DESCRIPTION = "There should be no dash between the parameter name and the description in a Javadoc comment of a method or constructor.";
     private static final String MESSAGE_EMPTY_LINE_BETWEEN_TAGS = "There should be no empty lines between tags in a Javadoc comment of a method or constructor.";
@@ -116,12 +116,12 @@ public class JavadocMethodStyleCheck extends AbstractCheck {
 
     @Override
     public int[] getRequiredTokens() {
-        return CommonUtils.EMPTY_INT_ARRAY;
+        return CommonUtil.EMPTY_INT_ARRAY;
     }
 
     @Override
     public void visitToken(DetailAST ast) {
-        boolean skipCheck = (CheckUtils.isSetterMethod(ast) || CheckUtils.isGetterMethod(ast))
+        boolean skipCheck = (CheckUtil.isSetterMethod(ast) || CheckUtil.isGetterMethod(ast))
                 && allowMissingPropertyJavadoc;
         if (!skipCheck) {
             visit(ast);

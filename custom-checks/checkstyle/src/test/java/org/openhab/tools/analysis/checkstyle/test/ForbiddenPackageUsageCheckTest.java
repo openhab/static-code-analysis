@@ -17,7 +17,7 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import com.puppycrawl.tools.checkstyle.api.Configuration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link ForbiddenPackageUsageCheck}
@@ -42,7 +42,7 @@ public class ForbiddenPackageUsageCheckTest extends AbstractStaticCheckTest {
     
     @Test
     public void shouldNotLogWhenThereIsNoForbiddenPackageUsage() throws Exception {
-        verifyClass("validFile.java", CommonUtils.EMPTY_STRING_ARRAY);
+        verifyClass("validFile.java", CommonUtil.EMPTY_STRING_ARRAY);
     }
     
     @Test
@@ -64,12 +64,12 @@ public class ForbiddenPackageUsageCheckTest extends AbstractStaticCheckTest {
     
     @Test
     public void shouldNotLogWhenThePackageIsAddedToExceptions() throws Exception {
-        verifyClass("file-with-exception.java", CommonUtils.EMPTY_STRING_ARRAY);
+        verifyClass("file-with-exception.java", CommonUtil.EMPTY_STRING_ARRAY);
     }
     
     @Test
     public void shouldNotLogWhenTheSubpackageIsAddedToExceptions() throws Exception {
-        verifyClass("file-with-subpackage-with-exception.java", CommonUtils.EMPTY_STRING_ARRAY);
+        verifyClass("file-with-subpackage-with-exception.java", CommonUtil.EMPTY_STRING_ARRAY);
     }
     
     @Test

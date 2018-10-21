@@ -22,7 +22,7 @@ import org.openhab.tools.analysis.checkstyle.BuildPropertiesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link BuildPropertiesCheck}
@@ -110,7 +110,7 @@ public class BuildPropertiesCheckTest extends AbstractStaticCheckTest {
         if (expectedMessage != null) {
             expectedMessages = generateExpectedMessages(expectedLine, expectedMessage);
         } else {
-            expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+            expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
         }
 
         verify(createChecker(config), filesToCheck, filePath, expectedMessages);

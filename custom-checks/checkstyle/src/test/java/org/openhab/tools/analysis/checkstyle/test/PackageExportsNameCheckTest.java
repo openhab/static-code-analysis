@@ -18,7 +18,7 @@ import org.openhab.tools.analysis.checkstyle.PackageExportsNameCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Test for {@link PackageExportsNameCheck }
@@ -80,7 +80,7 @@ public class PackageExportsNameCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verifyNoWarningMessages(String directory) throws Exception {
-        verifyWarningMessages(directory, CommonUtils.EMPTY_STRING_ARRAY);
+        verifyWarningMessages(directory, CommonUtil.EMPTY_STRING_ARRAY);
     }
 
     private void verifyWarningMessages(String directory, String[] messages) throws Exception {
