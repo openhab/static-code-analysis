@@ -42,13 +42,13 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
- * Validate the thing-types, binding and config xml-s against their xsd schemas.<br>
+ * Validate the thing-types, binding and config xml-s against their xsd
+ * schemas.<br>
  * Check if all files from ESH-INF are included in the build.properties file.
  *
  * @author Aleksandar Kovachev - Initial implementation
- * @author Svlien Valkanov - Some code refactoring and cleanup,
- *         added check for the build.properties file,
- *         download schema files only once
+ * @author Svlien Valkanov - Some code refactoring and cleanup, added check for
+ *         the build.properties file, download schema files only once
  *
  */
 public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
@@ -70,7 +70,8 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
     /**
      * Sets the configuration property for the thing schema file.
      *
-     * @param thingSchema URL of the thing schema file
+     * @param thingSchema
+     *            URL of the thing schema file
      */
     public void setThingSchema(String thingSchema) {
         this.thingSchema = thingSchema;
@@ -79,7 +80,8 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
     /**
      * Sets the configuration property for the binding schema file.
      *
-     * @param bindingSchema URL of the binding schema file
+     * @param bindingSchema
+     *            URL of the binding schema file
      */
     public void setBindingSchema(String bindingSchema) {
         this.bindingSchema = bindingSchema;
@@ -88,7 +90,8 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
     /**
      * Sets the configuration property for the config schema file.
      *
-     * @param configSchema URL of the config schema file
+     * @param configSchema
+     *            URL of the config schema file
      */
     public void setConfigSchema(String configSchema) {
         this.configSchema = configSchema;
@@ -100,6 +103,7 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
 
     @Override
     public void beginProcessing(String charset) {
+        super.beginProcessing(charset);
         ContentReceviedCallback<Schema> callback = new ContentReceviedCallback<Schema>() {
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
@@ -120,14 +124,13 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
         bindingSchemaFile = getXSD(bindingSchema, cachingClient);
         thingSchemaFile = getXSD(thingSchema, cachingClient);
         configSchemaFile = getXSD(configSchema, cachingClient);
-
-        super.beginProcessing(charset);
     }
 
     @Override
     public void finishProcessing() {
         // Check for missing ESH-INF files in the build.properties
         checkBuildProperties();
+        super.finishProcessing();
     }
 
     @Override
@@ -197,7 +200,8 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
                 validator.validate(new StreamSource(xmlFile));
             } catch (SAXParseException exception) {
                 String message = exception.getMessage();
-                // Removing the type of the logged message (For example - "cvc-complex-type.2.4.b: ...").
+                // Removing the type of the logged message (For example -
+                // "cvc-complex-type.2.4.b: ...").
                 message = message.substring(message.indexOf(":") + 2);
                 int lineNumber = exception.getLineNumber();
                 log(lineNumber, message, xmlFile.getPath());

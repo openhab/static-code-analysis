@@ -69,6 +69,7 @@ public class EshInfXmlUsageCheck extends AbstractEshInfXmlCheck {
         // Check for unused referenced config descriptions
         Map<String, File> unusedConfigDescriptions = removeAll(allConfigDescriptions, allConfigDescriptionRefs);
         logMissingEntries(unusedConfigDescriptions, MESSAGE_UNUSED_URI_CONFIGURATION);
+        super.finishProcessing();
     }
 
     @Override

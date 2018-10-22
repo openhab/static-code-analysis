@@ -82,6 +82,8 @@ public class RequiredFilesCheck extends AbstractStaticCheck {
         for (Path path : notFoundFiles) {
             logMessage(path);
         }
+        
+        super.finishProcessing();
     }
 
     private void logMessage(Path path) {

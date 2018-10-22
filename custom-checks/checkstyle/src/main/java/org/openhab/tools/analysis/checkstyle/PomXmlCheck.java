@@ -104,6 +104,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
     public void beginProcessing(String charset) {
         pomVersionPattern = compilePattern(pomVersionRegularExpression);
         manifestVersionPattern = compilePattern(manifestVersionRegularExpression);
+        super.beginProcessing(charset);
     }
 
     private Pattern compilePattern(String regExp) {
@@ -213,6 +214,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
         compareProperties(pomVersion, manifestVersion, pomVersionLine, WRONG_VERSION_MSG, MISSING_VERSION_MSG);
         compareProperties(pomArtifactId, manifestBundleSymbolicName, pomArtifactIdLine, WRONG_ARTIFACT_ID_MSG,
                 MISSING_ARTIFACT_ID_MSG);
+        super.finishProcessing();
     }
 
     private void compareProperties(String pomProperty, String manifestProperty, int wrongPropertyLine,
