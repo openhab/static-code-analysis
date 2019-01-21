@@ -104,7 +104,7 @@
      <property name="severity" value="error" />
      <property name="extensions" value="${checkstyle.requiredFilesCheck.extensions}" default="html,properties,xml,MF" />
      <!-- Relative path to the root directory of the module-->
-     <property name="requiredFiles" value="${checkstyle.requiredFilesCheck.files}" default="about.html,build.properties,pom.xml,META-INF/MANIFEST.MF" />
+     <property name="requiredFiles" value="${checkstyle.requiredFilesCheck.files}" default="build.properties,pom.xml,META-INF/MANIFEST.MF" />
   </module>
    
   <module name="org.openhab.tools.analysis.checkstyle.BuildPropertiesCheck">
