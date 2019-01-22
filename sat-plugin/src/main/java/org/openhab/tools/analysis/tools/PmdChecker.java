@@ -57,7 +57,7 @@ public class PmdChecker extends AbstractChecker {
     /**
      * The version of the maven-pmd-plugin that will be used
      */
-    @Parameter(property = "maven.pmd.version", defaultValue = "3.9.0")
+    @Parameter(property = "maven.pmd.version", defaultValue = "3.11.0")
     private String mavenPmdVersion;
 
     /**
