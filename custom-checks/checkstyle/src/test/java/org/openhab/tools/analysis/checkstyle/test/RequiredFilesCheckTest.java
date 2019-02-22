@@ -19,12 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.RequiredFilesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link RequiredFilesCheck}
@@ -47,8 +48,8 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
                 XML_EXTENSION, MANIFEST_EXTENSION, MARKDONW_EXTENSION);
         config.addAttribute("extensions", extenstionsPropertyValue);
 
-        String requiredFilesPropertyValue = String.format("%s,%s,%s,%s,%s", ABOUT_HTML_FILE_NAME,
-                BUILD_PROPERTIES_FILE_NAME, POM_XML_FILE_NAME, MANIFEST_RELATIVE_PATH_NAME, README_MD_FILE_NAME);
+        String requiredFilesPropertyValue = String.format("%s,%s,%s,%s", BUILD_PROPERTIES_FILE_NAME,
+                POM_XML_FILE_NAME, MANIFEST_RELATIVE_PATH_NAME, README_MD_FILE_NAME);
         config.addAttribute("requiredFiles", requiredFilesPropertyValue);
     }
 
@@ -57,15 +58,17 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
         return "checkstyle/requiredFilesCheckTest";
     }
 
+    @Ignore("Checkstyle can't check on files without extension. Therefore ignore for now.")
     @Test
-    public void testMissingAboutHtmlFile() throws Exception {
-        verifyDirectory("missing_about_html_directory", ABOUT_HTML_FILE_NAME,
-                String.format(MISSING_FILE_MSG, ABOUT_HTML_FILE_NAME));
+    public void testMissingNoticeFile() throws Exception {
+        verifyDirectory("missing_notice_html_directory", NOTICE_FILE_NAME,
+                String.format(MISSING_FILE_MSG, NOTICE_FILE_NAME));
     }
 
+    @Ignore("Checkstyle can't check on files without extension. Therefore ignore for now.")
     @Test
-    public void testPresentAboutHtmlFile() throws Exception {
-        verifyDirectory("valid_directory", ABOUT_HTML_FILE_NAME, null);
+    public void testPresentNoticeFile() throws Exception {
+        verifyDirectory("valid_directory", NOTICE_FILE_NAME, null);
     }
 
     @Test
@@ -119,7 +122,8 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
         Map<String, List<String>> expectedViolations = new HashMap<>();
 
         addExpectedViolation(expectedViolations, MANIFEST_RELATIVE_PATH_NAME, MANIFEST_FILE_NAME);
-        addExpectedViolation(expectedViolations, ABOUT_HTML_FILE_NAME, ABOUT_HTML_FILE_NAME);
+        // Checkstyle can't check on files without extension. Therefore ignore for now:
+        // addExpectedViolation(expectedViolations, NOTICE_FILE_NAME, NOTICE_FILE_NAME);
         addExpectedViolation(expectedViolations, BUILD_PROPERTIES_FILE_NAME, BUILD_PROPERTIES_FILE_NAME);
         addExpectedViolation(expectedViolations, POM_XML_FILE_NAME, POM_XML_FILE_NAME);
         addExpectedViolation(expectedViolations, README_MD_FILE_NAME, README_MD_FILE_NAME);
@@ -136,7 +140,7 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
         if (expectedMessage != null) {
             expectedMessages = generateExpectedMessages(0, expectedMessage);
         } else {
-            expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+            expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
         }
 
         verify(createChecker(config), testFiles, messageFilePath, expectedMessages);

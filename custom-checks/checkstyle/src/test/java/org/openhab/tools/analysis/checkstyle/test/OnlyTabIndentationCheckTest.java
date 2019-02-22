@@ -8,7 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static com.puppycrawl.tools.checkstyle.utils.CommonUtils.EMPTY_STRING_ARRAY;
+import static com.puppycrawl.tools.checkstyle.utils.CommonUtil.EMPTY_STRING_ARRAY;
 
 import org.junit.Before;
 import org.junit.Test;

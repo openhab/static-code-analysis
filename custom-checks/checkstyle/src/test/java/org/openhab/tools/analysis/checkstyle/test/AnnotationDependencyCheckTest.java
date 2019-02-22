@@ -13,7 +13,7 @@ import org.openhab.tools.analysis.checkstyle.AnnotationDependencyCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link AnnotationDependencyCheck}
@@ -42,7 +42,7 @@ public class AnnotationDependencyCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testManifestFileWithOptionalAnnotationDependency() throws Exception {
         String fileName = "MANIFEST2.MF";
-        checkFile(fileName, CommonUtils.EMPTY_STRING_ARRAY);
+        checkFile(fileName, CommonUtil.EMPTY_STRING_ARRAY);
     }
 
     @Test

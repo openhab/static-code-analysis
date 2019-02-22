@@ -50,12 +50,12 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
     @Captor
     private ArgumentCaptor<LogRecord> captor;
 
-    private static final String MSG_MISSING_BUNDLE_IN_FEATURE_XML = "Bundle with ID '{0}' must be added in {1}";
+    private static final String MSG_MISSING_BUNDLE_IN_FEATURE_XML = "Bundle with ID '{0}' must be added in one of {1}";
     private static final DefaultConfiguration CONFIGURATION = createModuleConfig(KarafFeatureCheck.class);
 
     @BeforeClass
     public static void setUp() {
-        CONFIGURATION.addAttribute("featureXmlPath", "feature/feature.xml");
+        CONFIGURATION.addAttribute("featureXmlPath", "feature/feature.xml:feature/internal/feature.xml");
     }
 
     @Override
@@ -84,6 +84,11 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
     public void testIncludedBundleWithParentGroupIdOnly() throws Exception {
         verify("includedBundleWithParentGroupIdOnly", ArrayUtils.EMPTY_STRING_ARRAY);
     }
+    
+    @Test
+    public void testIncludedBundleWithMultipleFeatureFiles() throws Exception {
+        verify("includedBundleWithParentGroupIdOnly", ArrayUtils.EMPTY_STRING_ARRAY);
+    }
 
     @Test
     public void testInvalidBundle() throws Exception {
@@ -99,8 +104,13 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testMissingBundle() throws Exception {
         String[] messages = generateExpectedMessages(0, MessageFormat.format(MSG_MISSING_BUNDLE_IN_FEATURE_XML,
-                "mvn:org.openhab.binding/org.openhab.binding.missing/{project.version}", "feature/feature.xml"));
+                "mvn:org.openhab.binding/org.openhab.binding.missing/{project.version}", "feature/feature.xml:feature/internal/feature.xml"));
         verify("missingBundle", messages);
+    }
+    
+    @Test
+    public void testMultipleFeatureFiles() throws Exception {
+        
     }
 
     private void verify(String fileDirectory, String[] expectedMessages) throws Exception {

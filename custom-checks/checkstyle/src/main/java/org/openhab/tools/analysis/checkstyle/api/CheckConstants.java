@@ -26,7 +26,7 @@ public class CheckConstants {
     // File names
     public static final String BUILD_PROPERTIES_FILE_NAME = "build.properties";
     public static final String MANIFEST_FILE_NAME = "MANIFEST.MF";
-    public static final String ABOUT_HTML_FILE_NAME = "about.html";
+    public static final String NOTICE_FILE_NAME = "NOTICE";
     public static final String POM_XML_FILE_NAME = "pom.xml";
     public static final String CLASSPATH_FILE_NAME = ".classpath";
     public static final String README_MD_FILE_NAME = "README.md";

@@ -36,7 +36,7 @@
     <!-- See http://checkstyle.sourceforge.net/config.html#Severity -->
     <property name="severity" value="error" />
     <property name="fileExtensions" value="java"/>
-    <property name="values" value="${checkstyle.headerCheck.values}" default="2010,2018"/>
+    <property name="values" value="${checkstyle.headerCheck.values}" default="2010,2019"/>
     <property name="header"
         value="${checkstyle.headerCheck.content}"
         default="^/\*\*$\n^ \* Copyright \(c\) {0}-{1} by the respective copyright holders\.$\n^ \*$\n^ \* All rights reserved\. This program and the accompanying materials$\n^ \* are made available under the terms of the Eclipse Public License v1\.0$\n^ \* which accompanies this distribution, and is available at$\n^ \* http://www.eclipse.org/legal/epl\-v10\.html$"/>
@@ -84,12 +84,7 @@
   <module name="org.openhab.tools.analysis.checkstyle.RequireBundleCheck">
       <property name="severity" value="error" />
       <property name="allowedRequireBundles" value="${checkstyle.requireBundleCheck.allowedBundles}" default="org.junit,org.mockito,org.hamcrest" />
-   </module>
-
-   <module name="org.openhab.tools.analysis.checkstyle.AboutHtmlCheck">
-     <property name="severity" value="error" />
-     <property name="validAboutHtmlFileURL" value="${checkstyle.aboutHtmlCheck.url}" default="https://raw.githubusercontent.com/openhab/openhab2-addons/master/src/etc/about.html" />
-   </module>
+  </module>
 
   <module name="org.openhab.tools.analysis.checkstyle.BundleVendorCheck">
     <property name="severity" value="warning" />
@@ -101,7 +96,7 @@
     <property name="allowedValues" value="JavaSE-1.8"/>
   </module>
   
-   <module name="org.openhab.tools.analysis.checkstyle.ManifestLineLengthCheck">
+  <module name="org.openhab.tools.analysis.checkstyle.ManifestLineLengthCheck">
   	<property name="severity" value="warning" />
   </module>
 
@@ -109,7 +104,7 @@
      <property name="severity" value="error" />
      <property name="extensions" value="${checkstyle.requiredFilesCheck.extensions}" default="html,properties,xml,MF" />
      <!-- Relative path to the root directory of the module-->
-     <property name="requiredFiles" value="${checkstyle.requiredFilesCheck.files}" default="about.html,build.properties,pom.xml,META-INF/MANIFEST.MF" />
+     <property name="requiredFiles" value="${checkstyle.requiredFilesCheck.files}" default="build.properties,pom.xml,META-INF/MANIFEST.MF" />
   </module>
    
   <module name="org.openhab.tools.analysis.checkstyle.BuildPropertiesCheck">
@@ -190,14 +185,19 @@
       <property name="checkInnerUnits" value="false"/>
       <property name="allowMissingParamTags" value="true"/>
       <property name="allowUnknownTags" value="true"/>
-      <property name="tokens" value="INTERFACE_DEF,CLASS_DEF" />
+      <property name="tokens" value="INTERFACE_DEF,CLASS_DEF,ENUM_DEF" />
       <message key="javadoc.missing" value="Missing Javadoc comment."/>
     </module>
     <module name="org.openhab.tools.analysis.checkstyle.DeclarativeServicesDependencyInjectionCheck">
       <property name="severity" value="warning" />
     </module>
     <module name="org.openhab.tools.analysis.checkstyle.InheritDocCheck">
+      <property name="severity" value="warning" />      
+    </module>
+    <module name="org.openhab.tools.analysis.checkstyle.ForbiddenPackageUsageCheck">
       <property name="severity" value="warning" />
+      <property name="forbiddenPackages" value="${checkstyle.forbiddenPackageUsageCheck.forbiddenPackages}"/>
+      <property name="exceptions" value="${checkstyle.forbiddenPackageUsageCheck.exceptions}"/>
     </module>
     <module name="UnusedImports">
       <property name="processJavadoc" value="true"/>
@@ -231,6 +231,11 @@
        <property name="requiredContributionDescriptions" value="Initial contribution"/>
        <property name="checkInnerUnits" value="false"/>
     </module>
+    
+    <module name="org.openhab.tools.analysis.checkstyle.NullAnnotationsCheck">
+      <property name="severity" value="warning"/>
+      <property name="checkInnerUnits" value="true"/>
+    </module>
 
     <!-- Rules for Java Naming Convention -->
     
@@ -241,7 +246,7 @@
     </module>
     <module name="TypeName">
       <property name="tokens"
-              value="INTERFACE_DEF,CLASS_DEF"/>
+              value="INTERFACE_DEF,CLASS_DEF,ENUM_DEF"/>
       <property name="severity" value="info" />
     </module>
     <module name="MethodName">

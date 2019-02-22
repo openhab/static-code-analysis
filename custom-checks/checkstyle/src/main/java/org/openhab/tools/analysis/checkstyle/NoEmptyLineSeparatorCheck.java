@@ -11,7 +11,7 @@ package org.openhab.tools.analysis.checkstyle;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Checks tokens with body for an empty lines after their opening and before their
@@ -108,7 +108,7 @@ public class NoEmptyLineSeparatorCheck extends AbstractCheck {
     @Override
     public int[] getRequiredTokens() {
         // we can configure the check to visit no tokens
-        return CommonUtils.EMPTY_INT_ARRAY;
+        return CommonUtil.EMPTY_INT_ARRAY;
     }
 
     @Override

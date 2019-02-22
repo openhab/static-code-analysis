@@ -20,7 +20,7 @@ import org.openhab.tools.analysis.checkstyle.PomXmlCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link PomXmlCheck}
@@ -129,6 +129,25 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
         String testFilePath = testDirectory.getPath() + File.separator + POM_XML_FILE_NAME;
 
         verify(createChecker(config), testFiles, testFilePath, expectedMessages);
+    }
+
+    private void verifyManifestFile(String testDirectoryName, int expectedLine, String expectedMessage)
+            throws Exception {
+        File testDirectory = getTestDirectory(testDirectoryName);
+        File[] testFiles = listFilesForDirectory(testDirectory, new ArrayList<File>());
+        String testFilePath = testDirectory.getPath() + File.separator + CheckConstants.META_INF_DIRECTORY_NAME
+                + File.separator + CheckConstants.MANIFEST_FILE_NAME;
+        String[] expectedMessages = getExpectedMessages(expectedMessage, expectedLine);
+
+        verify(createChecker(config), testFiles, testFilePath, expectedMessages);
+    }
+
+    private String[] getExpectedMessages(String expectedMessage, int expectedLine) {
+        if (expectedMessage != null) {
+            return generateExpectedMessages(expectedLine, expectedMessage);
+        } else {
+            return CommonUtil.EMPTY_STRING_ARRAY;
+        }
     }
 
     private File getTestDirectory(String testDirectoryName) throws Exception {

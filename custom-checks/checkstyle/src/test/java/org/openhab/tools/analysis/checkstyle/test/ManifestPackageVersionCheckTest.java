@@ -18,7 +18,7 @@ import org.openhab.tools.analysis.checkstyle.ManifestPackageVersionCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link ManifestPackageVersionCheck}
@@ -90,7 +90,7 @@ public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testValidManifest() throws Exception {
-        verifyManifest("validManifest", CommonUtils.EMPTY_STRING_ARRAY);
+        verifyManifest("validManifest", CommonUtil.EMPTY_STRING_ARRAY);
     }
 
     @Test

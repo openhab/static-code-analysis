@@ -86,7 +86,7 @@ Parameters:
 | ------ | ------| -------- |
 | **pmdRuleset** | String | Relative path of the XML configuration to use. If not set the default ruleset file will be used |
 | **pmdFilter** | String | Relative path of a suppression.properties file that lists classes and rules to be excluded from failures. If not set no classes and no rules will be excluded |
-| **maven.pmd.version** | String | The version of the maven-pmd-plugin that will be used (Default value is **3.7**)|
+| **maven.pmd.version** | String | The version of the maven-pmd-plugin that will be used (Default value is **3.11.0**)|
 | **pmdPlugins** | List<Dependency> | A list with artifacts that contain additional checks for PMD |
 
 ### sat-plugin:checkstyle
@@ -116,8 +116,8 @@ Parameters:
 | **spotbugsRuleset** | String | Relative path to the XML that specifies the bug detectors which should be run. If not set the default file will be used|
 | **spotbugsInclude** | String | Relative path to the XML that specifies the bug instances that will be included in the report. If not set the default file will be used|
 | **spotbugsExclude** | String | Relative path to the XML that specifies the bug instances that will be excluded from the report. If not set the default file will be used|
-| **maven.spotbugs.version** | String | The version of the spotbugs-maven-plugin that will be used (default value is **3.1.1**)|
-| **spotbugs.version** | String | The version of SpotBugs that will be used (default value is **3.1.1**)|
+| **maven.spotbugs.version** | String | The version of the spotbugs-maven-plugin that will be used (default value is **3.1.6**)|
+| **spotbugs.version** | String | The version of SpotBugs that will be used (default value is **3.1.7**)|
 | **spotbugsPlugins** | List<Dependency> | A list with artifacts that contain additional detectors/patterns for SpotBugs |
 | **findbugs.slf4j.version** | String | The version of the findbugs-slf4j plugin that will be used (default value is **1.2.4**)|
 

@@ -25,7 +25,7 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Test for {@link EshInfXmlValidationCheck}
@@ -80,7 +80,7 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testValidSupportedBridgeRef() throws Exception {
-        String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyWithPath("validSupportedBridgeRef", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 
@@ -106,7 +106,7 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testValidThingTypeXml() throws Exception {
-        String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyWithPath("validThingTypeXml", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 
@@ -126,7 +126,7 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
         int lineNumber = 18;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                "Invalid content was found starting with element item-type. One of {category, tags, state, event, config-description, config-description-ref} is expected.");
+                "Invalid content was found starting with element item-type. One of {category, tags, state, event, autoUpdatePolicy, config-description, config-description-ref} is expected.");
         verifyWithPath("sequenceChannelTypeCheck", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 
@@ -142,13 +142,13 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testWrongDirectory() throws Exception {
-        String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyWithPath("wrongDirectory", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 
     @Test
     public void testValidBridgeType() throws Exception {
-        String[] expectedMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyWithPath("validBridgeType", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 

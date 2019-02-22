@@ -16,7 +16,7 @@ import org.openhab.tools.analysis.checkstyle.ImportExportedPackagesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link ImportExportedPackagesCheck}
@@ -73,7 +73,7 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testManifestThatImportAllExportedPackages() throws Exception {
         String testFileName = "ManifestImportingAllExportedPackages.MF";
-        String[] warningMessages = CommonUtils.EMPTY_STRING_ARRAY;
+        String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
         verifyManifestFile(testFileName, warningMessages);
     }
 

@@ -13,7 +13,7 @@ import org.openhab.tools.analysis.checkstyle.InheritDocCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.api.Configuration;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link InheritDocCheck}
@@ -38,12 +38,12 @@ public class InheritDocCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void shouldNotLogWhenThereIsAnInheritDocWithAdditionalDocumentation() throws Exception {
-        verifyJavadoc("fileWithValidJavadoc.java", CommonUtils.EMPTY_STRING_ARRAY);
+        verifyJavadoc("fileWithValidJavadoc.java", CommonUtil.EMPTY_STRING_ARRAY);
     }
 
     @Test
     public void shouldNotLogWhenTheFileHasNoJavadoc() throws Exception {
-        verifyJavadoc("fileWithoutJavadoc.java", CommonUtils.EMPTY_STRING_ARRAY);
+        verifyJavadoc("fileWithoutJavadoc.java", CommonUtil.EMPTY_STRING_ARRAY);
     }
 
     @Test

@@ -8,7 +8,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static com.puppycrawl.tools.checkstyle.utils.CommonUtils.EMPTY_STRING_ARRAY;
+import static com.puppycrawl.tools.checkstyle.utils.CommonUtil.EMPTY_STRING_ARRAY;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.README_MD_FILE_NAME;
 
 import java.io.File;
