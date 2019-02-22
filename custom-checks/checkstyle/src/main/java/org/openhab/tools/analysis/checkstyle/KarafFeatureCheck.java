@@ -40,7 +40,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  */
 public class KarafFeatureCheck extends AbstractStaticCheck {
 
-    private static final String MSG_MISSING_BUNDLE_IN_FEATURE_XML = "Bundle with ID '{0}' must be added in {1}";
+    private static final String MSG_MISSING_BUNDLE_IN_FEATURE_XML = "Bundle with ID '{0}' must be added in one of {1}";
     private static final String BINDING_ID_PATTERN = "mvn:{0}/{1}/{2}";
     private static final String BINDING_FEATURE_EXPRESSION = "//features/feature/bundle[text()=\"{0}\"]";
     private static final String POM_ARTIFACT_ID_XPATH_EXPRESSION = "//project/artifactId/text()";
@@ -75,25 +75,39 @@ public class KarafFeatureCheck extends AbstractStaticCheck {
 
             String expression = MessageFormat.format(BINDING_FEATURE_EXPRESSION, bundleId);
 
-            Path featurePath = resolveRecursively(file.toPath(), Paths.get(featureXmlPath));
-            if (featurePath == null) {
-                logger.warn(
-                        this.getClass().getSimpleName() + " will be skipped. Could not find file " + featureXmlPath);
-                return;
-            }
+            String[] individualPaths = featureXmlPath.split(":");
 
-            try {
-                FileText featureFileText = new FileText(featurePath.toFile(), StandardCharsets.UTF_8.name());
-                Document featureXML = parseDomDocumentFromFile(featureFileText);
+            boolean isFound = false;
 
-                Node result = getFirstNode(featureXML, expression);
+            for (int i = 0; i < individualPaths.length; i++) {
+                String singlePath = individualPaths[i];
 
-                if (result == null) {
-                    log(0, MessageFormat.format(MSG_MISSING_BUNDLE_IN_FEATURE_XML, bundleId, featureXmlPath));
+                Path featurePath = resolveRecursively(file.toPath(), Paths.get(singlePath));
+
+                if (featurePath == null) {
+                    logger.warn("Could not find file feature file " + singlePath);
+                    continue;
                 }
-            } catch (IOException e) {
-                logger.error(this.getClass().getSimpleName() + " will be skipped.Could not read " + featureXmlPath);
+
+                try {
+                    FileText featureFileText = new FileText(featurePath.toFile(), StandardCharsets.UTF_8.name());
+                    Document featureXML = parseDomDocumentFromFile(featureFileText);
+
+                    Node result = getFirstNode(featureXML, expression);
+
+                    if (result != null) {
+                        isFound = true;
+                        break;
+                    }
+                } catch (IOException e) {
+                    logger.error("Could not read " + featureXmlPath);
+                }
             }
+
+            if (!isFound) {
+                log(0, MessageFormat.format(MSG_MISSING_BUNDLE_IN_FEATURE_XML, bundleId, featureXmlPath));
+            }
+
         }
     }
 
