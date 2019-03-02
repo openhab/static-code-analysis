@@ -4,7 +4,7 @@
     "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <!--
-    Checkstyle configuration that checks if a bundle is matching the Coding Guidelines in the Eclipse SmartHome project.
+    Checkstyle configuration that checks if a bundle is matching the Coding Guidelines in the openHAB project.
 
     For more information about the guidelines see - http://www.eclipse.org/smarthome/documentation/development/guidelines.html.
 
@@ -132,9 +132,9 @@
    
   <module name="org.openhab.tools.analysis.checkstyle.EshInfXmlValidationCheck">
     <property name="severity" value="error" />
-    <property name="thingSchema" value="http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd" />
-    <property name="bindingSchema" value="http://www.eclipse.org/smarthome/schemas/binding-1.0.0.xsd" />
-    <property name="configSchema" value="http://www.eclipse.org/smarthome/schemas/config-description-1.0.0.xsd" />
+    <property name="thingSchema" value="https://openhab.org/schemas/thing-description-1.0.0.xsd" />
+    <property name="bindingSchema" value="https://openhab.org/schemas/binding-1.0.0.xsd" />
+    <property name="configSchema" value="https://openhab.org/schemas/config-description-1.0.0.xsd" />
   </module>
   
   <module name="org.openhab.tools.analysis.checkstyle.EshInfXmlUsageCheck">
