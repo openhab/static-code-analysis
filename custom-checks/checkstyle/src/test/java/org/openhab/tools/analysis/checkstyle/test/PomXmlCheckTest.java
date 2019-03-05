@@ -46,7 +46,7 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
     @BeforeClass
     public static void setUpClass() {
         config = createModuleConfig(PomXmlCheck.class);
-        config.addAttribute("checkPomVersions", "true");
+        config.addAttribute("checkPomVersion", "true");
     }
 
     @Override

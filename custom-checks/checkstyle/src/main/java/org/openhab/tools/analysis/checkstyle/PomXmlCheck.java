@@ -73,7 +73,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
     private String pomPath;
     private boolean checkPomVersion;
 
-    public void setCheckPomVersions(boolean value) {
+    public void setCheckPomVersion(boolean value) {
         checkPomVersion = value;
     }
 
