@@ -1,7 +1,7 @@
 # Static Code Analysis Tool
 
 The Static Code Analysis Tools is a Maven plugin that executes the Maven plugins for FindBugs, Checkstyle and PMD and generates a merged .html report.
-It is specifically designed for Eclipse SmartHome and openHAB code as it is tailored to respect their coding guidelines.
+It is especially designed for openHAB to respect the defined coding guidelines.
 
 This project contains:
 
