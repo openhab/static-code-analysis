@@ -60,7 +60,7 @@
     <org.apache.ivy.version>2.4.0</org.apache.ivy.version>
     <org.jsoup.version>1.7.1</org.jsoup.version>
     <pde.core.version>3.11.1</pde.core.version>
-    <sat.version>0.4.1</sat.version>
+    <sat.version>0.6.1</sat.version>
     <jdt-annotations.version>2.1.0</jdt-annotations.version>
     <flexmark.version>0.28.6</flexmark.version>
     <maven.surefire.plugin.version>2.12.4</maven.surefire.plugin.version>
@@ -75,6 +75,28 @@
           <uniqueVersion>false</uniqueVersion>
       </repository>
   </distributionManagement>
+
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>openhab-artifactory-release</id>
+      <name>JFrog Artifactory Repository</name>
+      <url>https://openhab.jfrog.io/openhab/libs-release</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>openhab-artifactory-release</id>
+      <url>https://openhab.jfrog.io/openhab/libs-release</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <build>
     <plugins>
@@ -157,48 +179,6 @@
               </execution>
           </executions>
       </plugin>
-      <plugin>
-        <groupId>org.openhab.tools.sat</groupId>
-        <artifactId>sat-plugin</artifactId>
-        <version>${sat.version}</version>
-        <executions>
-          <execution>
-            <phase>verify</phase>
-            <goals>
-              <goal>checkstyle</goal>
-              <goal>pmd</goal>
-              <goal>findbugs</goal>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.2.11</version>
-          </dependency>
-          <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-core</artifactId>
-            <version>2.2.11</version>
-          </dependency>
-          <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.2.11</version>
-          </dependency>
-          <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1.1</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <checkstyleFilter>tools/suppressions.xml</checkstyleFilter>
-          <checkstyleProperties>tools/checkstyle.properties</checkstyleProperties>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
   
@@ -241,5 +221,48 @@
     <module>custom-checks</module>
     <module>sat-plugin</module>
   </modules>
-  
+
+  <profiles>
+    <profile>
+      <id>check</id>
+      <activation>
+        <property>
+          <name>!skipChecks</name>
+        </property>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.openhab.tools.sat</groupId>
+              <artifactId>sat-plugin</artifactId>
+              <version>${sat.version}</version>
+              <configuration>
+                <checkstyleFilter>tools/suppressions.xml</checkstyleFilter>
+                <checkstyleProperties>tools/checkstyle.properties</checkstyleProperties>
+              </configuration>
+              <executions>
+                <execution>
+                  <goals>
+                    <goal>checkstyle</goal>
+                    <goal>pmd</goal>
+                    <goal>spotbugs</goal>
+                    <goal>report</goal>
+                  </goals>
+                  <phase>verify</phase>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>org.openhab.tools.sat</groupId>
+            <artifactId>sat-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
