@@ -122,7 +122,11 @@ public class CheckstyleChecker extends AbstractChecker {
         checkstylePlugins.add(dependency("com.puppycrawl.tools", "checkstyle", "8.12"));
         checkstylePlugins.forEach(logDependency());
 
-        Xpp3Dom config = configuration(element("sourceDirectory", mavenProject.getBasedir().toString()));
+        String baseDir = mavenProject.getBasedir().toString();
+        if (baseDir.contains("AddJarsMojo")) {
+            baseDir += "/../..";
+        }
+        Xpp3Dom config = configuration(element("sourceDirectory", baseDir));
 
         executeCheck(MAVEN_CHECKSTYLE_PLUGIN_GROUP_ID, MAVEN_CHECKSTYLE_PLUGIN_ARTIFACT_ID, checkstyleMavenVersion,
                 MAVEN_CHECKSTYLE_PLUGIN_GOAL, config, checkstylePlugins);

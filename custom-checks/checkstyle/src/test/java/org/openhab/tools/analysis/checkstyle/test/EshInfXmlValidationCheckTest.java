@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.junit.Assume;
 import org.junit.Before;
@@ -73,6 +74,7 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Before
     public void checkConnection() {
+        Locale.setDefault(new Locale("en", "US"));
         try {
             URL url = new URL(THING_SCHEMA_URL);
             CachingHttpClient<String> cachingClient = new CachingHttpClient<>(c -> new String(c));

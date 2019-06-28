@@ -133,7 +133,7 @@ public class ReportUtility extends AbstractMojo {
     // Input files that contain the reports of the different tools
     private static final String PMD_INPUT_FILE_NAME = "pmd.xml";
     private static final String CHECKSTYLE_INPUT_FILE_NAME = "checkstyle-result.xml";
-    private static final String FINDBUGS_INPUT_FILE_NAME = "findbugsXml.xml";
+    private static final String FINDBUGS_INPUT_FILE_NAME = "spotbugsXml.xml";
 
     // Name of the file that contains the merged report
     public static final String RESULT_FILE_NAME = "report.html";
