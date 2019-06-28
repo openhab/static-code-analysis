@@ -216,6 +216,7 @@ public class ReportUtility extends AbstractMojo {
 
             // 7. Append the individual report to the summary, if it is not empty
             if (summaryReportDirectory != null) {
+                ensureSummaryReportDirectoryExists();
                 generateSummaryByBundle(htmlOutputFileName, mergedReport);
                 generateSummaryByRules(htmlOutputFileName, mergedReport);
             }
@@ -363,6 +364,12 @@ public class ReportUtility extends AbstractMojo {
             case "3":
             default:
                 getLog().debug(log);
+        }
+    }
+
+    private void ensureSummaryReportDirectoryExists() {
+        if (!summaryReportDirectory.exists()) {
+            summaryReportDirectory.mkdirs();
         }
     }
 
