@@ -67,10 +67,6 @@
     <property name="severity" value="warning" />
   </module>  
   
-  <module name="org.openhab.tools.analysis.checkstyle.MavenPomderivedInClasspathCheck">
-    <property name="severity" value="warning" />
-  </module>
-
   <module name="org.openhab.tools.analysis.checkstyle.OverridingParentPomConfigurationCheck">
     <property name="severity" value="warning" />
   </module>
