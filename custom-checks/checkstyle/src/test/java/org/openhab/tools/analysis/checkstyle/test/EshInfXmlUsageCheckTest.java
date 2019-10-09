@@ -12,7 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ESH_INF_DIRECTORY;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ESH_INF_PATH;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -34,9 +34,9 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
  */
 public class EshInfXmlUsageCheckTest extends AbstractStaticCheckTest {
 
-    private static final String RELATIVE_PATH_TO_THING = File.separator + ESH_INF_DIRECTORY + File.separator
+    private static final String RELATIVE_PATH_TO_THING = File.separator + ESH_INF_PATH + File.separator
             + EshInfXmlValidationCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
-    private static final String RELATIVE_PATH_TO_CONFIG = File.separator + ESH_INF_DIRECTORY + File.separator
+    private static final String RELATIVE_PATH_TO_CONFIG = File.separator + ESH_INF_PATH + File.separator
             + EshInfXmlValidationCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
 
     private static final String MESSAGE_MISSING_URI_CONFIGURATION = "Missing configuration for the configuration reference with uri - {0}";

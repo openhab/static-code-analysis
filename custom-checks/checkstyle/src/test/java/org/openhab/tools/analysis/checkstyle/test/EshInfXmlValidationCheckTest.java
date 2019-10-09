@@ -12,7 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ESH_INF_DIRECTORY;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ESH_INF_PATH;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,14 +41,14 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  */
 public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
-    private static final String RELATIVE_PATH_TO_THING = File.separator + ESH_INF_DIRECTORY + File.separator
+    private static final String RELATIVE_PATH_TO_THING = File.separator + ESH_INF_PATH + File.separator
             + EshInfXmlValidationCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
-    private static final String RELATIVE_PATH_TO_BINDING = File.separator + ESH_INF_DIRECTORY + File.separator
+    private static final String RELATIVE_PATH_TO_BINDING = File.separator + ESH_INF_PATH + File.separator
             + EshInfXmlValidationCheck.BINDING_DIRECTORY + File.separator + "bind.xml";
-    private static final String RELATIVE_PATH_TO_CONFIG = File.separator + ESH_INF_DIRECTORY + File.separator
+    private static final String RELATIVE_PATH_TO_CONFIG = File.separator + ESH_INF_PATH + File.separator
             + EshInfXmlValidationCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
 
-    private static final String SCHEMA_ROOT_URL = "http://eclipse.org/smarthome/schemas/";
+    private static final String SCHEMA_ROOT_URL = "https://openhab.org/schemas/";
     private static final String THING_SCHEMA_URL = SCHEMA_ROOT_URL + "thing-description-1.0.0.xsd";
     private static final String BINDING_SCHEMA_URL = SCHEMA_ROOT_URL + "binding-1.0.0.xsd";
     private static final String CONFIG_SCHEMA_URL = SCHEMA_ROOT_URL + "config-description-1.0.0.xsd";
@@ -132,7 +132,7 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
         int lineNumber = 18;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                "Invalid content was found starting with element item-type. One of {category, tags, state, event, autoUpdatePolicy, config-description, config-description-ref} is expected.");
+                "Invalid content was found starting with element item-type. One of {category, tags, state, command, event, autoUpdatePolicy, config-description, config-description-ref} is expected.");
         verifyWithPath("sequenceChannelTypeCheck", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 

@@ -1,0 +1,9 @@
+<thing:thing-descriptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0" bindingId="digitalstrom"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+	<thing-type id="GE">
+		<label>Text</label>
+		<description>Text</description>
+        <config-description-ref uri="binding:ge:config" />
+	</thing-type>
+</thing:thing-descriptions>
