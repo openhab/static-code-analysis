@@ -17,14 +17,9 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-
 import org.openhab.tools.analysis.checkstyle.api.AbstractOhInfXmlCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
@@ -49,46 +44,46 @@ public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
 
     private final Logger logger = LoggerFactory.getLogger(OhInfXmlUsageCheck.class);
 
-    private Map<String, File> allConfigDescriptionRefs = new HashMap<>();
-    private Map<String, File> allConfigDescriptions = new HashMap<>();
+    private final Map<String, File> allConfigDescriptionRefs = new HashMap<>();
+    private final Map<String, File> allConfigDescriptions = new HashMap<>();
 
-    private Map<String, File> allSupportedBridges = new HashMap<>();
-    private Map<String, File> allBridgeTypes = new HashMap<>();
+    private final Map<String, File> allSupportedBridges = new HashMap<>();
+    private final Map<String, File> allBridgeTypes = new HashMap<>();
 
     @Override
     public void finishProcessing() {
         // Check for missing supported bridge-type-refs.
-        Map<String, File> missingSupportedBridges = removeAll(allSupportedBridges, allBridgeTypes);
+        final Map<String, File> missingSupportedBridges = removeAll(allSupportedBridges, allBridgeTypes);
         logMissingEntries(missingSupportedBridges, MESSAGE_MISSING_SUPPORTED_BRIDGE);
 
         // Check for missing referenced config descriptions
-        Map<String, File> missingConfigDescriptions = removeAll(allConfigDescriptionRefs, allConfigDescriptions);
+        final Map<String, File> missingConfigDescriptions = removeAll(allConfigDescriptionRefs, allConfigDescriptions);
         logMissingEntries(missingConfigDescriptions, MESSAGE_MISSING_URI_CONFIGURATION);
 
         // Check for unused bridge-type-refs.
-        Map<String, File> unusedBridges = removeAll(allBridgeTypes, allSupportedBridges);
+        final Map<String, File> unusedBridges = removeAll(allBridgeTypes, allSupportedBridges);
         logMissingEntries(unusedBridges, MESSAGE_UNUSED_BRIDGE);
 
         // Check for unused referenced config descriptions
-        Map<String, File> unusedConfigDescriptions = removeAll(allConfigDescriptions, allConfigDescriptionRefs);
+        final Map<String, File> unusedConfigDescriptions = removeAll(allConfigDescriptions, allConfigDescriptionRefs);
         logMissingEntries(unusedConfigDescriptions, MESSAGE_UNUSED_URI_CONFIGURATION);
     }
 
     @Override
-    protected void checkConfigFile(FileText xmlFileText) throws CheckstyleException {
+    protected void checkConfigFile(final FileText xmlFileText) throws CheckstyleException {
         // The allowed values are described in the config description XSD
         allConfigDescriptions.putAll(evaluateExpressionOnFile(xmlFileText, CONFIG_DESCRIPTION_EXPRESSION));
     }
 
     @Override
-    protected void checkBindingFile(FileText xmlFileText) throws CheckstyleException {
+    protected void checkBindingFile(final FileText xmlFileText) throws CheckstyleException {
         // The allowed values are described in the binding XSD
         allConfigDescriptionRefs.putAll(evaluateExpressionOnFile(xmlFileText, CONFIG_DESCRIPTION_REF_EXPRESSION));
         allConfigDescriptions.putAll(evaluateExpressionOnFile(xmlFileText, CONFIG_DESCRIPTION_EXPRESSION));
     }
 
     @Override
-    protected void checkThingTypeFile(FileText xmlFileText) throws CheckstyleException {
+    protected void checkThingTypeFile(final FileText xmlFileText) throws CheckstyleException {
         // Process the files for all nodes below,
         // the allowed values are described in the thing description XSD
         allSupportedBridges.putAll(evaluateExpressionOnFile(xmlFileText, SUPPORTED_BRIDGE_TYPE_REF_EXPRESSION));
@@ -97,10 +92,10 @@ public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
         allConfigDescriptions.putAll(evaluateExpressionOnFile(xmlFileText, CONFIG_DESCRIPTION_EXPRESSION));
     }
 
-    private Map<String, File> evaluateExpressionOnFile(FileText xmlFileText, String xPathExpression)
+    private Map<String, File> evaluateExpressionOnFile(final FileText xmlFileText, final String xPathExpression)
             throws CheckstyleException {
-        Map<String, File> collection = new HashMap<>();
-        NodeList nodes = getNodes(xmlFileText, xPathExpression);
+        final Map<String, File> collection = new HashMap<>();
+        final NodeList nodes = getNodes(xmlFileText, xPathExpression);
 
         if (nodes != null) {
             for (int i = 0; i < nodes.getLength(); i++) {
@@ -110,30 +105,15 @@ public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
         return collection;
     }
 
-    private NodeList getNodes(FileText xmlFileText, String expression) throws CheckstyleException {
-        Document document = parseDomDocumentFromFile(xmlFileText);
-
-        XPathExpression xpathExpression = compileXPathExpression(expression);
-
-        NodeList nodes = null;
-        try {
-            nodes = (NodeList) xpathExpression.evaluate(document, XPathConstants.NODESET);
-        } catch (XPathExpressionException e) {
-            logger.error("Problem occurred while evaluating the expression {} on the {} file.", expression,
-                    xmlFileText.getFile().getName(), e);
-        }
-        return nodes;
-    }
-
-    private <K, V> Map<K, V> removeAll(Map<K, V> firstMap, Map<K, V> secondMap) {
-        Map<K, V> result = new HashMap<>(firstMap);
+    private <K, V> Map<K, V> removeAll(final Map<K, V> firstMap, final Map<K, V> secondMap) {
+        final Map<K, V> result = new HashMap<>(firstMap);
         result.keySet().removeAll(secondMap.keySet());
         return result;
     }
 
-    private <K> void logMissingEntries(Map<K, File> collection, String message) {
-        for (K element : collection.keySet()) {
-            File xmlFile = collection.get(element);
+    private <K> void logMissingEntries(final Map<K, File> collection, final String message) {
+        for (final K element : collection.keySet()) {
+            final File xmlFile = collection.get(element);
             logMessage(xmlFile.getPath(), 0, xmlFile.getName(), MessageFormat.format(message, element));
         }
     }

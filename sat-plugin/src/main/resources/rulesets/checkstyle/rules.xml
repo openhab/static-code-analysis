@@ -131,6 +131,16 @@
 		<property name="ignoreImportedPackages" value="org.junit.*"/>
 	</module>
 
+	<module name="org.openhab.tools.analysis.checkstyle.OhInfXmlLabelCheck">
+		<property name="severity" value="warning"/>
+		<property name="maxLabelLength" value="20"/>
+	</module>
+
+	<module name="org.openhab.tools.analysis.checkstyle.OhInfXmlLabelCheck">
+		<property name="severity" value="error"/>
+		<property name="maxLabelLength" value="25"/>
+	</module>
+
 	<module name="org.openhab.tools.analysis.checkstyle.OhInfXmlValidationCheck">
 		<property name="severity" value="error"/>
 		<property name="thingSchema" value="https://openhab.org/schemas/thing-description-1.0.0.xsd"/>
