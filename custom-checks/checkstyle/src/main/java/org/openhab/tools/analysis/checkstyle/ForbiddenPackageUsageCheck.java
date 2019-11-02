@@ -25,7 +25,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * A check that verifies that there are no forbidden packages in use.
- * 
+ *
  * @author Velin Yordanov - initial contribution
  *
  */
@@ -53,7 +53,7 @@ public class ForbiddenPackageUsageCheck extends AbstractCheck {
     /**
      * Sets a configuration property that sets all the packages that need to be
      * avoided.
-     * 
+     *
      * @param value
      *            The value of the forbiddenPackages array that we want to set
      */
@@ -64,7 +64,7 @@ public class ForbiddenPackageUsageCheck extends AbstractCheck {
     /**
      * Sets a configuration property that sets exceptions to the forbidden packages.
      * Usable when we want to ban all subpackages but one.
-     * 
+     *
      * @param value
      *            - The value of the exceptions array that we want to set
      */
@@ -72,10 +72,17 @@ public class ForbiddenPackageUsageCheck extends AbstractCheck {
         exceptions = Arrays.asList(value);
     }
 
+    @Override
     public void visitToken(DetailAST ast) {
         importsToLineNumbers.put(CheckUtil.createFullType(ast).getText(), ast.getLineNo());
     }
 
+    @Override
+    public void beginTree(DetailAST rootAST) {
+        importsToLineNumbers.clear();
+    }
+
+    @Override
     public void finishTree(DetailAST ast) {
         importsToLineNumbers.entrySet().stream()
                 .filter(entry -> forbiddenPackages.stream().anyMatch(entry.getKey()::contains))
