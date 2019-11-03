@@ -266,6 +266,7 @@
   <modules>
     <module>custom-checks</module>
     <module>sat-plugin</module>
+    <module>codestyle</module>
   </modules>
 
   <profiles>
