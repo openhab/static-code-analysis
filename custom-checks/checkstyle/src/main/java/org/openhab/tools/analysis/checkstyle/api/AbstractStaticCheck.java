@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
-import java.text.ParseException;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -32,8 +31,6 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.ivy.osgi.core.BundleInfo;
-import org.apache.ivy.osgi.core.ManifestParser;
 import org.eclipse.core.internal.filebuffers.SynchronizableDocument;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
@@ -132,24 +129,6 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
             throw new CheckstyleException("Unable to read from file: " + fileText.getFile().getAbsolutePath(), e);
         } catch (IOException e) {
             throw new CheckstyleException("Unable to open file: " + fileText.getFile().getAbsolutePath(), e);
-        }
-    }
-
-    /**
-     * Parses the content of the given Manifest file
-     *
-     * @param fileText - Represents the text contents of a file
-     * @return Bundle info extracted from the bundle manifest
-     * @throws CheckstyleException - if an error occurred while trying to parse the file
-     */
-    protected BundleInfo parseManifestFromFile(FileText fileText) throws CheckstyleException {
-        try {
-            BundleInfo info = ManifestParser.parseManifest(getInputStream(fileText));
-            return info;
-        } catch (IOException e) {
-            throw new CheckstyleException("Unable to read from file: " + fileText.getFile().getAbsolutePath(), e);
-        } catch (ParseException e) {
-            throw new CheckstyleException("Unable to parse file:" + fileText.getFile().getAbsolutePath(), e);
         }
     }
 

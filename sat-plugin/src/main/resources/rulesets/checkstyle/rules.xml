@@ -46,14 +46,6 @@
     <property name="severity" value="info"/>
   </module>
 
-  <module name="org.openhab.tools.analysis.checkstyle.ExportInternalPackageCheck">
-    <property name="severity" value="error" />
-  </module>
-    
-  <module name="org.openhab.tools.analysis.checkstyle.ManifestExternalLibrariesCheck">
-    <property name="severity" value="error" />
-  </module>
-  
   <module name="org.openhab.tools.analysis.checkstyle.BuildPropertiesExternalLibrariesCheck">
     <property name="severity" value="error" />
   </module>
@@ -77,25 +69,6 @@
     <property name="fileTypes" value="${checkstyle.onlyTabIndentationCheck.fileTypes}" default="xml,json"/>
   </module>
 
-  <module name="org.openhab.tools.analysis.checkstyle.RequireBundleCheck">
-      <property name="severity" value="error" />
-      <property name="allowedRequireBundles" value="${checkstyle.requireBundleCheck.allowedBundles}" default="org.junit,org.mockito,org.hamcrest" />
-  </module>
-
-  <module name="org.openhab.tools.analysis.checkstyle.BundleVendorCheck">
-    <property name="severity" value="warning" />
-    <property name="allowedValues" value="${checkstyle.bundleVendorCheck.allowedValues}" default="openHAB"/>
-  </module>
-
-  <module name="org.openhab.tools.analysis.checkstyle.ManifestJavaVersionCheck">
-    <property name="severity" value="warning" />
-    <property name="allowedValues" value="JavaSE-1.8"/>
-  </module>
-  
-  <module name="org.openhab.tools.analysis.checkstyle.ManifestLineLengthCheck">
-  	<property name="severity" value="warning" />
-  </module>
-
   <module name="org.openhab.tools.analysis.checkstyle.RequiredFilesCheck">
      <property name="severity" value="error" />
      <property name="extensions" value="${checkstyle.requiredFilesCheck.extensions}" default="html,properties,xml,MF" />
@@ -113,19 +86,6 @@
     <property name="possibleSourceValues" value="src/main/java,src/main/resources,src/test/java,src/test/resources,src/main/groovy,src/test/groovy" />
   </module>
    
-  <module name="org.openhab.tools.analysis.checkstyle.ServiceComponentManifestCheck">
-    <property name="severity" value="error" />
-  </module>
-
-  <module name="org.openhab.tools.analysis.checkstyle.ImportExportedPackagesCheck">
-    <property name="severity" value="warning" />
-  </module>
-  
-  <module name="org.openhab.tools.analysis.checkstyle.ManifestPackageVersionCheck">
-     <property name="severity" value="warning" />
-     <property name="ignoreImportedPackages" value="org.junit.*"/>
-  </module>
-   
   <module name="org.openhab.tools.analysis.checkstyle.EshInfXmlValidationCheck">
     <property name="severity" value="error" />
     <property name="thingSchema" value="https://openhab.org/schemas/thing-description-1.0.0.xsd" />
@@ -137,26 +97,11 @@
     <property name="severity" value="warning" />
   </module>
   
-  <module name="org.openhab.tools.analysis.checkstyle.PomXmlCheck">
-    <property name="severity" value="error" />
-    <property name="checkPomVersion" value="${checkstyle.pomXmlCheck.checkPomVersion}" default="true"/>
-  </module>
-  
-  <module name="org.openhab.tools.analysis.checkstyle.PackageExportsNameCheck">
-    <property name="severity" value="error" />
-    <property name="sourceDirectories" value="src/main/java" />
-    <property name="excludedPackages" value=".*.internal.*" />
-  </module>
-  
   <module name="org.openhab.tools.analysis.checkstyle.KarafFeatureCheck">
     <property name="severity" value="${checkstyle.karafFeatureCheck.severity}" default="ignore" />
     <property name="featureXmlPath" value="${checkstyle.karafFeatureCheck.featureXmlPath}" default="features/karaf/openhab-addons/src/main/feature/feature.xml" />
   </module>
   
-  <module name="org.openhab.tools.analysis.checkstyle.AnnotationDependencyCheck">
-    <property name="severity" value="warning" />
-  </module>
-
   <module name="TreeWalker">
     <!-- See http://checkstyle.sourceforge.net/config_coding.html#IllegalThrows -->
     <module name="IllegalThrows">
