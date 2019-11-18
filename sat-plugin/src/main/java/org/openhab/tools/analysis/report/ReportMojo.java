@@ -35,6 +35,8 @@
  */
 package org.openhab.tools.analysis.report;
 
+import static org.openhab.tools.analysis.report.ReportUtil.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,10 +44,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -88,14 +93,14 @@ import net.sf.saxon.TransformerFactoryImpl;
  *      MarkusSprunck/static-
  *      code-analysis-report</a>
  *
- * @author Markus Sprunck - Initial Implementation
+ * @author Markus Sprunck - Initial contribution
  * @author Svilen Valkanov - Some minor changes and adaptations
  * @author Petar Valchev - Changed the logging to be parameterized
  * @author Martin van Wingerden - added maven console logging of all messages
+ * @author Wouter Born - Synchronize summary updates to make Mojo thread-safe
  */
-
-@Mojo(name = "report")
-public class ReportUtility extends AbstractMojo {
+@Mojo(name = "report", threadSafe = true)
+public class ReportMojo extends AbstractMojo {
 
     /**
      * The directory where the individual report will be generated
@@ -116,30 +121,14 @@ public class ReportUtility extends AbstractMojo {
     @Parameter(property = "report.summary.targetDir", defaultValue = "${session.executionRootDirectory}/target")
     private File summaryReportDirectory;
 
-    private static final String REPORT_SUBDIR = "report";
-
     @Parameter(property = "report.in.maven", defaultValue = "true")
     private boolean reportInMaven;
 
-    // XSLT files that are used to create the merged report, located in the resources folder
-    private static final String CREATE_HTML_XSLT = REPORT_SUBDIR + "/create_html.xslt";
-    private static final String MERGE_XSLT = REPORT_SUBDIR + "/merge.xslt";
-    private static final String PREPARE_PMD_XSLT = REPORT_SUBDIR + "/prepare_pmd.xslt";
-    private static final String PREPARE_CHECKSTYLE_XSLT = REPORT_SUBDIR + "/prepare_checkstyle.xslt";
-    private static final String PREPARE_FINDBUGS_XSLT = REPORT_SUBDIR + "/prepare_findbugs.xslt";
+    @Parameter(property = "report.summary.html.generation", defaultValue = "PERIODIC")
+    private SummaryHtmlGeneration summaryHtmlGeneration;
 
-    private static final String SUMMARY_TEMPLATE_FILE_NAME = "summary.html";
-
-    // Input files that contain the reports of the different tools
-    private static final String PMD_INPUT_FILE_NAME = "pmd.xml";
-    private static final String CHECKSTYLE_INPUT_FILE_NAME = "checkstyle-result.xml";
-    private static final String FINDBUGS_INPUT_FILE_NAME = "spotbugsXml.xml";
-
-    // Name of the file that contains the merged report
-    public static final String RESULT_FILE_NAME = "report.html";
-    public static final String SUMMARY_REPORT_FILE_NAME = "summary_report.html";
-    public static final String SUMMARY_BUNLES_FILE_NAME = "summary_bundles.html";
-    private static final String EMPTY = "";
+    @Parameter(property = "report.summary.html.generation.period", defaultValue = "60")
+    private int summaryHtmlGenerationPeriod;
 
     private TransformerFactory transformerFactory;
 
@@ -217,8 +206,16 @@ public class ReportUtility extends AbstractMojo {
             // 7. Append the individual report to the summary, if it is not empty
             if (summaryReportDirectory != null) {
                 ensureSummaryReportDirectoryExists();
-                generateSummaryByBundle(htmlOutputFileName, mergedReport);
-                generateSummaryByRules(htmlOutputFileName, mergedReport);
+                File mergeLockFile = new File(summaryReportDirectory, MERGE_LOCK_FILE_NAME);
+                try (FileChannel fileChannel = acquireFileLock(mergeLockFile)) {
+                    generateSummaryByBundle(htmlOutputFileName, mergedReport);
+                    generateSummaryByRules(htmlOutputFileName, mergedReport);
+                } catch (IOException e) {
+                    throw new MojoFailureException("Exception while acquiring merge lock file: " + mergeLockFile, e);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
             }
 
             // 8. Report errors and warnings in Maven
@@ -228,7 +225,7 @@ public class ReportUtility extends AbstractMojo {
 
             // 9. Fail the build if the option is enabled and high priority warnings are found
             if (failOnError) {
-                checkForErrors(mergedReport, htmlOutputFileName);
+                failOnErrors(mergedReport);
             }
 
             // 10. Delete the temporary files
@@ -239,9 +236,10 @@ public class ReportUtility extends AbstractMojo {
     }
 
     private void run(final String xslt, final File input, final File output, final String param, final File value) {
-        FileOutputStream outputStream = null;
-        try {
-            getLog().debug(MessageFormat.format("{0}  > {1} {2} {3} >  {4}", input, xslt, param, value, output));
+        try (FileOutputStream outputStream = new FileOutputStream(output)) {
+            if (getLog().isDebugEnabled()) {
+                getLog().debug(MessageFormat.format("{0}  > {1} {2} {3} >  {4}", input, xslt, param, value, output));
+            }
 
             // Process the Source into a Transformer Object
             final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(xslt);
@@ -254,24 +252,22 @@ public class ReportUtility extends AbstractMojo {
                 transformer.setParameter(param, value.toURI().toURL());
             }
 
-            outputStream = new FileOutputStream(output);
             final StreamResult outputTarget = new StreamResult(outputStream);
             final StreamSource xmlSource = new StreamSource(input);
 
             // Transform the XML Source to a Result
+            Instant start = Instant.now();
             transformer.transform(xmlSource, outputTarget);
-        } catch (IOException e) {
-            getLog().error("IOException occcurred ", e);
-        } catch (TransformerException e) {
-            getLog().error("TransformerException occcurred ", e);
-        } finally {
-            if (null != outputStream) {
-                try {
-                    outputStream.close();
-                } catch (final IOException e) {
-                    getLog().error(e.getMessage());
-                }
+            Instant end = Instant.now();
+
+            if (getLog().isDebugEnabled()) {
+                getLog().debug(MessageFormat.format("Transformation ''{0}'' took {1}ms", xslt,
+                        Duration.between(start, end).toMillis()));
             }
+        } catch (IOException e) {
+            getLog().error("IOException occurred", e);
+        } catch (TransformerException e) {
+            getLog().error("TransformerException occurred", e);
         }
     }
 
@@ -293,7 +289,7 @@ public class ReportUtility extends AbstractMojo {
             return;
         }
 
-        String format = String.format("Code Analysis Tool has found: \n %d error(s)! \n %d warning(s) \n %d info(s)",
+        String format = String.format("Code Analysis Tool has found: %n %d error(s)! %n %d warning(s) %n %d info(s)",
                 errorCount, warnCount, infoCount);
         report(maxLevel(errorCount, warnCount, infoCount), format);
 
@@ -308,12 +304,12 @@ public class ReportUtility extends AbstractMojo {
                 String line = messageNode.getAttribute("line");
                 String message = messageNode.getAttribute("message").trim();
 
-                String logTemplate = "%s:[%s]\n%s";
+                String logTemplate = "%s:[%s]%n%s";
                 String log = String.format(logTemplate, fileName, line, message);
                 report(priority, log);
             }
         }
-        getLog().info("Detailed report can be found at: file:///" + reportLocation);
+        getLog().info("Detailed report can be found at: " + reportLocation.toURI());
     }
 
     private String maxLevel(int errorCount, int warnCount, int infoCount) {
@@ -342,14 +338,13 @@ public class ReportUtility extends AbstractMojo {
         return count;
     }
 
-    private void checkForErrors(File secondMergeResult, File reportLocation) throws MojoFailureException {
-        int numberOfErrors = selectNodes(secondMergeResult, "/sca/file/message[@priority=1]").getLength();
-
-        if (numberOfErrors > 0) {
+    private void failOnErrors(File mergedReport) throws MojoFailureException {
+        int errorCount = selectNodes(mergedReport, "/sca/file/message[@priority=1]").getLength();
+        if (errorCount > 0) {
             throw new MojoFailureException(String.format(
-                    "\n" + "Code Analysis Tool has found %d error(s)! \n"
-                            + "Please fix the errors and rerun the build. \n",
-                    selectNodes(secondMergeResult, "/sca/file/message[@priority=1]").getLength()));
+                    "%n" + "Code Analysis Tool has found %d error(s)! %n"
+                            + "Please fix the errors and rerun the build. %n",
+                    selectNodes(mergedReport, "/sca/file/message[@priority=1]").getLength()));
         }
     }
 
@@ -373,8 +368,8 @@ public class ReportUtility extends AbstractMojo {
         }
     }
 
-    private void generateSummaryByBundle(File htmlOutputFileName, File secondMergeResult) {
-        NodeList nodes = selectNodes(secondMergeResult, "/sca/file/message");
+    private void generateSummaryByBundle(File htmlOutputFile, File mergedReport) {
+        NodeList nodes = selectNodes(mergedReport, "/sca/file/message");
         int messagesNumber = nodes.getLength();
         if (messagesNumber == 0) {
             getLog().info("Empty report will not be appended to the summary report.");
@@ -382,7 +377,7 @@ public class ReportUtility extends AbstractMojo {
         }
 
         try {
-            File summaryReport = new File(summaryReportDirectory, SUMMARY_BUNLES_FILE_NAME);
+            File summaryReport = new File(summaryReportDirectory, SUMMARY_BUNDLES_FILE_NAME);
             if (!summaryReport.exists()) {
                 InputStream inputStream = Thread.currentThread().getContextClassLoader()
                         .getResourceAsStream(REPORT_SUBDIR + "/" + SUMMARY_TEMPLATE_FILE_NAME);
@@ -399,7 +394,7 @@ public class ReportUtility extends AbstractMojo {
             String reportContent = FileUtils.readFileToString(summaryReport);
 
             final String singleItem = "<tr class=alternate><td><a href=\"%s\">%s</a></td></tr><tr></tr>";
-            Path absoluteIndividualReportPath = htmlOutputFileName.toPath();
+            Path absoluteIndividualReportPath = htmlOutputFile.toPath();
             Path summaryReportDirectoryPath = summaryReportDirectory.toPath();
             Path relativePath = summaryReportDirectoryPath.relativize(absoluteIndividualReportPath);
 
@@ -417,7 +412,7 @@ public class ReportUtility extends AbstractMojo {
     }
 
     private void generateSummaryByRules(final File htmlOutputFileName, final File mergedReport) {
-        File latestMergeResult = new File(summaryReportDirectory, "old_Merge.xml");
+        File latestMergeResult = new File(summaryReportDirectory, MERGE_XML_FILE_NAME);
         File latestSummaryReport = new File(summaryReportDirectory, SUMMARY_REPORT_FILE_NAME);
 
         try {
@@ -427,10 +422,9 @@ public class ReportUtility extends AbstractMojo {
                 Files.copy(mergedReport, latestMergeResult);
                 Files.copy(htmlOutputFileName, latestSummaryReport);
             } else {
-                final File tempMergedReport = new File(summaryReportDirectory, "temp_Merge.xml");
+                final File tempMergedReport = new File(summaryReportDirectory, MERGE_XML_TMP_FILE_NAME);
                 Files.copy(latestMergeResult, tempMergedReport);
                 run(MERGE_XSLT, tempMergedReport, latestMergeResult, "with", mergedReport);
-                run(CREATE_HTML_XSLT, latestMergeResult, latestSummaryReport, EMPTY, null);
                 deleteFile(tempMergedReport);
             }
         } catch (IOException e) {
@@ -455,4 +449,5 @@ public class ReportUtility extends AbstractMojo {
             return new EmptyNodeList();
         }
     }
+
 }

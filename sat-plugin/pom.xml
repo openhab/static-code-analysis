@@ -58,7 +58,7 @@
   </dependencies>
 
   <build>
-    <plugins>   
+    <plugins>
       <plugin>
         <artifactId>maven-plugin-plugin</artifactId>
         <version>${maven.plugin.plugin.version}</version>
@@ -78,7 +78,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>    
+      </plugin>
     </plugins>
-  </build>  
+  </build>
 </project>

@@ -5,5 +5,5 @@
 
 <suppressions>
     <suppress files=".+[\\/]pom\.xml" checks="OnlyTabIndentationCheck|PomXmlCheck"/>
-    <suppress files=".+org.openhab.tools.analysis.report.ReportUtility.java|.+org.openhab.tools.analysis.findbugs.CustomClassNameLengthDetector.java" checks="RegexpHeaderCheck"/>
+    <suppress files=".+org.openhab.tools.analysis.report.ReportMojo.java|.+org.openhab.tools.analysis.findbugs.CustomClassNameLengthDetector.java" checks="RegexpHeaderCheck"/>
 </suppressions>

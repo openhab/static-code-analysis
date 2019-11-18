@@ -54,11 +54,9 @@ import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
  * SpotBugs is fully backward compatible with FindBugs.
  * </p>
  *
- * @author Svilen Valkanov
- *
+ * @author Svilen Valkanov - Initial contribution
  */
-
-@Mojo(name = "spotbugs", requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(name = "spotbugs", requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
 public class SpotBugsChecker extends AbstractChecker {
 
     /**
@@ -85,19 +83,19 @@ public class SpotBugsChecker extends AbstractChecker {
     /**
      * The version of the spotbugs-maven-plugin that will be used
      */
-    @Parameter(property = "maven.spotbugs.version", defaultValue = "3.1.6")
+    @Parameter(property = "maven.spotbugs.version", defaultValue = "3.1.12.2")
     private String spotbugsMavenPluginVersion;
 
     /**
      * The version of the findbugs-slf4j plugin that will be used
      */
-    @Parameter(property = "findbugs.slf4j.version", defaultValue = "1.2.4")
+    @Parameter(property = "findbugs.slf4j.version", defaultValue = "1.5.0")
     private String findBugsSlf4jPluginVersion;
 
     /**
      * The version of the spotbugs that will be used
      */
-    @Parameter(property = "spotbugs.version", defaultValue = "3.1.7")
+    @Parameter(property = "spotbugs.version", defaultValue = "3.1.12")
     private String spotBugsVersion;
 
     /**
@@ -217,7 +215,8 @@ public class SpotBugsChecker extends AbstractChecker {
                 getLog().warn("Unable to find file " + resolvedPath.toString());
             }
         } else {
-            stream = this.getClass().getClassLoader().getResourceAsStream(SpotBugsChecker.DEFAULT_VISITORS_XML);        }
+            stream = this.getClass().getClassLoader().getResourceAsStream(SpotBugsChecker.DEFAULT_VISITORS_XML);
+        }
 
         // Serialize the content
         JAXBContext context;

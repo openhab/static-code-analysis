@@ -31,10 +31,9 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
  * <a href="https://maven.apache.org/components/plugins/maven-checkstyle-plugin/">maven-checkstyle-
  * plugin</a> with a predefined ruleset file and configuration properties
  *
- * @author Svilen Valkanov
- *
+ * @author Svilen Valkanov - Initial contribution
  */
-@Mojo(name = "checkstyle", requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(name = "checkstyle", requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
 public class CheckstyleChecker extends AbstractChecker {
 
     /**

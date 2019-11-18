@@ -32,10 +32,9 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
  * <a href="https://maven.apache.org/plugins/maven-pmd-plugin/index.html">maven-pmd-plugin</a> with
  * a predefined ruleset file and configuration properties
  *
- * @author Svilen Valkanov
- *
+ * @author Svilen Valkanov - Initial contribution
  */
-@Mojo(name = "pmd", requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(name = "pmd", requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
 public class PmdChecker extends AbstractChecker {
 
     private static final String DEFAULT_RULESET_XML = "rulesets/pmd/rules.xml";
@@ -102,7 +101,7 @@ public class PmdChecker extends AbstractChecker {
                 element("targetDirectory", userProps.getProperty("pmd.custom.targetDirectory")),
                 element("compileSourceRoots", userProps.getProperty("pmd.custom.compileSourceRoots")),
                 element("rulesets", element("ruleset", defaultRulesetLocation),
-                                    element("ruleset", customRulesetLocation)));
+                        element("ruleset", customRulesetLocation)));
         pmdPlugins.add(dependency("org.openhab.tools.sat.custom-checks", "pmd", plugin.getVersion()));
         pmdPlugins.add(dependency("net.sourceforge.pmd", "pmd-core", PMD_VERSION));
         pmdPlugins.add(dependency("net.sourceforge.pmd", "pmd-java", PMD_VERSION));
