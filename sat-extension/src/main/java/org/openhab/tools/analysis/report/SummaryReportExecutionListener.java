@@ -82,19 +82,27 @@ public class SummaryReportExecutionListener extends AbstractExecutionListener {
             return latestSummaryReport;
         }
 
-        public void incrementalUpdate() {
-            executor.submit(() -> {
-                if (htmlGeneration == SummaryHtmlGeneration.CONTINUOUS
-                        || (htmlGeneration == SummaryHtmlGeneration.PERIODIC
-                                && Instant.now().isAfter(lastUpdate.plusSeconds(htmlGenerationPeriod)))) {
-                    File latestSummaryReport = update();
+        private boolean shouldUpdateIncrementally() {
+            return htmlGeneration == SummaryHtmlGeneration.CONTINUOUS
+                    || (htmlGeneration == SummaryHtmlGeneration.PERIODIC
+                            && Instant.now().isAfter(lastUpdate.plusSeconds(htmlGenerationPeriod)));
+        }
 
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Updated static code analysis summary report in:");
-                        logger.debug(latestSummaryReport.toURI().toString());
+        public void incrementalUpdate() {
+            // Only queue tasks that are likely to be executed by the single thread executor
+            if (shouldUpdateIncrementally()) {
+                executor.submit(() -> {
+                    // Check again because the lastUpdate value may have been updated while waiting in the task queue
+                    if (shouldUpdateIncrementally()) {
+                        File latestSummaryReport = update();
+
+                        if (logger.isDebugEnabled()) {
+                            logger.debug("Updated static code analysis summary report in:");
+                            logger.debug(latestSummaryReport.toURI().toString());
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         public void finalUpdate() {
