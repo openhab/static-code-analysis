@@ -12,11 +12,7 @@
  */
 package org.openhab.tools.analysis.report;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.channels.FileChannel;
-import java.nio.channels.OverlappingFileLockException;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.plugin.MojoExecution;
@@ -55,42 +51,61 @@ final class ReportUtil {
 
     // Name of the file that contains the merged report
     static final String RESULT_FILE_NAME = "report.html";
-    static final String SUMMARY_LOCK_FILE_NAME = "summary.lock";
     static final String SUMMARY_REPORT_FILE_NAME = "summary_report.html";
     static final String SUMMARY_BUNDLES_FILE_NAME = "summary_bundles.html";
     static final String SUMMARY_XML_FILE_NAME = "summary.xml";
     static final String EMPTY = "";
 
     // Files used for merging the individual reports into the summary reports
-    static final String MERGE_LOCK_FILE_NAME = "merge.lock";
     static final String MERGE_XML_FILE_NAME = "merge.xml";
     static final String MERGE_XML_TMP_FILE_NAME = "merge.xml.tmp";
+
+    // The lock used for updating merge files
+    private static final ReentrantLock MERGE_LOCK;
+    private static final String MERGE_LOCK_KEY_NAME = ReportUtil.class.getCanonicalName() + ".MERGE_LOCK";
+
+    // The lock used for updating summary files
+    private static final ReentrantLock SUMMARY_LOCK;
+    private static final String SUMMARY_LOCK_KEY_NAME = ReportUtil.class.getCanonicalName() + ".SUMMARY_LOCK";
 
     private ReportUtil() {
         // Hidden utility class constructor
     }
 
-    @SuppressWarnings("resource")
-    static FileChannel acquireFileLock(File file) throws IOException, InterruptedException {
-        FileChannel channel = new RandomAccessFile(file, "rw").getChannel();
-        try {
-            while (!Thread.currentThread().isInterrupted()) {
-                try {
-                    // Blocking wait until file lock is acquired
-                    channel.lock();
-                    return channel;
-                } catch (OverlappingFileLockException e) {
-                    // Another thread is locking the same file
-                    Thread.sleep(100L);
-                }
-            }
-        } catch (InterruptedException | IOException e) {
-            channel.close();
-            throw e;
+    static {
+        synchronized (ClassLoader.getSystemClassLoader()) {
+            MERGE_LOCK = getOrCreateJvmSingletonLock(MERGE_LOCK_KEY_NAME);
+            SUMMARY_LOCK = getOrCreateJvmSingletonLock(SUMMARY_LOCK_KEY_NAME);
         }
-        // Unreachable code added for completeness because exceptions should already have been thrown
-        channel.close();
-        throw new InterruptedException("Interrupted while waiting for lock on: " + file);
+    }
+
+    private static ReentrantLock getOrCreateJvmSingletonLock(String keyName) {
+        ReentrantLock lock = (ReentrantLock) System.getProperties().get(keyName);
+        if (lock == null) {
+            lock = new ReentrantLock();
+            System.getProperties().put(keyName, lock);
+        }
+        return lock;
+    }
+
+    static void acquireMergeLock() {
+        MERGE_LOCK.lock();
+    }
+
+    static void releaseMergeLock() {
+        if (MERGE_LOCK.isHeldByCurrentThread()) {
+            MERGE_LOCK.unlock();
+        }
+    }
+
+    static void acquireSummaryLock() {
+        SUMMARY_LOCK.lock();
+    }
+
+    static void releaseSummaryLock() {
+        if (SUMMARY_LOCK.isHeldByCurrentThread()) {
+            SUMMARY_LOCK.unlock();
+        }
     }
 
     static boolean isReportExecution(ExecutionEvent event) {
@@ -99,4 +114,5 @@ final class ReportUtil {
                 && SAT_PLUGIN_ARTIFACT_ID.equals(execution.getArtifactId())
                 && SAT_PLUGIN_REPORT_GOAL.equals(execution.getGoal());
     }
+
 }

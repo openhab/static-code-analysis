@@ -20,8 +20,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLockInterruptionException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
@@ -64,22 +62,19 @@ public class SummaryReportHtmlGenerator {
         File latestMergeResult = new File(summaryReportDirectory, MERGE_XML_FILE_NAME);
         File latestMergeResultCopy = new File(summaryReportDirectory, SUMMARY_XML_FILE_NAME);
 
-        FileChannel mergeLockFileChannel = null;
-        FileChannel summaryLockFileChannel = null;
-
         try {
             // Acquire the merge and summary locks
-            mergeLockFileChannel = acquireFileLock(summaryReportDirectory, MERGE_LOCK_FILE_NAME);
+            ReportUtil.acquireMergeLock();
             if (!latestMergeResult.exists()) {
                 return null;
             }
-            summaryLockFileChannel = acquireFileLock(summaryReportDirectory, SUMMARY_LOCK_FILE_NAME);
+            ReportUtil.acquireSummaryLock();
 
             // Copy merge.xml to summary.xml which is used for generating the report
             Files.copy(latestMergeResult.toPath(), latestMergeResultCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
             // Release the merge lock so plugin reporting goals executed in parallel can keep merging
-            closeFileChannel(mergeLockFileChannel);
+            ReportUtil.releaseMergeLock();
 
             File latestSummaryReport = new File(summaryReportDirectory, SUMMARY_REPORT_FILE_NAME);
             run(CREATE_HTML_XSLT, latestMergeResultCopy, latestSummaryReport);
@@ -89,34 +84,11 @@ public class SummaryReportHtmlGenerator {
             }
 
             return latestSummaryReport;
-        } catch (InterruptedException | FileLockInterruptionException e) {
-            Thread.currentThread().interrupt();
         } catch (IOException e) {
             throw new IllegalStateException("Exception while acquiring lock file", e);
         } finally {
-            closeFileChannel(mergeLockFileChannel);
-            closeFileChannel(summaryLockFileChannel);
-        }
-        return null;
-    }
-
-    private void closeFileChannel(FileChannel fileChannel) {
-        if (fileChannel != null) {
-            try {
-                fileChannel.close();
-            } catch (IOException e) {
-                logger.error("Exception while closing file channel: " + fileChannel, e);
-            }
-        }
-    }
-
-    private FileChannel acquireFileLock(final String summaryReportDirectory, final String fileName)
-            throws InterruptedException, FileLockInterruptionException {
-        File mergeLockFile = new File(summaryReportDirectory, fileName);
-        try {
-            return ReportUtil.acquireFileLock(mergeLockFile);
-        } catch (IOException e) {
-            throw new IllegalStateException("Exception while acquiring lock file: " + mergeLockFile, e);
+            ReportUtil.releaseMergeLock();
+            ReportUtil.releaseSummaryLock();
         }
     }
 

@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -206,15 +205,13 @@ public class ReportMojo extends AbstractMojo {
             // 7. Append the individual report to the summary, if it is not empty
             if (summaryReportDirectory != null) {
                 ensureSummaryReportDirectoryExists();
-                File mergeLockFile = new File(summaryReportDirectory, MERGE_LOCK_FILE_NAME);
-                try (FileChannel fileChannel = acquireFileLock(mergeLockFile)) {
+
+                ReportUtil.acquireMergeLock();
+                try {
                     generateSummaryByBundle(htmlOutputFileName, mergedReport);
                     generateSummaryByRules(htmlOutputFileName, mergedReport);
-                } catch (IOException e) {
-                    throw new MojoFailureException("Exception while acquiring merge lock file: " + mergeLockFile, e);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return;
+                } finally {
+                    ReportUtil.releaseMergeLock();
                 }
             }
 
