@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLockInterruptionException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
@@ -35,8 +37,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
-
-import com.google.common.io.Files;
 
 import net.sf.saxon.TransformerFactoryImpl;
 
@@ -76,7 +76,7 @@ public class SummaryReportHtmlGenerator {
             summaryLockFileChannel = acquireFileLock(summaryReportDirectory, SUMMARY_LOCK_FILE_NAME);
 
             // Copy merge.xml to summary.xml which is used for generating the report
-            Files.copy(latestMergeResult, latestMergeResultCopy);
+            Files.copy(latestMergeResult.toPath(), latestMergeResultCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
             // Release the merge lock so plugin reporting goals executed in parallel can keep merging
             closeFileChannel(mergeLockFileChannel);

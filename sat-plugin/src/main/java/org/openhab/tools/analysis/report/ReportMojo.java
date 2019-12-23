@@ -46,7 +46,9 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -78,8 +80,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import com.google.common.io.Files;
 
 import net.sf.saxon.TransformerFactoryImpl;
 
@@ -271,6 +271,10 @@ public class ReportMojo extends AbstractMojo {
         }
     }
 
+    private void copyFile(File source, File target) throws IOException {
+        Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    }
+
     private void deleteFile(File file) {
         if (!file.delete()) {
             getLog().error("Unable to delete file " + file.getAbsolutePath());
@@ -419,11 +423,11 @@ public class ReportMojo extends AbstractMojo {
             if (!latestMergeResult.exists() && !latestSummaryReport.exists()) {
                 latestMergeResult.createNewFile();
                 latestSummaryReport.createNewFile();
-                Files.copy(mergedReport, latestMergeResult);
-                Files.copy(htmlOutputFileName, latestSummaryReport);
+                copyFile(mergedReport, latestMergeResult);
+                copyFile(htmlOutputFileName, latestSummaryReport);
             } else {
                 final File tempMergedReport = new File(summaryReportDirectory, MERGE_XML_TMP_FILE_NAME);
-                Files.copy(latestMergeResult, tempMergedReport);
+                copyFile(latestMergeResult, tempMergedReport);
                 run(MERGE_XSLT, tempMergedReport, latestMergeResult, "with", mergedReport);
                 deleteFile(tempMergedReport);
             }
