@@ -85,7 +85,7 @@ public class SummaryReportHtmlGenerator {
 
             return latestSummaryReport;
         } catch (IOException e) {
-            throw new IllegalStateException("Exception while acquiring lock file", e);
+            throw new IllegalStateException("Exception while copying latest merge result", e);
         } finally {
             ReportUtil.releaseMergeLock();
             ReportUtil.releaseSummaryLock();
