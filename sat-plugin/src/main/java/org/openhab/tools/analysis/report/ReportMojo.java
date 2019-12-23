@@ -236,14 +236,14 @@ public class ReportMojo extends AbstractMojo {
     }
 
     private void run(final String xslt, final File input, final File output, final String param, final File value) {
-        try (FileOutputStream outputStream = new FileOutputStream(output)) {
+        try (FileOutputStream outputStream = new FileOutputStream(output);
+                InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(xslt);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             if (getLog().isDebugEnabled()) {
                 getLog().debug(MessageFormat.format("{0}  > {1} {2} {3} >  {4}", input, xslt, param, value, output));
             }
 
             // Process the Source into a Transformer Object
-            final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(xslt);
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             final StreamSource source = new StreamSource(reader);
             final Transformer transformer = transformerFactory.newTransformer(source);
 

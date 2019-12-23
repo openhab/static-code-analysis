@@ -121,16 +121,15 @@ public class SummaryReportHtmlGenerator {
     }
 
     private void run(final String xslt, final File input, final File output) {
-        try (FileOutputStream outputStream = new FileOutputStream(output)) {
+        try (FileOutputStream outputStream = new FileOutputStream(output);
+                InputStream inputStream = contextClassLoader.getResourceAsStream(xslt);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             if (logger.isDebugEnabled()) {
                 logger.debug(MessageFormat.format("{0}  > {1} >  {2}", input, xslt, output));
             }
 
             // Process the Source into a Transformer Object
-            final InputStream inputStream = contextClassLoader.getResourceAsStream(xslt);
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             final StreamSource source = new StreamSource(reader);
-
             final Transformer transformer = transformerFactory.newTransformer(source);
 
             final StreamResult outputTarget = new StreamResult(outputStream);
