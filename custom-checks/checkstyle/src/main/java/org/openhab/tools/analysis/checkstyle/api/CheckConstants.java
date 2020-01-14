@@ -38,7 +38,7 @@ public class CheckConstants {
     // Directory names
     public static final String OSGI_INF_DIRECTORY_NAME = "OSGI-INF";
     public static final String META_INF_DIRECTORY_NAME = "META-INF";
-    public static final String ESH_INF_DIRECTORY = "ESH-INF";
+    public static final String ESH_INF_DIRECTORY = "OH-INF";
     public static final String ESH_INF_PATH = "src/main/resources/" + ESH_INF_DIRECTORY;
 
     // Properties

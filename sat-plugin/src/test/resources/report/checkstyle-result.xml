@@ -16,7 +16,7 @@
 </file>
 <file name="C:\prj\openHAB\EclipseIDE\git\smarthome\bundles\auth\org.eclipse.smarthome.auth.jaas\pom.xml">
 </file>
-<file name="C:\prj\openHAB\EclipseIDE\git\smarthome\bundles\automation\org.eclipse.smarthome.automation.module.core\ESH-INF\automation\moduletypes\EventTriggersTypeDefinition.json">
+<file name="C:\prj\openHAB\EclipseIDE\git\smarthome\bundles\automation\org.eclipse.smarthome.automation.module.core\OH-INF\automation\moduletypes\EventTriggersTypeDefinition.json">
 <error line="0" severity="info" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
 </file>
 </checkstyle>

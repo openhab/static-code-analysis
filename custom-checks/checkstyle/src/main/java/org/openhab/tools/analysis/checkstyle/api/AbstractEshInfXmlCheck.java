@@ -25,7 +25,7 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
- * Abstract class for checks that will validate .xml files located in the ESH-INF directory.
+ * Abstract class for checks that will validate .xml files located in the OH-INF directory.
  *
  * More information can be found
  * <a href="https://eclipse.org/smarthome/documentation/development/bindings/xml-reference.html">here</a>
@@ -94,7 +94,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
     }
 
     /**
-     * Validate a .xml file located in the ESH-INF/config directory
+     * Validate a .xml file located in the OH-INF/config directory
      *
      * @param xmlFileText - Represents the text contents of the xml file
      * @throws CheckstyleException when exception occurred during XML processing
@@ -102,7 +102,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
     protected abstract void checkConfigFile(FileText xmlFileText) throws CheckstyleException;
 
     /**
-     * Validate a .xml file located in the ESH-INF/binding directory
+     * Validate a .xml file located in the OH-INF/binding directory
      *
      * @param xmlFileText - Represents the text contents of the xml file
      * @throws CheckstyleException when exception occurred during XML processing
@@ -110,7 +110,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
     protected abstract void checkBindingFile(FileText xmlFileText) throws CheckstyleException;
 
     /**
-     * Validate a .xml file located in the ESH-INF/thing directory
+     * Validate a .xml file located in the OH-INF/thing directory
      *
      * @param xmlFileText - Represents the text contents of the xml file
      * @throws CheckstyleException when exception occurred during XML processing

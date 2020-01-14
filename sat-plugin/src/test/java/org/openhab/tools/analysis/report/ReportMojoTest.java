@@ -112,7 +112,7 @@ public class ReportMojoTest {
         verify(logger)
                 .debug("org.sprunck.foo.Foo.java:[36]\nDo not use if statements that are always true or always false");
         verify(logger).debug(
-                "C:\\prj\\openHAB\\EclipseIDE\\git\\smarthome\\bundles\\automation\\org.eclipse.smarthome.automation.module.core\\ESH-INF\\automation\\moduletypes\\EventTriggersTypeDefinition.json:[0]\n"
+                "C:\\prj\\openHAB\\EclipseIDE\\git\\smarthome\\bundles\\automation\\org.eclipse.smarthome.automation.module.core\\OH-INF\\automation\\moduletypes\\EventTriggersTypeDefinition.json:[0]\n"
                         + "File does not end with a newline.");
         verify(logger).info("Detailed report can be found at: " + new File(RESULT_FILE_PATH).toURI());
     }

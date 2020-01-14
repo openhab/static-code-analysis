@@ -47,7 +47,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Validate the thing-types, binding and config xml-s against their xsd schemas.<br>
- * Check if all files from ESH-INF are included in the build.properties file.
+ * Check if all files from OH-INF are included in the build.properties file.
  *
  * @author Aleksandar Kovachev - Initial implementation
  * @author Svlien Valkanov - Some code refactoring and cleanup,
@@ -56,7 +56,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  *
  */
 public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
-    private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `ESH-INF/` value to the bin.includes property.";
+    private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `OH-INF/` value to the bin.includes property.";
 
     private final Log logger = LogFactory.getLog(this.getClass());
 
@@ -130,7 +130,7 @@ public class EshInfXmlValidationCheck extends AbstractEshInfXmlCheck {
 
     @Override
     public void finishProcessing() {
-        // Check for missing ESH-INF files in the build.properties
+        // Check for missing OH-INF files in the build.properties
         checkBuildProperties();
     }
 
