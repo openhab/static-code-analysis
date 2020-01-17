@@ -9,7 +9,7 @@
   <version>0.9.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Static Code Analysis Tool Parent Pom</name>
+  <name>Static Code Analysis Tool Parent POM</name>
   <description>Tool that aggregates reports of PMD, Checkstyle and FindBugs</description>
   <url>https://github.com/openhab/static-code-analysis</url>
 
@@ -21,8 +21,8 @@
   </licenses>
 
   <organization>
-    <name>openhab.org</name>
-    <url>http://www.openhab.org</url>
+    <name>openHAB.org</name>
+    <url>https://www.openhab.org</url>
   </organization>
 
   <developers>
@@ -37,7 +37,7 @@
     <url>git@github.com:openhab/static-code-analysis.git</url>
   </scm>
   <issueManagement>
-    <system>github</system>
+    <system>GitHub</system>
     <url>https://github.com/openhab/static-code-analysis/issues</url>
   </issueManagement>
 
@@ -51,20 +51,21 @@
     <maven.resources.version>2.4</maven.resources.version>
     <pmd.version>6.7.0</pmd.version>
     <checkstyle.version>8.12</checkstyle.version>
-    <spotbugs.version>3.1.7</spotbugs.version>
-    <maven.plugin.api.version>3.1.1</maven.plugin.api.version>
+    <spotbugs.version>3.1.12</spotbugs.version>
+    <maven.core.version>3.5.0</maven.core.version>
+    <maven.plugin.api.version>3.5.0</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.5</maven.plugin.annotations.version>
     <maven.plugin.plugin.version>3.5</maven.plugin.plugin.version>
     <maven.plugin.compiler.version>3.6.1</maven.plugin.compiler.version>
-    <mojo.executor.version>2.2.0</mojo.executor.version>
+    <mojo.executor.version>2.3.0</mojo.executor.version>
     <org.apache.ivy.version>2.4.0</org.apache.ivy.version>
     <org.jsoup.version>1.7.1</org.jsoup.version>
     <pde.core.version>3.11.1</pde.core.version>
-    <sat.version>0.6.1</sat.version>
+    <sat.version>0.8.0</sat.version>
     <jdt-annotations.version>2.1.0</jdt-annotations.version>
     <flexmark.version>0.28.6</flexmark.version>
     <maven.surefire.plugin.version>2.12.4</maven.surefire.plugin.version>
-    <jetty.server.version>9.3.14.v20161028</jetty.server.version>
+    <jetty.server.version>9.4.20.v20190813</jetty.server.version>
     <saxon.version>9.1.0.8</saxon.version>
   </properties>
 
@@ -186,7 +187,7 @@
             <version>2.4.3-01</version>
           </dependency>
         </dependencies>
-      </plugin>         
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -227,7 +228,7 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -262,9 +263,10 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <modules>
     <module>custom-checks</module>
+    <module>sat-extension</module>
     <module>sat-plugin</module>
     <module>codestyle</module>
   </modules>
