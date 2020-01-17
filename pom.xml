@@ -6,7 +6,7 @@
 
   <groupId>org.openhab.tools.sat</groupId>
   <artifactId>pom</artifactId>
-  <version>0.9.0-SNAPSHOT</version>
+  <version>0.10.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Static Code Analysis Tool Parent POM</name>
