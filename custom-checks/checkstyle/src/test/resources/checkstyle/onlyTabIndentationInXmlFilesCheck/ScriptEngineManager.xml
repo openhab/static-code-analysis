@@ -13,11 +13,11 @@
     SPDX-License-Identifier: EPL-2.0
 
 -->
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="org.eclipse.smarthome.automation.module.script.ScriptEngineManager">
-   <implementation class="org.eclipse.smarthome.automation.module.script.internal.ScriptEngineManagerImpl"/>  
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="org.openhab.core.automation.module.script.ScriptEngineManager">
+   <implementation class="org.openhab.core.automation.module.script.internal.ScriptEngineManagerImpl"/>  
    
    <service>
-     <provide interface="org.eclipse.smarthome.automation.module.script.ScriptEngineManager" />
+     <provide interface="org.openhab.core.automation.module.script.ScriptEngineManager" />
    </service>
-   <reference bind="addScriptEngineFactory" unbind="removeScriptEngineFactory" cardinality="0..n" interface="org.eclipse.smarthome.automation.module.script.ScriptEngineFactory" name="ScriptEngineFactory" policy="dynamic"/>
+   <reference bind="addScriptEngineFactory" unbind="removeScriptEngineFactory" cardinality="0..n" interface="org.openhab.core.automation.module.script.ScriptEngineFactory" name="ScriptEngineFactory" policy="dynamic"/>
 </scr:component>

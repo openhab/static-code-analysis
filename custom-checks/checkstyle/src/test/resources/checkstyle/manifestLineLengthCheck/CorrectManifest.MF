@@ -1,28 +1,28 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
-Bundle-SymbolicName: org.eclipse.smarthome.binding.test;singleton:=true
+Bundle-SymbolicName: org.openhab.core.binding.test;singleton:=true
 Bundle-Vendor: Eclipse.org/SmartHome
 Bundle-Version: 0.10.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .
 Import-Package: 
  org.eclipse.jdt.annotation;resolution:=optional,
- org.eclipse.smarthome.binding.bluetooth,
- org.eclipse.smarthome.binding.bluetooth.discovery,
- org.eclipse.smarthome.binding.bluetooth.notification,
- org.eclipse.smarthome.config.core,
- org.eclipse.smarthome.config.discovery,
- org.eclipse.smarthome.core.common.registry,
- org.eclipse.smarthome.core.library.types,
- org.eclipse.smarthome.core.thing,
- org.eclipse.smarthome.core.thing.binding,
- org.eclipse.smarthome.core.thing.binding.builder,
- org.eclipse.smarthome.core.thing.type,
- org.eclipse.smarthome.core.types,
+ org.openhab.core.binding.bluetooth,
+ org.openhab.core.binding.bluetooth.discovery,
+ org.openhab.core.binding.bluetooth.notification,
+ org.openhab.core.config.core,
+ org.openhab.core.config.discovery,
+ org.openhab.core.common.registry,
+ org.openhab.core.library.types,
+ org.openhab.core.thing,
+ org.openhab.core.thing.binding,
+ org.openhab.core.thing.binding.builder,
+ org.openhab.core.thing.type,
+ org.openhab.core.types,
  org.slf4j
 Service-Component: OSGI-INF/*.xml
-Export-Package: org.eclipse.smarthome.binding.bluetooth,
- org.eclipse.smarthome.binding.bluetooth.discovery,
- org.eclipse.smarthome.binding.bluetooth.notification
+Export-Package: org.openhab.core.binding.bluetooth,
+ org.openhab.core.binding.bluetooth.discovery,
+ org.openhab.core.binding.bluetooth.notification
 Bundle-ActivationPolicy: lazy

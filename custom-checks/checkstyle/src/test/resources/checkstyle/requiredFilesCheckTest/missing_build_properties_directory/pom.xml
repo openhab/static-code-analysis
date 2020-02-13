@@ -4,19 +4,19 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <groupId>org.eclipse.smarthome.bundles</groupId>
+    <groupId>org.openhab.core.bundles</groupId>
     <artifactId>config</artifactId>
     <version>0.9.0-SNAPSHOT</version>
   </parent>
 
   <properties>
-    <bundle.symbolicName>org.eclipse.smarthome.config.dispatch</bundle.symbolicName>
-    <bundle.namespace>org.eclipse.smarthome.config.dispatch</bundle.namespace>
+    <bundle.symbolicName>org.openhab.core.config.dispatch</bundle.symbolicName>
+    <bundle.namespace>org.openhab.core.config.dispatch</bundle.namespace>
   </properties>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.eclipse.smarthome.config</groupId>
-  <artifactId>org.eclipse.smarthome.config.dispatch</artifactId>
+  <groupId>org.openhab.core.config</groupId>
+  <artifactId>org.openhab.core.config.dispatch</artifactId>
 
   <name>Eclipse SmartHome Configuration Dispatcher</name>
 

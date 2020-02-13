@@ -1,4 +1,4 @@
-package org.eclipse.smarthome.buildtools.rules.checkstyle.test;
+package org.openhab.core.buildtools.rules.checkstyle.test;
 
 public class MethodLimitCheckTestFile { // warn
 

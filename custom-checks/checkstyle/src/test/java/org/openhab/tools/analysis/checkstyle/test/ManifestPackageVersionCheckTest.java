@@ -40,7 +40,7 @@ public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
     public static void createConfiguration() {
         config = createModuleConfig(ManifestPackageVersionCheck.class);
         config.addAttribute("ignoreImportedPackages", "org.apache.*, org.junit.*");
-        config.addAttribute("ignoreExportedPackages", "org.eclipse.smarthome.tool.*");
+        config.addAttribute("ignoreExportedPackages", "org.openhab.core.tool.*");
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testExportWithVersion() throws Exception {
         String[] expectedMessages = generateExpectedMessages(13,
-                String.format(VERSION_USED_MSG, "org.eclipse.smarthome.buildtools.other"));
+                String.format(VERSION_USED_MSG, "org.openhab.core.buildtools.other"));
         verifyManifest("invalidExportsManifest", expectedMessages);
     }
 
@@ -75,9 +75,9 @@ public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
     public void testMultipleExportsWithVersion() throws Exception {
         // @formatter:off
         String[] expectedMessages = generateExpectedMessages(
-                13, String.format(VERSION_USED_MSG, "org.eclipse.smarthome.buildtools.other"),
-                15, String.format(VERSION_USED_MSG, "org.eclipse.smarthome.build"),
-                17, String.format(VERSION_USED_MSG, "org.eclipse.smarthome.ui"));
+                13, String.format(VERSION_USED_MSG, "org.openhab.core.buildtools.other"),
+                15, String.format(VERSION_USED_MSG, "org.openhab.core.build"),
+                17, String.format(VERSION_USED_MSG, "org.openhab.core.ui"));
         verifyManifest("testMultipleExportsWithVersion", expectedMessages);
     }
 
@@ -88,7 +88,7 @@ public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
                 11,  String.format(VERSION_USED_MSG, "com.apache.commons.io"),
                 13, String.format(VERSION_USED_MSG, "com.apache.commons"),
                 15, String.format(VERSION_USED_MSG, "com.junit"),
-                21, String.format(VERSION_USED_MSG, "org.eclipse.smarthome.checkstyle"));
+                21, String.format(VERSION_USED_MSG, "org.openhab.core.checkstyle"));
         verifyManifest("testConfiguratedRegexPackages", expectedMessages);
     }
 

@@ -106,13 +106,13 @@ public class ReportMojoTest {
         verify(logger).error(
                 "org.sprunck.bee.Bee.java:[19]\norg.sprunck.bee.Bee.toString() ignores return value of String.concat(String)");
         verify(logger).error(
-                "org.eclipse.smarthome.auth.jaas.internal.JaasAuthenticationProvider.java:[69]\nComment matches to-do format '(TODO)|(FIXME)'.");
+                "org.openhab.core.auth.jaas.internal.JaasAuthenticationProvider.java:[69]\nComment matches to-do format '(TODO)|(FIXME)'.");
         verify(logger).debug(
                 "org.sprunck.bee.Bee.java:[19]\nAn operation on an Immutable object (String, BigDecimal or BigInteger) won't change the object itself");
         verify(logger)
                 .debug("org.sprunck.foo.Foo.java:[36]\nDo not use if statements that are always true or always false");
         verify(logger).debug(
-                "C:\\prj\\openHAB\\EclipseIDE\\git\\smarthome\\bundles\\automation\\org.eclipse.smarthome.automation.module.core\\OH-INF\\automation\\moduletypes\\EventTriggersTypeDefinition.json:[0]\n"
+                ".core.automation.module.core\\OH-INF\\automation\\moduletypes\\EventTriggersTypeDefinition.json:[0]\n"
                         + "File does not end with a newline.");
         verify(logger).info("Detailed report can be found at: " + new File(RESULT_FILE_PATH).toURI());
     }

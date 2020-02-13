@@ -48,7 +48,7 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
         String testFileName = "ManifestNotImportingAnExportedPackage.MF";
         int lineNumber = 12;
         String[] warningMessages = generateExpectedMessages(lineNumber,
-                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.eclipse.smarthome.buildtools.package"));
+                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.openhab.core.buildtools.package"));
         verifyManifestFile(testFileName, warningMessages);
     }
 
@@ -58,9 +58,9 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
         int lineNumber = 13;
 
         String[] warningMessages = generateExpectedMessages(lineNumber,
-                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.eclipse.smarthome.buildtools.second.package"),
+                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.openhab.core.buildtools.second.package"),
                 lineNumber,
-                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.eclipse.smarthome.buildtools.third.package"));
+                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.openhab.core.buildtools.third.package"));
         verifyManifestFile(testFileName, warningMessages);
     }
 
@@ -70,7 +70,7 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
         int lineNumber = 10;
 
         String[] warningMessages = generateExpectedMessages(lineNumber,
-                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.eclipse.smarthome.buildtools.package"));
+                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.openhab.core.buildtools.package"));
         verifyManifestFile(testFileName, warningMessages);
     }
 
@@ -86,7 +86,7 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
         String testFileName = "JustifiedManifestNotImportingAnExportedPackage.MF";
         int lineNumber = 12;
         String[] warningMessages = generateExpectedMessages(lineNumber,
-                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.eclipse.smarthome.buildtools.package"));
+                MessageFormat.format(NOT_IMPORTED_PACKAGE_MESSAGE, "org.openhab.core.buildtools.package"));
         verifyManifestFile(testFileName, warningMessages);
     }
 
