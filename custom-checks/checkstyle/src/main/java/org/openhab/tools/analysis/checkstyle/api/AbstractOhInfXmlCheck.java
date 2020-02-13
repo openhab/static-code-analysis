@@ -34,7 +34,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * @author Svlien Valkanov - Some code refactoring and cleanup, added check for the build.properties file
  *
  */
-public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
+public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
     public static final String THING_DIRECTORY = "thing";
     public static final String BINDING_DIRECTORY = "binding";
     public static final String CONFIGURATION_DIRECTORY = "config";
@@ -43,7 +43,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
 
     private final Log logger = LogFactory.getLog(this.getClass());
 
-    public AbstractEshInfXmlCheck() {
+    public AbstractOhInfXmlCheck() {
         setFileExtensions(XML_EXTENSION);
     }
 
@@ -68,7 +68,7 @@ public abstract class AbstractEshInfXmlCheck extends AbstractStaticCheck {
         } else {
 
             File fileParentDirectory = xmlFile.getParentFile();
-            boolean isESHParentDirectory = ESH_INF_DIRECTORY.equals(fileParentDirectory.getParentFile().getName());
+            boolean isESHParentDirectory = OH_INF_DIRECTORY.equals(fileParentDirectory.getParentFile().getName());
 
             if (isESHParentDirectory) {
                 switch (fileParentDirectory.getName()) {

@@ -23,7 +23,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhab.tools.analysis.checkstyle.api.AbstractEshInfXmlCheck;
+import org.openhab.tools.analysis.checkstyle.api.AbstractOhInfXmlCheck;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -37,7 +37,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * @author Svlien Valkanov - Initial implementation
  *
  */
-public class EshInfXmlUsageCheck extends AbstractEshInfXmlCheck {
+public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
     private static final String CONFIG_DESCRIPTION_EXPRESSION = "//config-description[@uri]/@uri";
     private static final String CONFIG_DESCRIPTION_REF_EXPRESSION = "//config-description-ref[@uri]/@uri";
     private static final String BRIDGE_TYPE_EXPRESSION = "//bridge-type[@id]/@id";

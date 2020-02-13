@@ -126,14 +126,14 @@
      <property name="ignoreImportedPackages" value="org.junit.*"/>
   </module>
    
-  <module name="org.openhab.tools.analysis.checkstyle.EshInfXmlValidationCheck">
+  <module name="org.openhab.tools.analysis.checkstyle.OhInfXmlValidationCheck">
     <property name="severity" value="error" />
     <property name="thingSchema" value="https://openhab.org/schemas/thing-description-1.0.0.xsd" />
     <property name="bindingSchema" value="https://openhab.org/schemas/binding-1.0.0.xsd" />
     <property name="configSchema" value="https://openhab.org/schemas/config-description-1.0.0.xsd" />
   </module>
   
-  <module name="org.openhab.tools.analysis.checkstyle.EshInfXmlUsageCheck">
+  <module name="org.openhab.tools.analysis.checkstyle.OhInfXmlUsageCheck">
     <property name="severity" value="warning" />
   </module>
   
