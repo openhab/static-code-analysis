@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse SmartHome Example 
-Bundle-SymbolicName: org.eclipse.smarthome.binding.example;singleton:=true
+Bundle-SymbolicName: org.openhab.core.binding.example;singleton:=true
 Bundle-Vendor: Eclipse.org/SmartHome
 Bundle-Version: 0.9.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
@@ -12,5 +12,5 @@ Service-Component: OSGI-INF/testServiceOne.xml,
  OSGI-INF/testServiceTwo.xml,
  OSGI-INF/testServiceThree.xml,
  OSGI-INF/testServiceFour.xml
-Export-Package: org.eclipse.smarthome.buildtools.internal,
- org.eclipse.smarthome.buildtools.other
+Export-Package: org.openhab.core.buildtools.internal,
+ org.openhab.core.buildtools.other

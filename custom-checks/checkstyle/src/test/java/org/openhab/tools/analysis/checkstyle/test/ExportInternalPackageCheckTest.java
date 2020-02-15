@@ -44,7 +44,7 @@ public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
     public void testManifestFileExportsSingleInternalPackage() throws Exception {
         int lineNumber = 12;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                "Remove internal package export org.eclipse.smarthome.buildtools.internal");
+                "Remove internal package export org.openhab.core.buildtools.internal");
         verifyManifest("singleInternalPackageExported.MF", expectedMessages);
     }
 
@@ -52,8 +52,8 @@ public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
     public void testManifestFileExportsMultipleInternalPackages() throws Exception {
         int lineNumber = 12;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                "Remove internal package export org.eclipse.smarthome.buildtools.internal", lineNumber,
-                "Remove internal package export org.eclipse.smarthome.buildtools.internal.test");
+                "Remove internal package export org.openhab.core.buildtools.internal", lineNumber,
+                "Remove internal package export org.openhab.core.buildtools.internal.test");
         verifyManifest("multipleInternalPackagesExported.MF", expectedMessages);
     }
 
@@ -74,8 +74,8 @@ public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
     public void testManifestJustifiedText() throws Exception {
         int lineNumber = 13;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                "Remove internal package export org.eclipse.smarthome.buildtools.internal", lineNumber,
-                "Remove internal package export org.eclipse.smarthome.buildtools.internal.test");
+                "Remove internal package export org.openhab.core.buildtools.internal", lineNumber,
+                "Remove internal package export org.openhab.core.buildtools.internal.test");
         verifyManifest("manifestJustifiedText.MF", expectedMessages);
     }
 

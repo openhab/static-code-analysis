@@ -12,7 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ESH_INF_PATH;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OH_INF_PATH;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openhab.tools.analysis.checkstyle.EshInfXmlValidationCheck;
+import org.openhab.tools.analysis.checkstyle.OhInfXmlValidationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
 
@@ -33,20 +33,20 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
- * Test for {@link EshInfXmlValidationCheck}
+ * Test for {@link OhInfXmlValidationCheck}
  *
  * @author Aleksandar Kovachev - Initial implementation
  * @author Svilen Valkanov - Added new test cases, message constants and done some refactoring
  *
  */
-public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
+public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
-    private static final String RELATIVE_PATH_TO_THING = File.separator + ESH_INF_PATH + File.separator
-            + EshInfXmlValidationCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
-    private static final String RELATIVE_PATH_TO_BINDING = File.separator + ESH_INF_PATH + File.separator
-            + EshInfXmlValidationCheck.BINDING_DIRECTORY + File.separator + "bind.xml";
-    private static final String RELATIVE_PATH_TO_CONFIG = File.separator + ESH_INF_PATH + File.separator
-            + EshInfXmlValidationCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
+    private static final String RELATIVE_PATH_TO_THING = File.separator + OH_INF_PATH + File.separator
+            + OhInfXmlValidationCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
+    private static final String RELATIVE_PATH_TO_BINDING = File.separator + OH_INF_PATH + File.separator
+            + OhInfXmlValidationCheck.BINDING_DIRECTORY + File.separator + "bind.xml";
+    private static final String RELATIVE_PATH_TO_CONFIG = File.separator + OH_INF_PATH + File.separator
+            + OhInfXmlValidationCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
 
     private static final String SCHEMA_ROOT_URL = "https://openhab.org/schemas/";
     private static final String THING_SCHEMA_URL = SCHEMA_ROOT_URL + "thing-description-1.0.0.xsd";
@@ -54,9 +54,9 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
     private static final String CONFIG_SCHEMA_URL = SCHEMA_ROOT_URL + "config-description-1.0.0.xsd";
 
     private static final String MESSAGE_EMPTY_FILE = "The file {0} should not be empty.";
-    private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `ESH-INF/` value to the bin.includes property.";
+    private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `OH-INF/` value to the bin.includes property.";
 
-    private static final DefaultConfiguration CONFIGURATION = createModuleConfig(EshInfXmlValidationCheck.class);
+    private static final DefaultConfiguration CONFIGURATION = createModuleConfig(OhInfXmlValidationCheck.class);
 
     @BeforeClass
     public static void createConfiguration() {
@@ -201,7 +201,7 @@ public class EshInfXmlValidationCheckTest extends AbstractStaticCheckTest {
         int lineNumber = 0;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
                 MessageFormat.format(MESSAGE_NOT_INCLUDED_XML_FILE,
-                        "ESH-INF" + File.separator + "thing" + File.separator + "thing-types.xml"));
+                        "OH-INF" + File.separator + "thing" + File.separator + "thing-types.xml"));
         verifyWithPath("missingXmlFileInBuildProperties", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 

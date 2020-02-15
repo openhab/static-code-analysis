@@ -4,19 +4,19 @@
 	the terms of the Eclipse Public License 2.0 which is available at http://www.eclipse.org/legal/epl-2.0 SPDX-License-Identifier: 
 	EPL-2.0 -->
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate"
-	immediate="true" name="org.eclipse.smarthome.automation.module.core.factory.basicmodulehandlerfactory">
+	immediate="true" name="org.openhab.core.automation.module.core.factory.basicmodulehandlerfactory">
 
-	<implementation class="org.eclipse.smarthome.automation.module.core.factory.CoreModuleHandlerFactory" />
+	<implementation class="org.openhab.core.automation.module.core.factory.CoreModuleHandlerFactory" />
 
 	<service>
-		<provide interface="org.eclipse.smarthome.automation.handler.ModuleHandlerFactory" />
+		<provide interface="org.openhab.core.automation.handler.ModuleHandlerFactory" />
 	</service>
-	<reference bind="setRuleRegistry" cardinality="1..1" interface="org.eclipse.smarthome.automation.RuleRegistry"
+	<reference bind="setRuleRegistry" cardinality="1..1" interface="org.openhab.core.automation.RuleRegistry"
 		name="RuleRegistry" policy="static" unbind="unsetRuleRegistry" />
 
-	<reference bind="setItemRegistry" cardinality="0..1" interface="org.eclipse.smarthome.core.items.ItemRegistry"
+	<reference bind="setItemRegistry" cardinality="0..1" interface="org.openhab.core.items.ItemRegistry"
 		name="ItemRegistry" policy="dynamic" unbind="unsetItemRegistry" />
-	<reference bind="setEventPublisher" cardinality="0..1" interface="org.eclipse.smarthome.core.events.EventPublisher"
+	<reference bind="setEventPublisher" cardinality="0..1" interface="org.openhab.core.events.EventPublisher"
 		name="EventPublisher" policy="dynamic" unbind="unsetEventPublisher" />
 
 </scr:component>

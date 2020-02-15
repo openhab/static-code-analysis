@@ -12,39 +12,39 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.ESH_INF_PATH;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OH_INF_PATH;
 
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import org.junit.Test;
-import org.openhab.tools.analysis.checkstyle.EshInfXmlUsageCheck;
-import org.openhab.tools.analysis.checkstyle.EshInfXmlValidationCheck;
+import org.openhab.tools.analysis.checkstyle.OhInfXmlUsageCheck;
+import org.openhab.tools.analysis.checkstyle.OhInfXmlValidationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 
 /**
- * Test for {@link EshInfXmlValidationCheck}
+ * Test for {@link OhInfXmlValidationCheck}
  *
  * @author Aleksandar Kovachev - Initial implementation
  * @author Svilen Valkanov - Added new test cases, message constants and done some refactoring
  *
  */
-public class EshInfXmlUsageCheckTest extends AbstractStaticCheckTest {
+public class OhInfXmlUsageCheckTest extends AbstractStaticCheckTest {
 
-    private static final String RELATIVE_PATH_TO_THING = File.separator + ESH_INF_PATH + File.separator
-            + EshInfXmlValidationCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
-    private static final String RELATIVE_PATH_TO_CONFIG = File.separator + ESH_INF_PATH + File.separator
-            + EshInfXmlValidationCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
+    private static final String RELATIVE_PATH_TO_THING = File.separator + OH_INF_PATH + File.separator
+            + OhInfXmlValidationCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
+    private static final String RELATIVE_PATH_TO_CONFIG = File.separator + OH_INF_PATH + File.separator
+            + OhInfXmlValidationCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
 
     private static final String MESSAGE_MISSING_URI_CONFIGURATION = "Missing configuration for the configuration reference with uri - {0}";
     private static final String MESSAGE_MISSING_SUPPORTED_BRIDGE = "Missing the supported bridge with id {0}";
     private static final String MESSAGE_UNUSED_URI_CONFIGURATION = "Unused configuration reference with uri - {0}";
     private static final String MESSAGE_UNUSED_BRIDGE = "Unused bridge reference with id - {0}";
 
-    private static final DefaultConfiguration CONFIGURATION = createModuleConfig(EshInfXmlUsageCheck.class);
+    private static final DefaultConfiguration CONFIGURATION = createModuleConfig(OhInfXmlUsageCheck.class);
 
     @Override
     protected String getPackageLocation() {
