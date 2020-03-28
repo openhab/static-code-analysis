@@ -64,9 +64,9 @@ class Foo{
 ]]></code>
   </test-code>
   <test-code reinitializeRule="true" regressionTest="true">
-  <description>Real smarthome class</description>
-  <expected-problems>0</expected-problems>
-  <code><![CDATA[
+    <description>Real smarthome class</description>
+    <expected-problems>0</expected-problems>
+    <code><![CDATA[
 /**
  * Copyright (c) 2014,2018 Contributors to the Eclipse Foundation
  *
@@ -189,7 +189,20 @@ public class RawType implements PrimitiveType, State {
     }
 
 }
-
-  ]]></code>
+]]></code>
+  </test-code>
+  <test-code reinitializeRule="true" regressionTest="true">
+    <description>Unresolved inferred var types</description>
+    <expected-problems>0</expected-problems>
+    <code><![CDATA[
+class Foo {
+    Foo() {
+        var oh = "openHAB";
+        var obj1 = new Object();
+        var obj2 = null;
+        var i = 1;
+    }
+}
+]]></code>
   </test-code>
 </test-data>
