@@ -12,7 +12,7 @@
 |  | com.puppycrawl.tools.checkstyle.checks.naming.LocalVariableName | info |
 |  | com.puppycrawl.tools.checkstyle.checks.naming.StaticVariableName | info |
 | Every Java file must have a license header. | org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck | error |
-| Every class, interface and enumeration should have JavaDoc describing its purpose and usage. | org.openhab.tools.analysis.checkstyle.JavadocFilterCheck | warning |
+| Every class, interface and enumeration should have JavaDoc describing its purpose and usage. | org.openhab.tools.analysis.checkstyle.MissingJavadocFilterCheck | warning |
 | Every class, interface and enumeration must have an @author tag in its,JavaDoc for every author that wrote a substantial part of the file. | org.openhab.tools.analysis.checkstyle.AuthorTagCheck | error |
 | Every constant, field and method with default, protected or public,visibility should have JavaDoc (optional, but encouraged for private,visibility as well). | https://github.com/openhab/static-code-analysis/issues/219 |  |
 | Formatting : java files must use spaces for formatting, rather than tabs | com.puppycrawl.tools.checkstyle.checks.whitespace.FileTabCharacterCheck | error |

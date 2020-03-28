@@ -53,7 +53,7 @@ public class CheckstyleChecker extends AbstractChecker {
     /**
      * The version of the maven-checkstyle-plugin that will be used
      */
-    @Parameter(property = "maven.checkstyle.version", defaultValue = "2.17")
+    @Parameter(property = "maven.checkstyle.version", defaultValue = "3.1.1")
     private String checkstyleMavenVersion;
 
     /**
@@ -118,14 +118,14 @@ public class CheckstyleChecker extends AbstractChecker {
 
         checkstylePlugins.add(dependency("org.openhab.tools.sat.custom-checks", "checkstyle", plugin.getVersion()));
         // Maven may load an older version, if no version is specified
-        checkstylePlugins.add(dependency("com.puppycrawl.tools", "checkstyle", "8.12"));
+        checkstylePlugins.add(dependency("com.puppycrawl.tools", "checkstyle", "8.30"));
         checkstylePlugins.forEach(logDependency());
 
         String baseDir = mavenProject.getBasedir().toString();
         if (baseDir.contains("AddJarsMojo")) {
             baseDir += "/../..";
         }
-        Xpp3Dom config = configuration(element("sourceDirectory", baseDir));
+        Xpp3Dom config = configuration(element("sourceDirectories", element("sourceDirectory", baseDir)));
 
         executeCheck(MAVEN_CHECKSTYLE_PLUGIN_GROUP_ID, MAVEN_CHECKSTYLE_PLUGIN_ARTIFACT_ID, checkstyleMavenVersion,
                 MAVEN_CHECKSTYLE_PLUGIN_GOAL, config, checkstylePlugins);

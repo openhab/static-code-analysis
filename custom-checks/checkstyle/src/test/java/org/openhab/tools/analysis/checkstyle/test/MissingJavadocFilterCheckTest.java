@@ -13,7 +13,7 @@
 package org.openhab.tools.analysis.checkstyle.test;
 
 import org.junit.Test;
-import org.openhab.tools.analysis.checkstyle.JavadocFilterCheck;
+import org.openhab.tools.analysis.checkstyle.MissingJavadocFilterCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
@@ -22,16 +22,16 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link JavadocInnerClassesFilterCheck}
- * 
- * @author Petar Valchev
  *
+ * @author Petar Valchev - Initial contribution
  */
-public class JavadocFilterCheckTest extends AbstractStaticCheckTest {
+public class MissingJavadocFilterCheckTest extends AbstractStaticCheckTest {
 
     @Override
     protected String getPackageLocation() {
-        return "checkstyle/javadocFilterCheckTest";
+        return "checkstyle/missingJavadocFilterCheckTest";
     }
+
     @Test
     public void testOuterClassWithJavadoc() throws Exception {
         int[] lineNumbers = new int[] { 10 };
@@ -55,7 +55,7 @@ public class JavadocFilterCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verifyJavadoc(String testFileName, boolean checkInnerClasses, int[] lineNumbers) throws Exception {
-        DefaultConfiguration config = createModuleConfig(JavadocFilterCheck.class);
+        DefaultConfiguration config = createModuleConfig(MissingJavadocFilterCheck.class);
         String checkInnerClassesPropertyName = "checkInnerUnits";
         config.addAttribute(checkInnerClassesPropertyName, String.valueOf(checkInnerClasses));
 

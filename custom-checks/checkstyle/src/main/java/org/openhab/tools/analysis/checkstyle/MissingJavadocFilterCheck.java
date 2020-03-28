@@ -13,16 +13,15 @@
 package org.openhab.tools.analysis.checkstyle;
 
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
-import com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTypeCheck;
+import com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocTypeCheck;
 
 /**
  * Provides a filter that determines whether to check the inner units for a
  * javadoc.
- * 
- * @author Petar Valchev
  *
+ * @author Petar Valchev - Initial contribution
  */
-public class JavadocFilterCheck extends JavadocTypeCheck {
+public class MissingJavadocFilterCheck extends MissingJavadocTypeCheck {
     private boolean checkInnerUnits = false;
 
     // A configuration property that determines whether to check the inner units
