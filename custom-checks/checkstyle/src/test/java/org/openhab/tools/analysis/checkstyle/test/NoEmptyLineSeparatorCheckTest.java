@@ -228,11 +228,16 @@ public class NoEmptyLineSeparatorCheckTest extends AbstractStaticCheckTest {
     }
 
     @Test
-    public void verifyMutlitpleEmptyLinesInSwitchWithCases() throws Exception {
+    public void verifyMultipleEmptyLinesInSwitchWithCases() throws Exception {
         String[] expectedMessages = generateExpectedMessages(12, MSG_LINE_AFTER_OPENING_BRACE_EMPTY, 29,
                 MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY, 16, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY, 19, MSG_FOR_EMPTY_LINE,
                 27, MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY);
         verifyJavaFile("MutlitpleEmptyLinesInSwitchWithCases.java", expectedMessages);
+    }
+
+    @Test
+    public void verifyValidAnnotationInterface() throws Exception {
+        verifyJavaFileNoErrors("ValidAnnotationInterface.java");
     }
 
     @Test

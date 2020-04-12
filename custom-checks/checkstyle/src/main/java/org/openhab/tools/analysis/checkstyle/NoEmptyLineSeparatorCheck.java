@@ -205,6 +205,10 @@ public class NoEmptyLineSeparatorCheck extends AbstractCheck {
         switch (ast.getType()) {
             case TokenTypes.LITERAL_CASE:
             case TokenTypes.LITERAL_DEFAULT: {
+                if (ast.getParent().getType() == TokenTypes.ANNOTATION_FIELD_DEF) {
+                    // annotation field defaults don't have a curly
+                    return null;
+                }
                 DetailAST nextNode = ast.getParent().getNextSibling();
                 return (nextNode != null) ? ast : null;
             }
@@ -223,6 +227,10 @@ public class NoEmptyLineSeparatorCheck extends AbstractCheck {
         switch (ast.getType()) {
             case TokenTypes.LITERAL_DEFAULT:
             case TokenTypes.LITERAL_CASE: {
+                if (ast.getParent().getType() == TokenTypes.ANNOTATION_FIELD_DEF) {
+                    // annotation field defaults don't have a curly
+                    return null;
+                }
                 /*
                  * cases are nested in case groups(a group of case clauses),
                  * we are searching for the case in the next case group or
