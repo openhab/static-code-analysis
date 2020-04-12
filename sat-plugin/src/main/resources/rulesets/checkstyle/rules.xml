@@ -228,7 +228,7 @@
     
     <module name="org.openhab.tools.analysis.checkstyle.NullAnnotationsCheck">
       <property name="severity" value="warning"/>
-      <property name="checkInnerUnits" value="true"/>
+      <property name="checkInnerUnits" value="false"/>
     </module>
 
     <!-- Rules for Java Naming Convention -->
