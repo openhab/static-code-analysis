@@ -12,6 +12,7 @@
  -->
 
 <module name="Checker">
+  <module name="org.openhab.tools.analysis.checkstyle.filters.GitIgnoredFilesFilter"/>
 
   <!-- Allow to skip parsing of files, see https://github.com/checkstyle/checkstyle/issues/5629#issuecomment-375126473 -->
   <!-- Add default to skip unhandled Java 9 sources -->
