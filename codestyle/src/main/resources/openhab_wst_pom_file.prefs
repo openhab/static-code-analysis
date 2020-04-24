@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+formatCommentJoinLines=false
 indentationChar=space
 indentationSize=2
 lineWidth=120
