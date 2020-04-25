@@ -47,7 +47,8 @@ public class UseSLF4JLoggerRule extends AbstractJavaRule {
         String fullImportName = node.getImportedName();
         if (forbiddenLoggers.contains(fullImportName)) {
             addViolation(data, node);
-        } else if ("org.slf4j.Logger".equals(fullImportName) || ("org.slf4j".equals(fullImportName) && node.isImportOnDemand())) {
+        } else if ("org.slf4j.Logger".equals(fullImportName)
+                || ("org.slf4j".equals(fullImportName) && node.isImportOnDemand())) {
             isSlf4jPackageImported = true;
         }
         return super.visit(node, data);
@@ -55,10 +56,11 @@ public class UseSLF4JLoggerRule extends AbstractJavaRule {
 
     @Override
     public Object visit(ASTVariableDeclarator node, Object data) {
-        ASTType typeNode = node.jjtGetParent().getFirstChildOfType(ASTType.class);
-        Node reftypeNode = typeNode.jjtGetChild(0);
+        ASTType typeNode = node.getParent().getFirstChildOfType(ASTType.class);
+        Node reftypeNode = typeNode.getChild(0);
         if (reftypeNode instanceof ASTReferenceType) {
-            ASTClassOrInterfaceType classOrInterfaceType = reftypeNode.getFirstChildOfType(ASTClassOrInterfaceType.class);
+            ASTClassOrInterfaceType classOrInterfaceType = reftypeNode
+                    .getFirstChildOfType(ASTClassOrInterfaceType.class);
             if (classOrInterfaceType != null) {
                 String className = classOrInterfaceType.getImage();
 
@@ -74,9 +76,8 @@ public class UseSLF4JLoggerRule extends AbstractJavaRule {
         if (forbiddenLoggers.contains(className)) {
             return true;
         }
-        //If the classname is Logger but org.slf4j is not in the imports,
+        // If the classname is Logger but org.slf4j is not in the imports,
         // that means the current Logger literal is not a sfl4j.Logger
         return LOGGER_LITERAL.equals(className) && !isSlf4jPackageImported;
     }
 }
-
