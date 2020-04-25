@@ -57,15 +57,17 @@ public class UseSLF4JLoggerRule extends AbstractJavaRule {
     @Override
     public Object visit(ASTVariableDeclarator node, Object data) {
         ASTType typeNode = node.getParent().getFirstChildOfType(ASTType.class);
-        Node reftypeNode = typeNode.getChild(0);
-        if (reftypeNode instanceof ASTReferenceType) {
-            ASTClassOrInterfaceType classOrInterfaceType = reftypeNode
-                    .getFirstChildOfType(ASTClassOrInterfaceType.class);
-            if (classOrInterfaceType != null) {
-                String className = classOrInterfaceType.getImage();
+        if (typeNode != null) {
+            Node reftypeNode = typeNode.getChild(0);
+            if (reftypeNode instanceof ASTReferenceType) {
+                ASTClassOrInterfaceType classOrInterfaceType = reftypeNode
+                        .getFirstChildOfType(ASTClassOrInterfaceType.class);
+                if (classOrInterfaceType != null) {
+                    String className = classOrInterfaceType.getImage();
 
-                if (isClassNameForbidden(className)) {
-                    addViolation(data, typeNode);
+                    if (isClassNameForbidden(className)) {
+                        addViolation(data, typeNode);
+                    }
                 }
             }
         }
