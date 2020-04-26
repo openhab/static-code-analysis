@@ -27,7 +27,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  * Tests for {@link AuthorContributionDescriptionCheck}
  *
  * @author Kristina Simova - Initial contribution
- *
  */
 public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckTest {
 

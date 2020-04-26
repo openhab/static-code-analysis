@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractExternalLibrariesCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -34,14 +34,13 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * are added to the lib folder.
  *
  * @author Velin Yordanov - Initial contribution
- *
  */
 public class BuildPropertiesExternalLibrariesCheck extends AbstractExternalLibrariesCheck {
     private static final String BIN_INCLUDES = "bin.includes";
     private static final String FILES_NEED_TO_BE_IN_A_LIB_FOLDER = "All jar files need to be placed inside a lib folder.";
     private static final String JAR_PRESENT_IN_BUILD_PROPERTIES_NOT_IN_LIB = "The file %s is present in the build properties but not in the lib folder.";
     private static final String JAR_PRESENT_IN_LIB_NOT_IN_BUILD_PROPERTIES = "The jar file %s is present in the lib folder but is not present in the build properties";
-    private static final Log logger = LogFactory.getLog(BuildPropertiesExternalLibrariesCheck.class);
+    private final Logger logger = LoggerFactory.getLogger(BuildPropertiesExternalLibrariesCheck.class);
 
     public BuildPropertiesExternalLibrariesCheck() {
         // build.properties will not be explicitly processed by the check.

@@ -23,8 +23,7 @@ import com.puppycrawl.tools.checkstyle.utils.CheckUtil;
  * usage of {@code org.osgi.util.tracker.ServiceTracker} or
  * {@code org.osgi.util.tracker.ServiceTrackerCustomizer} is found.
  *
- * @author Svilen Valkanov
- *
+ * @author Svilen Valkanov - Initial contribution
  */
 public class DeclarativeServicesDependencyInjectionCheck extends AbstractCheck {
 
@@ -67,7 +66,7 @@ public class DeclarativeServicesDependencyInjectionCheck extends AbstractCheck {
     /**
      * Checks whether a variable is of type {@link #SERVICE_TRACKER_CLASS_NAME} and logs a message
      *
-     * @param astNode - the node to check
+     * @param astNode the node to check
      */
     private void checkVariable(DetailAST astNode) {
         DetailAST variableTypeNode = astNode.findFirstToken(TokenTypes.TYPE);
@@ -81,7 +80,7 @@ public class DeclarativeServicesDependencyInjectionCheck extends AbstractCheck {
     /**
      * Checks whether a class implements {@link #SERVICE_CUSTOMIZER_CLASS_NAME} and logs a message
      *
-     * @param astNode -the node to check
+     * @param astNode the node to check
      */
     private void checkClass(DetailAST astNode) {
         DetailAST implementedInterfaceNode = astNode.findFirstToken(TokenTypes.IMPLEMENTS_CLAUSE);

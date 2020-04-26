@@ -30,8 +30,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.ivy.osgi.core.BundleInfo;
 import org.apache.ivy.osgi.core.ManifestParser;
 import org.eclipse.core.internal.filebuffers.SynchronizableDocument;
@@ -40,6 +38,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.internal.core.text.build.BuildModel;
 import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -60,16 +60,16 @@ import com.vladsch.flexmark.util.options.MutableDataSet;
  */
 public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
 
-    private Log logger = LogFactory.getLog(AbstractStaticCheck.class);
+    private final Logger logger = LoggerFactory.getLogger(AbstractStaticCheck.class);
 
     /**
      * Finds the first occurrence of a text in a list of text lines representing the file content and
      * returns the line number, where the text was found
      *
      *
-     * @param fileContent - represents the text content
-     * @param searchedText - the text that we are looking for
-     * @param startLineNumber - the line number from which the search starts exclusive, to start the
+     * @param fileContent represents the text content
+     * @param searchedText the text that we are looking for
+     * @param startLineNumber the line number from which the search starts exclusive, to start the
      *            search of the beginning of the text the startLineNumber should be 0
      * @return the number of the line starting from 1, where the searched text occurred for the first
      *         time
@@ -95,11 +95,11 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
      * Finds the first occurrence of a text in a list of text lines representing the file content and
      * returns the line number, where the text was found
      *
-     * @param fileText - represents the content of a file
-     * @param searchedText - the text that we are looking for
-     * @param startLineNumber - the line number from which the search starts exclusive, to start the
+     * @param fileText represents the content of a file
+     * @param searchedText the text that we are looking for
+     * @param startLineNumber the line number from which the search starts exclusive, to start the
      *            search of the beginning of the text the startLineNumber should be 0
-     * @param warningMessage - message to be logged as warning in case no match is found
+     * @param warningMessage message to be logged as warning in case no match is found
      * @return the number of the line starting from 1, where the searched text occurred for the first
      *         time, or 0 if no matches are found
      */
@@ -108,7 +108,7 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
         try {
             return findLineNumber(fileText, searchedText, startLineNumber);
         } catch (NoResultException e) {
-            logger.warn(warningMessage + " Fall back to 0.", e);
+            logger.warn("{} Fall back to 0.", warningMessage, e);
             return 0;
         }
     }
@@ -116,9 +116,9 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parses the content of the given file as an XML document.
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText Represents the text contents of a file
      * @return DOM Document object
-     * @throws CheckstyleException - if an error occurred while trying to parse the file
+     * @throws CheckstyleException if an error occurred while trying to parse the file
      */
     protected Document parseDomDocumentFromFile(FileText fileText) throws CheckstyleException {
         try {
@@ -138,9 +138,9 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parses the content of the given Manifest file
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText Represents the text contents of a file
      * @return Bundle info extracted from the bundle manifest
-     * @throws CheckstyleException - if an error occurred while trying to parse the file
+     * @throws CheckstyleException if an error occurred while trying to parse the file
      */
     protected BundleInfo parseManifestFromFile(FileText fileText) throws CheckstyleException {
         try {
@@ -156,12 +156,11 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Reads a properties list from a file
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText Represents the text contents of a file
      * @return Properties object containing all the read properties
-     * @throws CheckstyleException - if an error occurred while trying to parse the file
+     * @throws CheckstyleException if an error occurred while trying to parse the file
      */
     protected Properties readPropertiesFromFile(FileText fileText) throws CheckstyleException {
-
         try {
             Properties properties = new Properties();
             properties.load(getInputStream(fileText));
@@ -176,7 +175,7 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parses the content of a given file as a HTML file
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText Represents the text contents of a file
      * @return HTML Document representation of the file
      */
     protected org.jsoup.nodes.Document parseHTMLDocumentFromFile(FileText fileText) {
@@ -187,7 +186,7 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Compiles an XPathExpression
      *
-     * @param expresion - the XPath expression
+     * @param expresion the XPath expression
      * @return compiled XPath expression
      * @throws CheckstyleException if an error occurred during the compilation
      */
@@ -204,9 +203,9 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parses the content of a given file as a build.properties file
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText Represents the text contents of a file
      * @return IBuild representation of the file
-     * @throws CheckstyleException - if an error occurred while trying to parse the file
+     * @throws CheckstyleException if an error occurred while trying to parse the file
      */
     protected IBuild parseBuildProperties(FileText fileText) throws CheckstyleException {
         IDocument document = new SynchronizableDocument();
@@ -222,7 +221,7 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Checks whether a file is empty
      *
-     * @param fileText - Represents the text contents of a file
+     * @param fileText Represents the text contents of a file
      * @return true if the file is empty, otherwise false
      */
     protected boolean isEmpty(FileText fileText) {
@@ -258,8 +257,8 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Parsed the content of a markdown file.
      *
-     * @param fileText - Represents the text contents of a file
-     * @param parsingOptions - parsing options
+     * @param fileText Represents the text contents of a file
+     * @param parsingOptions parsing options
      * @return The markdown node
      */
     protected Node parseMarkdown(FileText fileText, MutableDataSet parsingOptions) {

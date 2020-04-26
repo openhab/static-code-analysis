@@ -22,14 +22,14 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 /**
  * Tests for {@link BundleVendorCheck}
  *
- * @author Martin van Wingerden
+ * @author Martin van Wingerden - Initial contribution
  */
 public class BundleVendorCheckTest extends AbstractStaticCheckTest {
-    private static final DefaultConfiguration checkConfig = createModuleConfig(BundleVendorCheck.class);
+    private static final DefaultConfiguration CHECK_CONFIG = createModuleConfig(BundleVendorCheck.class);
 
     @BeforeClass
     public static void setUpClass() {
-        checkConfig.addAttribute("allowedValues", "openHAB");
+        CHECK_CONFIG.addAttribute("allowedValues", "openHAB");
     }
 
     @Override
@@ -73,6 +73,6 @@ public class BundleVendorCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verify(String fileName, String[] expectedMessages) throws Exception {
-        verify(checkConfig, getPath(fileName), expectedMessages);
+        verify(CHECK_CONFIG, getPath(fileName), expectedMessages);
     }
 }

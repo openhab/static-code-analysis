@@ -18,8 +18,7 @@ import com.puppycrawl.tools.checkstyle.checks.javadoc.WriteTagCheck;
 /**
  * Checks if a class/interface/enumeration has an author tag
  *
- * @author Mihaela Memova
- *
+ * @author Mihaela Memova - Initial contribution
  */
 public class AuthorTagCheck extends WriteTagCheck {
 

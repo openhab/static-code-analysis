@@ -19,9 +19,8 @@ import net.sourceforge.pmd.testframework.SimpleAggregatorTst;
 /**
  * Test class that includes all custom PMD tests for the .classpath files
  *
- * @author Svilen Valkanov
+ * @author Svilen Valkanov - Initial contribution
  */
-
 public class ClasspathTest extends SimpleAggregatorTst {
 
     // How to implement PMD rule test - https://pmd.github.io/pmd-5.4.1/customizing/rule-guidelines.html

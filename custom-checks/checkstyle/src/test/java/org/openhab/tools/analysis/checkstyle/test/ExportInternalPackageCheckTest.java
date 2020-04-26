@@ -25,7 +25,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  *
  * @author Svilen Valkanov - Initial contribution
  * @author Petar Valchev - Added the general verifyManifest() method
- *
  */
 public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
     private static DefaultConfiguration config;

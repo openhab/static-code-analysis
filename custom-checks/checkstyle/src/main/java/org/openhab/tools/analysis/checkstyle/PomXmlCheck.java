@@ -23,11 +23,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.ivy.osgi.core.BundleInfo;
 import org.apache.ivy.osgi.util.Version;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -38,7 +38,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * Checks if the version and the artifactId in the pom.xml file correspond to
  * the ones in the MANIFEST.MF
  *
- * @author Petar Valchev - Initial implementation
+ * @author Petar Valchev - Initial contribution
  * @author Svilen Valkanov - Replaced headers, applied minor improvements, added
  *         check for parent pom ID
  * @author Velin Yordanov - The check can now verify that the pom version is the
@@ -61,7 +61,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
     private static final String POM_VERSION_XPATH_EXPRESSION = "/project/version/text()";
     private static final String DIFFERENT_POM_VERSION = "The pom version is different from the parent pom version";
 
-    private final Log logger = LogFactory.getLog(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(PomXmlCheck.class);
 
     private String pomDirectoryPath;
 
@@ -229,7 +229,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
             NodeList nodes = (NodeList) result;
             return nodes.getLength() > 0 ? Optional.of(nodes.item(0).getTextContent()) : Optional.empty();
         } catch (XPathExpressionException e) {
-            logger.error("An exception was thrown, while trying to parse the file: " + filePath, e);
+            logger.error("An exception was thrown, while trying to parse the file: {}", filePath, e);
             return Optional.empty();
         }
     }

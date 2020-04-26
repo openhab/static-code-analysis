@@ -15,7 +15,7 @@ package org.openhab.tools.analysis.checkstyle.api;
 /**
  * Contains constants used in the implementation of checks and tests for them
  *
- * @author Svilen Valkanov
+ * @author Svilen Valkanov - Initial contribution
  */
 public class CheckConstants {
     // File extensions
@@ -47,9 +47,9 @@ public class CheckConstants {
     public static final String SOURCE_PROPERTY_NAME = "source..";
 
     // OSGi MANIFEST.MF properties
-    public final static String REQUIRE_BUNDLE_HEADER_NAME = "Require-Bundle";
-    public final static String FRAGMENT_HOST_HEADER_NAME = "Fragment-Host";
-    public final static String BUNDLE_SYMBOLIC_NAME_HEADER_NAME = "Bundle-SymbolicName";
-    public final static String EXPORT_PACKAGE_HEADER_NAME = "Export-Package";
-    public final static String SERVICE_COMPONENT_HEADER_NAME = "Service-Component";
+    public static final String REQUIRE_BUNDLE_HEADER_NAME = "Require-Bundle";
+    public static final String FRAGMENT_HOST_HEADER_NAME = "Fragment-Host";
+    public static final String BUNDLE_SYMBOLIC_NAME_HEADER_NAME = "Bundle-SymbolicName";
+    public static final String EXPORT_PACKAGE_HEADER_NAME = "Export-Package";
+    public static final String SERVICE_COMPONENT_HEADER_NAME = "Service-Component";
 }

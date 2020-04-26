@@ -25,12 +25,11 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Test for the {@link ManifestExternalLibrariesCheck}
  *
- * @author Velin Yordanov - initial contribution
- *
+ * @author Velin Yordanov - Initial contribution
  */
 public class ManifestExternalLibrariesCheckTest extends AbstractStaticCheckTest {
     private static final DefaultConfiguration CONFIGURATION = createModuleConfig(ManifestExternalLibrariesCheck.class);
-    private static String TEST_FILE_NAME = "MANIFEST.MF";
+    private static final String TEST_FILE_NAME = "MANIFEST.MF";
     private static final String TEST_FOLDER_NAME = "META-INF";
 
     @Override

@@ -12,10 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUNDLE_SYMBOLIC_NAME_HEADER_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.FRAGMENT_HOST_HEADER_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.REQUIRE_BUNDLE_HEADER_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,9 +25,9 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
@@ -39,12 +36,11 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * configuration property 'checkstyle.requireBundleCheck.allowedBundles', e.g. "org.junit,org.mokcito,org.hamcrest"
  * which is the default.
  *
- * @author Petar Valchev
+ * @author Petar Valchev - Initial contribution
  * @author Henning Treu - Allow bundle exceptions from the check.
- *
  */
 public class RequireBundleCheck extends AbstractStaticCheck {
-    private final Log logger = LogFactory.getLog(RequireBundleCheck.class);
+    private final Logger logger = LoggerFactory.getLogger(RequireBundleCheck.class);
 
     private List<String> allowedRequireBundles = Collections.emptyList();
 
@@ -53,7 +49,6 @@ public class RequireBundleCheck extends AbstractStaticCheck {
     }
 
     // configuration property for the allowed RequireBundle entries
-    @SuppressWarnings("unchecked")
     public void setAllowedRequireBundles(String[] bundles) {
         allowedRequireBundles = Arrays.asList(bundles);
     }
@@ -78,7 +73,6 @@ public class RequireBundleCheck extends AbstractStaticCheck {
 
             String requireBundleHeaderValue = attributes.getValue(REQUIRE_BUNDLE_HEADER_NAME);
             if (requireBundleHeaderValue != null && !testBundle) {
-
                 int lineNumber = findLineNumberSafe(fileText, requireBundleHeaderValue, 0,
                         REQUIRE_BUNDLE_HEADER_NAME + " header line number not found.");
                 log(lineNumber, "The MANIFEST.MF file must not contain any Require-Bundle entries. "
@@ -96,12 +90,10 @@ public class RequireBundleCheck extends AbstractStaticCheck {
                     }
                 }
             }
-        } catch (
-
-        FileNotFoundException e) {
-            logger.error("An exception was thrown while trying to open the file " + file.getPath(), e);
+        } catch (FileNotFoundException e) {
+            logger.error("An exception was thrown while trying to open the file {}", file.getPath(), e);
         } catch (IOException e) {
-            logger.error("An exception was thrown while trying to read the file " + file.getPath(), e);
+            logger.error("An exception was thrown while trying to read the file {}", file.getPath(), e);
         }
     }
 

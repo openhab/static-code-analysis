@@ -19,8 +19,7 @@ import net.sourceforge.pmd.testframework.SimpleAggregatorTst;
 /**
  * Test class that includes all custom PMD tests for the pom.xml files
  *
- * @author Svilen Valkanov
- *
+ * @author Svilen Valkanov - Initial contribution
  */
 public class PomTest extends SimpleAggregatorTst {
 

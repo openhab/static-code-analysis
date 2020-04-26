@@ -12,11 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.readme;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BIN_INCLUDES_PROPERTY_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MARKDONW_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.README_MD_FILE_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 
@@ -88,7 +84,6 @@ public class MarkdownCheck extends AbstractStaticCheck {
     }
 
     private void checkReadMe(FileText fileText) {
-
         MutableDataSet options = new MutableDataSet();
         // By setting this option to true, the parser provides line numbers in the original markdown text for each node
         options.set(Parser.TRACK_DOCUMENT_LINES, true);

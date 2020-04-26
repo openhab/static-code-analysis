@@ -29,7 +29,6 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * WARNING </b> if it is missing.
  *
  * @author Kristina Simova - Initial contribution
- *
  */
 public class AnnotationDependencyCheck extends AbstractStaticCheck {
     private static final String DEPENDENCY_NAME = "org.eclipse.jdt.annotation";

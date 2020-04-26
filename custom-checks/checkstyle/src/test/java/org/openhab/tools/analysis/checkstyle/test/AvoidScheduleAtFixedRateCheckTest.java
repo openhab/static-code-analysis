@@ -22,8 +22,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Tests for {@link AvoidScheduleAtFixedRateCheck}
  *
- * @author Lyubomir Papazov
- *
+ * @author Lyubomir Papazov - Initial contribution
  */
 public class AvoidScheduleAtFixedRateCheckTest extends AbstractStaticCheckTest {
 

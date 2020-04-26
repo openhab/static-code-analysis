@@ -15,7 +15,8 @@ package org.openhab.tools.analysis.utils;
 /**
  * A callback interface for the {@link CachingHttpClient}.
  *
- * @author Svilen Valkanov
+ * @author Svilen Valkanov - Initial contribution
+ *
  * @param <T> - the type of the object
  */
 public interface ContentReceviedCallback<T> {
@@ -23,7 +24,7 @@ public interface ContentReceviedCallback<T> {
      * Called after a successful download attempt is made by the {@link CachingHttpClient}
      * and should transform the data into a object of type T
      *
-     * @param content - HTTP request content, can`t be null
+     * @param content HTTP request content, can`t be null
      * @return the transformed data
      */
     public T transform(byte[] content);

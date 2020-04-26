@@ -32,13 +32,13 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractOhInfXmlCheck;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
 import org.openhab.tools.analysis.utils.ContentReceviedCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -49,16 +49,15 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * Validate the thing-types, binding and config xml-s against their xsd schemas.<br>
  * Check if all files from OH-INF are included in the build.properties file.
  *
- * @author Aleksandar Kovachev - Initial implementation
- * @author Svlien Valkanov - Some code refactoring and cleanup,
+ * @author Aleksandar Kovachev - Initial contribution
+ * @author Svilen Valkanov - Some code refactoring and cleanup,
  *         added check for the build.properties file,
  *         download schema files only once
- *
  */
 public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
     private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `OH-INF/` value to the bin.includes property.";
 
-    private final Log logger = LogFactory.getLog(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(OhInfXmlValidationCheck.class);
 
     private Map<Path, File> eshInfFiles = new HashMap<>();
     private IBuild buildPropertiesFile;
@@ -113,7 +112,7 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
                     InputStream is = new ByteArrayInputStream(content);
                     return schemaFactory.newSchema(new StreamSource(is));
                 } catch (SAXException e) {
-                    logger.error("Unable to parse schema ", e);
+                    logger.error("Unable to parse schema", e);
                     return null;
                 }
             }
@@ -136,7 +135,7 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-        logger.debug("Processing the " + file.getName());
+        logger.debug("Processing the {}", file.getName());
 
         if (file.getName().equals(BUILD_PROPERTIES_FILE_NAME)) {
             processBuildProperties(fileText);
@@ -190,7 +189,7 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
         try {
             buildPropertiesFile = parseBuildProperties(fileText);
         } catch (CheckstyleException e) {
-            logger.error("Problem occurred while parsing the file " + fileText.getFile().getPath(), e);
+            logger.error("Problem occurred while parsing the file {}", fileText.getFile().getPath(), e);
         }
     }
 
@@ -206,7 +205,7 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
                 int lineNumber = exception.getLineNumber();
                 log(lineNumber, message, xmlFile.getPath());
             } catch (IOException | SAXException e) {
-                logger.error("Problem occurred while parsing the file " + xmlFile.getName(), e);
+                logger.error("Problem occurred while parsing the file {}", xmlFile.getName(), e);
             }
         } else {
             logger.warn("XML validation will be skipped as the schema file download failed.");
@@ -232,8 +231,7 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
             URL schemaUrl = new URL(schemaUrlString);
             return client.get(schemaUrl);
         } catch (IOException e) {
-            String message = MessageFormat.format("Unable to get XSD file {0} : {1}", schemaUrlString, e.getMessage());
-            logger.error(message, e);
+            logger.error("Unable to get XSD file {} : {}", schemaUrlString, e.getMessage(), e);
             return null;
         }
     }

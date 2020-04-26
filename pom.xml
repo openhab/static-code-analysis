@@ -83,6 +83,8 @@
     <jetty.server.version>9.4.20.v20190813</jetty.server.version>
     <saxon.version>9.1.0.8</saxon.version>
     <spotless.version>1.30.0</spotless.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    <logback.version>1.2.3</logback.version>
   </properties>
 
   <dependencies>
@@ -220,8 +222,9 @@
           <artifactId>sat-plugin</artifactId>
           <version>${sat.version}</version>
           <configuration>
-            <checkstyleFilter>${basedirRoot}/tools/suppressions.xml</checkstyleFilter>
-            <checkstyleProperties>${basedirRoot}/tools/checkstyle.properties</checkstyleProperties>
+            <checkstyleFilter>${basedirRoot}/tools/static-code-analysis/checkstyle/suppressions.xml</checkstyleFilter>
+            <checkstyleProperties>${basedirRoot}/tools/static-code-analysis/checkstyle/ruleset.properties</checkstyleProperties>
+            <pmdFilter>${basedirRoot}/tools/static-code-analysis/pmd/suppressions.properties</pmdFilter>
           </configuration>
           <executions>
             <execution>

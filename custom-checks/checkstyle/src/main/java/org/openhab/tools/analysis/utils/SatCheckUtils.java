@@ -24,7 +24,6 @@ import com.puppycrawl.tools.checkstyle.utils.CheckUtil;
  *
  * @author Kristina Simova - Initial contribution
  * @author Tanya Georgieva - Added methods that are looking for children nodes of a given type
- *
  */
 public final class SatCheckUtils {
 

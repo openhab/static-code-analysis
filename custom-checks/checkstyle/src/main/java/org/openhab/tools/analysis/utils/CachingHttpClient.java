@@ -32,7 +32,7 @@ import com.google.common.cache.CacheBuilder;
  * A {@link ContentReceviedCallback} is used to convert the downloaded data.
  * The cached entry expires after {@link #RETRY_TIME}
  *
- * @author Svilen Valkanov - Initial implementation
+ * @author Svilen Valkanov - Initial contribution
  * @param <T> the type of the object being returned from the client
  */
 public class CachingHttpClient<T> {

@@ -19,10 +19,10 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.ivy.osgi.core.BundleInfo;
 import org.openhab.tools.analysis.checkstyle.api.AbstractExternalLibrariesCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -33,14 +33,13 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * present in the lib folder.
  *
  * @author Velin Yordanov - Initial contribution
- *
  */
 public class ManifestExternalLibrariesCheck extends AbstractExternalLibrariesCheck {
     private static final String COULD_NOT_OPEN_MANIFEST = "Could not open MANIFEST.MF";
     private static final String FILES_NEED_TO_BE_IN_A_LIB_FOLDER = "All jar files need to be placed inside a lib folder.";
     private static final String JAR_NOT_PRESENT_IN_LIB_FOLDER = "The jar file %s is not present in the lib folder";
     private static final String JAR_PRESENT_IN_LIB_NOT_IN_MANIFEST = "The jar file %s is present in the lib folder but is not present in the MANIFEST.MF file";
-    private static final Log logger = LogFactory.getLog(ManifestExternalLibrariesCheck.class);
+    private final Logger logger = LoggerFactory.getLogger(ManifestExternalLibrariesCheck.class);
 
     public ManifestExternalLibrariesCheck() {
         // build.properties will not be explicitly processed by the check.

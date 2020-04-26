@@ -25,8 +25,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Test for the {@link BuildPropertiesExternalLibrariesCheck}
  *
- * @author Velin Yordanov - initial contribution
- *
+ * @author Velin Yordanov - Initial contribution
  */
 public class BuildPropertiesExternalLibrariesCheckTest extends AbstractStaticCheckTest {
     private static final DefaultConfiguration CONFIGURATION = createModuleConfig(

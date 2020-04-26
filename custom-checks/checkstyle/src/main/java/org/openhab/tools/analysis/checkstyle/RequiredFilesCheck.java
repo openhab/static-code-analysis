@@ -30,7 +30,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * are listed as a configuration properties. The missing files will be reported
  * one by one.
  *
- * @author Petar Valchev
+ * @author Petar Valchev - Initial contribution
  * @author Svilen Valkanov - Use relative path for required files
  */
 public class RequiredFilesCheck extends AbstractStaticCheck {

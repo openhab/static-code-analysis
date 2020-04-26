@@ -23,9 +23,8 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * Checks whether whitespace characters are use instead of tabs in xml files
  * indentations and generates warnings in such cases.
  *
- * @author Lyubomir Papazov - initial contribution
+ * @author Lyubomir Papazov - Initial contribution
  * @author Kristina Simova - Removed REGEX and changed the way we look for indentation
- *
  */
 public class OnlyTabIndentationCheck extends AbstractStaticCheck {
 

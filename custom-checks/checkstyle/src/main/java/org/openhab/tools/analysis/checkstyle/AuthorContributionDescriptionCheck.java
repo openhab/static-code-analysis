@@ -32,7 +32,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  * class/interface/enumeration and generates a warning if they are missing
  *
  * @author Kristina Simova - Initial contribution
- *
  */
 public class AuthorContributionDescriptionCheck extends AbstractCheck {
 
@@ -120,9 +119,8 @@ public class AuthorContributionDescriptionCheck extends AbstractCheck {
         TextBlock textBlock = contents.getJavadocBefore(typeDefinitionLineNumber);
         if (textBlock != null) {
             checkIfAuthorTagHasDescription(typeDefinitionLineNumber, textBlock.getText());
-        } else {
-            // it should be handled by AuthorTagCheck
         }
+        // when the text block is null, it should be handled by AuthorTagCheck
     }
 
     /**

@@ -29,7 +29,7 @@ public abstract class AbstractStaticCheckTest extends AbstractModuleTestSupport 
      * Generates message that can be used in the
      * {@link AbstractModuleTestSupport} verify methods.
      *
-     * @param arguments - a set of line number and message pairs
+     * @param arguments a set of line number and message pairs
      * @return String[] in the format used from checkstyle to verify the logged messages
      */
     protected String[] generateExpectedMessages(Object... arguments) {
@@ -47,10 +47,8 @@ public abstract class AbstractStaticCheckTest extends AbstractModuleTestSupport 
     /**
      * Lists all the files from the current directory and its subdirectories.
      *
-     * @param directory
-     *            - the directory which files will be returned
-     * @param files
-     *            - list where the found files will be stored
+     * @param directory the directory which files will be returned
+     * @param files list where the found files will be stored
      * @return File[] with the files in the directory and its subdirectories
      */
     protected File[] listFilesForDirectory(File directory, ArrayList<File> files) {

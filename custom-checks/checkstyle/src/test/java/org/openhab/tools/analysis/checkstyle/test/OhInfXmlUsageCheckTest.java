@@ -28,9 +28,8 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 /**
  * Test for {@link OhInfXmlValidationCheck}
  *
- * @author Aleksandar Kovachev - Initial implementation
+ * @author Aleksandar Kovachev - Initial contribution
  * @author Svilen Valkanov - Added new test cases, message constants and done some refactoring
- *
  */
 public class OhInfXmlUsageCheckTest extends AbstractStaticCheckTest {
 

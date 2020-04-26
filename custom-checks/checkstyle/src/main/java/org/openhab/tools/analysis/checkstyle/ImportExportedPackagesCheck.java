@@ -12,8 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.EXPORT_PACKAGE_HEADER_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,12 +20,12 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.ivy.osgi.core.BundleRequirement;
 import org.apache.ivy.osgi.core.ExportPackage;
 import org.apache.ivy.osgi.core.ManifestParser;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -34,12 +33,12 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 /**
  * Checks if all of the exported packages are imported by the bundle itself
  *
- * @author Mihaela Memova
+ * @author Mihaela Memova - Initial contribution
  */
 public class ImportExportedPackagesCheck extends AbstractStaticCheck {
     private static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package `{0}` is not imported";
 
-    private Log logger = LogFactory.getLog(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(ImportExportedPackagesCheck.class);
 
     public ImportExportedPackagesCheck() {
         setFileExtensions(MANIFEST_EXTENSION);
@@ -63,9 +62,9 @@ public class ImportExportedPackagesCheck extends AbstractStaticCheck {
             }
 
         } catch (IOException e) {
-            logger.error("An error occured while processing the file " + file.getPath(), e);
+            logger.error("An error occured while processing the file {}", file.getPath(), e);
         } catch (ParseException e) {
-            logger.error("An error occured while trying to parse the MANIFEST " + file.getPath(), e);
+            logger.error("An error occured while trying to parse the MANIFEST: {}", file.getPath(), e);
         }
     }
 
@@ -74,8 +73,8 @@ public class ImportExportedPackagesCheck extends AbstractStaticCheck {
      * {@link Set#contains(Object)} cannot be used since an {@link ExportPackage} object
      * is searched in a set of {link {@link BundleRequirement} objects.
      *
-     * @param imports - set of all imported packages
-     * @param searchedPackage - the package that has to be checked
+     * @param imports set of all imported packages
+     * @param searchedPackage the package that has to be checked
      * @return true if the imports contains the package, false otherwise
      */
     private boolean isPackageImported(Set<BundleRequirement> imports, ExportPackage searchedPackage) {

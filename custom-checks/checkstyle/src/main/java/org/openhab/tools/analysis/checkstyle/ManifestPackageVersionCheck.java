@@ -32,10 +32,9 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 /**
  * Checks if the MANIFEST.MF file has any version constraints on imported and exported packages.
  *
- *
- * @author Petar Valchev - Initial contribution.
+ * @author Petar Valchev - Initial contribution
  * @author Aleksandar Kovachev - Refactored the code and added check for exported packages.
- * @author Svlien Valkanov - Renamed the check, bug fixtures
+ * @author Svilen Valkanov - Renamed the check, bug fixtures
  */
 public class ManifestPackageVersionCheck extends AbstractStaticCheck {
     private static final String VERSION_USED_MSG = "The version of the package %s should not be specified";
@@ -123,8 +122,8 @@ public class ManifestPackageVersionCheck extends AbstractStaticCheck {
     /**
      * Checks if a package is ignored
      *
-     * @param ignoredPackages - the packages that are ignored, regex expressions are allowed
-     * @param packageName - the package to check
+     * @param ignoredPackages the packages that are ignored, regex expressions are allowed
+     * @param packageName the package to check
      * @return true if the package is ignored, false otherwise
      */
     private boolean isIgnoredPackage(List<String> ignoredPackages, String packageName) {

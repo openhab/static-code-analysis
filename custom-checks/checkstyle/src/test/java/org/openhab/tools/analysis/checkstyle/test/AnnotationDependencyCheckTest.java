@@ -23,7 +23,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  * Tests for {@link AnnotationDependencyCheck}
  *
  * @author Kristina Simova - Initial contribution
- *
  */
 public class AnnotationDependencyCheckTest extends AbstractStaticCheckTest {
 

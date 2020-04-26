@@ -12,10 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BIN_INCLUDES_PROPERTY_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OUTPUT_PROPERTY_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.SOURCE_PROPERTY_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 
@@ -31,7 +28,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Tests for {@link BuildPropertiesCheck}
  *
- * @author Petar Valchev - Intial implementation
+ * @author Petar Valchev - Initial contribution
  * @author Svilen Valkanov - Some minor fixes and improvements
  */
 public class BuildPropertiesCheckTest extends AbstractStaticCheckTest {

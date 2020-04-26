@@ -12,28 +12,19 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.times;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openhab.tools.analysis.checkstyle.KarafFeatureCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
@@ -48,14 +39,10 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 @RunWith(MockitoJUnitRunner.class)
 public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
 
-    @Mock
-    private Handler handler;
-
-    @Captor
-    private ArgumentCaptor<LogRecord> captor;
-
     private static final String MSG_MISSING_BUNDLE_IN_FEATURE_XML = "Bundle with ID '{0}' must be added in one of {1}";
     private static final DefaultConfiguration CONFIGURATION = createModuleConfig(KarafFeatureCheck.class);
+
+    public final @Rule LoggerRule loggerRule = new LoggerRule(KarafFeatureCheck.class);
 
     @BeforeClass
     public static void setUp() {
@@ -65,18 +52,6 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
     @Override
     protected String getPackageLocation() {
         return "checkstyle/karafFeatureCheck";
-    }
-
-    @Before
-    public void setup() {
-        Logger system = Logger.getLogger("");
-        system.addHandler(handler);
-    }
-
-    @After
-    public void teardown() {
-        Logger system = Logger.getLogger("");
-        system.removeHandler(handler);
     }
 
     @Test
@@ -98,10 +73,10 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
     public void testInvalidBundle() throws Exception {
         verify("invalidBundle", ArrayUtils.EMPTY_STRING_ARRAY);
 
-        org.mockito.Mockito.verify(handler, times(1)).publish(captor.capture());
+        List<String> messages = loggerRule.getFormattedMessages();
 
-        assertThat(captor.getValue().getLevel(), is(Level.WARNING));
-        assertThat(captor.getValue().getMessage(), startsWith(
+        assertThat(messages.size(), is(1));
+        assertThat(messages.get(0), startsWith(
                 "KarafFeatureCheck will be skipped. Could not find Maven group ID (parent group ID) or artifact ID in"));
     }
 

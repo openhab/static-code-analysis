@@ -17,7 +17,7 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractManifestAttributeCheck;
 /**
  * Checks if a manifest file contains the expected RequiredExecutionEnvironment
  *
- * @author Martin van Wingerden
+ * @author Martin van Wingerden - Initial contribution
  */
 public class ManifestJavaVersionCheck extends AbstractManifestAttributeCheck {
     private static final String ATTRIBUTE = "Bundle-RequiredExecutionEnvironment";

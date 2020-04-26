@@ -18,8 +18,8 @@ import java.io.File;
 import java.text.MessageFormat;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -30,9 +30,8 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * More information can be found
  * <a href="https://eclipse.org/smarthome/documentation/development/bindings/xml-reference.html">here</a>
  *
- * @author Aleksandar Kovachev - Initial implementation
- * @author Svlien Valkanov - Some code refactoring and cleanup, added check for the build.properties file
- *
+ * @author Aleksandar Kovachev - Initial contribution
+ * @author Svilen Valkanov - Some code refactoring and cleanup, added check for the build.properties file
  */
 public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
     public static final String THING_DIRECTORY = "thing";
@@ -41,7 +40,7 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
 
     private static final String MESSAGE_EMPTY_FILE = "The file {0} should not be empty.";
 
-    private final Log logger = LogFactory.getLog(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public AbstractOhInfXmlCheck() {
         setFileExtensions(XML_EXTENSION);
@@ -49,7 +48,7 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
 
     @Override
     public void beginProcessing(String charset) {
-        logger.debug("Executing the " + this.getClass().getSimpleName());
+        logger.debug("Executing the {}", getClass().getSimpleName());
     }
 
     @Override
@@ -66,11 +65,10 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
         if (isEmpty(xmlFileText)) {
             log(0, MessageFormat.format(MESSAGE_EMPTY_FILE, xmlFile.getName()), xmlFile.getPath());
         } else {
-
             File fileParentDirectory = xmlFile.getParentFile();
-            boolean isESHParentDirectory = OH_INF_DIRECTORY.equals(fileParentDirectory.getParentFile().getName());
+            boolean isOHParentDirectory = OH_INF_DIRECTORY.equals(fileParentDirectory.getParentFile().getName());
 
-            if (isESHParentDirectory) {
+            if (isOHParentDirectory) {
                 switch (fileParentDirectory.getName()) {
                     case THING_DIRECTORY: {
                         checkThingTypeFile(xmlFileText);
@@ -96,7 +94,7 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
     /**
      * Validate a .xml file located in the OH-INF/config directory
      *
-     * @param xmlFileText - Represents the text contents of the xml file
+     * @param xmlFileText Represents the text contents of the xml file
      * @throws CheckstyleException when exception occurred during XML processing
      */
     protected abstract void checkConfigFile(FileText xmlFileText) throws CheckstyleException;
@@ -104,7 +102,7 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
     /**
      * Validate a .xml file located in the OH-INF/binding directory
      *
-     * @param xmlFileText - Represents the text contents of the xml file
+     * @param xmlFileText Represents the text contents of the xml file
      * @throws CheckstyleException when exception occurred during XML processing
      */
     protected abstract void checkBindingFile(FileText xmlFileText) throws CheckstyleException;
@@ -112,7 +110,7 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
     /**
      * Validate a .xml file located in the OH-INF/thing directory
      *
-     * @param xmlFileText - Represents the text contents of the xml file
+     * @param xmlFileText Represents the text contents of the xml file
      * @throws CheckstyleException when exception occurred during XML processing
      */
     protected abstract void checkThingTypeFile(FileText xmlFileText) throws CheckstyleException;

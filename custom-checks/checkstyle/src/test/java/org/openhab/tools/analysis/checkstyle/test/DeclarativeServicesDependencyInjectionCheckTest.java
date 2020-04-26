@@ -21,8 +21,7 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 /**
  * Test for the {@link DeclarativeServicesDependencyInjectionCheck}
  *
- * @author Svilen Valkanov
- *
+ * @author Svilen Valkanov - Initial contribution
  */
 public class DeclarativeServicesDependencyInjectionCheckTest extends AbstractStaticCheckTest {
 
