@@ -154,5 +154,4 @@ public class KarafFeatureCheck extends AbstractStaticCheck {
         }
         return null;
     }
-
 }

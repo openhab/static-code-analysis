@@ -52,5 +52,4 @@ public class CheckConstants {
     public final static String BUNDLE_SYMBOLIC_NAME_HEADER_NAME = "Bundle-SymbolicName";
     public final static String EXPORT_PACKAGE_HEADER_NAME = "Export-Package";
     public final static String SERVICE_COMPONENT_HEADER_NAME = "Service-Component";
-
 }

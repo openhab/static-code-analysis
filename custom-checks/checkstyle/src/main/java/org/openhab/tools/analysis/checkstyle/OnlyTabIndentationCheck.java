@@ -12,8 +12,6 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
-
 import java.io.File;
 
 import org.apache.commons.lang.StringUtils;
@@ -38,7 +36,7 @@ public class OnlyTabIndentationCheck extends AbstractStaticCheck {
     public void setOnlyShowFirstWarning(Boolean showFirstExceptionOnly) {
         this.onlyShowFirstWarning = showFirstExceptionOnly;
     }
-    
+
     public void setFileTypes(String[] value) {
         setFileExtensions(value);
     }

@@ -122,5 +122,4 @@ public class SummaryReportHtmlGenerator {
             logger.error("TransformerException occurred", e);
         }
     }
-
 }

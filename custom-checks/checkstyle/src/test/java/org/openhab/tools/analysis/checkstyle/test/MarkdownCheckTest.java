@@ -280,10 +280,9 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
     private void createValidConfig() {
         config = createModuleConfig(MarkdownCheck.class);
     }
-    
+
     private void verifyMarkDownFile(String testDirectoryName, String[] expectedMessages) throws Exception {
-        String testDirectoryRelativePath =  testDirectoryName
-                + File.separator + README_MD_FILE_NAME;
+        String testDirectoryRelativePath = testDirectoryName + File.separator + README_MD_FILE_NAME;
         String testDirectoryAbsolutePath = getPath(testDirectoryRelativePath);
         String messageFilePath = testDirectoryAbsolutePath;
         verify(createChecker(config), testDirectoryAbsolutePath, messageFilePath, expectedMessages);

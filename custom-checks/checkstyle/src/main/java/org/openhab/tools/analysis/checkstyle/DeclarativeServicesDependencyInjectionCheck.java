@@ -108,5 +108,4 @@ public class DeclarativeServicesDependencyInjectionCheck extends AbstractCheck {
         String shortOtherClassName = getShortName(otherClassName);
         return shortClassName.equals(shortOtherClassName);
     }
-
 }

@@ -269,5 +269,4 @@ public class SummaryReportExecutionListener extends AbstractExecutionListener {
     public void forkedProjectFailed(ExecutionEvent event) {
         listener.forkedProjectFailed(event);
     }
-
 }

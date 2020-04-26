@@ -68,7 +68,8 @@ public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
 
                     for (int i = 0; i < nodes.getLength(); i++) {
                         String nodeValue = nodes.item(i).getNodeValue();
-                        lineNumber = findLineNumberSafe(fileText, nodeValue, lineNumber, "XML node line number not found.");
+                        lineNumber = findLineNumberSafe(fileText, nodeValue, lineNumber,
+                                "XML node line number not found.");
                         log(lineNumber, "Avoid overriding a configuration inherited by the parent pom.");
                     }
                 }

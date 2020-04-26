@@ -48,12 +48,12 @@ public class OnlyTabIndentationCheckTest extends AbstractStaticCheckTest {
     public void testOneLineXmlFile() throws Exception {
         verifyXmlTabIdentation("WhiteSpacesNotUsedBeforeOpeningTags.xml", noMessagesExpected());
     }
-    
+
     @Test
     public void testValidJson() throws Exception {
         verifyTabIdentation("validJson.json", noMessagesExpected(), false);
     }
-    
+
     @Test
     public void testBadlyFormattedJson() throws Exception {
         String[] expectedMessages = generateExpectedMessages(7, WHITESPACE_USAGE_WARNING);

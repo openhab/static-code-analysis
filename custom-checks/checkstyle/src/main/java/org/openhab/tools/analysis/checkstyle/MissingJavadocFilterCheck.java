@@ -41,5 +41,4 @@ public class MissingJavadocFilterCheck extends MissingJavadocTypeCheck {
             super.visitToken(ast);
         }
     }
-
 }

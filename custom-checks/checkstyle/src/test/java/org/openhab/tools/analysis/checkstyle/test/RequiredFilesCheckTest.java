@@ -52,8 +52,8 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
                 XML_EXTENSION, MANIFEST_EXTENSION, MARKDONW_EXTENSION);
         config.addAttribute("extensions", extenstionsPropertyValue);
 
-        String requiredFilesPropertyValue = String.format("%s,%s,%s,%s", BUILD_PROPERTIES_FILE_NAME,
-                POM_XML_FILE_NAME, MANIFEST_RELATIVE_PATH_NAME, README_MD_FILE_NAME);
+        String requiredFilesPropertyValue = String.format("%s,%s,%s,%s", BUILD_PROPERTIES_FILE_NAME, POM_XML_FILE_NAME,
+                MANIFEST_RELATIVE_PATH_NAME, README_MD_FILE_NAME);
         config.addAttribute("requiredFiles", requiredFilesPropertyValue);
     }
 

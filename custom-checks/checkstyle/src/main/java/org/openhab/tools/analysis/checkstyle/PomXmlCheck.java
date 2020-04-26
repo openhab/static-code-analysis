@@ -171,7 +171,6 @@ public class PomXmlCheck extends AbstractStaticCheck {
                 log(0, MISSING_PARENT_ARTIFACT_ID_MSG, file.getPath());
             }
         }
-
     }
 
     @Override

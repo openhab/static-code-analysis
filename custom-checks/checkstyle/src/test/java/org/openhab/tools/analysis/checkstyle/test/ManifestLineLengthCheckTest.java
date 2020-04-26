@@ -12,8 +12,6 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import java.io.File;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.ManifestLineLengthCheck;
@@ -30,7 +28,8 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  */
 public class ManifestLineLengthCheckTest extends AbstractStaticCheckTest {
     private static final byte MAX_LINE_SIZE = 72;
-    private static final String LOG_MESSAGE = "No line may be longer than " + MAX_LINE_SIZE + " bytes (not characters), in its UTF8-encoded form. If a value would make the initial line longer than this, it should be continued on extra lines (each starting with a single SPACE).";
+    private static final String LOG_MESSAGE = "No line may be longer than " + MAX_LINE_SIZE
+            + " bytes (not characters), in its UTF8-encoded form. If a value would make the initial line longer than this, it should be continued on extra lines (each starting with a single SPACE).";
 
     private static DefaultConfiguration configuration;
 
@@ -43,12 +42,12 @@ public class ManifestLineLengthCheckTest extends AbstractStaticCheckTest {
     public void shouldNotLogWhenALineDoesNotExceedMaximumBytes() throws Exception {
         verifyManifest("CorrectManifest.MF", CommonUtil.EMPTY_STRING_ARRAY);
     }
-    
+
     @Test
     public void shouldLogWhenALineExceedsMaximumBytes() throws Exception {
         verifyManifest("ExceedingManifest.MF", generateExpectedMessages(0, LOG_MESSAGE));
     }
-    
+
     private void verifyManifest(String testFileName, String[] expectedMessages) throws Exception {
         String absolutePathToTestFile = getPath(testFileName);
         verify(configuration, absolutePathToTestFile, expectedMessages);

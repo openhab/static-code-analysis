@@ -158,5 +158,4 @@ public class NullAnnotationsCheck extends AbstractCheck {
             log(atClause.getLineNo(), WARNING_MESSAGE_NONNULL_ANNOTATION);
         }
     }
-
 }

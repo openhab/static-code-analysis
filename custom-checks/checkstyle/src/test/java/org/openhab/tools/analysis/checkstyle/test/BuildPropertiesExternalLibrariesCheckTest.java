@@ -29,7 +29,8 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  *
  */
 public class BuildPropertiesExternalLibrariesCheckTest extends AbstractStaticCheckTest {
-    private static final DefaultConfiguration CONFIGURATION = createModuleConfig(BuildPropertiesExternalLibrariesCheck.class);
+    private static final DefaultConfiguration CONFIGURATION = createModuleConfig(
+            BuildPropertiesExternalLibrariesCheck.class);
     private static final String TEST_FILE_NAME = "build.properties";
 
     @Override
@@ -40,8 +41,7 @@ public class BuildPropertiesExternalLibrariesCheckTest extends AbstractStaticChe
     @Test
     public void shouldNotLogWhenBundleIsValidFolder() throws Exception {
         String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
-        verifyNoWarningMessages(warningMessages,
-                getBuildPropertiesPathForDirectory("validBundle"));
+        verifyNoWarningMessages(warningMessages, getBuildPropertiesPathForDirectory("validBundle"));
     }
 
     @Test
@@ -55,7 +55,8 @@ public class BuildPropertiesExternalLibrariesCheckTest extends AbstractStaticChe
     public void shouldLogWhenThereAreMissingFilesInBuildProperties() throws Exception {
         String message = "The jar file lib/test2.jar is present in the lib folder but is not present in the build properties";
         String[] warningMessages = generateExpectedMessages(0, message);
-        verifyNoWarningMessages(warningMessages, getBuildPropertiesPathForDirectory("bundleWithMissingJarFilesFromBuildProperties"));
+        verifyNoWarningMessages(warningMessages,
+                getBuildPropertiesPathForDirectory("bundleWithMissingJarFilesFromBuildProperties"));
     }
 
     @Test
@@ -68,7 +69,8 @@ public class BuildPropertiesExternalLibrariesCheckTest extends AbstractStaticChe
     public void shouldLogWhenThereAreMissingJarFilesFromLib() throws Exception {
         String message = "The file lib/test2.jar is present in the build properties but not in the lib folder.";
         String[] warningMessages = generateExpectedMessages(0, message);
-        verifyNoWarningMessages(warningMessages, getBuildPropertiesPathForDirectory("bundleWithMissingFilesFromLibFolderWithBuildProperties"));
+        verifyNoWarningMessages(warningMessages,
+                getBuildPropertiesPathForDirectory("bundleWithMissingFilesFromLibFolderWithBuildProperties"));
     }
 
     @Test
@@ -80,7 +82,8 @@ public class BuildPropertiesExternalLibrariesCheckTest extends AbstractStaticChe
     @Test
     public void shouldNotLogWhenThereAreSpacesInBuildProperties() throws Exception {
         String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
-        verifyNoWarningMessages(warningMessages, getBuildPropertiesPathForDirectory("bundleWithSpacesInBuildProperties"));
+        verifyNoWarningMessages(warningMessages,
+                getBuildPropertiesPathForDirectory("bundleWithSpacesInBuildProperties"));
     }
 
     private void verifyNoWarningMessages(String[] warningMessages, String filePath) throws Exception {

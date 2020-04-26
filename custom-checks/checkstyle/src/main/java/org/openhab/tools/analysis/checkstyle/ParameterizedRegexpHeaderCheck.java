@@ -22,9 +22,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 
 import com.puppycrawl.tools.checkstyle.api.FileText;
 import com.puppycrawl.tools.checkstyle.checks.header.AbstractHeaderCheck;
@@ -132,5 +131,4 @@ public class ParameterizedRegexpHeaderCheck extends AbstractHeaderCheck {
     private boolean isComment(String type, String line) {
         return line.trim().startsWith(type.trim());
     }
-
 }

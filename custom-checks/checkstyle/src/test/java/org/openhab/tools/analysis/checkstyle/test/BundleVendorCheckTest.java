@@ -39,64 +39,40 @@ public class BundleVendorCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testEmptyFile() throws Exception {
-        verify("emptyManifest.MF",
-                generateExpectedMessages()
-        );
+        verify("emptyManifest.MF", generateExpectedMessages());
 
         // we ignore this, its the responsibility of another check
     }
 
     @Test
     public void testCompliantFile() throws Exception {
-        verify("compliantSample.MF",
-                generateExpectedMessages()
-        );
+        verify("compliantSample.MF", generateExpectedMessages());
     }
 
     @Test
     public void testMissingBundleVersion() throws Exception {
-        verify("missingBundleVendorSample.MF",
-                generateExpectedMessages(
-                        0,
-                        "\"Bundle-Vendor\" is missing"
-                )
-        );
+        verify("missingBundleVendorSample.MF", generateExpectedMessages(0, "\"Bundle-Vendor\" is missing"));
     }
 
     @Test
     public void testDoubleBundleVersion() throws Exception {
-        verify("doubleBundleVendorSample.MF",
-                generateExpectedMessages(
-                        4, "Only 1 \"Bundle-Vendor\" was expected.",
-                        8, "Only 1 \"Bundle-Vendor\" was expected."
-                )
-        );
+        verify("doubleBundleVendorSample.MF", generateExpectedMessages(4, "Only 1 \"Bundle-Vendor\" was expected.", 8,
+                "Only 1 \"Bundle-Vendor\" was expected."));
     }
 
     @Test
     public void testWrongLabelForBundleVersion() throws Exception {
         verify("wrongKeySample.MF",
-                generateExpectedMessages(
-                        5,
-                        "Expect eg. \"Bundle-Vendor: openHAB\" got \"Bundle-vendor:openHAB\""
-                )
-        );
+                generateExpectedMessages(5, "Expect eg. \"Bundle-Vendor: openHAB\" got \"Bundle-vendor:openHAB\""));
     }
 
     @Test
     public void testWrongValueForBundleVersion() throws Exception {
         verify("wrongValueSample.MF",
-                generateExpectedMessages(
-                        5,
-                        "Unexpected \"Openhab\", only allowed options: [openHAB]"
-                )
-        );
+                generateExpectedMessages(5, "Unexpected \"Openhab\", only allowed options: [openHAB]"));
     }
 
     private void verify(String fileName, String[] expectedMessages) throws Exception {
-        verify(checkConfig,
-                getPath(fileName),
-                expectedMessages
-        );
+        verify(checkConfig, getPath(fileName), expectedMessages);
     }
 }

@@ -113,7 +113,5 @@ public class PmdChecker extends AbstractChecker {
                 configuration, pmdPlugins);
 
         log.debug("PMD execution has been finished.");
-
     }
-
 }

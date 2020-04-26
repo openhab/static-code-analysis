@@ -88,7 +88,7 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
     public void testIncludedBundleWithParentGroupIdOnly() throws Exception {
         verify("includedBundleWithParentGroupIdOnly", ArrayUtils.EMPTY_STRING_ARRAY);
     }
-    
+
     @Test
     public void testIncludedBundleWithMultipleFeatureFiles() throws Exception {
         verify("includedBundleWithParentGroupIdOnly", ArrayUtils.EMPTY_STRING_ARRAY);
@@ -107,19 +107,18 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testMissingBundle() throws Exception {
-        String[] messages = generateExpectedMessages(0, MessageFormat.format(MSG_MISSING_BUNDLE_IN_FEATURE_XML,
-                "mvn:org.openhab.binding/org.openhab.binding.missing/{project.version}", "feature/feature.xml:feature/internal/feature.xml"));
+        String[] messages = generateExpectedMessages(0,
+                MessageFormat.format(MSG_MISSING_BUNDLE_IN_FEATURE_XML,
+                        "mvn:org.openhab.binding/org.openhab.binding.missing/{project.version}",
+                        "feature/feature.xml:feature/internal/feature.xml"));
         verify("missingBundle", messages);
     }
-    
+
     @Test
     public void testMultipleFeatureFiles() throws Exception {
-        
     }
 
     private void verify(String fileDirectory, String[] expectedMessages) throws Exception {
-        verify(CONFIGURATION,
-                getPath(fileDirectory + File.separator + POM_XML_FILE_NAME),
-                expectedMessages);
+        verify(CONFIGURATION, getPath(fileDirectory + File.separator + POM_XML_FILE_NAME), expectedMessages);
     }
 }

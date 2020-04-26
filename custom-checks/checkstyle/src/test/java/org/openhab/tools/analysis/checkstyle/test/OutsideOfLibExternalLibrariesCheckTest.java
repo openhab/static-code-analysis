@@ -32,8 +32,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 public class OutsideOfLibExternalLibrariesCheckTest extends AbstractStaticCheckTest {
     private static String TEST_FILE_NAME = "build.properties";
     private static DefaultConfiguration config;
-    
-
 
     @Override
     protected String getPackageLocation() {

@@ -34,7 +34,6 @@ public class NullAnnotationsCheckTest extends AbstractStaticCheckTest {
 
     private DefaultConfiguration configuration = createModuleConfig(NullAnnotationsCheck.class);
 
-
     @Override
     protected String getPackageLocation() {
         return "checkstyle/nullAnnotationsCheckTest";
@@ -143,5 +142,4 @@ public class NullAnnotationsCheckTest extends AbstractStaticCheckTest {
         configuration.addAttribute(ATTRIBUTE_NAME, String.valueOf(checkInnerUnits));
         verify(configuration, filePath, expectedMessages);
     }
-
 }

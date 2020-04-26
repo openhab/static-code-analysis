@@ -60,5 +60,4 @@ public class AnnotationDependencyCheckTest extends AbstractStaticCheckTest {
         String filePath = getPath(fileName);
         verify(checkConfiguration, filePath, expectedMessages);
     }
-
 }

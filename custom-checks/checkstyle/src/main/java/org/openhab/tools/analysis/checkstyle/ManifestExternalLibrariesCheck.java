@@ -99,6 +99,5 @@ public class ManifestExternalLibrariesCheck extends AbstractExternalLibrariesChe
         List<String> libJarFiles = getLibFolderJarFiles(lib, buildPropertiesPath);
         checkFiles(manifestJarFiles, libJarFiles, JAR_NOT_PRESENT_IN_LIB_FOLDER);
         checkFiles(libJarFiles, manifestJarFiles, JAR_PRESENT_IN_LIB_NOT_IN_MANIFEST);
-
     }
 }

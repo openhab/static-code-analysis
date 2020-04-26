@@ -35,7 +35,6 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
-
 /**
  * Checks if a build.properties file is valid.
  *

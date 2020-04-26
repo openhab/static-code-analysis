@@ -55,20 +55,23 @@ public class ManifestExternalLibrariesCheckTest extends AbstractStaticCheckTest 
     public void shouldLogWhenBundleIsMissingFilesFromLibFolder() throws Exception {
         String message = "The jar file lib/test2.jar is not present in the lib folder";
         String[] warningMessages = generateExpectedMessages(0, message);
-        verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithMissingFilesFromLibFolder")), warningMessages);
+        verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithMissingFilesFromLibFolder")),
+                warningMessages);
     }
 
     @Test
     public void shouldNotLogWhenThereAreNoExternalLibraries() throws Exception {
         String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
-        verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithoutExternalLibraries")), warningMessages);
+        verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithoutExternalLibraries")),
+                warningMessages);
     }
 
     @Test
     public void shouldLogWhenThereAreMissingFilesInManifest() throws Exception {
         String message = "The jar file lib/test2.jar is present in the lib folder but is not present in the MANIFEST.MF file";
         String[] warningMessages = generateExpectedMessages(0, message);
-        verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithMissingFilesInManifest")), warningMessages);
+        verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithMissingFilesInManifest")),
+                warningMessages);
     }
 
     @Test
@@ -80,13 +83,15 @@ public class ManifestExternalLibrariesCheckTest extends AbstractStaticCheckTest 
     @Test
     public void shouldNotLogWhenThereAreSpacesInManifest() throws Exception {
         String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
-        verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithSpacesInManifest")), warningMessages);
+        verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithSpacesInManifest")),
+                warningMessages);
     }
 
     @Test
     public void shouldNotLogWhenBundleHasVariousBundleClasspathEntries() throws Exception {
         String[] warningMessages = CommonUtil.EMPTY_STRING_ARRAY;
-        verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithVariousBundleClasspathEntries")), warningMessages);
+        verifyManifest(getManifestFilePathFromFolder(addMetaInfToFilePath("bundleWithVariousBundleClasspathEntries")),
+                warningMessages);
     }
 
     private String getManifestFilePathFromFolder(String folderName) throws IOException {
