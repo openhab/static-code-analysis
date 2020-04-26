@@ -12,8 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,9 +26,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -51,7 +50,7 @@ public class KarafFeatureCheck extends AbstractStaticCheck {
     private static final String POM_GROUP_ID_XPATH_EXPRESSION = "//project/groupId/text()";
     private static final String POM_PARENT_GROUP_ID_XPATH_EXPRESSION = "//project/parent/groupId/text()";
 
-    private final Log logger = LogFactory.getLog(getClass());
+    private final Logger logger = LoggerFactory.getLogger(KarafFeatureCheck.class);
 
     /**
      * Configuration property - relative path to the feature.xml file
@@ -71,9 +70,8 @@ public class KarafFeatureCheck extends AbstractStaticCheck {
         if (POM_XML_FILE_NAME.equals(file.getName())) {
             String bundleId = getBundleId(fileText);
             if (bundleId == null) {
-                logger.warn(this.getClass().getSimpleName()
-                        + " will be skipped. Could not find Maven group ID (parent group ID) or artifact ID in "
-                        + file.getAbsolutePath());
+                logger.warn("{} will be skipped. Could not find Maven group ID (parent group ID) or artifact ID in {}",
+                        getClass().getSimpleName(), file.getAbsolutePath());
                 return;
             }
 
@@ -89,7 +87,7 @@ public class KarafFeatureCheck extends AbstractStaticCheck {
                 Path featurePath = resolveRecursively(file.toPath(), Paths.get(singlePath));
 
                 if (featurePath == null) {
-                    logger.warn("Could not find file feature file " + singlePath);
+                    logger.warn("Could not find file feature file {}", singlePath);
                     continue;
                 }
 
@@ -104,14 +102,13 @@ public class KarafFeatureCheck extends AbstractStaticCheck {
                         break;
                     }
                 } catch (IOException e) {
-                    logger.error("Could not read " + featureXmlPath);
+                    logger.error("Could not read {}", featureXmlPath);
                 }
             }
 
             if (!isFound) {
                 log(0, MessageFormat.format(MSG_MISSING_BUNDLE_IN_FEATURE_XML, bundleId, featureXmlPath));
             }
-
         }
     }
 
@@ -139,7 +136,7 @@ public class KarafFeatureCheck extends AbstractStaticCheck {
             XPathExpression artifactIdExpression = compileXPathExpression(xpathExpression);
             return ((NodeList) artifactIdExpression.evaluate(document, XPathConstants.NODESET)).item(0);
         } catch (CheckstyleException | XPathExpressionException e) {
-            logger.error("Could not evaluate XPath expression " + xpathExpression, e);
+            logger.error("Could not evaluate XPath expression {}", xpathExpression, e);
             return null;
         }
     }

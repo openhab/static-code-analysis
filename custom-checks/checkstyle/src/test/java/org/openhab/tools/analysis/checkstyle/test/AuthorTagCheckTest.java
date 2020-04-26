@@ -22,8 +22,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Tests for {@link AuthorTagCheck}
  *
- * @author Mihaela Memova
- *
+ * @author Mihaela Memova - Initial contribution
  */
 public class AuthorTagCheckTest extends AbstractStaticCheckTest {
 
@@ -36,7 +35,6 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testOuterClassWithNoAuthorTag() throws Exception {
-
         String fileName = "NoAuthorOuterAndInnerClasses.java";
         /*
          * an error is expected at the line where the outer class is declared
@@ -49,7 +47,6 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testOuterAndInnerClassesWithNoAuthorTag() throws Exception {
-
         String fileName = "NoAuthorOuterAndInnerClasses.java";
         /*
          * errors are expected at the lines where the classes are declared in
@@ -63,7 +60,6 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testOuterClasWithNoJavaDoc() throws Exception {
-
         String fileName = "NoJavaDocOuterAndInnerClasses.java";
         /*
          * an error is expected at the line where the outer class is declared
@@ -76,7 +72,6 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testOuterAndInnerClassesWithNoJavaDoc() throws Exception {
-
         String fileName = "NoJavaDocOuterAndInnerClasses.java";
         /*
          * errors are expected at the lines where the classes are declared in
@@ -90,7 +85,6 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testOuterAndInnerClassesWithPresentAuthorTag() throws Exception {
-
         String fileName = "PresentAuthorTagOuterAndInnerClasses.java";
         boolean checkInnerClasses = true;
         // no errors are expected so we don't pass any warning lines
@@ -99,7 +93,6 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
 
     private void checkFileForAuthorTags(boolean checkInnerUnits, String fileName, Integer... warningLine)
             throws Exception {
-
         String filePath = getPath(fileName);
         String[] expected = null;
         if (warningLine.length > 0) {
@@ -116,7 +109,6 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
     }
 
     private DefaultConfiguration createConfiguration(boolean checkInnerUnits) {
-
         DefaultConfiguration configuration = createModuleConfig(AuthorTagCheck.class);
         /*
          * Modify the configuration with the needed attributes and message. They

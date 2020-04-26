@@ -38,8 +38,7 @@ import org.twdata.maven.mojoexecutor.MojoExecutor;
 /**
  * Base class for MOJOs that call Maven plugins
  *
- * @author Svilen Valkanov
- *
+ * @author Svilen Valkanov - Initial contribution
  */
 public abstract class AbstractChecker extends AbstractMojo {
 
@@ -61,16 +60,21 @@ public abstract class AbstractChecker extends AbstractMojo {
     /**
      * Loads properties from file into the Maven user properties
      *
-     * @param relativePath - relative path to the properties file
-     * @return - the loaded properties
-     * @throws MojoExecutionException - when the properties file can not be found or loaded
+     * @param relativePath relative path to the properties file
+     * @return the loaded properties
+     * @throws MojoExecutionException when the properties file can not be found or loaded
      */
     protected Properties loadPropertiesFromFile(String relativePath) throws MojoExecutionException {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(relativePath);
+        if (inputStream == null) {
+            throw new MojoExecutionException(
+                    "Can't load properties from file " + relativePath + " (resource not found)");
+        }
+
         Properties properties = new Properties();
         try {
             properties.load(inputStream);
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException e) {
             throw new MojoExecutionException("Can't load properties from file " + relativePath, e);
         } finally {
             try {
@@ -95,13 +99,13 @@ public abstract class AbstractChecker extends AbstractMojo {
     /**
      * Executes a Maven plugin using the {@link MojoExecutor}
      *
-     * @param groupId - groupId of the plugin
-     * @param artifactId - artifactId of the plugin
-     * @param version - version of the plugin
-     * @param goal - plugin goal to be executed
-     * @param configuration - configuration of the plugin
-     * @param dependencies - plugin dependencies
-     * @throws MojoExecutionException - If there are any exceptions locating or executing the MOJO
+     * @param groupId groupId of the plugin
+     * @param artifactId artifactId of the plugin
+     * @param version version of the plugin
+     * @param goal plugin goal to be executed
+     * @param configuration configuration of the plugin
+     * @param dependencies plugin dependencies
+     * @throws MojoExecutionException If there are any exceptions locating or executing the MOJO
      */
     protected void executeCheck(String groupId, String artifactId, String version, String goal, Xpp3Dom configuration,
             List<Dependency> dependencies) throws MojoExecutionException {
@@ -115,11 +119,11 @@ public abstract class AbstractChecker extends AbstractMojo {
      * Gets the location of a resource, external or internal. If {@code externalRelativePath} is given, it
      * will try to get the path to this file, otherwise will get the {@link URL} to the {@code internalRelativePath}
      *
-     * @param externalRelativePath - relative path to the execution directory of a resource not included in the current
+     * @param externalRelativePath relative path to the execution directory of a resource not included in the current
      *            project
-     * @param internalRelativePath - relative path of a resource included in the current project
+     * @param internalRelativePath relative path of a resource included in the current project
      * @return location of a resource (absolute path or url)
-     * @throws MojoExecutionException - if error occurs while trying to get the location
+     * @throws MojoExecutionException if error occurs while trying to get the location
      */
     protected String getLocation(String externalRelativePath, String internalRelativePath)
             throws MojoExecutionException {

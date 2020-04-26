@@ -26,8 +26,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * A check that verifies that there are no forbidden packages in use.
  *
- * @author Velin Yordanov - initial contribution
- *
+ * @author Velin Yordanov - Initial contribution
  */
 public class ForbiddenPackageUsageCheck extends AbstractCheck {
     private static final String MESSAGE = "The package %s should not be used.";

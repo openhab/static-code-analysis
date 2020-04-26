@@ -29,7 +29,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Tests for {@link PomXmlCheck}
  *
- * @author Petar Valchev - Initial Implementation
+ * @author Petar Valchev - Initial contribution
  * @author Svilen Valkanov - Replaced headers, added new tests, verify absolute
  *         path instead of relative
  * @author Velin Yordanov - Added new tests

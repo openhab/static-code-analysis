@@ -23,7 +23,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  * Tests for {@link JavadocMethodStyleCheck}
  *
  * @author Kristina Simova - Initial contribution
- *
  */
 public class JavadocMethodStyleCheckTest extends AbstractStaticCheckTest {
 

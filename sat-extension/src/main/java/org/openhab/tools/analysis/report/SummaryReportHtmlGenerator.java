@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -33,8 +32,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.sf.saxon.TransformerFactoryImpl;
 
@@ -46,8 +45,7 @@ import net.sf.saxon.TransformerFactoryImpl;
 @Component(role = SummaryReportHtmlGenerator.class)
 public class SummaryReportHtmlGenerator {
 
-    @Requirement
-    private Logger logger;
+    private Logger logger = LoggerFactory.getLogger(SummaryReportHtmlGenerator.class);
 
     private TransformerFactory transformerFactory;
 
@@ -80,7 +78,7 @@ public class SummaryReportHtmlGenerator {
             run(CREATE_HTML_XSLT, latestMergeResultCopy, latestSummaryReport);
 
             if (!latestMergeResultCopy.delete()) {
-                logger.error("Unable to delete file: " + latestMergeResultCopy.getAbsolutePath());
+                logger.error("Unable to delete file: {}", latestMergeResultCopy.getAbsolutePath());
             }
 
             return latestSummaryReport;
@@ -96,9 +94,7 @@ public class SummaryReportHtmlGenerator {
         try (FileOutputStream outputStream = new FileOutputStream(output);
                 InputStream inputStream = contextClassLoader.getResourceAsStream(xslt);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            if (logger.isDebugEnabled()) {
-                logger.debug(MessageFormat.format("{0}  > {1} >  {2}", input, xslt, output));
-            }
+            logger.debug("{}  > {} >  {}", input, xslt, output);
 
             // Process the Source into a Transformer Object
             final StreamSource source = new StreamSource(reader);
@@ -112,10 +108,7 @@ public class SummaryReportHtmlGenerator {
             transformer.transform(xmlSource, outputTarget);
             Instant end = Instant.now();
 
-            if (logger.isDebugEnabled()) {
-                logger.debug(MessageFormat.format("Transformation ''{0}'' took {1}ms", xslt,
-                        Duration.between(start, end).toMillis()));
-            }
+            logger.debug("Transformation '{}' took {}ms", xslt, Duration.between(start, end).toMillis());
         } catch (IOException e) {
             logger.error("IOException occurred", e);
         } catch (TransformerException e) {

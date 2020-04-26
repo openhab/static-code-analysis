@@ -22,11 +22,10 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Tests for {@link InheritDocCheck}
  *
- * @author Velin Yordanov
- *
+ * @author Velin Yordanov - Initial contribution
  */
 public class InheritDocCheckTest extends AbstractStaticCheckTest {
-    private final static String LOG_MESSAGE = "Remove unnecessary inherit doc";
+    private static final String LOG_MESSAGE = "Remove unnecessary inherit doc";
 
     Configuration config = createModuleConfig(InheritDocCheck.class);
 

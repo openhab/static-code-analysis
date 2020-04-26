@@ -154,9 +154,8 @@ public class JavadocMethodStyleCheck extends AbstractCheck {
             }
 
             checkComment(methodLineNumber, text);
-        } else {
-            // it should be handled by ExportedJavadocMethodCheck
         }
+        // when the text block is null, it should be handled by ExportedJavadocMethodCheck
     }
 
     /**

@@ -25,7 +25,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 /**
  * Checks if a manifest file contains the expected attribute
  *
- * @author Martin van Wingerden
+ * @author Martin van Wingerden - Initial contribution
  */
 public class AbstractManifestAttributeCheck extends AbstractStaticCheck {
     private final String attribute;

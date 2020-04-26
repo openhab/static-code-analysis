@@ -29,7 +29,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  *
  * @author Аleksandar Кovachev - Initial contribution
  * @author Petar Valchev - Added a test for non existent packages
- *
  */
 public class PackageExportsNameCheckTest extends AbstractStaticCheckTest {
     private static final String CORRECT_NAMING_OF_NOT_EXPORTED_PACKAGES_MESSAGE = "The package %s"

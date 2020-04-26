@@ -23,8 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * A JAXB model of the SpotBugs visitors XML file
  *
- * @author Svilen Valkanov
- *
+ * @author Svilen Valkanov - Initial contribution
  */
 @XmlRootElement(name = "visitors")
 public class SpotBugsVisitors {

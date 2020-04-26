@@ -22,8 +22,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  * specified, this is redundant and should be avoided. inheritDoc should only be used if some additional
  * documentation is added to it on a specific method.
  *
- * @author Velin Yordanov - initial contribution
- *
+ * @author Velin Yordanov - Initial contribution
  */
 public class InheritDocCheck extends AbstractCheck {
     private static final String INHERIT_DOC = "{@inheritDoc}";

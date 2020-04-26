@@ -22,8 +22,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  * of the ScheduledExecutorService interface is used.
  * The preferred method to be used instead is scheduleWithFixedDelay.
  *
- * @author Lyubomir Papazov - Initial Contribution
- *
+ * @author Lyubomir Papazov - Initial contribution
  */
 public class AvoidScheduleAtFixedRateCheck extends AbstractCheck {
 

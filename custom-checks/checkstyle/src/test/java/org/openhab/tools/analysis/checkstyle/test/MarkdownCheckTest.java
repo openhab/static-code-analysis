@@ -28,7 +28,7 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 /**
  * Tests for {@link MarkdownCheck}
  *
- * @author Erdoan Hadzhiyusein - Initial implementation
+ * @author Erdoan Hadzhiyusein - Initial contribution
  * @author Lyubomir Papazov - Added more tests
  */
 public class MarkdownCheckTest extends AbstractStaticCheckTest {

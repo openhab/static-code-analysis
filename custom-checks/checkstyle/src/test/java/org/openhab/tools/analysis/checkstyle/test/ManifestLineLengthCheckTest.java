@@ -22,9 +22,8 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link ManifestLineLengthCheck}
- * 
- * @author Velin Yordanov - initial contribution
  *
+ * @author Velin Yordanov - Initial contribution
  */
 public class ManifestLineLengthCheckTest extends AbstractStaticCheckTest {
     private static final byte MAX_LINE_SIZE = 72;

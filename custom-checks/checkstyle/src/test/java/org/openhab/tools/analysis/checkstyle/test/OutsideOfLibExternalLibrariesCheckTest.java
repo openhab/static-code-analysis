@@ -26,11 +26,10 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Tests for {@link OutsideOfLibExternalLibrariesCheck}
  *
- * @author Velin Yordanov - initial contribution
- *
+ * @author Velin Yordanov - Initial contribution
  */
 public class OutsideOfLibExternalLibrariesCheckTest extends AbstractStaticCheckTest {
-    private static String TEST_FILE_NAME = "build.properties";
+    private static final String TEST_FILE_NAME = "build.properties";
     private static DefaultConfiguration config;
 
     @Override
@@ -54,10 +53,10 @@ public class OutsideOfLibExternalLibrariesCheckTest extends AbstractStaticCheckT
 
     @Test
     public void shouldLogWhenThereAreJarFilesOutsideOfLibFolder() throws Exception {
-        final String JAR_PATH = getPath("bundleWithJarFilesOutsideOfLib");
+        final String jarPath = getPath("bundleWithJarFilesOutsideOfLib");
         String message = "There is a jar outside of the lib folder %s" + File.separator + "%s";
 
-        String[] warningMessages = generateExpectedMessages(0, String.format(message, JAR_PATH, "test3.jar"));
+        String[] warningMessages = generateExpectedMessages(0, String.format(message, jarPath, "test3.jar"));
         verifyBuildProperties(getBuildPropertiesPath("bundleWithJarFilesOutsideOfLib"), warningMessages);
     }
 

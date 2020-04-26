@@ -21,9 +21,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openhab.tools.analysis.checkstyle.api.AbstractOhInfXmlCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -34,8 +34,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * Check for missing bridge-type or supported bridge-type-refs in the same file.<br>
  * Check for missing config file if there is a uri reference to configuration.
  *
- * @author Svlien Valkanov - Initial implementation
- *
+ * @author Svilen Valkanov - Initial contribution
  */
 public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
     private static final String CONFIG_DESCRIPTION_EXPRESSION = "//config-description[@uri]/@uri";
@@ -48,7 +47,7 @@ public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
     private static final String MESSAGE_UNUSED_URI_CONFIGURATION = "Unused configuration reference with uri - {0}";
     private static final String MESSAGE_UNUSED_BRIDGE = "Unused bridge reference with id - {0}";
 
-    private final Log logger = LogFactory.getLog(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(OhInfXmlUsageCheck.class);
 
     private Map<String, File> allConfigDescriptionRefs = new HashMap<>();
     private Map<String, File> allConfigDescriptions = new HashMap<>();
@@ -120,10 +119,8 @@ public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
         try {
             nodes = (NodeList) xpathExpression.evaluate(document, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
-            String message = MessageFormat.format(
-                    "Problem occurred while evaluating the expression {0} on the {1} file.", expression,
-                    xmlFileText.getFile().getName());
-            logger.error(message, e);
+            logger.error("Problem occurred while evaluating the expression {} on the {} file.", expression,
+                    xmlFileText.getFile().getName(), e);
         }
         return nodes;
     }

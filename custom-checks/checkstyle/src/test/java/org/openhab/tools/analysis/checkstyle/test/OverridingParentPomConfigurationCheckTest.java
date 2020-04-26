@@ -27,8 +27,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Tests for {@link OverridingParentPomConfigurationCheck}
  *
- * @author Aleksandar Kovachev
- *
+ * @author Aleksandar Kovachev - Initial contribution
  */
 public class OverridingParentPomConfigurationCheckTest extends AbstractStaticCheckTest {
     private static DefaultConfiguration config;

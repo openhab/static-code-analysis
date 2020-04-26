@@ -23,14 +23,14 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 /**
  * Tests for {@link BundleVendorCheck}
  *
- * @author Martin van Wingerden
+ * @author Martin van Wingerden - Initial contribution
  */
 public class ManifestJavaVersionCheckTest extends AbstractStaticCheckTest {
-    private static final DefaultConfiguration checkConfig = createModuleConfig(ManifestJavaVersionCheck.class);
+    private static final DefaultConfiguration CHECK_CONFIG = createModuleConfig(ManifestJavaVersionCheck.class);
 
     @BeforeClass
     public static void setUpClass() {
-        checkConfig.addAttribute("allowedValues", "JavaSE-1.8");
+        CHECK_CONFIG.addAttribute("allowedValues", "JavaSE-1.8");
     }
 
     @Override
@@ -76,6 +76,6 @@ public class ManifestJavaVersionCheckTest extends AbstractStaticCheckTest {
     }
 
     private void verify(String fileName, String[] expectedMessages) throws Exception {
-        verify(checkConfig, getPath(fileName), expectedMessages);
+        verify(CHECK_CONFIG, getPath(fileName), expectedMessages);
     }
 }

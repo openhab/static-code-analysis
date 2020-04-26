@@ -25,8 +25,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Tests for {@link ImportExportedPackagesCheck}
  *
- * @author Mihaela Memova
- *
+ * @author Mihaela Memova - Initial contribution
  */
 public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
     private static final String NOT_IMPORTED_PACKAGE_MESSAGE = "The exported package `{0}` is not imported";

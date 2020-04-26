@@ -28,7 +28,6 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * Verifies that all jar files in the bundle are located in a folder named "lib".
  *
  * @author Velin Yordanov - Initial contribution
- *
  */
 public class OutsideOfLibExternalLibrariesCheck extends AbstractExternalLibrariesCheck {
     private List<String> ignoredDirectories;

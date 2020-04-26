@@ -65,7 +65,6 @@ class MarkdownVisitor extends NodeVisitorBase {
     }
 
     private void validateHeadingPosition(int zeroBasedHeaderLineNumber) {
-
         boolean isHeaderAtEndOfFile = zeroBasedHeaderLineNumber == fileText.size() - 1;
         if (isHeaderAtEndOfFile) {
             // log the one=based line number
@@ -91,12 +90,9 @@ class MarkdownVisitor extends NodeVisitorBase {
 
     private void validateCodeSectionPosition(int zeroBasedStartLineNumber, int zeroBasedEndLineNumber,
             Node codeBlockText) {
-
         Node codeSection = codeBlockText.getFirstChild();
-
         // Check if the code section is empty or blank
         if (codeSection != null && !StringUtils.isBlank(codeSection.getChars().toString())) {
-
             // The code block is not the first line, and the previous line is not empty
             if (zeroBasedStartLineNumber == 0 || !StringUtils.isBlank(fileText.get(zeroBasedStartLineNumber - 1))) {
                 // log the one-based line number
@@ -117,7 +113,7 @@ class MarkdownVisitor extends NodeVisitorBase {
     /**
      * Common method for processing visited {@link BulletList } and {@link OrderedList}
      *
-     * @param listBlock - a block type which is common parent of {@link BulletList } and {@link OrderedList}
+     * @param listBlock a block type which is common parent of {@link BulletList } and {@link OrderedList}
      */
     private void processListBlock(ListBlock listBlock) {
         checkEmptyLineBefore(listBlock);

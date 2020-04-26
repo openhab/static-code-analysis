@@ -27,7 +27,6 @@ import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
  * Checks if a logger other than the one provided by slf4j is used
  *
  * @author Lyubomir Papazov - Initial contribution
- *
  */
 public class UseSLF4JLoggerRule extends AbstractJavaRule {
     private static final String LOGGER_LITERAL = "Logger";

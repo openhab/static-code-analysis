@@ -29,7 +29,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  *
  * @author Petar Valchev - Initial contribution with tests for imported packages.
  * @author Aleksandar Kovachev - Added tests for exported packages.
- * @author Svlien Valkanov - Renamed the test class
+ * @author Svilen Valkanov - Renamed the test class
  */
 public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
     private static final String VERSION_USED_MSG = "The version of the package %s should not be specified";

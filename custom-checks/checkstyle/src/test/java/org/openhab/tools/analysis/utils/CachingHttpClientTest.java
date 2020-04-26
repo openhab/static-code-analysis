@@ -12,16 +12,10 @@
  */
 package org.openhab.tools.analysis.utils;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,8 +29,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Handler;
@@ -68,8 +60,6 @@ public class CachingHttpClientTest {
     private static final int TEST_TIMEOUT = 1000;
     private static final String SERVER_RESPONSE = "content";
 
-    private static final Log logger = LogFactory.getLog(CachingHttpClientTest.class);
-
     private static Server server;
 
     private ContentReceviedCallback<String> testCallback = s -> new String(s);
@@ -97,13 +87,9 @@ public class CachingHttpClientTest {
     }
 
     @AfterClass
-    public static void tearDown() {
-        try {
-            if (server.isStarted() || server.isStarting()) {
-                server.stop();
-            }
-        } catch (Exception e) {
-            logger.error("Unable to stop test server " + e.getMessage(), e);
+    public static void tearDown() throws Exception {
+        if (server.isStarted() || server.isStarting()) {
+            server.stop();
         }
     }
 

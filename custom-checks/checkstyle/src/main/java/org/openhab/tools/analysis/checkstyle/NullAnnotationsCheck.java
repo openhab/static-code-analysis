@@ -35,7 +35,6 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  * need for it as it is set as default. Only <code>@Nullable</code> should be used.
  *
  * @author Kristina Simova - Initial contribution
- *
  */
 public class NullAnnotationsCheck extends AbstractCheck {
 

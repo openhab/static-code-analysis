@@ -25,7 +25,7 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
  * Checks whether whitespace characters are use instead of tabs in xml files
  * indentations and generates warnings in such cases.
  *
- * @author Lyubomir Papazov - initial contribution
+ * @author Lyubomir Papazov - Initial contribution
  * @author Kristina Simova - Added tests
  */
 public class OnlyTabIndentationCheckTest extends AbstractStaticCheckTest {

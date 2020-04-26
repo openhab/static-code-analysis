@@ -17,9 +17,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.pde.core.build.IBuildEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -28,14 +28,13 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * Abstract class that contains logic that is used by other external libraries checks.
  *
  * @author Velin Yordanov - Initial contribution
- *
  */
 public abstract class AbstractExternalLibrariesCheck extends AbstractStaticCheck {
     protected static final String LIB_FOLDER_NAME = "lib";
     protected static final String JAR_FILE_EXTENSION = ".jar";
     private static final String BIN_EXCLUDES = "bin.excludes";
     protected static final String COULD_NOT_OPEN_BUILD_PROPERTIES = "Could not open build properties";
-    private static final Log logger = LogFactory.getLog(AbstractExternalLibrariesCheck.class);
+    private final Logger logger = LoggerFactory.getLogger(AbstractExternalLibrariesCheck.class);
 
     protected List<String> getLibFolderJarFiles(File libDirectory, String buildPropertiesPath) {
         List<String> excludedJarFiles = new ArrayList<>();

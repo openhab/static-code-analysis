@@ -12,13 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OSGI_INF_DIRECTORY_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.SERVICE_COMPONENT_HEADER_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.XML_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,11 +30,11 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.pde.core.build.IBuild;
 import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -57,7 +51,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 public class ServiceComponentManifestCheck extends AbstractStaticCheck {
     private static final String WILDCARD = "*";
 
-    private final Log logger = LogFactory.getLog(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(ServiceComponentManifestCheck.class);
 
     private List<String> manifestServiceComponents = new ArrayList<>();
     private List<String> componentXmlFiles = new ArrayList<>();
@@ -76,16 +70,13 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
     private IBuild buildPropertiesFile;
 
     public ServiceComponentManifestCheck() {
-        String message = MessageFormat.format(
-                "Executing {0}: Check if all the declarative services are included in the {1}",
+        logger.debug("Executing {}: Check if all the declarative services are included in the {}",
                 this.getClass().getName(), MANIFEST_FILE_NAME);
-        logger.debug(message);
         setFileExtensions(MANIFEST_EXTENSION, XML_EXTENSION, PROPERTIES_EXTENSION);
     }
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-
         Path absolutePath = file.toPath();
         int osgiInfIndex = getIndex(absolutePath, OSGI_INF_DIRECTORY_NAME);
         String fileExtension = FilenameUtils.getExtension(file.getName());
@@ -125,7 +116,7 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
             buildPropertiesFile = parseBuildProperties(fileText);
             buildPropertiesPath = fileText.getFile().getPath();
         } catch (CheckstyleException e) {
-            logger.error("Problem occurred while parsing the file " + buildPropertiesPath, e);
+            logger.error("Problem occurred while parsing the file {}", buildPropertiesPath, e);
         }
     }
 
@@ -305,7 +296,7 @@ public class ServiceComponentManifestCheck extends AbstractStaticCheck {
                 }
             }
         } catch (IOException e) {
-            logger.error("Problem occurred while parsing the file " + file.getPath(), e);
+            logger.error("Problem occurred while parsing the file {}", file.getPath(), e);
         }
     }
 

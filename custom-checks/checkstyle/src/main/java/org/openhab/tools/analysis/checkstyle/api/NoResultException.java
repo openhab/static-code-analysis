@@ -15,7 +15,7 @@ package org.openhab.tools.analysis.checkstyle.api;
 /**
  * Exception that indicates that a line number was not found in a file
  *
- * @author Svilen Valkanov
+ * @author Svilen Valkanov - Initial contribution
  */
 public class NoResultException extends Exception {
 

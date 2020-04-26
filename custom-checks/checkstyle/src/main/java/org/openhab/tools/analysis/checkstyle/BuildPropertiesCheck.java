@@ -12,11 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BIN_INCLUDES_PROPERTY_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.BUILD_PROPERTIES_FILE_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OUTPUT_PROPERTY_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.PROPERTIES_EXTENSION;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.SOURCE_PROPERTY_NAME;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,9 +34,8 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 /**
  * Checks if a build.properties file is valid.
  *
- * @author Petar Valchev - Initial implementation
+ * @author Petar Valchev - Initial contribution
  * @author Svilen Valkanov - Changes in the logic for the source property
- *
  */
 public class BuildPropertiesCheck extends AbstractStaticCheck {
     private static final String MISSING_PROPERTY_MSG = "Missing %s property in the %s file.";
@@ -160,9 +155,9 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
     /**
      * Checks if a property contains all expected values and logs messages if some of the expected values are missing
      *
-     * @param propertyValue - the value of the property
-     * @param expectedPropertyValues - expected values
-     * @param strictSyntax - if set to true, the values should end with "/", otherwise they could end with
+     * @param propertyValue the value of the property
+     * @param expectedPropertyValues expected values
+     * @param strictSyntax if set to true, the values should end with "/", otherwise they could end with
      */
     private List<String> findMissingValues(IBuildEntry propertyValue, List<String> expectedPropertyValues,
             boolean strictSyntax, BiPredicate<List<String>, List<String>> condition) {
@@ -183,7 +178,7 @@ public class BuildPropertiesCheck extends AbstractStaticCheck {
 
     /**
      *
-     * @param missingValueMessage - message to be used, when a value is missing
+     * @param missingValueMessage message to be used, when a value is missing
      *
      */
     private void logMissingValues(FileText fileText, String property, List<String> missingValues, String messsage) {

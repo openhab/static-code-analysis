@@ -22,12 +22,11 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
  * Tests for {@link ForbiddenPackageUsageCheck}
- * 
- * @author Velin Yordanov - initial contribution
  *
+ * @author Velin Yordanov - Initial contribution
  */
 public class ForbiddenPackageUsageCheckTest extends AbstractStaticCheckTest {
-    private final static String MESSAGE = "The package %s should not be used.";
+    private static final String MESSAGE = "The package %s should not be used.";
     DefaultConfiguration config = createModuleConfig(ForbiddenPackageUsageCheck.class);
 
     @Before

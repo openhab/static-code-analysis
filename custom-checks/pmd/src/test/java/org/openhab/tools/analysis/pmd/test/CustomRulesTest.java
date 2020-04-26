@@ -19,8 +19,7 @@ import net.sourceforge.pmd.testframework.SimpleAggregatorTst;
 /**
  * Test class that tests all custom PMD rules.
  *
- * @author Lyubomir Papazov - Initial Contribution
- *
+ * @author Lyubomir Papazov - Initial contribution
  */
 public class CustomRulesTest extends SimpleAggregatorTst {
     @Override

@@ -25,8 +25,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Tests for {@link RequireBundleCheck}
  *
- * @author Petar Valchev
- *
+ * @author Petar Valchev - Initial contribution
  */
 public class RequireBundleCheckTest extends AbstractStaticCheckTest {
     private static final String REQUIRE_BUNDLE_USED_MSG = "The MANIFEST.MF file must not contain any Require-Bundle entries. "

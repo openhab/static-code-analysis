@@ -32,7 +32,8 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Listens to Maven executions, delegates events to the default {@link ExecutionListener} and updates HTML summaries
@@ -43,8 +44,7 @@ import org.codehaus.plexus.logging.Logger;
 @Component(role = SummaryReportExecutionListener.class)
 public class SummaryReportExecutionListener extends AbstractExecutionListener {
 
-    @Requirement
-    private Logger logger;
+    private Logger logger = LoggerFactory.getLogger(SummaryReportExecutionListener.class);
 
     @Requirement
     private SummaryReportHtmlGenerator summaryReportHtmlGenerator;
@@ -96,10 +96,8 @@ public class SummaryReportExecutionListener extends AbstractExecutionListener {
                     if (shouldUpdateIncrementally()) {
                         File latestSummaryReport = update();
 
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("Updated static code analysis summary report in:");
-                            logger.debug(latestSummaryReport.toURI().toString());
-                        }
+                        logger.debug("Updated static code analysis summary report in:");
+                        logger.debug("{}", latestSummaryReport.toURI());
                     }
                 });
             }
@@ -111,7 +109,7 @@ public class SummaryReportExecutionListener extends AbstractExecutionListener {
 
                 if (latestSummaryReport != null) {
                     logger.info("Static code analysis summary report is available in:");
-                    logger.info(latestSummaryReport.toURI().toString());
+                    logger.info("{}", latestSummaryReport.toURI());
                 }
             }
         }
@@ -126,7 +124,7 @@ public class SummaryReportExecutionListener extends AbstractExecutionListener {
         try {
             getOrCreateSummaryUpdater(event).incrementalUpdate();
         } catch (ExpressionEvaluationException e) {
-            logger.error("Exception while evaluating '" + DIRECTORY_PARAMETER + "' plugin parameter", e);
+            logger.error("Exception while evaluating '{}' plugin parameter", DIRECTORY_PARAMETER, e);
         }
     }
 

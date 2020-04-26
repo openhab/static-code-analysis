@@ -34,7 +34,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Tests for {@link RequiredFilesCheck}
  *
- * @author Petar Valchev
+ * @author Petar Valchev - Initial contribution
  * @author Svilen Valkanov - Use relative path for required files
  */
 public class RequiredFilesCheckTest extends AbstractStaticCheckTest {

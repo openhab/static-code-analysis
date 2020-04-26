@@ -29,10 +29,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.ivy.osgi.core.BundleInfo;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -50,7 +50,7 @@ public class PackageExportsNameCheck extends AbstractStaticCheck {
 
     private static final String PACKAGE_PATTERN = "[a-zA-Z0-9\\._-]*";
 
-    private final Log logger = LogFactory.getLog(PackageExportsNameCheck.class);
+    private final Logger logger = LoggerFactory.getLogger(PackageExportsNameCheck.class);
 
     private String[] sourceDirectories;
     private String[] excludedPackages;
@@ -58,7 +58,7 @@ public class PackageExportsNameCheck extends AbstractStaticCheck {
     /**
      * Sets the configuration property for source directories.
      *
-     * @param sourceDirectories - source directories
+     * @param sourceDirectories source directories
      */
     public void setSourceDirectories(String[] sourceDirectories) {
         this.sourceDirectories = sourceDirectories;
@@ -67,7 +67,7 @@ public class PackageExportsNameCheck extends AbstractStaticCheck {
     /**
      * Sets the configuration property for excluding packages.
      *
-     * @param excludePackages - excluded packages
+     * @param excludePackages excluded packages
      */
     public void setExcludedPackages(String[] excludePackages) {
         this.excludedPackages = excludePackages;
@@ -107,7 +107,7 @@ public class PackageExportsNameCheck extends AbstractStaticCheck {
     /**
      * Filter and return the packages from the source directory. Only not excluded packages will be returned.
      *
-     * @param sourcePath - The full path of the source directory
+     * @param sourcePath The full path of the source directory
      * @return {@link Set } of {@link String }s with the package names.
      * @throws IOException if an I/O error is thrown while visiting files
      */
@@ -136,7 +136,7 @@ public class PackageExportsNameCheck extends AbstractStaticCheck {
     /**
      * Checks if the package should be excluded
      *
-     * @param packageName - The package name to be checked.
+     * @param packageName The package name to be checked.
      * @return <b>true</b> if the package name should be excluded
      */
     private boolean isExcluded(String packageName) {

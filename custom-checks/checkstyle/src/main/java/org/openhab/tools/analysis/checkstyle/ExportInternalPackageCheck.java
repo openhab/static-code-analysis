@@ -12,8 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.EXPORT_PACKAGE_HEADER_NAME;
-import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_EXTENSION;
+import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 import java.util.Set;
@@ -27,8 +26,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 /**
  * Checks if a manifest file exports internal packages.
  *
- * @author Svilen Valkanov
- *
+ * @author Svilen Valkanov - Initial contribution
  */
 public class ExportInternalPackageCheck extends AbstractStaticCheck {
 

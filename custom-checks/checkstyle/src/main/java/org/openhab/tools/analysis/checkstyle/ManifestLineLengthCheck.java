@@ -27,7 +27,6 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  * allowed size of bytes
  *
  * @author Velin Yordanov - Initial contribution
- *
  */
 public class ManifestLineLengthCheck extends AbstractStaticCheck {
     private static final int MAX_LINE_SIZE = 72;
