@@ -24,7 +24,6 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractExternalLibrariesCheck;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
-
 /**
  * Verifies that all jar files in the bundle are located in a folder named "lib".
  *

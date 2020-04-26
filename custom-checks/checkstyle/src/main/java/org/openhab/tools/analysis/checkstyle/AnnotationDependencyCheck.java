@@ -68,5 +68,4 @@ public class AnnotationDependencyCheck extends AbstractStaticCheck {
             log(lineNo, WARNING_MESSAGE_MISSING_DEPENDENCY_RESOLUTION);
         }
     }
-
 }

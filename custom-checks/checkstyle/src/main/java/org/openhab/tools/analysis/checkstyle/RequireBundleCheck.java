@@ -34,7 +34,6 @@ import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
-
 /**
  * Checks if the MANIFEST.MF file contains any "Require-Bundle" entries. Exceptions may be configured using the
  * configuration property 'checkstyle.requireBundleCheck.allowedBundles', e.g. "org.junit,org.mokcito,org.hamcrest"
@@ -117,5 +116,4 @@ public class RequireBundleCheck extends AbstractStaticCheck {
 
         return sb.toString();
     }
-
 }

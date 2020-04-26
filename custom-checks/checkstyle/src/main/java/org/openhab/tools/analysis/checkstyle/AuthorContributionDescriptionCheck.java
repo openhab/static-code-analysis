@@ -230,5 +230,4 @@ public class AuthorContributionDescriptionCheck extends AbstractCheck {
     public int[] getRequiredTokens() {
         return CommonUtil.EMPTY_INT_ARRAY;
     }
-
 }

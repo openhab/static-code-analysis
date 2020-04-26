@@ -236,6 +236,5 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
             logger.error(message, e);
             return null;
         }
-
     }
 }

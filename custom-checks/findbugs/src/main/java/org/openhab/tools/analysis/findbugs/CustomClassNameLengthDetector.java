@@ -58,5 +58,4 @@ public class CustomClassNameLengthDetector implements Detector {
             bugReporter.reportBug(new BugInstance("CLASS_NAME_LENGTH", Priorities.NORMAL_PRIORITY));
         }
     }
-
 }

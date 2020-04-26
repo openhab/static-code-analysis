@@ -40,7 +40,8 @@ public class ManifestLineLengthCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-        if (Arrays.stream(fileText.toLinesArray()).anyMatch(x -> x.getBytes(StandardCharsets.UTF_8).length > MAX_LINE_SIZE)) {
+        if (Arrays.stream(fileText.toLinesArray())
+                .anyMatch(x -> x.getBytes(StandardCharsets.UTF_8).length > MAX_LINE_SIZE)) {
             log(0, LOG_MESSAGE);
         }
     }

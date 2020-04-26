@@ -450,5 +450,4 @@ public class ReportMojo extends AbstractMojo {
             return new EmptyNodeList();
         }
     }
-
 }

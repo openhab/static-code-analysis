@@ -47,7 +47,6 @@ public class CachingHttpClient<T> {
 
     public CachingHttpClient(ContentReceviedCallback<T> callback) {
         this.callback = callback;
-
     }
 
     /**

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -11,9 +12,9 @@
 
   <artifactId>checkstyle</artifactId>
 
-  <name>Checkstyle Custom Checks</name>
-  
   <packaging>jar</packaging>
+
+  <name>Checkstyle Custom Checks</name>
 
   <dependencies>
     <dependency>
@@ -35,7 +36,7 @@
       <version>${jetty.server.version}</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
@@ -48,9 +49,9 @@
     </dependency>
 
     <dependency>
-        <groupId>com.vladsch.flexmark</groupId>
-        <artifactId>flexmark-all</artifactId>
-        <version>${flexmark.version}</version>
+      <groupId>com.vladsch.flexmark</groupId>
+      <artifactId>flexmark-all</artifactId>
+      <version>${flexmark.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.ivy</groupId>

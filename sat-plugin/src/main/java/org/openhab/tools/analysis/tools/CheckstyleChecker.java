@@ -131,7 +131,5 @@ public class CheckstyleChecker extends AbstractChecker {
                 MAVEN_CHECKSTYLE_PLUGIN_GOAL, config, checkstylePlugins);
 
         log.debug("Checkstyle execution has been finished.");
-
     }
-
 }

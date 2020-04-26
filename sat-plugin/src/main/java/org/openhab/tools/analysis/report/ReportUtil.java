@@ -114,5 +114,4 @@ final class ReportUtil {
                 && SAT_PLUGIN_ARTIFACT_ID.equals(execution.getArtifactId())
                 && SAT_PLUGIN_REPORT_GOAL.equals(execution.getGoal());
     }
-
 }

@@ -40,64 +40,42 @@ public class ManifestJavaVersionCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testEmptyFile() throws Exception {
-        verify("emptyManifest.MF",
-                generateExpectedMessages()
-        );
+        verify("emptyManifest.MF", generateExpectedMessages());
 
         // we ignore this, its the responsibility of another check
     }
 
     @Test
     public void testCompliantFile() throws Exception {
-        verify("compliantSample.MF",
-                generateExpectedMessages()
-        );
+        verify("compliantSample.MF", generateExpectedMessages());
     }
 
     @Test
     public void testMissingBundleVersion() throws Exception {
         verify("missingJavaVersionSample.MF",
-                generateExpectedMessages(
-                        0,
-                        "\"Bundle-RequiredExecutionEnvironment\" is missing"
-                )
-        );
+                generateExpectedMessages(0, "\"Bundle-RequiredExecutionEnvironment\" is missing"));
     }
 
     @Test
     public void testDoubleBundleVersion() throws Exception {
         verify("doubleJavaVersionSample.MF",
-                generateExpectedMessages(
-                        5, "Only 1 \"Bundle-RequiredExecutionEnvironment\" was expected.",
-                        8, "Only 1 \"Bundle-RequiredExecutionEnvironment\" was expected."
-                )
-        );
+                generateExpectedMessages(5, "Only 1 \"Bundle-RequiredExecutionEnvironment\" was expected.", 8,
+                        "Only 1 \"Bundle-RequiredExecutionEnvironment\" was expected."));
     }
 
     @Test
     public void testWrongLabelForBundleVersion() throws Exception {
-        verify("wrongKeySample.MF",
-                generateExpectedMessages(
-                        7,
-                        "Expect eg. \"Bundle-RequiredExecutionEnvironment: JavaSE-1.8\" got \"Bundle-RequiredExecutionEnvironmentJavaSE-1.7\""
-                )
-        );
+        verify("wrongKeySample.MF", generateExpectedMessages(7,
+                "Expect eg. \"Bundle-RequiredExecutionEnvironment: JavaSE-1.8\" got \"Bundle-RequiredExecutionEnvironmentJavaSE-1.7\""));
     }
 
     @Test
     public void testWrongValueForBundleVersion() throws Exception {
         verify("wrongValueSample.MF",
-                generateExpectedMessages(
-                        7,
-                        "Unexpected \"JavaSE-1.7\", only allowed options: [JavaSE-1.8]"
-                )
-        );
+                generateExpectedMessages(7, "Unexpected \"JavaSE-1.7\", only allowed options: [JavaSE-1.8]"));
     }
 
     private void verify(String fileName, String[] expectedMessages) throws Exception {
-        verify(checkConfig,
-                getPath(fileName),
-                expectedMessages
-        );
+        verify(checkConfig, getPath(fileName), expectedMessages);
     }
 }

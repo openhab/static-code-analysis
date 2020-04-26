@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
@@ -9,13 +9,13 @@
     <artifactId>pom</artifactId>
     <version>0.11.0-SNAPSHOT</version>
   </parent>
-  
+
   <artifactId>sat-extension</artifactId>
 
   <name>Static Code Analysis Tool Maven Extension</name>
   <description>Generates HTML summaries from analysis results</description>
 
-  <dependencies>  
+  <dependencies>
     <!-- Maven dependencies -->
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -40,21 +40,6 @@
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-component-metadata</artifactId>
-        <version>2.1.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate-metadata</goal>
-              <goal>generate-test-metadata</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -84,6 +69,21 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-component-metadata</artifactId>
+        <version>2.1.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate-metadata</goal>
+              <goal>generate-test-metadata</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
 </project>

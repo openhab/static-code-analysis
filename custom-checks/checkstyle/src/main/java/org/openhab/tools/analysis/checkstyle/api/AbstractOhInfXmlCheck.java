@@ -116,5 +116,4 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
      * @throws CheckstyleException when exception occurred during XML processing
      */
     protected abstract void checkThingTypeFile(FileText xmlFileText) throws CheckstyleException;
-
 }
