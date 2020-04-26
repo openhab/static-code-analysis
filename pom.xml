@@ -176,6 +176,28 @@
           <artifactId>maven-enforcer-plugin</artifactId>
           <version>3.0.0-M2</version>
         </plugin>
+
+        <plugin>
+          <groupId>org.openhab.tools.sat</groupId>
+          <artifactId>sat-plugin</artifactId>
+          <version>${sat.version}</version>
+          <configuration>
+            <checkstyleFilter>${basedirRoot}/tools/suppressions.xml</checkstyleFilter>
+            <checkstyleProperties>${basedirRoot}/tools/checkstyle.properties</checkstyleProperties>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>checkstyle</goal>
+                <goal>pmd</goal>
+                <goal>spotbugs</goal>
+                <goal>report</goal>
+              </goals>
+              <phase>verify</phase>
+            </execution>
+          </executions>
+        </plugin>
+
       </plugins>
     </pluginManagement>
     <plugins>
@@ -343,10 +365,10 @@
 
   <profiles>
     <profile>
-      <id>check</id>
+      <id>skip-check</id>
       <activation>
         <property>
-          <name>!skipChecks</name>
+          <name>skipChecks</name>
         </property>
       </activation>
       <build>
@@ -356,24 +378,25 @@
               <groupId>org.openhab.tools.sat</groupId>
               <artifactId>sat-plugin</artifactId>
               <version>${sat.version}</version>
-              <configuration>
-                <checkstyleFilter>${basedirRoot}/tools/suppressions.xml</checkstyleFilter>
-                <checkstyleProperties>${basedirRoot}/tools/checkstyle.properties</checkstyleProperties>
-              </configuration>
               <executions>
                 <execution>
-                  <goals>
-                    <goal>checkstyle</goal>
-                    <goal>pmd</goal>
-                    <goal>spotbugs</goal>
-                    <goal>report</goal>
-                  </goals>
-                  <phase>verify</phase>
+                  <id>sat-all</id>
+                  <phase>none</phase>
                 </execution>
               </executions>
             </plugin>
           </plugins>
         </pluginManagement>
+      </build>
+    </profile>
+    <profile>
+      <id>check-code</id>
+      <activation>
+        <property>
+          <name>!skipChecks</name>
+        </property>
+      </activation>
+      <build>
         <plugins>
           <plugin>
             <groupId>org.openhab.tools.sat</groupId>
