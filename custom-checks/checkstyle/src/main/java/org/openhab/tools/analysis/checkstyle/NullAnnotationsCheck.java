@@ -29,12 +29,13 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 /**
  * Check that generates <b> WARNING </b> if: <br>
  *
- * - Class/Interface is not annotated with <code>@NonNullByDefault</code> <br>
+ * - Class/Interface/Enum is not annotated with <code>@NonNullByDefault</code> <br>
  *
  * - Return types, parameter types, generic types etc. are annotated with <code>@NonNull</code>, because there is no
  * need for it as it is set as default. Only <code>@Nullable</code> should be used.
  *
  * @author Kristina Simova - Initial contribution
+ * @author Fabian Wolter - Add Enum
  */
 public class NullAnnotationsCheck extends AbstractCheck {
 
@@ -45,13 +46,13 @@ public class NullAnnotationsCheck extends AbstractCheck {
     private static final String NONNULLBYDEFAULT_ANNOTATION = NonNullByDefault.class.getSimpleName();
 
     private static final String WARNING_MESSAGE_MISSING_ANNOTATION = String
-            .format("Classes/Interfaces should be annotated with @%s", NONNULLBYDEFAULT_ANNOTATION);
+            .format("Classes/Interfaces/Enums should be annotated with @%s", NONNULLBYDEFAULT_ANNOTATION);
     private static final String WARNING_MESSAGE_NONNULL_ANNOTATION = String.format(
             "There is no need for a @%s annotation because it is set as default. Only @%s should be used",
             NONNULL_ANNOTATION, NULLABLE_ANNOTATION);
 
     /**
-     * Indicates whether the inner classes/interfaces (briefly called units) should be checked for a
+     * Indicates whether the inner classes/interfaces/enums (briefly called units) should be checked for a
      * <code>@NonNullByDefault</code>
      * annotation. It is a configuration property and can be changed through the check's configuration.
      */
@@ -68,7 +69,8 @@ public class NullAnnotationsCheck extends AbstractCheck {
 
     @Override
     public int[] getAcceptableTokens() {
-        return new int[] { TokenTypes.IMPORT, TokenTypes.AT, TokenTypes.CLASS_DEF, TokenTypes.INTERFACE_DEF };
+        return new int[] { TokenTypes.IMPORT, TokenTypes.AT, TokenTypes.CLASS_DEF, TokenTypes.INTERFACE_DEF,
+                TokenTypes.ENUM_DEF };
     }
 
     @Override
@@ -85,9 +87,8 @@ public class NullAnnotationsCheck extends AbstractCheck {
                 imports.add(packageImport);
                 break;
             case TokenTypes.CLASS_DEF:
-                visit(ast);
-                break;
             case TokenTypes.INTERFACE_DEF:
+            case TokenTypes.ENUM_DEF:
                 visit(ast);
                 break;
             case TokenTypes.AT:
@@ -109,7 +110,7 @@ public class NullAnnotationsCheck extends AbstractCheck {
     }
 
     /**
-     * Method that checks for missing <code>@NonNullByDefault</code> annotation before class/interface
+     * Method that checks for missing <code>@NonNullByDefault</code> annotation before class/interface/enum
      *
      * @param ast the ast
      */
