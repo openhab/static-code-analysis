@@ -26,7 +26,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  */
 public class NullAnnotationsCheckTest extends AbstractStaticCheckTest {
 
-    private static final String EXPECTED_WARNING_MESSAGE_MISSING_CLASS_ANNOTATION = "Classes/Interfaces should be annotated with @NonNullByDefault";
+    private static final String EXPECTED_WARNING_MESSAGE_MISSING_CLASS_ANNOTATION = "Classes/Interfaces/Enums should be annotated with @NonNullByDefault";
     private static final String EXPECTED_WARNING_MESSAGE_NONNULL_ANNOTATION = "There is no need for a @NonNull annotation because it is set as default. Only @Nullable should be used";
 
     private static final String ATTRIBUTE_NAME = "checkInnerUnits";
@@ -56,6 +56,14 @@ public class NullAnnotationsCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testInterfaceWithNoAnnotation() throws Exception {
         String fileName = "NotAnnotatedInterface.java";
+        String[] expectedMessage = generateExpectedMessages(3, EXPECTED_WARNING_MESSAGE_MISSING_CLASS_ANNOTATION);
+        boolean checkInnerUnits = false;
+        checkFile(fileName, checkInnerUnits, expectedMessage);
+    }
+
+    @Test
+    public void testEnumWithNoAnnotation() throws Exception {
+        String fileName = "NotAnnotatedEnum.java";
         String[] expectedMessage = generateExpectedMessages(3, EXPECTED_WARNING_MESSAGE_MISSING_CLASS_ANNOTATION);
         boolean checkInnerUnits = false;
         checkFile(fileName, checkInnerUnits, expectedMessage);
