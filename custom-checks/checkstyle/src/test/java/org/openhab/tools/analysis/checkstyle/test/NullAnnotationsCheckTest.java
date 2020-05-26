@@ -60,7 +60,7 @@ public class NullAnnotationsCheckTest extends AbstractStaticCheckTest {
         boolean checkInnerUnits = false;
         checkFile(fileName, checkInnerUnits, expectedMessage);
     }
-    
+
     @Test
     public void testEnumWithNoAnnotation() throws Exception {
         String fileName = "NotAnnotatedEnum.java";
