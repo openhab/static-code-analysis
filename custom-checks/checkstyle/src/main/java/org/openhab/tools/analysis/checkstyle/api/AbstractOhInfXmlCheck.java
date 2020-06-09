@@ -130,7 +130,7 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
             final String message = MessageFormat.format(
                     "Problem occurred while evaluating the expression {0} on the {1} file.", expression,
                     xmlFileText.getFile().getName());
-            logger.error(message, e);
+            log(0, message);
         }
         return nodes;
     }
