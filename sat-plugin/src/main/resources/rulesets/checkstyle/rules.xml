@@ -159,6 +159,14 @@
 			default="features/karaf/openhab-addons/src/main/feature/feature.xml"/>
 	</module>
 
+	<module name="org.openhab.tools.analysis.checkstyle.KarafAddonFeatureCheck">
+		<property name="severity" value="${checkstyle.karafAddonFeatureCheck.severity}" default="error"/>
+		<property name="featureNamePatterns" value="${checkstyle.karafAddonFeatureCheck.featureNamePatterns}"
+			default=""/>
+		<property name="excludeFeatureNames" value="${checkstyle.karafAddonFeatureCheck.excludeFeatureNames}"
+			default=""/>
+	</module>
+
 	<module name="org.openhab.tools.analysis.checkstyle.AnnotationDependencyCheck">
 		<property name="severity" value="warning"/>
 	</module>
