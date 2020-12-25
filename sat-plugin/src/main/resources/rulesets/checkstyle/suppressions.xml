@@ -18,7 +18,7 @@
 		well -->
 	<suppress
 		files=".+org.openhab.binding.homematic.+|.+org.openhab.binding.tellstick.+|.+org.openhab.io.+|.+org.openhab.voice.+"
-		checks="EshInfXmlCheck"/>
+		checks="OhInfXmlCheck"/>
 	<!-- All generated files will skip the author tag check -->
 	<suppress files=".+[\\/]gen[\\/].+\.java" checks="AuthorTagCheck"/>
 	<!-- Some checks will be supressed for test bundles -->
