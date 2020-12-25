@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
 
-	<description>Default set of PMD rules used for checking all bundles Eclipse SmartHome project</description>
+	<description>Default set of PMD rules used for checking all bundles</description>
 
 	<rule ref="category/java/errorprone.xml/EmptyIfStmt">
 		<!-- See https://pmd.github.io/pmd-6.7.0/pmd_rules_java_errorprone.html for all below -->

@@ -6,7 +6,7 @@
 <!--
 	Checkstyle configuration that checks if a bundle is matching the Coding Guidelines in the openHAB project.
 
-	For more information about the guidelines see - http://www.eclipse.org/smarthome/documentation/development/guidelines.html.
+	For more information about the guidelines see - https://www.openhab.org/docs/developer/guidelines.html.
 
 	Note that some of the required checks may be provided by some of the other plugins used in the Static Code Analysis tool.
 -->
