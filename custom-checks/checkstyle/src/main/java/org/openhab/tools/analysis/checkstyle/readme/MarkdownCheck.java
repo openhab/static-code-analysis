@@ -39,9 +39,7 @@ import com.vladsch.flexmark.util.options.MutableDataSet;
  * <li>the README.MD shouldn't be added in build.properties.
  * <li>the doc folder shouldn't be added in build.properties.
  * </ul>
- * <a href="https://www.eclipse.org/smarthome/documentation/development/bindings/docs.html">Eclipse Smarthome
- * Documentation Guidelines
- * info</a>
+ * <a href="https://www.openhab.org/docs/developer/guidelines.html">openHAB Coding Guidelines</a>
  *
  * @author Erdoan Hadzhiyusein - Initial contribution
  * @author Lyubomir Papazov - Change the Markdown parser to flexmark

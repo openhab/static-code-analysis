@@ -59,7 +59,7 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
 
     private final Logger logger = LoggerFactory.getLogger(OhInfXmlValidationCheck.class);
 
-    private Map<Path, File> eshInfFiles = new HashMap<>();
+    private Map<Path, File> ohInfFiles = new HashMap<>();
     private IBuild buildPropertiesFile;
 
     private String thingSchema;
@@ -152,7 +152,7 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
                 // Exclude processed files that are included
                 for (String included : includedTokens) {
                     // Iterator is used, as the collection will be modified
-                    for (Iterator<Entry<Path, File>> it = eshInfFiles.entrySet().iterator(); it.hasNext();) {
+                    for (Iterator<Entry<Path, File>> it = ohInfFiles.entrySet().iterator(); it.hasNext();) {
                         Map.Entry<Path, File> entry = it.next();
                         if (entry.getKey().startsWith(included)) {
                             it.remove();
@@ -160,32 +160,32 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
                     }
                 }
             }
-            logMissingEntries(eshInfFiles, MESSAGE_NOT_INCLUDED_XML_FILE);
+            logMissingEntries(ohInfFiles, MESSAGE_NOT_INCLUDED_XML_FILE);
         }
     }
 
     @Override
     protected void checkConfigFile(FileText xmlFileText) throws CheckstyleException {
         File xmlFile = xmlFileText.getFile();
-        addToEshFiles(xmlFile);
+        addToOhFiles(xmlFile);
         validateXmlAgainstSchema(xmlFile, configSchemaFile);
     }
 
     @Override
     protected void checkBindingFile(FileText xmlFileText) throws CheckstyleException {
         File xmlFile = xmlFileText.getFile();
-        addToEshFiles(xmlFile);
+        addToOhFiles(xmlFile);
         validateXmlAgainstSchema(xmlFile, bindingSchemaFile);
     }
 
     @Override
     protected void checkThingTypeFile(FileText xmlFileText) throws CheckstyleException {
         File xmlFile = xmlFileText.getFile();
-        addToEshFiles(xmlFile);
+        addToOhFiles(xmlFile);
         validateXmlAgainstSchema(xmlFile, thingSchemaFile);
     }
 
-    private void processBuildProperties(FileText fileText) throws CheckstyleException {
+    private void processBuildProperties(FileText fileText) {
         try {
             buildPropertiesFile = parseBuildProperties(fileText);
         } catch (CheckstyleException e) {
@@ -219,11 +219,11 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
         }
     }
 
-    private void addToEshFiles(File xmlFile) {
+    private void addToOhFiles(File xmlFile) {
         Path filePath = xmlFile.toPath();
         Path bundlePath = filePath.getParent().getParent().getParent();
         Path relativePath = bundlePath.relativize(filePath);
-        eshInfFiles.put(relativePath, xmlFile);
+        ohInfFiles.put(relativePath, xmlFile);
     }
 
     private Schema getXSD(String schemaUrlString, CachingHttpClient<Schema> client) {

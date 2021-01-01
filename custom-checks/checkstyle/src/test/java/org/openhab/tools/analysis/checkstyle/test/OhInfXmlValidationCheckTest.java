@@ -66,7 +66,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Override
     protected String getPackageLocation() {
-        return "checkstyle/eshInfXmlValidationCheckTest";
+        return "checkstyle/ohInfXmlValidationCheckTest";
     }
 
     private boolean isResourceAvailable;

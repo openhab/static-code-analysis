@@ -97,7 +97,7 @@ public class ManifestExternalLibrariesCheckTest extends AbstractStaticCheckTest 
         return getPath(folderName + File.separator + TEST_FILE_NAME);
     }
 
-    private String addMetaInfToFilePath(String filePath) throws IOException {
+    private String addMetaInfToFilePath(String filePath) {
         return filePath + File.separator + TEST_FOLDER_NAME;
     }
 

@@ -47,7 +47,7 @@ public class OhInfXmlUsageCheckTest extends AbstractStaticCheckTest {
 
     @Override
     protected String getPackageLocation() {
-        return "checkstyle/eshInfXmlUsageCheckTest";
+        return "checkstyle/ohInfXmlUsageCheckTest";
     }
 
     @Test

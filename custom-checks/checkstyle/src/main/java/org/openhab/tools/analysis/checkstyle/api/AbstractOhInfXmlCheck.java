@@ -27,9 +27,6 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 /**
  * Abstract class for checks that will validate .xml files located in the OH-INF directory.
  *
- * More information can be found
- * <a href="https://eclipse.org/smarthome/documentation/development/bindings/xml-reference.html">here</a>
- *
  * @author Aleksandar Kovachev - Initial contribution
  * @author Svilen Valkanov - Some code refactoring and cleanup, added check for the build.properties file
  */
