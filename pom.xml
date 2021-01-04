@@ -59,7 +59,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.eclipse.version>2.10</maven.eclipse.version>
-    <junit.version>4.11</junit.version>
+    <junit.version>4.13.1</junit.version>
     <commons.io.version>2.4</commons.io.version>
     <commons.lang.version>2.6</commons.lang.version>
     <mockito.version>2.25.0</mockito.version>
