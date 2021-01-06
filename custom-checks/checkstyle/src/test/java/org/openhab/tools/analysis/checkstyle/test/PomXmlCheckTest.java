@@ -18,8 +18,8 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.PomXmlCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -47,7 +47,7 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
 
     private static DefaultConfiguration config;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
         config = createModuleConfig(PomXmlCheck.class);
         config.addAttribute("checkPomVersion", "true");

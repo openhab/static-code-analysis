@@ -12,8 +12,8 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.ExportInternalPackageCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -29,7 +29,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 public class ExportInternalPackageCheckTest extends AbstractStaticCheckTest {
     private static DefaultConfiguration config;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
         config = createModuleConfig(ExportInternalPackageCheck.class);
     }

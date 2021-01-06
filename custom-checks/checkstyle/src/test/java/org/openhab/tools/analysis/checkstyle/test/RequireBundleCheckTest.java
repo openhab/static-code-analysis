@@ -14,8 +14,8 @@ package org.openhab.tools.analysis.checkstyle.test;
 
 import java.io.File;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.RequireBundleCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -35,7 +35,7 @@ public class RequireBundleCheckTest extends AbstractStaticCheckTest {
 
     private static DefaultConfiguration config;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
         config = createModuleConfig(RequireBundleCheck.class);
 

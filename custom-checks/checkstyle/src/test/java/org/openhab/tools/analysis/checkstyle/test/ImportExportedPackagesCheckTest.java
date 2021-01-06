@@ -14,8 +14,8 @@ package org.openhab.tools.analysis.checkstyle.test;
 
 import java.text.MessageFormat;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.ImportExportedPackagesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -32,7 +32,7 @@ public class ImportExportedPackagesCheckTest extends AbstractStaticCheckTest {
 
     private static DefaultConfiguration configuration;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         configuration = createModuleConfig(ImportExportedPackagesCheck.class);
     }

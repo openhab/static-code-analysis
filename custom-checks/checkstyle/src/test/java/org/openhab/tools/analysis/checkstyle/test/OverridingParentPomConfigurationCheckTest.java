@@ -16,8 +16,8 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_F
 
 import java.io.File;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.OverridingParentPomConfigurationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -32,7 +32,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 public class OverridingParentPomConfigurationCheckTest extends AbstractStaticCheckTest {
     private static DefaultConfiguration config;
 
-    @BeforeClass
+    @BeforeAll
     public static void createConfiguration() {
         config = createModuleConfig(OverridingParentPomConfigurationCheck.class);
     }

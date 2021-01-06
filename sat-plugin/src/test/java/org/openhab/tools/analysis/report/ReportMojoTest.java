@@ -12,7 +12,7 @@
  */
 package org.openhab.tools.analysis.report;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.openhab.tools.analysis.report.ReportUtil.RESULT_FILE_NAME;
 
@@ -20,11 +20,11 @@ import java.io.File;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * Tests for the {@link ReportMojo}
@@ -32,7 +32,7 @@ import org.mockito.junit.MockitoJUnitRunner;
  * @author Svilen Valkanov - Initial contribution
  * @author Martin van Wingerden - added logging of all messages
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ReportMojoTest {
 
     private static final String TARGET_RELATIVE_DIR = "target" + File.separator + "test-classes" + File.separator
@@ -41,14 +41,13 @@ public class ReportMojoTest {
             + TARGET_RELATIVE_DIR;
     private static final String RESULT_FILE_PATH = TARGET_ABSOLUTE_DIR + File.separator + RESULT_FILE_NAME;
 
-    @Mock
-    private Log logger;
+    private @Mock Log logger;
 
     private ReportMojo subject;
 
     private File resultFile = new File(RESULT_FILE_PATH);
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         subject = new ReportMojo();
         subject.setLog(logger);
@@ -58,7 +57,7 @@ public class ReportMojoTest {
         }
     }
 
-    @Test(expected = MojoFailureException.class)
+    @Test
     public void assertReportIsCreatedAndBuildFails() throws Exception {
         assertFalse(resultFile.exists());
 
@@ -66,11 +65,8 @@ public class ReportMojoTest {
         subject.setSummaryReport(null);
         subject.setTargetDirectory(new File(TARGET_ABSOLUTE_DIR));
 
-        try {
-            subject.execute();
-        } finally {
-            assertTrue(resultFile.exists());
-        }
+        assertThrows(MojoFailureException.class, () -> subject.execute());
+        assertTrue(resultFile.exists());
     }
 
     @Test

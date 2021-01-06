@@ -18,7 +18,7 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.OhInfXmlUsageCheck;
 import org.openhab.tools.analysis.checkstyle.OhInfXmlValidationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;

@@ -15,7 +15,7 @@ package org.openhab.tools.analysis.checkstyle.test;
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.BuildPropertiesExternalLibrariesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 

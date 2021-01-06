@@ -12,7 +12,7 @@
  */
 package org.openhab.tools.analysis.pmd.test;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import net.sourceforge.pmd.testframework.SimpleAggregatorTst;
 
@@ -23,7 +23,7 @@ import net.sourceforge.pmd.testframework.SimpleAggregatorTst;
  */
 public class CustomRulesTest extends SimpleAggregatorTst {
     @Override
-    @Before
+    @BeforeEach
     public void setUp() {
         addRule("pmd/ruleset/customrules.xml", "UseSLF4JLoggerRule");
     }

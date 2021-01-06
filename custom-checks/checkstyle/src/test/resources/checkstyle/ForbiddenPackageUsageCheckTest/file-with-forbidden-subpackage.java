@@ -1,6 +1,6 @@
 package org.openhab.tools.analysis.checkstyle.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.ForbiddenPackageUsageCheck;
 import org.openhab.tools.analysis.checkstyle.InheritDocCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;

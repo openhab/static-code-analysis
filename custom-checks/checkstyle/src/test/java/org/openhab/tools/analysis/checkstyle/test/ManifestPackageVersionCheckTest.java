@@ -16,8 +16,8 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.MANIFEST_
 
 import java.io.File;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.ManifestPackageVersionCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -36,7 +36,7 @@ public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
 
     private static DefaultConfiguration config;
 
-    @BeforeClass
+    @BeforeAll
     public static void createConfiguration() {
         config = createModuleConfig(ManifestPackageVersionCheck.class);
         config.addAttribute("ignoreImportedPackages", "org.apache.*, org.junit.*");

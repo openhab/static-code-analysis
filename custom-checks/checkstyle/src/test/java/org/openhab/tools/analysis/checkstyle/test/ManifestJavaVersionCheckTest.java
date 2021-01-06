@@ -12,8 +12,8 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.BundleVendorCheck;
 import org.openhab.tools.analysis.checkstyle.ManifestJavaVersionCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
@@ -28,7 +28,7 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 public class ManifestJavaVersionCheckTest extends AbstractStaticCheckTest {
     private static final DefaultConfiguration CHECK_CONFIG = createModuleConfig(ManifestJavaVersionCheck.class);
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
         CHECK_CONFIG.addAttribute("allowedValues", "JavaSE-1.8");
     }

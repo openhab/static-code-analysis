@@ -13,7 +13,8 @@
 package org.openhab.tools.analysis.utils;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -35,14 +36,14 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 /**
@@ -50,7 +51,7 @@ import org.mockito.stubbing.Answer;
  *
  * @author Svilen Valkanov - Initial contribution
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CachingHttpClientTest {
 
     private static final String PATH_TO_RESOURCE = "/found";
@@ -65,7 +66,7 @@ public class CachingHttpClientTest {
     private ContentReceviedCallback<String> testCallback = s -> new String(s);
     private CachingHttpClient<String> testClient = new CachingHttpClient<>(testCallback);
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws Exception {
         server = new Server();
 
@@ -86,14 +87,14 @@ public class CachingHttpClientTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws Exception {
         if (server.isStarted() || server.isStarting()) {
             server.stop();
         }
     }
 
-    @Before
+    @BeforeEach
     public void clearInteractionsWithServer() throws Exception {
         Handler handler = server.getHandler();
         Mockito.reset(handler);

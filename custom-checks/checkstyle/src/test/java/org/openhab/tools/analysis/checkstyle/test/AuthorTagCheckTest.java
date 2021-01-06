@@ -12,7 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.AuthorTagCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 

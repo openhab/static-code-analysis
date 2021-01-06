@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.RequiredFilesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -44,7 +44,7 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
 
     private static DefaultConfiguration config;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
         config = createModuleConfig(RequiredFilesCheck.class);
 
@@ -62,14 +62,14 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
         return "checkstyle/requiredFilesCheckTest";
     }
 
-    @Ignore("Checkstyle can't check on files without extension. Therefore ignore for now.")
+    @Disabled("Checkstyle can't check on files without extension. Therefore ignore for now.")
     @Test
     public void testMissingNoticeFile() throws Exception {
         verifyDirectory("missing_notice_html_directory", NOTICE_FILE_NAME,
                 String.format(MISSING_FILE_MSG, NOTICE_FILE_NAME));
     }
 
-    @Ignore("Checkstyle can't check on files without extension. Therefore ignore for now.")
+    @Disabled("Checkstyle can't check on files without extension. Therefore ignore for now.")
     @Test
     public void testPresentNoticeFile() throws Exception {
         verifyDirectory("valid_directory", NOTICE_FILE_NAME, null);

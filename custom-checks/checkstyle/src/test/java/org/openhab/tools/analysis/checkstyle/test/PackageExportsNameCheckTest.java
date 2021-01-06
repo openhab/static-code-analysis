@@ -16,8 +16,8 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.PackageExportsNameCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -38,7 +38,7 @@ public class PackageExportsNameCheckTest extends AbstractStaticCheckTest {
 
     private static DefaultConfiguration configuration;
 
-    @BeforeClass
+    @BeforeAll
     public static void createConfiguration() {
         configuration = createModuleConfig(PackageExportsNameCheck.class);
         configuration.addAttribute("sourceDirectories", "src/main/java");

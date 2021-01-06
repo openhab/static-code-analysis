@@ -12,7 +12,7 @@
  */
 package org.openhab.tools.analysis.pmd.test;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import net.sourceforge.pmd.testframework.SimpleAggregatorTst;
 
@@ -25,7 +25,7 @@ public class ClasspathTest extends SimpleAggregatorTst {
 
     // How to implement PMD rule test - https://pmd.github.io/pmd-5.4.1/customizing/rule-guidelines.html
     @Override
-    @Before
+    @BeforeEach
     public void setUp() {
         addRule("src/test/resources/pmd/ruleset/classpath.xml", "AvoidMavenPomderivedInClasspath");
     }

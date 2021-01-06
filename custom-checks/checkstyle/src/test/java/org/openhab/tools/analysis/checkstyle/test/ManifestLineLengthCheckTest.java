@@ -12,8 +12,8 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.ManifestLineLengthCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -32,7 +32,7 @@ public class ManifestLineLengthCheckTest extends AbstractStaticCheckTest {
 
     private static DefaultConfiguration configuration;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         configuration = createModuleConfig(ManifestLineLengthCheck.class);
     }

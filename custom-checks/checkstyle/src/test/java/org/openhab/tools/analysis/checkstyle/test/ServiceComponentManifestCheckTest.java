@@ -18,8 +18,8 @@ import java.io.File;
 import java.text.MessageFormat;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.ServiceComponentManifestCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -56,7 +56,7 @@ public class ServiceComponentManifestCheckTest extends AbstractStaticCheckTest {
 
     private static DefaultConfiguration config;
 
-    @BeforeClass
+    @BeforeAll
     public static void createConfiguration() {
         config = createModuleConfig(ServiceComponentManifestCheck.class);
     }

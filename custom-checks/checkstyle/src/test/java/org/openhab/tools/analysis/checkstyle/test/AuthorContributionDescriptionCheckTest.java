@@ -15,8 +15,8 @@ package org.openhab.tools.analysis.checkstyle.test;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.AuthorContributionDescriptionCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -50,7 +50,7 @@ public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckT
         return "checkstyle/authorContributionDescriptionCheckTest";
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         lineNumberToWarningMessageExpected = new TreeMap<>();
         configuration = createModuleConfig(AuthorContributionDescriptionCheck.class);
