@@ -58,6 +58,10 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <oh.java.version>11</oh.java.version>
+    <maven.compiler.source>${oh.java.version}</maven.compiler.source>
+    <maven.compiler.target>${oh.java.version}</maven.compiler.target>
+    <maven.compiler.compilerVersion>${oh.java.version}</maven.compiler.compilerVersion>
     <maven.eclipse.version>2.10</maven.eclipse.version>
     <junit.version>4.13.1</junit.version>
     <commons.io.version>2.4</commons.io.version>
@@ -71,7 +75,7 @@
     <maven.plugin.api.version>3.6.0</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.6.0</maven.plugin.annotations.version>
     <maven.plugin.plugin.version>3.6.0</maven.plugin.plugin.version>
-    <maven.plugin.compiler.version>3.6.1</maven.plugin.compiler.version>
+    <maven.plugin.compiler.version>3.8.1</maven.plugin.compiler.version>
     <mojo.executor.version>2.3.0</mojo.executor.version>
     <org.apache.ivy.version>2.4.0</org.apache.ivy.version>
     <org.jsoup.version>1.7.1</org.jsoup.version>
@@ -85,6 +89,8 @@
     <spotless.version>2.0.3</spotless.version>
     <slf4j.version>1.7.25</slf4j.version>
     <logback.version>1.2.3</logback.version>
+    <eea.version>2.2.1</eea.version>
+    <m2e.jdt.annotationpath>target/dependency</m2e.jdt.annotationpath>
   </properties>
 
   <dependencies>
@@ -372,27 +378,30 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven.plugin.compiler.version}</version>
         <configuration>
-          <release>11</release>
+          <compilerId>eclipse</compilerId>
+          <compilerArguments>
+            <annotationpath>CLASSPATH</annotationpath>
+            <classpath>${project.build.directory}/dependency</classpath>
+          </compilerArguments>
+          <compilerArgs>
+            <arg>-err:+nullAnnot(org.eclipse.jdt.annotation.Nullable|org.eclipse.jdt.annotation.NonNull|org.eclipse.jdt.annotation.NonNullByDefault),+inheritNullAnnot,+nullAnnotConflict,-nullUncheckedConversion</arg>
+            <arg>-warn:+null,+inheritNullAnnot,+nullAnnotConflict,-nullUncheckedConversion,+nullAnnotRedundant,+nullDereference</arg>
+          </compilerArgs>
+          <showWarnings>true</showWarnings>
+          <showDeprecation>true</showDeprecation>
         </configuration>
         <dependencies>
           <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-eclipse-compiler</artifactId>
-            <version>2.9.2-01</version>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-eclipse</artifactId>
+            <version>2.8.8</version>
           </dependency>
           <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-eclipse-batch</artifactId>
-            <version>2.4.3-01</version>
+            <groupId>org.eclipse.jdt</groupId>
+            <artifactId>ecj</artifactId>
+            <version>3.23.0</version>
           </dependency>
         </dependencies>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -458,6 +467,29 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.2</version>
+        <executions>
+          <execution>
+            <id>unpack-eea</id>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.lastnpe.eea</groupId>
+                  <artifactId>eea-all</artifactId>
+                  <version>${eea.version}</version>
+                  <overWrite>true</overWrite>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
     <extensions>
