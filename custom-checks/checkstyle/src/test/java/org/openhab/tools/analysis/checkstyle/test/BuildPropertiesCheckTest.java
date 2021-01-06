@@ -17,8 +17,8 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.BuildPropertiesCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -48,7 +48,7 @@ public class BuildPropertiesCheckTest extends AbstractStaticCheckTest {
 
     private static DefaultConfiguration config = createModuleConfig(BuildPropertiesCheck.class);
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpTest() {
         config.addAttribute("expectedBinIncludesValues", "META-INF/");
         config.addAttribute("possibleOutputValues", "target/classes,target/test-classes");

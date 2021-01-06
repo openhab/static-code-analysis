@@ -12,8 +12,8 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.ForbiddenPackageUsageCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -29,7 +29,7 @@ public class ForbiddenPackageUsageCheckTest extends AbstractStaticCheckTest {
     private static final String MESSAGE = "The package %s should not be used.";
     DefaultConfiguration config = createModuleConfig(ForbiddenPackageUsageCheck.class);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         config.addAttribute("forbiddenPackages", "com.google.common,com.something.something,org.something.asd");
         config.addAttribute("exceptions", "com.google.common.utils");

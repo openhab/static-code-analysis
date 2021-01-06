@@ -12,6 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
+import static org.junit.jupiter.api.Assumptions.*;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OH_INF_PATH;
 
 import java.io.File;
@@ -21,10 +22,9 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.OhInfXmlValidationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
@@ -57,7 +57,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     private static final DefaultConfiguration CONFIGURATION = createModuleConfig(OhInfXmlValidationCheck.class);
 
-    @BeforeClass
+    @BeforeAll
     public static void createConfiguration() {
         CONFIGURATION.addAttribute("thingSchema", THING_SCHEMA_URL);
         CONFIGURATION.addAttribute("bindingSchema", BINDING_SCHEMA_URL);
@@ -71,7 +71,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     private boolean isResourceAvailable;
 
-    @Before
+    @BeforeEach
     public void checkConnection() {
         Locale.setDefault(new Locale("en", "US"));
         try {
@@ -91,7 +91,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testMissingChannelTypeContent() throws Exception {
-        Assume.assumeTrue(isResourceAvailable);
+        assumeTrue(isResourceAvailable);
 
         int lineNumber = 16;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
@@ -101,7 +101,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testSequenceThingTypesCheck() throws Exception {
-        Assume.assumeTrue(isResourceAvailable);
+        assumeTrue(isResourceAvailable);
 
         int lineNumber = 8;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
@@ -117,7 +117,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testMissingPropertyContent() throws Exception {
-        Assume.assumeTrue(isResourceAvailable);
+        assumeTrue(isResourceAvailable);
 
         int lineNumber = 14;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
@@ -127,7 +127,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testSequenceChannelTypeCheck() throws Exception {
-        Assume.assumeTrue(isResourceAvailable);
+        assumeTrue(isResourceAvailable);
 
         int lineNumber = 18;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
@@ -137,7 +137,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testSequenceBridgeTypeCheck() throws Exception {
-        Assume.assumeTrue(isResourceAvailable);
+        assumeTrue(isResourceAvailable);
 
         int lineNumber = 7;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
@@ -159,7 +159,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testInvalidBinding() throws Exception {
-        Assume.assumeTrue(isResourceAvailable);
+        assumeTrue(isResourceAvailable);
 
         int lineNumber = 7;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
@@ -169,7 +169,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testInvalidConfig() throws Exception {
-        Assume.assumeTrue(isResourceAvailable);
+        assumeTrue(isResourceAvailable);
 
         int lineNumber = 8;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
@@ -179,7 +179,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testMissingThingDescriptionsContent() throws Exception {
-        Assume.assumeTrue(isResourceAvailable);
+        assumeTrue(isResourceAvailable);
 
         int lineNumber = 6;
         String[] expectedMessages = generateExpectedMessages(lineNumber,

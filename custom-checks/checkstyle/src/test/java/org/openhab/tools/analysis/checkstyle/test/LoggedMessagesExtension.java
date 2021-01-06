@@ -15,9 +15,9 @@ package org.openhab.tools.analysis.checkstyle.test;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;
@@ -25,37 +25,27 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 
 /**
- * A rule that stores all log messages appended by a logger during the execution of a test.
+ * An extension that stores all log messages appended by a logger during the execution of a test.
  *
  * @author Wouter Born - Initial contribution
  */
-public class LoggerRule implements TestRule {
+public class LoggedMessagesExtension implements BeforeEachCallback, AfterEachCallback {
 
     private final ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
     private final Logger logger;
 
-    public LoggerRule(Class<?> loggerClass) {
+    public LoggedMessagesExtension(Class<?> loggerClass) {
         logger = (Logger) LoggerFactory.getLogger(loggerClass);
     }
 
     @Override
-    public Statement apply(Statement base, Description description) {
-        return new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                setup();
-                base.evaluate();
-                teardown();
-            }
-        };
-    }
-
-    private void setup() {
+    public void beforeEach(ExtensionContext context) throws Exception {
         logger.addAppender(listAppender);
         listAppender.start();
     }
 
-    private void teardown() {
+    @Override
+    public void afterEach(ExtensionContext context) throws Exception {
         listAppender.stop();
         listAppender.list.clear();
         logger.detachAppender(listAppender);

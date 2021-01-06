@@ -15,8 +15,8 @@ package org.openhab.tools.analysis.checkstyle.test;
 import java.text.MessageFormat;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -36,7 +36,7 @@ public class ParameterizedRegexpHeaderCheckTest extends AbstractStaticCheckTest 
     private static final String TEST_XML_HEADER_PATTERN = "^<!-- Copyright \\(c\\) {0}-{1} by the respective copyright holders\\. -->$";
     private static DefaultConfiguration config;
 
-    @Before
+    @BeforeEach
     public void createConfiguration() {
         // The default configuration for the tests
         config = createTestConfiguration(TEST_JAVADOC_HEADER_PATTERN, "2010,2017", null);

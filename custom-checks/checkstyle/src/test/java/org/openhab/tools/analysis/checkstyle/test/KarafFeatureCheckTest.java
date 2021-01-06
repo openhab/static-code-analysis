@@ -13,7 +13,7 @@
 package org.openhab.tools.analysis.checkstyle.test;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_FILE_NAME;
 
 import java.io.File;
@@ -21,11 +21,9 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openhab.tools.analysis.checkstyle.KarafFeatureCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -36,15 +34,15 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
  *
  * @author Svilen Valkanov - Initial contribution
  */
-@RunWith(MockitoJUnitRunner.class)
 public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
 
     private static final String MSG_MISSING_BUNDLE_IN_FEATURE_XML = "Bundle with ID '{0}' must be added in one of {1}";
     private static final DefaultConfiguration CONFIGURATION = createModuleConfig(KarafFeatureCheck.class);
 
-    public final @Rule LoggerRule loggerRule = new LoggerRule(KarafFeatureCheck.class);
+    public final @RegisterExtension LoggedMessagesExtension extension = new LoggedMessagesExtension(
+            KarafFeatureCheck.class);
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         CONFIGURATION.addAttribute("featureXmlPath", "feature/feature.xml:feature/internal/feature.xml");
     }
@@ -73,7 +71,7 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
     public void testInvalidBundle() throws Exception {
         verify("invalidBundle", ArrayUtils.EMPTY_STRING_ARRAY);
 
-        List<String> messages = loggerRule.getFormattedMessages();
+        List<String> messages = extension.getFormattedMessages();
 
         assertThat(messages.size(), is(1));
         assertThat(messages.get(0), startsWith(

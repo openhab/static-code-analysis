@@ -14,8 +14,8 @@ package org.openhab.tools.analysis.checkstyle.test;
 
 import static com.puppycrawl.tools.checkstyle.utils.CommonUtil.EMPTY_STRING_ARRAY;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.OnlyTabIndentationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -33,7 +33,7 @@ public class OnlyTabIndentationCheckTest extends AbstractStaticCheckTest {
     private static final String WHITESPACE_USAGE_WARNING = "There were whitespace characters used for indentation. Please use tab characters instead";
     private DefaultConfiguration config;
 
-    @Before
+    @BeforeEach
     public void setUpClass() {
         config = createModuleConfig(OnlyTabIndentationCheck.class);
         config.addAttribute("fileTypes", "xml,json");

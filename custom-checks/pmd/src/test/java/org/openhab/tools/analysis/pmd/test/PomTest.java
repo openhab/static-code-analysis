@@ -12,7 +12,7 @@
  */
 package org.openhab.tools.analysis.pmd.test;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import net.sourceforge.pmd.testframework.SimpleAggregatorTst;
 
@@ -24,7 +24,7 @@ import net.sourceforge.pmd.testframework.SimpleAggregatorTst;
 public class PomTest extends SimpleAggregatorTst {
 
     @Override
-    @Before
+    @BeforeEach
     public void setUp() {
         addRule("src/test/resources/pmd/ruleset/pom.xml", "AvoidOverridingParentPomConfiguration");
     }

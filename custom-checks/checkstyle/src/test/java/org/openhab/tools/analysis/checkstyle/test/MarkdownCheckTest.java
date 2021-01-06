@@ -18,8 +18,8 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.README_MD
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.checkstyle.readme.MarkdownCheck;
 
@@ -36,7 +36,7 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
     private static final String ADDED_DOC_FOLDER_IN_BUILD_PROPERTIES_MSG = "The doc folder must not be added to the bin.includes property";
     private DefaultConfiguration config;
 
-    @Before
+    @BeforeEach
     public void setUpClass() {
         createValidConfig();
     }
