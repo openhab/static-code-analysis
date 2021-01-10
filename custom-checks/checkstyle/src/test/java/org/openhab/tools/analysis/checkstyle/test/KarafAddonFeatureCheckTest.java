@@ -20,8 +20,6 @@ import java.text.MessageFormat;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.openhab.tools.analysis.checkstyle.KarafAddonFeatureCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -32,7 +30,6 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
  *
  * @author Hilbrand Bouwkamp - Initial contribution
  */
-@RunWith(MockitoJUnitRunner.class)
 public class KarafAddonFeatureCheckTest extends AbstractStaticCheckTest {
 
     private static final String ARTIFACT_ID = "org.openhab.binding.example";

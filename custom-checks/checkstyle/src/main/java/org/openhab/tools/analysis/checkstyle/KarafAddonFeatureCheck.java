@@ -42,7 +42,7 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
- * Checks if a add-on has a valid feature.xml file.
+ * Checks if an add-on has a valid feature.xml file.
  *
  * @author Hilbrand Bouwkamp - Initial contribution
  */
@@ -177,7 +177,7 @@ public class KarafAddonFeatureCheck extends AbstractStaticCheck {
     }
 
     private void checkFeature(File featureFile, String artifactId, FileText fileText, Document featureXML) {
-        final String featureName = adapatedFeatureName(artifactId);
+        final String featureName = adaptedFeatureName(artifactId);
 
         for (String exclude : excludeFeatureNamesList) {
             if (exclude.equals(featureName)) {
@@ -189,7 +189,7 @@ public class KarafAddonFeatureCheck extends AbstractStaticCheck {
                 name -> !featureName.equals(name), MSG_FEATURE_NAME_INVALID, FEATURE_SEARCH);
     }
 
-    private String adapatedFeatureName(String artifactId) {
+    private String adaptedFeatureName(String artifactId) {
         String featureName = artifactId.substring(4).replaceAll("\\.", "-");
 
         for (Entry<String, String> entry : featureNamePatternsMap.entrySet()) {
