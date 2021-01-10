@@ -87,7 +87,7 @@ public class KarafFeatureCheck extends AbstractStaticCheck {
                 Path featurePath = resolveRecursively(file.toPath(), Paths.get(singlePath));
 
                 if (featurePath == null) {
-                    logger.warn("Could not find file feature file {}", singlePath);
+                    logger.debug("Could not find file feature file {}", singlePath);
                     continue;
                 }
 

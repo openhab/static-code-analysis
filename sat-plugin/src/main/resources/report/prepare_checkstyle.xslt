@@ -34,10 +34,14 @@
 	<xsl:template match="file">
 		<xsl:variable name="new_name">
 		<xsl:choose>
+			<xsl:when test="contains(@name,'feature.xml')">
+				<xsl:variable name="temp_name" select="translate(@name, '\', '/')" />
+				<xsl:value-of select="concat('src/', substring-after($temp_name, '/src/'))" />
+			</xsl:when>
 			<xsl:when test="contains(@name,'src')">
 				<xsl:variable name="temp_name" select="translate(@name, '/', '.')" />
 				<xsl:variable name="temp_name" select="translate($temp_name, '\', '.')" />
-				<xsl:value-of select="concat(substring-after($temp_name,'.java.'),  substring-after($temp_name,'.resources.'))" />
+				<xsl:value-of select="concat(substring-after($temp_name,'.java.'), substring-after($temp_name,'.resources.'))" />
 			</xsl:when>
 			<xsl:otherwise>				
 				<xsl:call-template name="substring-after-last">
