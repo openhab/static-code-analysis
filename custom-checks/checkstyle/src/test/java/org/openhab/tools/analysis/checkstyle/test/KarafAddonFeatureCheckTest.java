@@ -46,6 +46,15 @@ public class KarafAddonFeatureCheckTest extends AbstractStaticCheckTest {
     }
 
     @Test
+    public void testExcludeAddonPatterns() throws Exception {
+        DefaultConfiguration config = createModuleConfig(KarafAddonFeatureCheck.class);
+        config.addAttribute("excludeAddonPatterns", "excludeAddon.*");
+
+        verify(config, getPath("excludeAddonPatterns" + File.separator + POM_XML_FILE_NAME),
+                ArrayUtils.EMPTY_STRING_ARRAY);
+    }
+
+    @Test
     public void testMissingFeatureFile() throws Exception {
         final File featureFile = new File(getPath("missingFeature"), FEATURE_XML_PATH);
 
@@ -75,16 +84,7 @@ public class KarafAddonFeatureCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testPatternFeatureName() throws Exception {
         DefaultConfiguration config = createModuleConfig(KarafAddonFeatureCheck.class);
-        config.addAttribute("featureNamePatterns", "openhab-binding-example:org.openhab.binding.someother");
-        verify(config, getPath("invalidFeatureName" + File.separator + FEATURE_XML_PATH),
-                ArrayUtils.EMPTY_STRING_ARRAY);
-    }
-
-    @Test
-    public void testExcludedFeatureName() throws Exception {
-        DefaultConfiguration config = createModuleConfig(KarafAddonFeatureCheck.class);
-        config.addAttribute("featureNamePatterns", "openhab-binding-example:org.openhab.binding.someother");
-        config.addAttribute("excludeFeatureNames", "org.openhab.binding.someother");
+        config.addAttribute("featureNameMappings", "openhab-binding-example:org.openhab.binding.someother");
         verify(config, getPath("invalidFeatureName" + File.separator + FEATURE_XML_PATH),
                 ArrayUtils.EMPTY_STRING_ARRAY);
     }
