@@ -8,6 +8,10 @@
 		<label>Sample 1</label>
 	</thing-type>
 
+	<thing-type id="valid_text">
+		<label>@text/very.looooooooooooooooooooong.static.label</label>
+	</thing-type>
+
 	<thing-type id="check">
 		<label>Looooooooooooooooooooong Label</label>
 	</thing-type>

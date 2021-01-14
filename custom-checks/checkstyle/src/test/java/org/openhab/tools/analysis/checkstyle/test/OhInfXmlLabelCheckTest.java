@@ -17,7 +17,8 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OH_INF_PA
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -111,9 +112,9 @@ public class OhInfXmlLabelCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testExceedsMaxLabelLength() throws Exception {
-        final String[] expectedMessages = generateExpectedMessages(12,
-                String.format(MessageFormat.format(OhInfXmlLabelCheck.MESSAGE_MAX_LABEL_LENGTH, "thing-type", "id",
-                        "check", String.format("L%sng Label", String.join("", Collections.nCopies(21, "o")))), 25));
+        final String[] expectedMessages = generateExpectedMessages(16,
+                MessageFormat.format(String.format(OhInfXmlLabelCheck.MESSAGE_MAX_LABEL_LENGTH, 25), "thing-type", "id",
+                        "check", "L" + "o".repeat(21) + "ng Label", 30));
         configuration.addAttribute("maxLabelLength", "25");
         verifyWithPath("exceedsMaxLabelLength", RELATIVE_PATH_TO_THING, expectedMessages);
     }
@@ -122,9 +123,9 @@ public class OhInfXmlLabelCheckTest extends AbstractStaticCheckTest {
             final String[] expectedMessages) throws Exception {
         final String directoryPath = getPath(testSubDirectory);
         final File testDirectoryPath = new File(directoryPath);
-
         final File[] testFiles = listFilesForFolder(testDirectoryPath, new ArrayList<File>());
-        verify(createChecker(configuration), testFiles, directoryPath + testFilePath, expectedMessages);
+        verify(createChecker(configuration), testFiles, directoryPath + testFilePath, Stream.of(expectedMessages)
+                .map(s -> s.replace("''", "'")).collect(Collectors.toList()).toArray(new String[0]));
     }
 
     private File[] listFilesForFolder(final File folder, final ArrayList<File> files) {

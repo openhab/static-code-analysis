@@ -31,6 +31,7 @@ import org.w3c.dom.NodeList;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
+import com.puppycrawl.tools.checkstyle.api.SeverityLevel;
 
 /**
  * Checks if all words in a label start with an uppercase character and if labels are not to long.
@@ -41,6 +42,8 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
 
     private static final String CONFIG_ATTR_KEY = "name";
     private static final String THING_ATTR_KEY = "id";
+
+    private static final String I18N_PREFIX = "@text/";
 
     private static final String PARAMETER_LABEL_EXPRESSION = "//parameter/label/text()";
     private static final String PARAMETER_GROUP_LABEL_EXPRESSION = "//parameter-group/label/text()";
@@ -69,8 +72,8 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
     private static final Pattern TYPE_PATTERN = Pattern.compile("//([^\\/]+)");
     private static final Pattern LABEL_PATTERN = Pattern.compile("<label>([^<]+)</label>");
 
-    public static final String MESSAGE_LABEL_UPPERCASE = "Label of {0} with {1} \"{2}\" does not have uppercase first character for each word: \"{3}\"";
-    public static final String MESSAGE_MAX_LABEL_LENGTH = "Label of {0} with {1} \\\"{2}\\\" exceeds maximum length of %d characters: \"{3}\"";
+    public static final String MESSAGE_LABEL_UPPERCASE = "Label of {0} with {1} ''''{2}'''' does not have uppercase first character for each word: ''''{3}''''";
+    public static final String MESSAGE_MAX_LABEL_LENGTH = "Label of {0} with {1} ''''{2}'''' exceeds maximum length of %d characters with length {4}: ''''{3}''''";
 
     public static final Set<String> LOWER_CASE_WORDS = Stream
             .of("a", "an", "the", "and", "as", "but", "by", "for", "from", "in", "into", "like", "near", "nor", "of",
@@ -78,8 +81,10 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
             .collect(Collectors.toSet());
 
     private int maxLabelLength = Integer.MAX_VALUE;
+    private int maxLabelLengthError = Integer.MAX_VALUE;
     private boolean doCheckWordCasing;
     private String dynamicMessageMaxLabelLength = "";
+    private String dynamicMessageMaxLabelLengthError = "";
 
     /**
      * Sets the configuration property for the max label length.
@@ -89,6 +94,16 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
     public void setMaxLabelLength(final String maxLabelLength) {
         this.maxLabelLength = maxLabelLength == null ? Integer.MAX_VALUE : Integer.parseInt(maxLabelLength);
         dynamicMessageMaxLabelLength = String.format(MESSAGE_MAX_LABEL_LENGTH, this.maxLabelLength);
+    }
+
+    /**
+     * Sets the configuration property for the max label length.
+     *
+     * @param maxLabelLength max length a label may have
+     */
+    public void setMaxLabelLengthError(final String maxLabelLength) {
+        this.maxLabelLengthError = maxLabelLength == null ? Integer.MAX_VALUE : Integer.parseInt(maxLabelLength);
+        dynamicMessageMaxLabelLengthError = String.format(MESSAGE_MAX_LABEL_LENGTH, this.maxLabelLengthError);
     }
 
     public void setCheckWordCasing(final String check) {
@@ -127,11 +142,22 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
         if (nodes != null) {
             for (int i = 0; i < nodes.getLength(); i++) {
                 final String labelText = nodes.item(i).getNodeValue();
-
-                checkWordCasing(xmlFileText, lineNumberMap, key, type, nodes.item(i), file, labelText);
-                checkLabelLength(xmlFileText, lineNumberMap, key, type, nodes.item(i), file, labelText);
+                if (noI18NLabel(labelText)) {
+                    checkWordCasing(xmlFileText, lineNumberMap, key, type, nodes.item(i), file, labelText);
+                    checkLabelLength(xmlFileText, lineNumberMap, key, type, nodes.item(i), file, labelText);
+                }
             }
         }
+    }
+
+    /**
+     * Check if the label is an i18n key. If such it should not be checked for length.
+     *
+     * @param labelText label text to check
+     * @return true if no i18n label
+     */
+    private boolean noI18NLabel(String labelText) {
+        return !labelText.startsWith(I18N_PREFIX);
     }
 
     private void checkWordCasing(final FileText xmlFileText, final Map<String, Integer> lineNumberMap, final String key,
@@ -166,7 +192,12 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
 
     private void checkLabelLength(final FileText xmlFileText, final Map<String, Integer> lineNumberMap,
             final String key, final String type, final Node node, final File file, final String labelText) {
-        if (labelText.length() > maxLabelLength) {
+        if (labelText.length() > maxLabelLengthError) {
+            final SeverityLevel configuredSeverityLevel = getSeverityLevel();
+            setSeverity(SeverityLevel.ERROR.name());
+            log(xmlFileText, lineNumberMap, dynamicMessageMaxLabelLengthError, key, type, node, file, labelText);
+            setSeverity(configuredSeverityLevel.name());
+        } else if (labelText.length() > maxLabelLength) {
             log(xmlFileText, lineNumberMap, dynamicMessageMaxLabelLength, key, type, node, file, labelText);
         }
     }
@@ -177,7 +208,7 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
         final Integer lineNr = lineNumberMap.get(labelText);
 
         logMessage(file.getPath(), lineNr == null ? 0 : lineNr, file.getName(),
-                MessageFormat.format(message, type, key, getReferenceId(key, node), labelText));
+                MessageFormat.format(message, type, key, getReferenceId(key, node), labelText, labelText.length()));
     }
 
     private void lazyLoadMap(final FileText xmlFileText, final Map<String, Integer> lineNumberMap) {
