@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -71,25 +72,10 @@ public class KarafAddonFeatureCheck extends AbstractStaticCheck {
     private final Logger logger = LoggerFactory.getLogger(KarafAddonFeatureCheck.class);
 
     private final Map<String, String> featureNamePatternsMap = new LinkedHashMap<>();
-    private final List<String> excludeFeatureNamesList = new ArrayList<>();
+    private final List<Pattern> excludeAddonsList = new ArrayList<>();
 
     public KarafAddonFeatureCheck() {
         setFileExtensions(XML_EXTENSION);
-    }
-
-    /**
-     * Comma separated list of binding names (name after pattern applied) of feature names that will be ignored for
-     * checking.
-     *
-     * @param excludeFeatureNames command separated list
-     */
-    public void setExcludeFeatureNames(String excludeFeatureNames) {
-        if (excludeFeatureNames.trim().isBlank()) {
-            return;
-        }
-        for (String exclude : excludeFeatureNames.split(",")) {
-            excludeFeatureNamesList.add(exclude);
-        }
     }
 
     /**
@@ -97,23 +83,37 @@ public class KarafAddonFeatureCheck extends AbstractStaticCheck {
      * the actual feature name.
      * For example openhab-transform-map:openhab-transformation-map.
      * the openhab-transform-map is as expected as derived from the artifactId, but all bundles use transformation.
-     * So with the pattern expected feature name can be constructed.
+     * So with the map expected feature name can be constructed.
      *
-     * @param featureNamePatterns list of key/value pairs of patterns
+     * @param featureNameMappings list of key/value pairs of patterns
      */
-    public void setFeatureNamePatterns(String featureNamePatterns) {
-        if (featureNamePatterns.trim().isBlank()) {
+    public void setFeatureNameMappings(String featureNameMappings) {
+        if (featureNameMappings.trim().isBlank()) {
             return;
         }
-        for (String pattern : featureNamePatterns.split(",")) {
+        for (String pattern : featureNameMappings.split(",")) {
             final String[] keypair = pattern.split(":");
 
             if (keypair.length == 2) {
                 featureNamePatternsMap.put(keypair[0], keypair[1]);
             } else {
                 logger.warn("{} check pattern for option featureNamePatterns is invalid. Value set: {}",
-                        getClass().getName(), featureNamePatterns);
+                        getClass().getName(), featureNameMappings);
             }
+        }
+    }
+
+    /**
+     * Comma separated list of add-on name patterns that will be excluded from checking.
+     *
+     * @param excludeAddonPatterns command separated list
+     */
+    public void setExcludeAddonPatterns(String excludeAddonPatterns) {
+        if (excludeAddonPatterns.trim().isBlank()) {
+            return;
+        }
+        for (String pattern : excludeAddonPatterns.split(",")) {
+            excludeAddonsList.add(Pattern.compile(pattern));
         }
     }
 
@@ -140,19 +140,29 @@ public class KarafAddonFeatureCheck extends AbstractStaticCheck {
                     getClass().getSimpleName(), file.getAbsolutePath());
             return;
         }
-        final File featureFile = new File(file.getParent(), FEATURE_XML_PATH);
+        String parent = file.getParent();
+        final File featureFile = new File(parent, FEATURE_XML_PATH);
 
         if (!featureFile.exists()) {
-            logMessage(featureFile.toString(), 0, FEATURE_XML,
-                    MessageFormat.format(MSG_MISSING_FEATURE_XML, featureFile));
+            if (isExcludedAddon(parent)) {
+                logger.debug("Ignore check on none exisiting feature name {}", featureFile);
+            } else {
+                logMessage(featureFile.toString(), 0, FEATURE_XML,
+                        MessageFormat.format(MSG_MISSING_FEATURE_XML, featureFile));
+            }
         }
     }
 
     private void checkFeatureFile(File featureFile, FileText fileText) throws CheckstyleException {
         try {
             final String featureFileString = featureFile.getAbsoluteFile().toString();
-            final FileText pomFile = new FileText(
-                    new File(featureFileString.replace(FEATURE_XML_PATH, ""), POM_XML_FILE_NAME),
+            String addonPath = featureFileString.replace(FEATURE_XML_PATH, "");
+
+            if (isExcludedAddon(new File(addonPath).getName())) {
+                logger.debug("Ignore check on excluded addon with feature name {}", featureFile);
+                return;
+            }
+            final FileText pomFile = new FileText(new File(addonPath, POM_XML_FILE_NAME),
                     StandardCharsets.UTF_8.name());
             final String artifactId = getArtifactId(pomFile);
 
@@ -170,6 +180,10 @@ public class KarafAddonFeatureCheck extends AbstractStaticCheck {
         }
     }
 
+    private boolean isExcludedAddon(String parent) {
+        return excludeAddonsList.stream().anyMatch(p -> p.matcher(parent).find());
+    }
+
     private void checkFeatures(File featureFile, String artifactId, FileText fileText, Document featureXML) {
         checkName(featureFile, artifactId, fileText, featureXML, FEATURES_NAME_EXPRESSION,
                 name -> !artifactId.equals(name.substring(0, name.indexOf('-'))), MSG_FEATURES_NAME_INVALID,
@@ -179,17 +193,12 @@ public class KarafAddonFeatureCheck extends AbstractStaticCheck {
     private void checkFeature(File featureFile, String artifactId, FileText fileText, Document featureXML) {
         final String featureName = adaptedFeatureName(artifactId);
 
-        for (String exclude : excludeFeatureNamesList) {
-            if (exclude.equals(featureName)) {
-                logger.debug("Ignore check on feature name {}", featureName);
-                return;
-            }
-        }
         checkName(featureFile, featureName, fileText, featureXML, FEATURE_NAME_EXPRESSION,
                 name -> !featureName.equals(name), MSG_FEATURE_NAME_INVALID, FEATURE_SEARCH);
     }
 
     private String adaptedFeatureName(String artifactId) {
+        // skip 'org.' part of artifactId by taking substring(4)
         String featureName = artifactId.substring(4).replaceAll("\\.", "-");
 
         for (Entry<String, String> entry : featureNamePatternsMap.entrySet()) {

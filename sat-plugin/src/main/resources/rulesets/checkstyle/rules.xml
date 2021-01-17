@@ -161,9 +161,9 @@
 
 	<module name="org.openhab.tools.analysis.checkstyle.KarafAddonFeatureCheck">
 		<property name="severity" value="${checkstyle.karafAddonFeatureCheck.severity}" default="error"/>
-		<property name="featureNamePatterns" value="${checkstyle.karafAddonFeatureCheck.featureNamePatterns}"
+		<property name="featureNameMappings" value="${checkstyle.karafAddonFeatureCheck.featureNameMappings}"
 			default=""/>
-		<property name="excludeFeatureNames" value="${checkstyle.karafAddonFeatureCheck.excludeFeatureNames}"
+		<property name="excludeAddonPatterns" value="${checkstyle.karafAddonFeatureCheck.excludeAddonPatterns}"
 			default=""/>
 	</module>
 
