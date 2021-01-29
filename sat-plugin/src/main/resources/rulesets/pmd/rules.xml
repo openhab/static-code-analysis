@@ -55,6 +55,9 @@
 	<rule ref="category/java/errorprone.xml/DoNotThrowExceptionInFinally">
 		<priority>2</priority>
 	</rule>
+	<rule ref="category/java/errorprone.xml/CompareObjectsWithEquals">
+		<priority>1</priority>
+	</rule>
 	<rule ref="category/java/errorprone.xml/EqualsNull">
 		<priority>1</priority>
 	</rule>
@@ -67,6 +70,9 @@
 	<rule ref="category/java/errorprone.xml/CompareObjectsWithEquals">
 		<priority>3</priority>
 	</rule>
+	<rule ref="category/java/bestpractices.xml/UseCollectionIsEmpty">
+		<priority>2</priority>
+	</rule>
 
 	<!-- See https://pmd.github.io/pmd-6.7.0/pmd_rules_java_multithreading.html -->
 	<rule ref="category/java/multithreading.xml/DontCallThreadRun">
@@ -78,6 +84,16 @@
 	<rule ref="category/java/multithreading.xml/UnsynchronizedStaticFormatter">
 		<priority>3</priority>
 	</rule>
+	<rule ref="category/java/bestpractices.xml/UnusedLocalVariable">
+		<priority>3</priority>
+	</rule>
+	<rule ref="category/java/bestpractices.xml/UnusedPrivateField">
+		<priority>3</priority>
+	</rule>
+	<rule ref="category/java/bestpractices.xml/UnusedPrivateMethod">
+		<priority>3</priority>
+	</rule>
+
 
 	<!-- See https://pmd.github.io/pmd-6.7.0/pmd_rules_java_bestpractices.html -->
 	<rule ref="category/java/bestpractices.xml/AvoidPrintStackTrace">
@@ -98,6 +114,9 @@
 		<priority>1</priority>
 	</rule>
 	<rule ref="category/java/design.xml/SimplifyBooleanExpressions">
+		<priority>3</priority>
+	</rule>
+	<rule ref="category/java/design.xml/SimplifyBooleanReturns">
 		<priority>3</priority>
 	</rule>
 

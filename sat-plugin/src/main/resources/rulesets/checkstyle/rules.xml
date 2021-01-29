@@ -43,7 +43,7 @@
 	</module>
 
 	<module name="NewlineAtEndOfFile">
-		<property name="severity" value="info"/>
+		<property name="severity" value="error"/>
 	</module>
 
 	<module name="org.openhab.tools.analysis.checkstyle.ExportInternalPackageCheck">
@@ -272,6 +272,9 @@
 		</module>
 		<module name="MemberName">
 			<property name="severity" value="info"/>
+		</module>
+		<module name="EqualsAvoidNull">
+			<property name="severity" value="warning"/>
 		</module>
 	</module>
 </module>
