@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="check"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+
+	<thing-type id="valid1">
+		<label>Sample 1</label>
+	</thing-type>
+
+	<thing-type id="valid2">
+		<label>Sample in Sample</label>
+	</thing-type>
+
+	<thing-type id="valid3">
+		<label>Sample in (in ms)</label>
+	</thing-type>
+
+    <thing-type id="valid3">
+        <label>Sample in (ms in)</label>
+    </thing-type>
+
+    <thing-type id="valid4">
+        <label>s.a.m.p.l.e</label>
+    </thing-type>
+
+    <thing-type id="valid5">
+        <label>sAmple</label>
+    </thing-type>
+
+    <thing-type id="valid6">
+        <label>Sample In</label>
+    </thing-type>
+
+	<thing-type id="check1">
+		<label>Sample thing</label>
+	</thing-type>
+
+	<thing-type id="check2">
+		<label>Sample in</label>
+
+		<config-description uri="config">
+			<parameter name="check3">
+				<label>Sample Parameter Cfg in</label>
+			</parameter>
+		</config-description>
+	</thing-type>
+
+</thing:thing-descriptions>

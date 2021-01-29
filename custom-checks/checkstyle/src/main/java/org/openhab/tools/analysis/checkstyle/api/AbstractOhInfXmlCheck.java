@@ -17,9 +17,15 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 import java.io.File;
 import java.text.MessageFormat;
 
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
@@ -44,26 +50,26 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
     }
 
     @Override
-    public void beginProcessing(String charset) {
+    public void beginProcessing(final String charset) {
         logger.debug("Executing the {}", getClass().getSimpleName());
     }
 
     @Override
-    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-        String fileName = file.getName();
+    protected void processFiltered(final File file, final FileText fileText) throws CheckstyleException {
+        final String fileName = file.getName();
 
         if (FilenameUtils.getExtension(fileName).equals(XML_EXTENSION)) {
             processXmlFile(fileText);
         }
     }
 
-    private void processXmlFile(FileText xmlFileText) throws CheckstyleException {
-        File xmlFile = xmlFileText.getFile();
+    private void processXmlFile(final FileText xmlFileText) throws CheckstyleException {
+        final File xmlFile = xmlFileText.getFile();
         if (isEmpty(xmlFileText)) {
             log(0, MessageFormat.format(MESSAGE_EMPTY_FILE, xmlFile.getName()), xmlFile.getPath());
         } else {
-            File fileParentDirectory = xmlFile.getParentFile();
-            boolean isOHParentDirectory = OH_INF_DIRECTORY.equals(fileParentDirectory.getParentFile().getName());
+            final File fileParentDirectory = xmlFile.getParentFile();
+            final boolean isOHParentDirectory = OH_INF_DIRECTORY.equals(fileParentDirectory.getParentFile().getName());
 
             if (isOHParentDirectory) {
                 switch (fileParentDirectory.getName()) {
@@ -111,4 +117,21 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
      * @throws CheckstyleException when exception occurred during XML processing
      */
     protected abstract void checkThingTypeFile(FileText xmlFileText) throws CheckstyleException;
+
+    protected NodeList getNodes(final FileText xmlFileText, final String expression) throws CheckstyleException {
+        final Document document = parseDomDocumentFromFile(xmlFileText);
+
+        final XPathExpression xpathExpression = compileXPathExpression(expression);
+
+        NodeList nodes = null;
+        try {
+            nodes = (NodeList) xpathExpression.evaluate(document, XPathConstants.NODESET);
+        } catch (final XPathExpressionException e) {
+            final String message = MessageFormat.format(
+                    "Problem occurred while evaluating the expression {0} on the {1} file.", expression,
+                    xmlFileText.getFile().getName());
+            log(0, message);
+        }
+        return nodes;
+    }
 }
