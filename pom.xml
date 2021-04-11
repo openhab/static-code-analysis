@@ -51,8 +51,8 @@
   <distributionManagement>
     <repository>
       <uniqueVersion>false</uniqueVersion>
-      <id>bintray</id>
-      <url>https://api.bintray.com/maven/openhab/mvn/openhab-tools/;publish=1</url>
+      <id>jfrog</id>
+      <url>https://openhab.jfrog.io/artifactory/libs-3rdparty-local</url>
     </repository>
   </distributionManagement>
 
