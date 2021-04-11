@@ -6,7 +6,7 @@
 
   <groupId>org.openhab.tools.sat</groupId>
   <artifactId>pom</artifactId>
-  <version>0.11.0-SNAPSHOT</version>
+  <version>0.11.0</version>
   <packaging>pom</packaging>
 
   <name>Static Code Analysis Tool Parent POM</name>
@@ -51,8 +51,8 @@
   <distributionManagement>
     <repository>
       <uniqueVersion>false</uniqueVersion>
-      <id>jfrog</id>
-      <url>https://openhab.jfrog.io/artifactory/libs-3rdparty-local</url>
+      <id>maven</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
 
@@ -513,6 +513,20 @@
                 </artifactItem>
               </artifactItems>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <phase>verify</phase>
           </execution>
         </executions>
       </plugin>
