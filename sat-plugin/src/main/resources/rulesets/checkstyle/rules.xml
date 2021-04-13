@@ -224,7 +224,7 @@
 		<!-- See https://checkstyle.sourceforge.io/config_imports.html#AvoidStarImport -->
 		<module name="AvoidStarImport">
 			<property name="allowStaticMemberImports" value="true"/>
-			<property name="severity" value="warn"/>
+			<property name="severity" value="warning"/>
 		</module>
 
 		<module name="org.openhab.tools.analysis.checkstyle.AuthorTagCheck">
