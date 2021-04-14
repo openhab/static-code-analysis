@@ -67,9 +67,6 @@
 	<rule ref="category/java/errorprone.xml/AvoidInstanceofChecksInCatchClause">
 		<priority>2</priority>
 	</rule>
-	<rule ref="category/java/errorprone.xml/CompareObjectsWithEquals">
-		<priority>3</priority>
-	</rule>
 	<rule ref="category/java/bestpractices.xml/UseCollectionIsEmpty">
 		<priority>2</priority>
 	</rule>
