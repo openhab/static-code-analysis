@@ -17,6 +17,7 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -51,7 +52,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 public class KarafAddonFeatureCheck extends AbstractStaticCheck {
 
     public static final String FEATURE_XML = "feature.xml";
-    public static final String FEATURE_XML_PATH = "src/main/feature/" + FEATURE_XML;
+    public static final Path FEATURE_XML_PATH = Path.of("src", "main", "feature", FEATURE_XML);
     public static final String MSG_MISSING_FEATURE_XML = "Missing feature file {0}";
     public static final String MSG_FEATURES_NAME_INVALID = "Invalid features name, expected name starting with: {0}";
     public static final String MSG_FEATURE_NAME_INVALID = "Invalid feature name, expected name: {0}";
@@ -141,7 +142,7 @@ public class KarafAddonFeatureCheck extends AbstractStaticCheck {
             return;
         }
         String parent = file.getParent();
-        final File featureFile = new File(parent, FEATURE_XML_PATH);
+        final File featureFile = new File(parent, FEATURE_XML_PATH.toString());
 
         if (!featureFile.exists()) {
             if (isExcludedAddon(parent)) {
@@ -156,7 +157,7 @@ public class KarafAddonFeatureCheck extends AbstractStaticCheck {
     private void checkFeatureFile(File featureFile, FileText fileText) throws CheckstyleException {
         try {
             final String featureFileString = featureFile.getAbsoluteFile().toString();
-            String addonPath = featureFileString.replace(FEATURE_XML_PATH, "");
+            String addonPath = featureFileString.replace(FEATURE_XML_PATH.toString(), "");
 
             if (isExcludedAddon(new File(addonPath).getName())) {
                 logger.debug("Ignore check on excluded addon with feature name {}", featureFile);
