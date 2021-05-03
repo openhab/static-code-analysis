@@ -160,7 +160,7 @@ class MarkdownVisitor extends NodeVisitorBase {
 
     public void visit(Image image) {
         String url = image.getUrl().toString();
-        if (!url.startsWith("doc/") && !url.startsWith("http://")) {
+        if (!url.startsWith("doc/") && !url.startsWith("http://") && !url.startsWith("https://")) {
             callback.log(image.getLineNumber(), IMAGES_IN_DOC_FOLDER_MSG);
         }
     }
