@@ -56,7 +56,7 @@ public class KarafAddonFeatureCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testMissingFeatureFile() throws Exception {
-        final File featureFile = new File(getPath("missingFeature"), FEATURE_XML_PATH);
+        final File featureFile = new File(getPath("missingFeature"), FEATURE_XML_PATH.toString());
 
         verify(createChecker(CONFIGURATION), getPath("missingFeature" + File.separator + POM_XML_FILE_NAME),
                 featureFile.getAbsolutePath(),
