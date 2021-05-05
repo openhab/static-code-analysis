@@ -270,6 +270,17 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
         verifyMarkDownFile("testHeaderCreatedByDashesOnNextRow", noMessagesExpected());
     }
 
+    @Test
+    public void testDocFolderCorrect() throws Exception {
+        verifyMarkDownFile("testDocFolderCorrect", noMessagesExpected());
+    }
+
+    @Test
+    public void testDocFolderWrong() throws Exception {
+        String[] expectedMessages = generateExpectedMessages(3, "Images must be located in the doc/ folder.");
+        verifyMarkDownFile("testDocFolderWrong", expectedMessages);
+    }
+
     private void verifyBuildProperties(String[] expectedMessages, String testDirectoryName)
             throws IOException, Exception {
         String testDirectoryAbsolutePath = getPath(testDirectoryName);

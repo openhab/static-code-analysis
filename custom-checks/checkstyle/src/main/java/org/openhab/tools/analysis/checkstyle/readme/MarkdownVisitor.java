@@ -19,6 +19,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 import com.vladsch.flexmark.ast.BulletList;
 import com.vladsch.flexmark.ast.FencedCodeBlock;
 import com.vladsch.flexmark.ast.Heading;
+import com.vladsch.flexmark.ast.Image;
 import com.vladsch.flexmark.ast.ListBlock;
 import com.vladsch.flexmark.ast.ListItem;
 import com.vladsch.flexmark.ast.Node;
@@ -42,6 +43,7 @@ class MarkdownVisitor extends NodeVisitorBase {
     private static final String EMPTY_LINE_AFTER_CODE_MSG = "The line after code formatting section must be empty.";
     private static final String EMPTY_CODE_BLOCK_WARNING = "There is an empty or unclosed code formatting section. Please correct it.";
     private static final String HEADER_AT_END_OF_FILE = "There is a header at the end of the Markdown file. Please consider adding some content below.";
+    private static final String IMAGES_IN_DOC_FOLDER_MSG = "Images must be located in the doc/ folder.";
 
     private static final String REGEX_NEW_LINES = "\\\r?\\\n";
 
@@ -156,6 +158,13 @@ class MarkdownVisitor extends NodeVisitorBase {
         processListBlock(list);
     }
 
+    public void visit(Image image) {
+        String url = image.getUrl().toString();
+        if (!url.startsWith("doc/") && !url.startsWith("http://") && !url.startsWith("https://")) {
+            callback.log(image.getLineNumber(), IMAGES_IN_DOC_FOLDER_MSG);
+        }
+    }
+
     @Override
     protected void visit(Node node) {
         if (node instanceof FencedCodeBlock) {
@@ -164,6 +173,8 @@ class MarkdownVisitor extends NodeVisitorBase {
             visit((Heading) node);
         } else if (node instanceof ListBlock) {
             visit((ListBlock) node);
+        } else if (node instanceof Image) {
+            visit((Image) node);
         } else {
             visitChildren(node);
         }
