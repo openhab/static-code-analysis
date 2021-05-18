@@ -137,7 +137,7 @@ public class KarafAddonFeatureCheck extends AbstractStaticCheck {
         final String artifactId = getArtifactId(fileText);
 
         if (artifactId == null) {
-            logger.warn("{} will be skipped. Could not find Maven group ID (parent group ID) or artifact ID in {}",
+            logger.debug("{} will be skipped. Could not find Maven group ID (parent group ID) or artifact ID in {}",
                     getClass().getSimpleName(), file.getAbsolutePath());
             return;
         }

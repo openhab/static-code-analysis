@@ -144,6 +144,6 @@ public abstract class AbstractChecker extends AbstractMojo {
      * @return Consumer
      */
     protected Consumer<? super Dependency> logDependency() {
-        return d -> getLog().info("Adding dependency to " + d.getArtifactId() + ":" + d.getVersion());
+        return d -> getLog().debug("Adding dependency to " + d.getArtifactId() + ":" + d.getVersion());
     }
 }
