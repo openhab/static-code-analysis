@@ -54,7 +54,7 @@ public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckT
     public void setUp() {
         lineNumberToWarningMessageExpected = new TreeMap<>();
         configuration = createModuleConfig(AuthorContributionDescriptionCheck.class);
-        configuration.addAttribute(ATTRIBUTE_REQUIRED_DESCRIPTIONS_NAME, ATTRIBUTE_REQUIRED_DESCRIPTIONS_VALUE);
+        configuration.addProperty(ATTRIBUTE_REQUIRED_DESCRIPTIONS_NAME, ATTRIBUTE_REQUIRED_DESCRIPTIONS_VALUE);
     }
 
     /*
@@ -290,7 +290,7 @@ public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckT
                     .toArray(size -> new String[lineNumberToWarningMessageExpected.size()]);
         }
 
-        configuration.addAttribute(ATTRIBUTE_CHECK_UNITS_NAME, String.valueOf(checkInnerUnits));
+        configuration.addProperty(ATTRIBUTE_CHECK_UNITS_NAME, String.valueOf(checkInnerUnits));
         verify(configuration, filePath, expected);
     }
 }

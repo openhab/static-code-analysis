@@ -95,13 +95,13 @@ public class ParameterizedRegexpHeaderCheckTest extends AbstractStaticCheckTest 
     private DefaultConfiguration createTestConfiguration(String headerPattern, String values, String headerFormat) {
         DefaultConfiguration configuration = createModuleConfig(ParameterizedRegexpHeaderCheck.class);
         if (headerPattern != null) {
-            configuration.addAttribute("header", headerPattern);
+            configuration.addProperty("header", headerPattern);
         }
         if (values != null) {
-            configuration.addAttribute("values", values);
+            configuration.addProperty("values", values);
         }
         if (headerFormat != null) {
-            configuration.addAttribute("headerFormat", headerFormat);
+            configuration.addProperty("headerFormat", headerFormat);
         }
         return configuration;
     }

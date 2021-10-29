@@ -42,7 +42,7 @@ public class OutsideOfLibExternalLibrariesCheckTest extends AbstractStaticCheckT
         config = createModuleConfig(OutsideOfLibExternalLibrariesCheck.class);
 
         String ignoredDirectoriesValue = "bin,target";
-        config.addAttribute("ignoredDirectories", ignoredDirectoriesValue);
+        config.addProperty("ignoredDirectories", ignoredDirectoriesValue);
     }
 
     @Test
