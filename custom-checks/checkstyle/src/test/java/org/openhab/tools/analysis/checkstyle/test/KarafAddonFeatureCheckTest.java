@@ -18,7 +18,7 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_F
 import java.io.File;
 import java.text.MessageFormat;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.KarafAddonFeatureCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;

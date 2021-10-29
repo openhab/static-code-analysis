@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

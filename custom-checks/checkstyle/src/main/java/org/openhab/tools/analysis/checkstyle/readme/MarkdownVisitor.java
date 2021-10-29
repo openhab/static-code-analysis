@@ -12,7 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.readme;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 
 import com.puppycrawl.tools.checkstyle.api.FileText;

@@ -14,7 +14,7 @@ package org.openhab.tools.analysis.checkstyle.test;
 
 import java.text.MessageFormat;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck;
