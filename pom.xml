@@ -82,7 +82,7 @@
     <pde.core.version>3.11.1</pde.core.version>
     <sat.version>0.10.0</sat.version>
     <jdt-annotations.version>2.1.0</jdt-annotations.version>
-    <flexmark.version>0.28.6</flexmark.version>
+    <flexmark.version>0.60.0</flexmark.version>
     <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
     <jetty.server.version>9.4.20.v20190813</jetty.server.version>
     <saxon.version>9.1.0.8</saxon.version>
