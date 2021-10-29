@@ -63,10 +63,10 @@
     <maven.compiler.target>${oh.java.version}</maven.compiler.target>
     <maven.compiler.compilerVersion>${oh.java.version}</maven.compiler.compilerVersion>
     <maven.eclipse.version>2.10</maven.eclipse.version>
-    <junit.version>5.7.0</junit.version>
+    <junit.version>5.8.1</junit.version>
     <commons.io.version>2.4</commons.io.version>
     <commons.lang.version>2.6</commons.lang.version>
-    <mockito.version>3.7.0</mockito.version>
+    <mockito.version>4.0.0</mockito.version>
     <maven.resources.version>2.4</maven.resources.version>
     <pmd.version>6.22.0</pmd.version>
     <checkstyle.version>8.30</checkstyle.version>
