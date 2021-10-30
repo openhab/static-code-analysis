@@ -45,7 +45,7 @@ public class OhInfXmlLabelCheckTest extends AbstractStaticCheckTest {
     @Before
     public void before() {
         configuration = createModuleConfig(OhInfXmlLabelCheck.class);
-        configuration.addAttribute("checkWordCasing", "true");
+        configuration.addProperty("checkWordCasing", "true");
     }
 
     @Override
@@ -115,7 +115,7 @@ public class OhInfXmlLabelCheckTest extends AbstractStaticCheckTest {
         final String[] expectedMessages = generateExpectedMessages(16,
                 MessageFormat.format(String.format(OhInfXmlLabelCheck.MESSAGE_MAX_LABEL_LENGTH, 25), "thing-type", "id",
                         "check", "L" + "o".repeat(21) + "ng Label", 30));
-        configuration.addAttribute("maxLabelLength", "25");
+        configuration.addProperty("maxLabelLength", "25");
         verifyWithPath("exceedsMaxLabelLength", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 

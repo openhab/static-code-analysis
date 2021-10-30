@@ -39,8 +39,8 @@ public class ManifestPackageVersionCheckTest extends AbstractStaticCheckTest {
     @BeforeAll
     public static void createConfiguration() {
         config = createModuleConfig(ManifestPackageVersionCheck.class);
-        config.addAttribute("ignoreImportedPackages", "org.apache.*, org.junit.*");
-        config.addAttribute("ignoreExportedPackages", "org.openhab.core.tool.*");
+        config.addProperty("ignoreImportedPackages", "org.apache.*, org.junit.*");
+        config.addProperty("ignoreExportedPackages", "org.openhab.core.tool.*");
     }
 
     @Override

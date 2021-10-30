@@ -29,7 +29,7 @@ public class BundleVendorCheckTest extends AbstractStaticCheckTest {
 
     @BeforeAll
     public static void setUpClass() {
-        CHECK_CONFIG.addAttribute("allowedValues", "openHAB");
+        CHECK_CONFIG.addProperty("allowedValues", "openHAB");
     }
 
     @Override
