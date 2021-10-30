@@ -40,7 +40,7 @@ public class RequireBundleCheckTest extends AbstractStaticCheckTest {
         config = createModuleConfig(RequireBundleCheck.class);
 
         String allowedRequireBundles = String.format("%s,%s,%s", "org.junit", "org.hamcrest", "org.mockito");
-        config.addAttribute("allowedRequireBundles", allowedRequireBundles);
+        config.addProperty("allowedRequireBundles", allowedRequireBundles);
     }
 
     @Override

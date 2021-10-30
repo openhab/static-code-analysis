@@ -18,7 +18,7 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.POM_XML_F
 import java.io.File;
 import java.text.MessageFormat;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 import org.openhab.tools.analysis.checkstyle.KarafAddonFeatureCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
@@ -48,7 +48,7 @@ public class KarafAddonFeatureCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testExcludeAddonPatterns() throws Exception {
         DefaultConfiguration config = createModuleConfig(KarafAddonFeatureCheck.class);
-        config.addAttribute("excludeAddonPatterns", "excludeAddon.*");
+        config.addProperty("excludeAddonPatterns", "excludeAddon.*");
 
         verify(config, getPath("excludeAddonPatterns" + File.separator + POM_XML_FILE_NAME),
                 ArrayUtils.EMPTY_STRING_ARRAY);
@@ -84,7 +84,7 @@ public class KarafAddonFeatureCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testPatternFeatureName() throws Exception {
         DefaultConfiguration config = createModuleConfig(KarafAddonFeatureCheck.class);
-        config.addAttribute("featureNameMappings", "openhab-binding-example:org.openhab.binding.someother");
+        config.addProperty("featureNameMappings", "openhab-binding-example:org.openhab.binding.someother");
         verify(config, getPath("invalidFeatureName" + File.separator + FEATURE_XML_PATH),
                 ArrayUtils.EMPTY_STRING_ARRAY);
     }

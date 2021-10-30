@@ -14,7 +14,7 @@ package org.openhab.tools.analysis.checkstyle.test;
 
 import java.text.MessageFormat;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.ParameterizedRegexpHeaderCheck;
@@ -95,13 +95,13 @@ public class ParameterizedRegexpHeaderCheckTest extends AbstractStaticCheckTest 
     private DefaultConfiguration createTestConfiguration(String headerPattern, String values, String headerFormat) {
         DefaultConfiguration configuration = createModuleConfig(ParameterizedRegexpHeaderCheck.class);
         if (headerPattern != null) {
-            configuration.addAttribute("header", headerPattern);
+            configuration.addProperty("header", headerPattern);
         }
         if (values != null) {
-            configuration.addAttribute("values", values);
+            configuration.addProperty("values", values);
         }
         if (headerFormat != null) {
-            configuration.addAttribute("headerFormat", headerFormat);
+            configuration.addProperty("headerFormat", headerFormat);
         }
         return configuration;
     }

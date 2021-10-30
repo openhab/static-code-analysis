@@ -115,10 +115,10 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
          * should be the same as their corresponding properties defined in
          * rulesets.checkstyle/rules.xml file
          */
-        configuration.addAttribute("tag", "@author");
-        configuration.addAttribute("tagFormat", "\\S");
-        configuration.addAttribute("tagSeverity", "ignore");
-        configuration.addAttribute("checkInnerUnits", String.valueOf(checkInnerUnits));
+        configuration.addProperty("tag", "@author");
+        configuration.addProperty("tagFormat", "\\S");
+        configuration.addProperty("tagSeverity", "ignore");
+        configuration.addProperty("checkInnerUnits", String.valueOf(checkInnerUnits));
         configuration.addMessage("type.missingTag", EXPECTED_WARNING_MESSAGE);
 
         return configuration;

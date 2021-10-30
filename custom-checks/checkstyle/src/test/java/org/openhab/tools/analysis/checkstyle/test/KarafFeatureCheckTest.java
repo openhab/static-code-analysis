@@ -20,7 +20,7 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -44,7 +44,7 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
 
     @BeforeAll
     public static void setUp() {
-        CONFIGURATION.addAttribute("featureXmlPath", "feature/feature.xml:feature/internal/feature.xml");
+        CONFIGURATION.addProperty("featureXmlPath", "feature/feature.xml:feature/internal/feature.xml");
     }
 
     @Override
