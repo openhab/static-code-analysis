@@ -12,7 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle.test;
 
-import static org.junit.jupiter.api.Assumptions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OH_INF_PATH;
 
 import java.io.File;
@@ -59,9 +59,9 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     @BeforeAll
     public static void createConfiguration() {
-        CONFIGURATION.addAttribute("thingSchema", THING_SCHEMA_URL);
-        CONFIGURATION.addAttribute("bindingSchema", BINDING_SCHEMA_URL);
-        CONFIGURATION.addAttribute("configSchema", CONFIG_SCHEMA_URL);
+        CONFIGURATION.addProperty("thingSchema", THING_SCHEMA_URL);
+        CONFIGURATION.addProperty("bindingSchema", BINDING_SCHEMA_URL);
+        CONFIGURATION.addProperty("configSchema", CONFIG_SCHEMA_URL);
     }
 
     @Override

@@ -146,7 +146,7 @@ public class NullAnnotationsCheckTest extends AbstractStaticCheckTest {
 
     private void checkFile(String fileName, boolean checkInnerUnits, String... expectedMessages) throws Exception {
         String filePath = getPath(fileName);
-        configuration.addAttribute(ATTRIBUTE_NAME, String.valueOf(checkInnerUnits));
+        configuration.addProperty(ATTRIBUTE_NAME, String.valueOf(checkInnerUnits));
         verify(configuration, filePath, expectedMessages);
     }
 }

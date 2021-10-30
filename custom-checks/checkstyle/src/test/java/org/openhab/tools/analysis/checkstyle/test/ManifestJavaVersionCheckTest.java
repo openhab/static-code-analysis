@@ -30,7 +30,7 @@ public class ManifestJavaVersionCheckTest extends AbstractStaticCheckTest {
 
     @BeforeAll
     public static void setUpClass() {
-        CHECK_CONFIG.addAttribute("allowedValues", "JavaSE-1.8");
+        CHECK_CONFIG.addProperty("allowedValues", "JavaSE-1.8");
     }
 
     @Override

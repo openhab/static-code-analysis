@@ -36,7 +36,7 @@ public class OnlyTabIndentationCheckTest extends AbstractStaticCheckTest {
     @BeforeEach
     public void setUpClass() {
         config = createModuleConfig(OnlyTabIndentationCheck.class);
-        config.addAttribute("fileTypes", "xml,json");
+        config.addProperty("fileTypes", "xml,json");
     }
 
     @Override
@@ -140,9 +140,9 @@ public class OnlyTabIndentationCheckTest extends AbstractStaticCheckTest {
         String testFileAbsolutePath = getPath(fileName);
         String messageFilePath = testFileAbsolutePath;
         if (onlyShowFirstWarning) {
-            config.addAttribute("onlyShowFirstWarning", "true");
+            config.addProperty("onlyShowFirstWarning", "true");
         } else {
-            config.addAttribute("onlyShowFirstWarning", "false");
+            config.addProperty("onlyShowFirstWarning", "false");
         }
         verify(createChecker(config), testFileAbsolutePath, messageFilePath, expectedMessages);
     }

@@ -41,8 +41,8 @@ public class PackageExportsNameCheckTest extends AbstractStaticCheckTest {
     @BeforeAll
     public static void createConfiguration() {
         configuration = createModuleConfig(PackageExportsNameCheck.class);
-        configuration.addAttribute("sourceDirectories", "src/main/java");
-        configuration.addAttribute("excludedPackages", ".*.internal.*");
+        configuration.addProperty("sourceDirectories", "src/main/java");
+        configuration.addProperty("excludedPackages", ".*.internal.*");
     }
 
     @Override

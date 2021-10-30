@@ -34,14 +34,14 @@ public class MissingJavadocFilterCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testOuterClassWithJavadoc() throws Exception {
-        int[] lineNumbers = new int[] { 10 };
-        verifyJavadoc("MissingJavadocOuterAndInnnerClass.java", false, lineNumbers);
+        String[] locations = new String[] { "10:1" };
+        verifyJavadoc("MissingJavadocOuterAndInnnerClass.java", false, locations);
     }
 
     @Test
     public void testOuterAndInnerClassesWithJavadoc() throws Exception {
-        int[] lineNumbers = new int[] { 10, 12 };
-        verifyJavadoc("MissingJavadocOuterAndInnnerClass.java", true, lineNumbers);
+        String[] locations = new String[] { "10:1", "12:5" };
+        verifyJavadoc("MissingJavadocOuterAndInnnerClass.java", true, locations);
     }
 
     @Test
@@ -54,18 +54,18 @@ public class MissingJavadocFilterCheckTest extends AbstractStaticCheckTest {
         verifyJavadoc("PresentJavadocOuterAndInnerClass.java", true, null);
     }
 
-    private void verifyJavadoc(String testFileName, boolean checkInnerClasses, int[] lineNumbers) throws Exception {
+    private void verifyJavadoc(String testFileName, boolean checkInnerClasses, String[] locations) throws Exception {
         DefaultConfiguration config = createModuleConfig(MissingJavadocFilterCheck.class);
         String checkInnerClassesPropertyName = "checkInnerUnits";
-        config.addAttribute(checkInnerClassesPropertyName, String.valueOf(checkInnerClasses));
+        config.addProperty(checkInnerClassesPropertyName, String.valueOf(checkInnerClasses));
 
         String filePath = getPath(testFileName);
 
         String[] expectedMessages = null;
-        if (lineNumbers != null) {
-            expectedMessages = new String[lineNumbers.length];
-            for (int i = 0; i < lineNumbers.length; i++) {
-                expectedMessages[i] = lineNumbers[i] + ": " + JavadocStyleCheck.MSG_JAVADOC_MISSING;
+        if (locations != null) {
+            expectedMessages = new String[locations.length];
+            for (int i = 0; i < locations.length; i++) {
+                expectedMessages[i] = locations[i] + ": " + JavadocStyleCheck.MSG_JAVADOC_MISSING;
             }
         } else {
             expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
