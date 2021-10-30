@@ -70,7 +70,7 @@
     <maven.resources.version>2.4</maven.resources.version>
     <pmd.version>6.22.0</pmd.version>
     <checkstyle.version>8.45.1</checkstyle.version>
-    <spotbugs.version>4.0.1</spotbugs.version>
+    <spotbugs.version>4.4.2</spotbugs.version>
     <maven.core.version>3.6.0</maven.core.version>
     <maven.plugin.api.version>3.6.0</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.6.0</maven.plugin.annotations.version>
@@ -256,6 +256,7 @@
             <checkstyleFilter>${basedirRoot}/tools/static-code-analysis/checkstyle/suppressions.xml</checkstyleFilter>
             <checkstyleProperties>${basedirRoot}/tools/static-code-analysis/checkstyle/ruleset.properties</checkstyleProperties>
             <pmdFilter>${basedirRoot}/tools/static-code-analysis/pmd/suppressions.properties</pmdFilter>
+            <spotBugsVersion>4.0.1</spotBugsVersion>
           </configuration>
           <executions>
             <execution>
