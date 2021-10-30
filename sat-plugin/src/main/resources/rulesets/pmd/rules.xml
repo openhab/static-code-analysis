@@ -6,11 +6,11 @@
 	<description>Default set of PMD rules used for checking all bundles</description>
 
 	<rule ref="category/java/errorprone.xml/EmptyIfStmt">
-		<!-- See https://pmd.github.io/pmd-6.7.0/pmd_rules_java_errorprone.html for all below -->
+		<!-- See https://pmd.github.io/pmd-6.39.0/pmd_rules_java_errorprone.html for all below -->
 		<!-- Priorities range in value from 1 to 5, with 5 being the lowest priority -->
 		<!-- We will use only priority 1,2 and 3 so the results of PMD can be comparable with the results of the other tools -->
 
-		<!-- See http://pmd.github.io/pmd-5.0.1/apidocs/net/sourceforge/pmd/RulePriority.html -->
+		<!-- See https://docs.pmd-code.org/apidocs/pmd-core/6.39.0/net/sourceforge/pmd/RulePriority.html -->
 		<priority>3</priority>
 	</rule>
 	<rule ref="category/java/errorprone.xml/EmptyWhileStmt">
@@ -71,7 +71,7 @@
 		<priority>2</priority>
 	</rule>
 
-	<!-- See https://pmd.github.io/pmd-6.7.0/pmd_rules_java_multithreading.html -->
+	<!-- See https://pmd.github.io/pmd-6.39.0/pmd_rules_java_multithreading.html -->
 	<rule ref="category/java/multithreading.xml/DontCallThreadRun">
 		<priority>2</priority>
 	</rule>
@@ -92,7 +92,7 @@
 	</rule>
 
 
-	<!-- See https://pmd.github.io/pmd-6.7.0/pmd_rules_java_bestpractices.html -->
+	<!-- See https://pmd.github.io/pmd-6.39.0/pmd_rules_java_bestpractices.html -->
 	<rule ref="category/java/bestpractices.xml/AvoidPrintStackTrace">
 		<priority>1</priority>
 	</rule>
@@ -100,7 +100,7 @@
 		<priority>2</priority>
 	</rule>
 
-	<!-- See https://pmd.github.io/pmd-6.7.0/pmd_rules_java_design.html -->
+	<!-- See https://pmd.github.io/pmd-6.39.0/pmd_rules_java_design.html -->
 	<rule ref="category/java/design.xml/AvoidThrowingRawExceptionTypes">
 		<priority>2</priority>
 	</rule>
@@ -117,7 +117,7 @@
 		<priority>3</priority>
 	</rule>
 
-	<!-- See https://pmd.github.io/pmd-6.7.0/pmd_rules_java_performance.html -->
+	<!-- See https://pmd.github.io/pmd-6.39.0/pmd_rules_java_performance.html -->
 	<rule ref="category/java/performance.xml/AvoidArrayLoops">
 		<priority>3</priority>
 	</rule>
