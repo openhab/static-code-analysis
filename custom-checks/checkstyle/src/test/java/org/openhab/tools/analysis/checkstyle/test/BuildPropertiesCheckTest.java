@@ -50,9 +50,9 @@ public class BuildPropertiesCheckTest extends AbstractStaticCheckTest {
 
     @BeforeAll
     public static void setUpTest() {
-        config.addAttribute("expectedBinIncludesValues", "META-INF/");
-        config.addAttribute("possibleOutputValues", "target/classes,target/test-classes");
-        config.addAttribute("possibleSourceValues", "src/main/java,src/main/resources,src/test/java,src/test/groovy");
+        config.addProperty("expectedBinIncludesValues", "META-INF/");
+        config.addProperty("possibleOutputValues", "target/classes,target/test-classes");
+        config.addProperty("possibleSourceValues", "src/main/java,src/main/resources,src/test/java,src/test/groovy");
     }
 
     @Override

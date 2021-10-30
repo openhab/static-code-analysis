@@ -100,7 +100,7 @@ Parameters:
 | ------ | ------| -------- |
 | **checkstyleRuleset** | String | Relative path of the XML configuration to use. If not set the default ruleset file will be used |
 | **checkstyleFilter** | String | Relative path of the suppressions XML file to use. If not set the default filter file will be used |
-| **maven.checkstyle.version** | String | The version of the maven-checkstyle-plugin that will be used (default value is **3.1.1**)|
+| **maven.checkstyle.version** | String | The version of the maven-checkstyle-plugin that will be used (default value is **3.1.2**)|
 | **checkstylePlugins** | List<Dependency> | A list with artifacts that contain additional checks for Checkstyle |
 | **checkstyleProperties** | String | Relative path of the properties file to use in the ruleset to configure specific checks |
 
@@ -116,8 +116,8 @@ Parameters:
 | **spotbugsRuleset** | String | Relative path to the XML that specifies the bug detectors which should be run. If not set the default file will be used|
 | **spotbugsInclude** | String | Relative path to the XML that specifies the bug instances that will be included in the report. If not set the default file will be used|
 | **spotbugsExclude** | String | Relative path to the XML that specifies the bug instances that will be excluded from the report. If not set the default file will be used|
-| **maven.spotbugs.version** | String | The version of the spotbugs-maven-plugin that will be used (default value is **4.0.0**) |
-| **spotbugs.version** | String | The version of SpotBugs that will be used (default value is **4.0.1**) |
+| **maven.spotbugs.version** | String | The version of the spotbugs-maven-plugin that will be used (default value is **4.4.2.2**) |
+| **spotbugs.version** | String | The version of SpotBugs that will be used (default value is **4.4.2**) |
 | **spotbugsPlugins** | List<Dependency> | A list with artifacts that contain additional detectors/patterns for SpotBugs |
 | **findbugs.slf4j.version** | String | The version of the findbugs-slf4j plugin that will be used (default value is **1.5.0**)|
 

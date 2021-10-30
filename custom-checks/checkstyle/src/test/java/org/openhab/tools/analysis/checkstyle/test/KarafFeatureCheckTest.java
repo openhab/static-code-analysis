@@ -44,7 +44,7 @@ public class KarafFeatureCheckTest extends AbstractStaticCheckTest {
 
     @BeforeAll
     public static void setUp() {
-        CONFIGURATION.addAttribute("featureXmlPath", "feature/feature.xml:feature/internal/feature.xml");
+        CONFIGURATION.addProperty("featureXmlPath", "feature/feature.xml:feature/internal/feature.xml");
     }
 
     @Override

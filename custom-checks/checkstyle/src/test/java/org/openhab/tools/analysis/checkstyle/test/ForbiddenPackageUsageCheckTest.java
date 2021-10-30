@@ -31,8 +31,8 @@ public class ForbiddenPackageUsageCheckTest extends AbstractStaticCheckTest {
 
     @BeforeEach
     public void setUp() {
-        config.addAttribute("forbiddenPackages", "com.google.common,com.something.something,org.something.asd");
-        config.addAttribute("exceptions", "com.google.common.utils");
+        config.addProperty("forbiddenPackages", "com.google.common,com.something.something,org.something.asd");
+        config.addProperty("exceptions", "com.google.common.utils");
     }
 
     @Override
