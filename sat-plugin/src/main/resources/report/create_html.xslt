@@ -46,21 +46,29 @@
 			<head>
 				<title>Analysis Report</title>
 				<style type="text/css">
-					body {margin-left: 3%; font-size:10pt;font-family:Arial;color:#000000 ; }					
-					table.details tr th {font-size:10pt;font-family:Arial;font-weight:bold;background:#AC58FA}
-					table.details tr {font-size:10pt;font-family:Arial;font-weight:normal;background:#BEa1Fa}
-					table tbody	tr.alternate {background:#BAF4A7;}
-					table tbody tr.dark {background:#F4F4A7;}
+					body {margin-left:3%;margin-top:2%;font-size:12pt;font-family:-apple-system,system-ui,Helvetica,Arial,sans-serif;color:#000000;background:#f3f3f3;}
+					td, th {padding-left: 2pt; padding-right: 2pt;}
+					table.details tr th a {color: #ffffff;}
+					table.details tr th {font-size:12pt;font-weight:bold;background:#e64a19;color:#ffffff;}
+					table.details tr {font-size:11pt;font-weight:bold;background:#dddddd;}
+					table tbody tr.alternate {font-size:11pt;font-weight:normal;background:#ffffff;}
+					table tbody tr.dark {font-weight:bold;background:#dddddd;}
+					a {color: #000000;}
+					
+					@media (prefers-color-scheme: dark) {
+						body {color:#dddddd;background-color:#121212;}
+						table.details tr th a {color:#dddddd;}
+						table.details tr th {background:#0f0f0f;}
+						table.details tr {background:#343434;}
+						table tbody tr.alternate {background:#1c1c1d;}
+						table tbody tr.dark {background:#343434;}
+						a {color: #dddddd;}
+					}
 				</style>
 			</head>
-			
+
 			<body>
-				<h2>Report
-					<xsl:call-template name="out_whitespace" />
-					(<xsl:value-of select="current-date()" />;
-					<xsl:call-template name="out_whitespace" />
-					<xsl:value-of select="current-time()" />)
-				</h2>
+				<h2>Report <xsl:call-template name="out_whitespace" />(<xsl:value-of select="format-dateTime(current-dateTime(), '[Y0001]-[M01]-[D01] [H01]:[m01]:[s01] [Z]')" />)</h2>
 				<h3>Summary Messages</h3>
 				<table width="90%" border="0" class="details">
 					<tr>
@@ -116,7 +124,7 @@
 					</tr>
 				</table>
 				<p/>
-				
+
 				<h3>Summary Files</h3>
 				<table width="90%" border="0" class="details">
 					<tr>
@@ -129,7 +137,7 @@
 					<xsl:for-each-group select="file" group-by="@name">
 						<xsl:sort select="@name" order="ascending" />
 						<xsl:variable name="fileName" select="@name" />
-	
+
 						<tr class="alternate">
 							<td>
 								<xsl:call-template name="out_element_link" />
@@ -181,13 +189,13 @@
 					</tr>
 				</table>
 				<p />
-				
+
 				<h3>Details by Class</h3>
-			 	<xsl:for-each-group select="file" group-by="@name"> 
+				<xsl:for-each-group select="file" group-by="@name"> 
 				<xsl:sort select="@name" order="ascending" />
 					<xsl:call-template name="file_detail" />
 				</xsl:for-each-group> 
-								
+
 			</body>
 		</html>
 	</xsl:template>
@@ -199,35 +207,23 @@
 				<xsl:call-template name="out_element_anker" />
 			</th>
 			<tr>
-				<th align="left" width="80pt">tool</th>
-				<th align="left" width="50pt">priority</th>
-				<th align="left" width="30pt">line</th>
-				<th align="left" width="80pt">category</th>
-				<th align="left" width="380pt">rule</th>
-				<th align="left">message</th>
-			</tr>			
+				<td align="left" width="80pt">tool</td>
+				<td align="left" width="50pt">priority</td>
+				<td align="left" width="30pt">line</td>
+				<td align="left" width="80pt">category</td>
+				<td align="left" width="380pt">rule</td>
+				<td align="left">message</td>
+			</tr>
 				
 			<xsl:for-each select="//file[@name=$fileName]/message">
 				<xsl:sort select="@priority" order="ascending" />
 				<tr class="alternate">
-					<td>
-						<xsl:value-of select="@tool" />
-					</td>
-					<td>
-						<xsl:value-of select="@priority" />
-					</td>
-					<td>
-						<xsl:value-of select="@line" />
-					</td>
-					<td>
-						<xsl:value-of select="@category" />
-					</td>
-					<td>
-						<xsl:value-of select="@rule" />
-					</td>
-					<td>
-						<xsl:value-of select="@message" />
-					</td>
+					<td><xsl:value-of select="@tool" /></td>
+					<td><xsl:value-of select="@priority" /></td>
+					<td><xsl:value-of select="@line" /></td>
+					<td><xsl:value-of select="@category" /></td>
+					<td><xsl:value-of select="@rule" /></td>
+					<td><xsl:value-of select="@message" /></td>
 				</tr>
 			</xsl:for-each>
 		</table>

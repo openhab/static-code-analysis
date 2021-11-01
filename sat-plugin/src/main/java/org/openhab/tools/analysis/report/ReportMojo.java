@@ -49,10 +49,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Date;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -387,8 +388,9 @@ public class ReportMojo extends AbstractMojo {
                 IOUtils.copy(inputStream, writer, Charset.defaultCharset());
                 String htmlString = writer.toString();
 
-                String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-                htmlString = htmlString.replace("$time", now);
+                DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss ")
+                        .appendOffset("+HH:MM", "Z").toFormatter();
+                htmlString = htmlString.replace("$time", formatter.format(ZonedDateTime.now()));
 
                 FileUtils.writeStringToFile(summaryReport, htmlString);
             }
