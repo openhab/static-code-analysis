@@ -199,10 +199,11 @@
               <exclude>target/**</exclude>
               <exclude>**/org/openhab/tools/analysis/findbugs/CustomClassNameLengthDetector.java</exclude>
               <exclude>**/org/openhab/tools/analysis/report/ReportUtility.java</exclude>
+              <exclude>**/org/openhab/tools/analysis/report/ReportMojo.java</exclude>
             </excludes>
             <useDefaultExcludes>true</useDefaultExcludes>
             <properties>
-              <year>2021</year>
+              <year>2022</year>
             </properties>
             <encoding>UTF-8</encoding>
           </configuration>
