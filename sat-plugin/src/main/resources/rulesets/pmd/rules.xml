@@ -70,6 +70,9 @@
 	<rule ref="category/java/bestpractices.xml/UseCollectionIsEmpty">
 		<priority>2</priority>
 	</rule>
+	<rule ref="category/java/bestpractices.xml/UseStandardCharsets">
+		<priority>2</priority>
+	</rule>
 
 	<!-- See https://pmd.github.io/pmd-6.39.0/pmd_rules_java_multithreading.html -->
 	<rule ref="category/java/multithreading.xml/DontCallThreadRun">
