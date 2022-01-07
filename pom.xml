@@ -199,6 +199,7 @@
               <exclude>target/**</exclude>
               <exclude>**/org/openhab/tools/analysis/findbugs/CustomClassNameLengthDetector.java</exclude>
               <exclude>**/org/openhab/tools/analysis/report/ReportUtility.java</exclude>
+              <exclude>**/org/openhab/tools/analysis/report/ReportMojo.java</exclude>
             </excludes>
             <useDefaultExcludes>true</useDefaultExcludes>
             <properties>
