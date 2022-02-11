@@ -154,8 +154,31 @@ public class NullAnnotationsCheck extends AbstractCheck {
     private void checkForNonNullAnnotation(DetailAST ast) {
         DetailAST atClause = CheckUtil.getFirstNode(ast);
         String annotationName = atClause.getNextSibling().getText();
-        if (NONNULL_ANNOTATION.equals(annotationName) && imports.contains(NonNull.class.getName())) {
+        if (NONNULL_ANNOTATION.equals(annotationName) && imports.contains(NonNull.class.getName()) && !isGeneric(ast)) {
             log(atClause.getLineNo(), WARNING_MESSAGE_NONNULL_ANNOTATION);
         }
+    }
+
+    /**
+     * Method that checks if the annotation is on a generic argument or parameter type
+     *
+     * @param ast the ast
+     */
+    private boolean isGeneric(DetailAST ast) {
+        for (DetailAST parentAst = ast.getParent(); parentAst != null; parentAst = parentAst.getParent()) {
+            int type = parentAst.getType();
+            if (type == TokenTypes.TYPE_ARGUMENT || type == TokenTypes.TYPE_PARAMETER) {
+                for (DetailAST siblingAst = parentAst.getPreviousSibling(); siblingAst != null; siblingAst = siblingAst
+                        .getPreviousSibling()) {
+                    type = siblingAst.getType();
+                    if (type == TokenTypes.GENERIC_START) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        return false;
     }
 }
