@@ -13,13 +13,17 @@
 package org.openhab.tools.analysis.checkstyle;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.openhab.tools.analysis.checkstyle.api.AbstractOhInfXmlCheck;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.openhab.tools.analysis.checkstyle.api.CheckConstants;
 import org.w3c.dom.NodeList;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
@@ -36,13 +40,12 @@ public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
     private static final String CONFIG_DESCRIPTION_REF_EXPRESSION = "//config-description-ref[@uri]/@uri";
     private static final String BRIDGE_TYPE_EXPRESSION = "//bridge-type[@id]/@id";
     private static final String SUPPORTED_BRIDGE_TYPE_REF_EXPRESSION = "//supported-bridge-type-refs/bridge-type-ref[@id]/@id";
+    private static final String CONFIGURABLE_SERVICE_REF_EXPRESSION = "//component/property[@name='service.config.description.uri']/@value";
 
     private static final String MESSAGE_MISSING_URI_CONFIGURATION = "Missing configuration for the configuration reference with uri - {0}";
     private static final String MESSAGE_MISSING_SUPPORTED_BRIDGE = "Missing the supported bridge with id {0}";
     private static final String MESSAGE_UNUSED_URI_CONFIGURATION = "Unused configuration reference with uri - {0}";
     private static final String MESSAGE_UNUSED_BRIDGE = "Unused bridge reference with id - {0}";
-
-    private final Logger logger = LoggerFactory.getLogger(OhInfXmlUsageCheck.class);
 
     private final Map<String, File> allConfigDescriptionRefs = new HashMap<>();
     private final Map<String, File> allConfigDescriptions = new HashMap<>();
@@ -65,7 +68,14 @@ public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
         logMissingEntries(unusedBridges, MESSAGE_UNUSED_BRIDGE);
 
         // Check for unused referenced config descriptions
-        final Map<String, File> unusedConfigDescriptions = removeAll(allConfigDescriptions, allConfigDescriptionRefs);
+        Map<String, File> unusedConfigDescriptions = removeAll(allConfigDescriptions, allConfigDescriptionRefs);
+        if (!unusedConfigDescriptions.isEmpty()) {
+            // Check if the unused config descriptions are referenced by configurable service components
+            Map<String, File> configurableServiceRefs = getConfigurableServiceRefs(
+                    unusedConfigDescriptions.values().iterator().next().toPath());
+            unusedConfigDescriptions = removeAll(unusedConfigDescriptions, configurableServiceRefs);
+        }
+
         logMissingEntries(unusedConfigDescriptions, MESSAGE_UNUSED_URI_CONFIGURATION);
     }
 
@@ -105,16 +115,44 @@ public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
         return collection;
     }
 
-    private <K, V> Map<K, V> removeAll(final Map<K, V> firstMap, final Map<K, V> secondMap) {
-        final Map<K, V> result = new HashMap<>(firstMap);
+    private Map<String, File> removeAll(final Map<String, File> firstMap, final Map<String, File> secondMap) {
+        final Map<String, File> result = new HashMap<>(firstMap);
         result.keySet().removeAll(secondMap.keySet());
         return result;
     }
 
-    private <K> void logMissingEntries(final Map<K, File> collection, final String message) {
-        for (final K element : collection.keySet()) {
-            final File xmlFile = collection.get(element);
-            logMessage(xmlFile.getPath(), 0, xmlFile.getName(), MessageFormat.format(message, element));
+    private void logMissingEntries(final Map<String, File> collection, final String message) {
+        for (final Entry<String, File> entry : collection.entrySet()) {
+            final File xmlFile = entry.getValue();
+            logMessage(xmlFile.getPath(), 0, xmlFile.getName(), MessageFormat.format(message, entry.getKey()));
+        }
+    }
+
+    private Map<String, File> getConfigurableServiceRefs(Path basePath) {
+        Map<String, File> uriFileMap = new HashMap<>();
+        for (Path path = basePath; path != null; path = path.getParent()) {
+            if (CheckConstants.OH_INF_DIRECTORY.equals(path.getFileName().toString())) {
+                Path osgiInfPath = path.resolve("../../../../" + CheckConstants.OSGI_INF_PATH);
+                if (!Files.exists(osgiInfPath)) {
+                    return uriFileMap;
+                }
+                try {
+                    Files.list(osgiInfPath)
+                            .forEach(xmlPath -> uriFileMap.putAll(getConfigurableServiceRefsFromXml(xmlPath)));
+                } catch (IOException e) {
+                }
+                break;
+            }
+        }
+        return uriFileMap;
+    }
+
+    private Map<String, File> getConfigurableServiceRefsFromXml(Path xmlPath) {
+        try {
+            FileText xmlFileText = new FileText(xmlPath.toFile(), StandardCharsets.UTF_8.name());
+            return evaluateExpressionOnFile(xmlFileText, CONFIGURABLE_SERVICE_REF_EXPRESSION);
+        } catch (CheckstyleException | IOException e) {
+            return Map.of();
         }
     }
 }

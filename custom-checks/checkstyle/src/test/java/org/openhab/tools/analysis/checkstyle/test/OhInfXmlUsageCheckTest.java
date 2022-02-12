@@ -17,6 +17,7 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OH_INF_PA
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.OhInfXmlUsageCheck;
@@ -51,6 +52,11 @@ public class OhInfXmlUsageCheckTest extends AbstractStaticCheckTest {
     }
 
     @Test
+    public void testConfigurableService() throws Exception {
+        verifyWithPath("configurableService", RELATIVE_PATH_TO_THING, new String[0]);
+    }
+
+    @Test
     public void testMissingSupportedBridgeRef() throws Exception {
         String[] expectedMessages = generateExpectedMessages(0,
                 MessageFormat.format(MESSAGE_MISSING_SUPPORTED_BRIDGE, "bridge"));
@@ -82,11 +88,11 @@ public class OhInfXmlUsageCheckTest extends AbstractStaticCheckTest {
         String directoryPath = getPath(testSubDirectory);
         File testDirectoryPath = new File(directoryPath);
 
-        File[] testFiles = listFilesForFolder(testDirectoryPath, new ArrayList<File>());
+        File[] testFiles = listFilesForFolder(testDirectoryPath, new ArrayList<>());
         verify(createChecker(CONFIGURATION), testFiles, directoryPath + testFilePath, expectedMessages);
     }
 
-    private File[] listFilesForFolder(File folder, ArrayList<File> files) {
+    private File[] listFilesForFolder(File folder, List<File> files) {
         for (File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry, files);
