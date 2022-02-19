@@ -96,7 +96,7 @@ public class NullAnnotationsCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testGenericsWithNonNullAnnotation() throws Exception {
         String fileName = "GenericsNonNullAnnotation.java";
-        String[] expectedMessage = generateExpectedMessages(9, EXPECTED_WARNING_MESSAGE_NONNULL_ANNOTATION);
+        String[] expectedMessage = generateExpectedMessages(14, EXPECTED_WARNING_MESSAGE_NONNULL_ANNOTATION);
         boolean checkInnerUnits = false;
         checkFile(fileName, checkInnerUnits, expectedMessage);
     }
