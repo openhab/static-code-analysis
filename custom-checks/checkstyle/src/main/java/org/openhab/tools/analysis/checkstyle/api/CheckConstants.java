@@ -39,6 +39,8 @@ public class CheckConstants {
 
     // Directory names
     public static final String OSGI_INF_DIRECTORY_NAME = "OSGI-INF";
+    public static final String OSGI_INF_PATH = Path.of("target", "classes", OSGI_INF_DIRECTORY_NAME).toString();
+
     public static final String META_INF_DIRECTORY_NAME = "META-INF";
     public static final String OH_INF_DIRECTORY = "OH-INF";
     public static final String OH_INF_PATH = Path.of("src", "main", "resources", OH_INF_DIRECTORY).toString();

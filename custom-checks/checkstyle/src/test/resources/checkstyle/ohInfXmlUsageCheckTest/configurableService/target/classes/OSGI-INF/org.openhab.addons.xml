@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.4.0" name="org.openhab.addons" activate="activate" deactivate="deactivate" modified="modified" init="2">
+  <property name="service.config.category" type="String" value="system"/>
+  <property name="service.config.label" type="String" value="Add-on Management"/>
+  <property name="service.config.description.uri" type="String" value="system:addons"/>
+  <property name="service.config.factory" type="Boolean" value="false"/>
+  <service>
+    <provide interface="org.openhab.core.karaf.internal.FeatureInstaller"/>
+    <provide interface="org.osgi.service.cm.ConfigurationListener"/>
+  </service>
+  <reference name="$000" interface="org.osgi.service.cm.ConfigurationAdmin" parameter="0"/>
+  <reference name="$001" interface="org.apache.karaf.features.FeaturesService" parameter="1"/>
+  <reference name="EventPublisher" interface="org.openhab.core.events.EventPublisher" bind="setEventPublisher" unbind="unsetEventPublisher"/>
+  <implementation class="org.openhab.core.karaf.internal.FeatureInstaller"/>
+</scr:component>
