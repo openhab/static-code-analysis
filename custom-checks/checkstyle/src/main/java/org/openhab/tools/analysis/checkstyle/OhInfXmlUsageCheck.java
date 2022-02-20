@@ -69,6 +69,7 @@ public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
 
         // Check for unused referenced config descriptions
         Map<String, File> unusedConfigDescriptions = removeAll(allConfigDescriptions, allConfigDescriptionRefs);
+        unusedConfigDescriptions.keySet().removeIf(key -> key.startsWith("profile:"));
         if (!unusedConfigDescriptions.isEmpty()) {
             // Check if the unused config descriptions are referenced by configurable service components
             Map<String, File> configurableServiceRefs = getConfigurableServiceRefs(
