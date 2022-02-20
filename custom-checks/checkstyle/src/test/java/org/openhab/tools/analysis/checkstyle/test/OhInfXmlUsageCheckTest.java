@@ -71,6 +71,11 @@ public class OhInfXmlUsageCheckTest extends AbstractStaticCheckTest {
     }
 
     @Test
+    public void testProfileConfigDescription() throws Exception {
+        verifyWithPath("profileConfigDescription", RELATIVE_PATH_TO_THING, new String[0]);
+    }
+
+    @Test
     public void testUnusedConfig() throws Exception {
         String[] expectedMessages = generateExpectedMessages(0,
                 MessageFormat.format(MESSAGE_UNUSED_URI_CONFIGURATION, "thing-type:bindingID:thing"));
