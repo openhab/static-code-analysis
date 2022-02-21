@@ -20,11 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
-import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -32,8 +29,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.eclipse.pde.core.build.IBuild;
-import org.eclipse.pde.core.build.IBuildEntry;
 import org.openhab.tools.analysis.checkstyle.api.AbstractOhInfXmlCheck;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
 import org.openhab.tools.analysis.utils.ContentReceviedCallback;
@@ -47,7 +42,6 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
  * Validate the thing-types, binding and config xml-s against their xsd schemas.<br>
- * Check if all files from OH-INF are included in the build.properties file.
  *
  * @author Aleksandar Kovachev - Initial contribution
  * @author Svilen Valkanov - Some code refactoring and cleanup,
@@ -55,12 +49,9 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  *         download schema files only once
  */
 public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
-    private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `OH-INF/` value to the bin.includes property.";
-
     private final Logger logger = LoggerFactory.getLogger(OhInfXmlValidationCheck.class);
 
     private Map<Path, File> ohInfFiles = new HashMap<>();
-    private IBuild buildPropertiesFile;
 
     private String thingSchema;
     private String bindingSchema;
@@ -128,43 +119,6 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
     }
 
     @Override
-    public void finishProcessing() {
-        // Check for missing OH-INF files in the build.properties
-        checkBuildProperties();
-    }
-
-    @Override
-    protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-        logger.debug("Processing the {}", file.getName());
-
-        if (file.getName().equals(BUILD_PROPERTIES_FILE_NAME)) {
-            processBuildProperties(fileText);
-        } else {
-            super.processFiltered(file, fileText);
-        }
-    }
-
-    private void checkBuildProperties() {
-        if (buildPropertiesFile != null) {
-            IBuildEntry binIncludes = buildPropertiesFile.getEntry(IBuildEntry.BIN_INCLUDES);
-            if (binIncludes != null) {
-                String[] includedTokens = binIncludes.getTokens();
-                // Exclude processed files that are included
-                for (String included : includedTokens) {
-                    // Iterator is used, as the collection will be modified
-                    for (Iterator<Entry<Path, File>> it = ohInfFiles.entrySet().iterator(); it.hasNext();) {
-                        Map.Entry<Path, File> entry = it.next();
-                        if (entry.getKey().startsWith(included)) {
-                            it.remove();
-                        }
-                    }
-                }
-            }
-            logMissingEntries(ohInfFiles, MESSAGE_NOT_INCLUDED_XML_FILE);
-        }
-    }
-
-    @Override
     protected void checkConfigFile(FileText xmlFileText) throws CheckstyleException {
         File xmlFile = xmlFileText.getFile();
         addToOhFiles(xmlFile);
@@ -185,14 +139,6 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
         validateXmlAgainstSchema(xmlFile, thingSchemaFile);
     }
 
-    private void processBuildProperties(FileText fileText) {
-        try {
-            buildPropertiesFile = parseBuildProperties(fileText);
-        } catch (CheckstyleException e) {
-            logger.error("Problem occurred while parsing the file {}", fileText.getFile().getPath(), e);
-        }
-    }
-
     private void validateXmlAgainstSchema(File xmlFile, Schema schema) {
         if (schema != null) {
             try {
@@ -209,13 +155,6 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
             }
         } else {
             logger.warn("XML validation will be skipped as the schema file download failed.");
-        }
-    }
-
-    private <K> void logMissingEntries(Map<K, File> collection, String message) {
-        for (K element : collection.keySet()) {
-            File xmlFile = collection.get(element);
-            logMessage(xmlFile.getPath(), 0, xmlFile.getName(), MessageFormat.format(message, element));
         }
     }
 

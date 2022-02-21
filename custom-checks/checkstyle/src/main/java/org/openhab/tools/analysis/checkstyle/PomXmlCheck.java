@@ -23,8 +23,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.apache.ivy.osgi.core.BundleInfo;
-import org.apache.ivy.osgi.util.Version;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +33,7 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
 
 /**
- * Checks if the version and the artifactId in the pom.xml file correspond to
- * the ones in the MANIFEST.MF
+ * Checks if the properties in the pom.xml file.
  *
  * @author Petar Valchev - Initial contribution
  * @author Svilen Valkanov - Replaced headers, applied minor improvements, added
@@ -48,10 +45,6 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
 public class PomXmlCheck extends AbstractStaticCheck {
     private static final String MISSING_VERSION_MSG = "Missing /project/version in the pom.xml file.";
     private static final String MISSING_ARTIFACT_ID_MSG = "Missing /project/artifactId in the pom.xml file.";
-    private static final String WRONG_VERSION_MSG = "Wrong /project/parent/version in the pom.xml file. "
-            + "The version should match the one in the MANIFEST.MF file.";
-    private static final String WRONG_ARTIFACT_ID_MSG = "Wrong /project/artifactId in the pom.xml file. "
-            + "The artifactId should match the bundle symbolic name in the MANIFEST.MF file.";
     private static final String MISSING_PARENT_ARTIFACT_ID_MSG = "Missing /project/parent/artifactId of the parent pom";
     private static final String WRONG_PARENT_ARTIFACT_ID_MSG = "Wrong /project/parent/artifactId. Expected {0} but was {1}";
 
@@ -67,11 +60,9 @@ public class PomXmlCheck extends AbstractStaticCheck {
 
     private String pomVersion;
     private int pomVersionLine;
-    private String manifestVersion;
 
     private String pomArtifactId;
     private int pomArtifactIdLine;
-    private String manifestBundleSymbolicName;
     private Document parentPomXmlDocument;
     private String parentPomPath;
     private String pomPath;
@@ -82,7 +73,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
     }
 
     public PomXmlCheck() {
-        setFileExtensions(XML_EXTENSION, MANIFEST_EXTENSION);
+        setFileExtensions(XML_EXTENSION);
     }
 
     @Override
@@ -90,23 +81,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
         String fileName = file.getName();
         if (fileName.equals(POM_XML_FILE_NAME)) {
             processPomXmlFile(fileText);
-        } else if (fileName.equals(MANIFEST_FILE_NAME)) {
-            processManifestFile(fileText);
         }
-    }
-
-    private void processManifestFile(FileText fileText) throws CheckstyleException {
-        BundleInfo bundleInfo = parseManifestFromFile(fileText);
-
-        Version version = bundleInfo.getVersion();
-        // We need this in order to filter the "qualifier" for the Snapshot versions
-        manifestVersion = version.withoutQualifier().toString();
-
-        if (manifestVersion == null) {
-            log(0, "Manifest version is missing");
-        }
-
-        manifestBundleSymbolicName = bundleInfo.getSymbolicName();
     }
 
     private void processPomXmlFile(FileText fileText) throws CheckstyleException {
@@ -175,9 +150,8 @@ public class PomXmlCheck extends AbstractStaticCheck {
 
     @Override
     public void finishProcessing() {
-        compareProperties(pomVersion, manifestVersion, pomVersionLine, WRONG_VERSION_MSG, MISSING_VERSION_MSG);
-        compareProperties(pomArtifactId, manifestBundleSymbolicName, pomArtifactIdLine, WRONG_ARTIFACT_ID_MSG,
-                MISSING_ARTIFACT_ID_MSG);
+        checkMissingProperty(pomVersion, pomVersionLine, MISSING_VERSION_MSG);
+        checkMissingProperty(pomArtifactId, pomArtifactIdLine, MISSING_ARTIFACT_ID_MSG);
         if (checkPomVersion) {
             try {
                 checkVersions();
@@ -206,16 +180,8 @@ public class PomXmlCheck extends AbstractStaticCheck {
         }
     }
 
-    private void compareProperties(String pomProperty, String manifestProperty, int wrongPropertyLine,
-            String wrongPropertyMessage, String missingPropertyMessage) {
-        if (pomProperty != null) {
-            if (manifestProperty != null && !pomProperty.contains(manifestProperty)) {
-                logMessage(pomDirectoryPath + File.separator + POM_XML_FILE_NAME, wrongPropertyLine, POM_XML_FILE_NAME,
-                        wrongPropertyMessage);
-            }
-            // no need to log if something is wrong with the manifestProperty,
-            // there are other special checks for that
-        } else {
+    private void checkMissingProperty(String pomProperty, int wrongPropertyLine, String missingPropertyMessage) {
+        if (pomProperty == null) {
             logMessage(pomDirectoryPath + File.separator + POM_XML_FILE_NAME, 0, POM_XML_FILE_NAME,
                     missingPropertyMessage);
         }

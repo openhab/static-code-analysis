@@ -34,7 +34,7 @@ Add the following profiles to your pom.xml:
     <id>check-bundles</id>
     <activation>
       <file>
-        <exists>META-INF/MANIFEST.MF</exists>
+        <exists>src</exists>
       </file>
     </activation>
     <build>
