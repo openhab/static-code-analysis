@@ -16,7 +16,6 @@ import static com.puppycrawl.tools.checkstyle.utils.CommonUtil.EMPTY_STRING_ARRA
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.README_MD_FILE_NAME;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,8 +31,6 @@ import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
  * @author Lyubomir Papazov - Added more tests
  */
 public class MarkdownCheckTest extends AbstractStaticCheckTest {
-    private static final String ADDED_README_IN_BUILD_PROPERTIES_MSG = "README.MD file must not be added to the bin.includes property";
-    private static final String ADDED_DOC_FOLDER_IN_BUILD_PROPERTIES_MSG = "The doc folder must not be added to the bin.includes property";
     private DefaultConfiguration config;
 
     @BeforeEach
@@ -84,6 +81,11 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
     public void testEmptyLineAfterList() throws Exception {
         String[] expectedMessages = generateExpectedMessages(7, "The line after a Markdown list must be empty.");
         verifyMarkDownFile("testEmptyLineAfterList", expectedMessages);
+    }
+
+    @Test
+    public void testListWithParagraphs() throws Exception {
+        verifyMarkDownFile("testListWithParagraphs", noMessagesExpected());
     }
 
     @Test
@@ -226,40 +228,6 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
     }
 
     @Test
-    public void testReadMeAddedInBuildProperties() throws Exception {
-        String[] expectedMessages = generateExpectedMessages(0, ADDED_README_IN_BUILD_PROPERTIES_MSG);
-        String testDirectoryName = "testAddedReadMeInBuildProperties";
-
-        // The message is logged for the build.properties file
-        verifyBuildProperties(expectedMessages, testDirectoryName);
-    }
-
-    @Test
-    public void testAddedDummyDocInBuildProperties() throws Exception {
-        String testDirectoryName = "testAddedDummyDocInBuildProperties";
-        verifyBuildProperties(noMessagesExpected(), testDirectoryName);
-    }
-
-    @Test
-    public void testDocFolderAddedInBuildProperties() throws Exception {
-        String[] expectedMessages = generateExpectedMessages(0, ADDED_DOC_FOLDER_IN_BUILD_PROPERTIES_MSG);
-        String testDirectoryName = "testAddedDocFolderInBuildProperties";
-
-        // The message is logged for the build.properties file
-        verifyBuildProperties(expectedMessages, testDirectoryName);
-    }
-
-    @Test
-    public void testAddedReadmeAndDocInBuildProperties() throws Exception {
-        String[] expectedMessages = generateExpectedMessages(0, ADDED_README_IN_BUILD_PROPERTIES_MSG, 0,
-                ADDED_DOC_FOLDER_IN_BUILD_PROPERTIES_MSG);
-        String testDirectoryName = "testAddedReadmeAndDocInBuildProperties";
-
-        // The message is logged for the build.properties file
-        verifyBuildProperties(expectedMessages, testDirectoryName);
-    }
-
-    @Test
     public void testOpenhabBindingExec() throws Exception {
         String testDirectoryName = "org.openhab.binding.exec";
         verifyMarkDownFile(testDirectoryName, noMessagesExpected());
@@ -279,13 +247,6 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
     public void testDocFolderWrong() throws Exception {
         String[] expectedMessages = generateExpectedMessages(3, "Images must be located in the doc/ folder.");
         verifyMarkDownFile("testDocFolderWrong", expectedMessages);
-    }
-
-    private void verifyBuildProperties(String[] expectedMessages, String testDirectoryName)
-            throws IOException, Exception {
-        String testDirectoryAbsolutePath = getPath(testDirectoryName);
-        String messageFilePath = testDirectoryAbsolutePath + File.separator + "build.properties";
-        verify(createChecker(config), messageFilePath, expectedMessages);
     }
 
     private void createValidConfig() {
