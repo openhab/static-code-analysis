@@ -147,8 +147,13 @@ class MarkdownVisitor extends NodeVisitorBase {
         if (isListEnd) {
             String[] lastListItemlines = lastListItemContent.getChars().toString().split(REGEX_NEW_LINES);
             if (lastListItemlines.length > 1) {
-                // Log the one-based line where there is an empty line
-                callback.log(lastListItemContent.getLineNumber(), EMPTY_LINE_AFTER_LIST_MSG);
+                for (int i = 1; i < lastListItemlines.length; i++) {
+                    if (!lastListItemlines[i].startsWith(" ")) {
+                        // Log the one-based line where there is an empty line
+                        callback.log(lastListItemContent.getLineNumber(), EMPTY_LINE_AFTER_LIST_MSG);
+                        break;
+                    }
+                }
             }
         }
     }
