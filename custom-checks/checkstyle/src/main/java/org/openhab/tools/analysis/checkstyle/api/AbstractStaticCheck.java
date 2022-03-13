@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
-import java.text.ParseException;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -30,13 +29,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.ivy.osgi.core.BundleInfo;
-import org.apache.ivy.osgi.core.ManifestParser;
-import org.eclipse.core.internal.filebuffers.SynchronizableDocument;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.pde.core.build.IBuild;
-import org.eclipse.pde.internal.core.text.build.BuildModel;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,24 +128,6 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     }
 
     /**
-     * Parses the content of the given Manifest file
-     *
-     * @param fileText Represents the text contents of a file
-     * @return Bundle info extracted from the bundle manifest
-     * @throws CheckstyleException if an error occurred while trying to parse the file
-     */
-    protected BundleInfo parseManifestFromFile(FileText fileText) throws CheckstyleException {
-        try {
-            BundleInfo info = ManifestParser.parseManifest(getInputStream(fileText));
-            return info;
-        } catch (IOException e) {
-            throw new CheckstyleException("Unable to read from file: " + fileText.getFile().getAbsolutePath(), e);
-        } catch (ParseException e) {
-            throw new CheckstyleException("Unable to parse file:" + fileText.getFile().getAbsolutePath(), e);
-        }
-    }
-
-    /**
      * Reads a properties list from a file
      *
      * @param fileText Represents the text contents of a file
@@ -197,24 +171,6 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
             return xpath.compile(expresion);
         } catch (XPathExpressionException e) {
             throw new CheckstyleException("Unable to compile the expression" + expresion, e);
-        }
-    }
-
-    /**
-     * Parses the content of a given file as a build.properties file
-     *
-     * @param fileText Represents the text contents of a file
-     * @return IBuild representation of the file
-     * @throws CheckstyleException if an error occurred while trying to parse the file
-     */
-    protected IBuild parseBuildProperties(FileText fileText) throws CheckstyleException {
-        IDocument document = new SynchronizableDocument();
-        BuildModel buildModel = new BuildModel(document, false);
-        try {
-            buildModel.load(getInputStream(fileText), true);
-            return buildModel.getBuild();
-        } catch (CoreException e) {
-            throw new CheckstyleException("Unable to read build.properties file", e);
         }
     }
 

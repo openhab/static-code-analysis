@@ -53,7 +53,6 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
     private static final String CONFIG_SCHEMA_URL = SCHEMA_ROOT_URL + "config-description-1.0.0.xsd";
 
     private static final String MESSAGE_EMPTY_FILE = "The file {0} should not be empty.";
-    private static final String MESSAGE_NOT_INCLUDED_XML_FILE = "The file {0} isn't included in the build.properties file. Good approach is to include all files by adding `OH-INF/` value to the bin.includes property.";
 
     private static final DefaultConfiguration CONFIGURATION = createModuleConfig(OhInfXmlValidationCheck.class);
 
@@ -193,15 +192,6 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
         String[] expectedMessages = generateExpectedMessages(lineNumber,
                 MessageFormat.format(MESSAGE_EMPTY_FILE, "thing-types.xml"));
         verifyWithPath("emptyThingTypeXml", RELATIVE_PATH_TO_THING, expectedMessages);
-    }
-
-    @Test
-    public void testMissingXmlFileInBuildProperties() throws Exception {
-        int lineNumber = 0;
-        String[] expectedMessages = generateExpectedMessages(lineNumber,
-                MessageFormat.format(MESSAGE_NOT_INCLUDED_XML_FILE,
-                        "OH-INF" + File.separator + "thing" + File.separator + "thing-types.xml"));
-        verifyWithPath("missingXmlFileInBuildProperties", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 
     private void verifyWithPath(String testSubDirectory, String testFilePath, String[] expectedMessages)

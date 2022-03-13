@@ -40,7 +40,7 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 public class MarkdownCheck extends AbstractStaticCheck {
 
     public MarkdownCheck() {
-        setFileExtensions(MARKDONW_EXTENSION);
+        setFileExtensions(MARKDOWN_EXTENSION);
     }
 
     @Override

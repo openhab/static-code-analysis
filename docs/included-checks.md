@@ -21,24 +21,9 @@
 | Generics must be used where applicable. | Not covered yet |  |
 | Code should not show any warnings. Warnings that cannot be circumvented,should be suppressed by using the @SuppressWarnings annotation. | Not covered yet |  |
 | For dependency injection, OSGi Declarative Services should be used. | org.openhab.tools.analysis.checkstyle.DeclarativeServicesDependencyInjectionCheck | warning |
-| Packages that contain classes that are not meant to be used by other bundles should have “internal” in their package name. | org.openhab.tools.analysis.checkstyle.PackageExportsNameCheck | warning |
 | We are using null annotations from the Eclipse JDT project. Therefore every bundle should have an optional Import-Package dependency to org.eclipse.jdt.annotation. Classes should be annotated by @NonNullByDefault and return types, parameter types, generic types etc. are annotated with @Nullable only. There is no need for a @NonNull annotation because it is set as default. | https://github.com/openhab/static-code-analysis/issues/218 | |
 
-
-## B. OSGi Bundles
-
-| Guideline | Check | Severity |
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|----------|
-| Every bundle must contain a Maven pom.xml with a version and artifact name that is in sync with the manifest entry. The pom.xml must reference the correct parent pom (which is usually in the parent folder). | org.openhab.tools.analysis.checkstyle.PomXmlCheck | Error |
-| Every bundle must contain an about.html file, providing license information. | org.openhab.tools.analysis.checkstyle.AboutHtmlCheck | Error |
-| Every bundle must contain a build.properties file, which lists all resources that should end up in the binary under bin.includes. | org.openhab.tools.analysis.checkstyle.BuildPropertiesCheck | Warning |
-| The manifest must not contain any “Require-Bundle” entries. Instead, “Import-Package” must be used. | org.openhab.tools.analysis.checkstyle.RequireBundleCheck | Error |
-| The manifest must not export any internal package. | org.openhab.tools.analysis.checkstyle.ExportInternalPackageCheck | Error |
-| The manifest must not have any version constraint on package imports, unless this is thoughtfully added. | org.openhab.tools.analysis.checkstyle.ManifestPackageVersionCheck | Warning |
-| The manifest must include all services in the Service-Component entry. A good approach is to put OSGI-INF/*.xml in there. | org.openhab.tools.analysis.checkstyle.ServiceComponentManifestCheck | Error |
-| Every exported package of a bundle must be imported by the bundle itself again. | org.openhab.tools.analysis.checkstyle.ImportExportedPackagesCheck | Warning |
-
-## C. Language Levels and Libraries
+## B. Language Levels and Libraries
 
 | Guideline | Check | Severity |
 |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|----------|
@@ -48,7 +33,7 @@ Java 5 for org.eclipse.smarthome.protocols.enocean.* | https://github.com/openha
 | The minimum OSGi framework version supported is OSGi R4.2, no newer features must be used. | Not covered yet |  |
 | For logging, slf4j (v1.7.2) is used. | https://github.com/openhab/static-code-analysis/issues/220 |  |
 
-## D. Runtime Behavior
+## C. Runtime Behavior
 
 
 | Guideline | Check | Severity |
@@ -58,7 +43,7 @@ Java 5 for org.eclipse.smarthome.protocols.enocean.* | https://github.com/openha
 | Bundles need to cleanly start and stop without throwing exceptions or malfunctioning. This can be tested by manually starting and stopping the bundle from the console (stop <bundle-id> resp. start <bundle-id>). | Not covered yet | |
 | Bundles must not require any substantial CPU time. Test this e.g. using “top” or VisualVM and compare CPU utilization with your bundle stopped vs. started. | Not covered yet | | 
 
-## E. Logging
+## D. Logging
 
 
 | Guideline | Check | Severity |
