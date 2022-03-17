@@ -70,7 +70,7 @@
     <maven.resources.version>2.4</maven.resources.version>
     <pmd.version>6.39.0</pmd.version>
     <checkstyle.version>8.45.1</checkstyle.version>
-    <spotbugs.version>4.4.2</spotbugs.version>
+    <spotbugs.version>4.7.0</spotbugs.version>
     <maven.core.version>3.6.0</maven.core.version>
     <maven.plugin.api.version>3.6.0</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.6.0</maven.plugin.annotations.version>
