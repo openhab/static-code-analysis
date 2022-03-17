@@ -1,4 +1,4 @@
-# ESH Guidelines Covered
+# openHAB Guidelines Covered
 
 ## A. Code Style
 
@@ -58,13 +58,13 @@ Java 5 for org.eclipse.smarthome.protocols.enocean.* | https://github.com/openha
 # Implemented Checks
 
 ## Checkstyle
-- [included checks](https://github.com/openhab/static-code-analysis/blob/master/src/main/resources/rulesets/checkstyle/rules.xml)
-- [documentation for the checks](http://checkstyle.sourceforge.net/checks.html)
+- [included checks](https://github.com/openhab/static-code-analysis/blob/main/sat-plugin/src/main/resources/rulesets/checkstyle/rules.xml)
+- [documentation for the checks](https://checkstyle.sourceforge.io/checks.html)
 
 ## PMD
-- [included rules](https://github.com/openhab/static-code-analysis/blob/master/src/main/resources/rulesets/pmd/rules.xml)
-- [documentation for the rules](http://pmd.sourceforge.net/pmd-4.3.0/rules/index.html)
+- [included rules](https://github.com/openhab/static-code-analysis/blob/main/sat-plugin/src/main/resources/rulesets/pmd/rules.xml)
+- [documentation for the rules](https://pmd.github.io/latest/)
 
-## FindBugs
-- [included rules](https://github.com/openhab/static-code-analysis/blob/master/src/main/resources/rulesets/findbugs/visitors.xml)
-- [documentation for the rules](http://findbugs.sourceforge.net/bugDescriptions.html)
+## SpotBugs
+- [included rules](https://github.com/openhab/static-code-analysis/blob/main/sat-plugin/src/main/resources/rulesets/spotbugs/visitors.xml)
+- [documentation for the rules](https://spotbugs.readthedocs.io/en/stable/bugDescriptions.html)

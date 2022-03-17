@@ -5,14 +5,14 @@
 [![EPL-2.0](https://img.shields.io/badge/license-EPL%202-green.svg)](https://opensource.org/licenses/EPL-2.0)
 [![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=56481698)](https://www.bountysource.com/teams/openhab/issues?tracker_ids=56481698)
 
-The Static Code Analysis Tools is a Maven plugin that executes the Maven plugins for FindBugs, Checkstyle and PMD and generates a merged .html report.
+The Static Code Analysis Tools is a Maven plugin that executes the Maven plugins for SpotBugs, Checkstyle and PMD and generates a merged .html report.
 It is especially designed for openHAB to respect the defined coding guidelines.
 
 This project contains:
 
- - properties files for the PMD, Checkstyle and FindBugs Maven plugins configuration in the `src/main/resources/configuration` folder;
- - rule sets for the plugins in the `src/main/resources/rulesets` folder;
- - custom rules for PMD, CheckStyle and FindBugs and unit tests for the rules;
+ - properties files for the PMD, Checkstyle and SpotBugs Maven plugins configuration in the `sat-plugin/src/main/resources/configuration` folder;
+ - rule sets for the plugins in the `sat-plugin/src/main/resources/rulesets` folder;
+ - custom rules for PMD, CheckStyle and SpotBugs and unit tests for the rules;
  - tool that merges the reports from the individual plugins in a summary report.
 
 ## Essentials
@@ -23,5 +23,5 @@ This project contains:
 
 ## 3rd Party
 
-- The example checks provided in the `static-code-analysis-config` (`MethodLimitCheck`, `CustomClassNameLengthDetector`, `WhileLoopsMustUseBracesRule`) are based on tutorials how to use the API of Checkstyle, FindBugs and PMD. For more info, see javadoc;
+- The example checks provided in the `static-code-analysis-config` (`MethodLimitCheck`, `CustomClassNameLengthDetector`, `WhileLoopsMustUseBracesRule`) are based on tutorials how to use the API of Checkstyle, SpotBugs and PMD. For more info, see javadoc;
 - The tool that merges the individual reports is based completely on source files from the https://github.com/MarkusSprunck/static-code-analysis-report that are distributed under a custom license. More information can be found in the [LICENSE](LICENSE) file.

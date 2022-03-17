@@ -58,7 +58,8 @@ The summary report can be found in the root target directory:
 
 ![Summary report](images/summary-report.PNG "Summary-report")
 
- The build will fail if a problem with high priority is found by some of the Maven plugins for PMD, Checkstyle and SpotBugs. Each of the plugins has its own way to prioritize the detected problems:
+The build will fail if a problem with high priority is found by some of the Maven plugins for PMD, Checkstyle and SpotBugs.
+Each of the plugins has its own way to prioritize the detected problems:
 
  - for PMD - the build will fail when a rule with Priority "1" is found;
  - for Checkstyle - a rule with severity="Error";
@@ -139,9 +140,11 @@ Parameters:
 
 Different sets of checks can be executed on different types of projects.
 
-The tool executes different checks on OSGi bundles and ESH Bindings. It uses default configuration files for SpotBugs, Checkstyle and PMD that are stored in the `src/main/resources/configuration`.
+The tool executes different checks on OSGi bundles and openHAB add-ons.
+It uses default configuration files for SpotBugs, Checkstyle and PMD that are stored in `sat-plugin/src/main/resources/configuration`.
 
-If you want to use a custom set of rules you will have to set the configuration parameters for the individual MOJOs. An example configuration may look like this;
+If you want to use a custom set of rules you will have to set the configuration parameters for the individual MOJOs.
+An example configuration may look like this;
 
 ```
   <plugin>
@@ -173,12 +176,12 @@ The `visitors.xml` contains a list with SpotBugs visitors (bug detectors) and ha
 
 ### Individual plugin customization
 
-Each of the Maven plugins that are used (for SpotBugs, Checkstyle and PMD) are configured by setting user properties that are located in the `src/main/resources/configuration` directory.
+Each of the Maven plugins that are used (for SpotBugs, Checkstyle and PMD) are configured by setting user properties that are located in the `sat-plugin/src/main/resources/configuration` directory.
 
 You can refer to the following links for more configuration options for the specific Maven plugins:
 
 - https://maven.apache.org/plugins/maven-pmd-plugin/check-mojo.html;
-- https://maven.apache.org/plugins-archives/maven-checkstyle-plugin-2.16/checkstyle-mojo.html;
+- https://maven.apache.org/plugins/maven-checkstyle-plugin/checkstyle-mojo.html;
 - https://spotbugs.github.io/spotbugs-maven-plugin/spotbugs-mojo.html.
 
 ## Reuse Checks
@@ -187,6 +190,6 @@ PMD, Checkstyle and SpotBugs come with a set of custom rules that can be used di
 
 Helpful resources with lists of the available checks and information how to use them:
 
-- for PMD - https://pmd.github.io/pmd-5.4.0/pmd-java/rules/index.html;
-- for Checkstyle - http://checkstyle.sourceforge.net/checks.html;
-- for SpotBugs - http://spotbugs.readthedocs.io/en/latest/implement-plugin.html.
+- for PMD - https://pmd.github.io/latest/pmd_rules_java.html;
+- for Checkstyle - https://checkstyle.sourceforge.io/checks.html;
+- for SpotBugs - https://spotbugs.readthedocs.io/en/latest/implement-plugin.html.

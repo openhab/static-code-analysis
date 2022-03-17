@@ -1,20 +1,22 @@
 # Integrating Custom Check Into The Tool
 
-The Static Analysis Tool provides the necessary infrastructure for custom check implementations using the API of FindBugs, Checkstyle and PMD. 
+The Static Analysis Tool provides the necessary infrastructure for custom check implementations using the API of SpotBugs, Checkstyle and PMD. 
 
 Helpful links when writing a custom check for the first time may be:
 
-- for [Writing custom checks in Checkstyle](http://checkstyle.sourceforge.net/writingchecks.html#Writing_Checks);
-- for [Writing a custom PDM rule](http://pmd.sourceforge.net/pmd-4.3.0/howtowritearule.html);
-- for [Writing custom bug detectors for Findbugs](https://www.ibm.com/developerworks/library/j-findbug2/).
+- for [Writing custom checks in Checkstyle](https://checkstyle.sourceforge.io/writingchecks.html#Writing_Checks);
+- for [Writing a custom PMD rule](https://pmd.github.io/latest/pmd_userdocs_extending_writing_rules_intro.html);
+- for [Writing custom bug detectors for SpotBugs](https://spotbugs.readthedocs.io/en/stable/implement-plugin.html).
 
 In this guide we will use the Checkstyle API, because it is easy to use, supports different file extensions and languages. 
 
-If you haven't set up the IDE for openHAB, please visit the [openHAB IDE Setup page](https://www.openhab.org/docs/developer/development/ide.html). 
+If you haven't set up the IDE for openHAB, please visit the [openHAB IDE Setup page](https://www.openhab.org/docs/developer/#setup-the-development-environment). 
 
 ## Create an Eclipse project
 
-After checking out the repository on your local machine execute `mvn eclipse:eclipse` in project root directory. This will generate an Eclipse project, containing the `.classpath` and `.project` files. You are ready to import the project in Eclipse.
+After checking out the repository on your local machine execute `mvn eclipse:eclipse` in project root directory.
+This will generate an Eclipse project, containing the `.classpath` and `.project` files.
+You are ready to import the project in Eclipse.
 
 >	Hint! Depending on your Java installation the static-code-analysis project might not find tools.jar. Please make sure that the folder containing the tools.jar is included in the PATH variable (for Windows) and rerun mvn eclipse:eclipse.
 
@@ -26,11 +28,13 @@ The first answer that you would have to answer before staring is what kind of fi
 - for **none .java** files extend the `org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck`. We have included there some helpful methods for processing different types of files and others, take a look at the javadoc for detailed information;
 - for **.java** files you will most probably have to extend `com.puppycrawl.tools.checkstyle.api.AbstractCheck`.
 
-And once again, please refer to the [Checkstyle documentation for writing a check](http://checkstyle.sourceforge.net/writingchecks.html), if you haven't.
+And once again, please refer to the [Checkstyle documentation for writing a check](https://checkstyle.sourceforge.io/writingchecks.html), if you haven't.
 
 ## Include Checks In The Ruleset
 
-The next step is to integrate your check into the tool. You will have to add it to the ruleset. The ruleset location for Checkstyle is in the `src/main/resources/rulesets/checkstyle` folder.
+The next step is to integrate your check into the tool.
+You will have to add it to the ruleset.
+The ruleset location for Checkstyle is in the `sat-plugin/src/main/resources/rulesets/checkstyle` folder.
 
 You will have to consider several things before adding your check there.
 
@@ -56,13 +60,17 @@ In order to test your check the testing framework expects that you provide an ex
 
 ## [Optional] Execute The Check On openHAB Addons Repository
 
-We would highly recommend this step. The static code analysis tool is used in the `openhab2-addons` build. 
+We would highly recommend this step.
+The static code analysis tool is used in the `openhab-addons` build.
 
-This is a two step process. Firstly execute `mvn clean install` from the root of the `static-code-analysis` repository. This will install the artifact into your local Maven repository. Please note that this is a snapshot version (e.g. x.y.z-SNAPSHOT, where x.y.z is the current Major.Minor.Patch version or at the moment of writing 0.1.0).
+This is a two step process.
+Firstly execute `mvn clean install` from the root of the `static-code-analysis` repository.
+This will install the artifact into your local Maven repository.
+Please note that this is a snapshot version (e.g. x.y.z-SNAPSHOT, where x.y.z is the current Major.Minor.Patch version or at the moment of writing 0.12.0).
 
 The second step is to execute `mvn clean install -Dsat.version=x.y.z-SNAPSHOT` from the root of the `openhab2-addons` repository.
 
-Take a look at the log as it is described in the [openHAB documentation](https://www.openhab.org/docs/developer/development/bindings.html#static-code-analysis).
+Take a look at the log as it is described in the [openHAB documentation](https://www.openhab.org/docs/developer/guidelines.html#static-code-analysis).
 
 ## Still need additional help ?
 
