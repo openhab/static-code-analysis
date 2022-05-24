@@ -78,7 +78,7 @@
     <maven.plugin.compiler.version>3.8.1</maven.plugin.compiler.version>
     <mojo.executor.version>2.3.0</mojo.executor.version>
     <org.jsoup.version>1.7.1</org.jsoup.version>
-    <sat.version>0.12.0</sat.version>
+    <sat.version>0.13.0</sat.version>
     <jdt-annotations.version>2.1.0</jdt-annotations.version>
     <flexmark.version>0.64.0</flexmark.version>
     <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
