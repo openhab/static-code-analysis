@@ -25,13 +25,6 @@
     </license>
   </licenses>
 
-  <developers>
-    <developer>
-      <name>Svilen Valkanov</name>
-      <email>svilen.valkanov@musala.com</email>
-    </developer>
-  </developers>
-
   <modules>
     <module>custom-checks</module>
     <module>sat-extension</module>
@@ -58,36 +51,37 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <oh.java.version>11</oh.java.version>
+    <oh.java.version>17</oh.java.version>
     <maven.compiler.source>${oh.java.version}</maven.compiler.source>
     <maven.compiler.target>${oh.java.version}</maven.compiler.target>
     <maven.compiler.compilerVersion>${oh.java.version}</maven.compiler.compilerVersion>
     <maven.eclipse.version>2.10</maven.eclipse.version>
-    <junit.version>5.8.1</junit.version>
+    <junit.version>5.9.1</junit.version>
     <commons.io.version>2.11.0</commons.io.version>
     <commons.lang3.version>3.12.0</commons.lang3.version>
-    <mockito.version>4.0.0</mockito.version>
-    <maven.resources.version>2.4</maven.resources.version>
+    <mockito.version>4.10.0</mockito.version>
+    <maven.resources.version>3.3.0</maven.resources.version>
     <pmd.version>6.39.0</pmd.version>
     <checkstyle.version>8.45.1</checkstyle.version>
     <spotbugs.version>4.7.0</spotbugs.version>
     <maven.core.version>3.6.0</maven.core.version>
-    <maven.plugin.api.version>3.6.0</maven.plugin.api.version>
-    <maven.plugin.annotations.version>3.6.0</maven.plugin.annotations.version>
-    <maven.plugin.plugin.version>3.6.0</maven.plugin.plugin.version>
-    <maven.plugin.compiler.version>3.8.1</maven.plugin.compiler.version>
-    <mojo.executor.version>2.3.0</mojo.executor.version>
+    <maven.plugin.api.version>3.8.5</maven.plugin.api.version>
+    <maven.plugin.annotations.version>3.7.0</maven.plugin.annotations.version>
+    <maven.plugin.plugin.version>3.6.4</maven.plugin.plugin.version>
+    <maven.plugin.compiler.version>3.10.1</maven.plugin.compiler.version>
+    <mojo.executor.version>2.4.0</mojo.executor.version>
     <org.jsoup.version>1.7.1</org.jsoup.version>
     <sat.version>0.13.0</sat.version>
     <jdt-annotations.version>2.1.0</jdt-annotations.version>
     <flexmark.version>0.64.0</flexmark.version>
-    <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
-    <jetty.server.version>9.4.20.v20190813</jetty.server.version>
+    <maven.surefire.plugin.version>3.0.0-M7</maven.surefire.plugin.version>
+    <jetty.server.version>9.4.50.v20221201</jetty.server.version>
     <saxon.version>9.1.0.8</saxon.version>
-    <spotless.version>2.0.3</spotless.version>
-    <slf4j.version>1.7.25</slf4j.version>
-    <logback.version>1.2.3</logback.version>
-    <eea.version>2.3.0</eea.version>
+    <spotless.version>2.28.0</spotless.version>
+    <spotless.eclipse.version>4.21.0</spotless.eclipse.version>
+    <slf4j.version>1.7.36</slf4j.version>
+    <logback.version>1.2.9</logback.version>
+    <eea.version>2.4.0</eea.version>
     <m2e.jdt.annotationpath>target/dependency</m2e.jdt.annotationpath>
   </properties>
 
@@ -244,7 +238,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.0.0-M2</version>
+          <version>3.1.0</version>
         </plugin>
 
         <plugin>
@@ -300,7 +294,7 @@
             <java>
               <eclipse>
                 <file>openhab_codestyle.xml</file>
-                <version>4.13.0</version>
+                <version>${spotless.eclipse.version}</version>
               </eclipse>
               <removeUnusedImports/>
               <importOrder>
@@ -323,7 +317,7 @@
                   <files>
                     <file>openhab_wst_xml_files.prefs</file>
                   </files>
-                  <version>4.13.0</version>
+                  <version>${spotless.eclipse.version}</version>
                 </eclipseWtp>
                 <trimTrailingWhitespace/>
                 <endWithNewline/>
@@ -338,7 +332,7 @@
                   <files>
                     <file>openhab_wst_pom_file.prefs</file>
                   </files>
-                  <version>4.13.0</version>
+                  <version>${spotless.eclipse.version}</version>
                 </eclipseWtp>
                 <trimTrailingWhitespace/>
                 <endWithNewline/>
@@ -369,7 +363,7 @@
       <plugin>
         <groupId>org.commonjava.maven.plugins</groupId>
         <artifactId>directory-maven-plugin</artifactId>
-        <version>0.3.1</version>
+        <version>1.0</version>
         <executions>
           <execution>
             <id>directories</id>
@@ -418,19 +412,19 @@
           <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-compiler-eclipse</artifactId>
-            <version>2.8.8</version>
+            <version>2.12.1</version>
           </dependency>
           <dependency>
             <groupId>org.eclipse.jdt</groupId>
             <artifactId>ecj</artifactId>
-            <version>3.23.0</version>
+            <version>3.30.0</version>
           </dependency>
         </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.4</version>
+        <version>3.2.1</version>
         <configuration>
           <attach>true</attach>
         </configuration>
@@ -447,10 +441,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.1.1</version>
+        <version>3.4.1</version>
         <configuration>
-          <source>11</source>
+          <source>17</source>
           <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
+          <doclint>all,-missing</doclint>
           <failOnError>true</failOnError>
         </configuration>
         <executions>
@@ -477,7 +472,7 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>[11.0,18.0)</version>
+                  <version>[17.0,18.0)</version>
                 </requireJavaVersion>
               </rules>
             </configuration>
@@ -495,7 +490,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.4.0</version>
         <executions>
           <execution>
             <id>unpack-eea</id>
