@@ -87,8 +87,8 @@ public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
     }
 
     @Override
-    protected void checkBindingFile(final FileText xmlFileText) throws CheckstyleException {
-        // The allowed values are described in the binding XSD
+    protected void checkAddonFile(final FileText xmlFileText) throws CheckstyleException {
+        // The allowed values are described in the addon XSD
         allConfigDescriptionRefs.putAll(evaluateExpressionOnFile(xmlFileText, CONFIG_DESCRIPTION_REF_EXPRESSION));
         allConfigDescriptions.putAll(evaluateExpressionOnFile(xmlFileText, CONFIG_DESCRIPTION_EXPRESSION));
     }

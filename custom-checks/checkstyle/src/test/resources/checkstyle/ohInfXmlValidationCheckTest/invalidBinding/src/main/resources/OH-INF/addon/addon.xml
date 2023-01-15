@@ -3,11 +3,5 @@
 	xsi:schemaLocation="https://openhab.org/schemas/addon/v1.0.0
         https://openhab.org/schemas/addon-1.0.0.xsd">
 
-	<type>binding</type>
-	<name>String</name>
-	<description>String</description>
-	<author>String</author>
-
-	<config-description-ref uri="binding:bindingID:bind" />
 
 </addon:addon>

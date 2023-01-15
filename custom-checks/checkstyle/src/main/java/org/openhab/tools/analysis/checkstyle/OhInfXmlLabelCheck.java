@@ -118,7 +118,7 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
     }
 
     @Override
-    protected void checkBindingFile(final FileText xmlFileText) throws CheckstyleException {
+    protected void checkAddonFile(final FileText xmlFileText) throws CheckstyleException {
         // No labels in binding files.
     }
 

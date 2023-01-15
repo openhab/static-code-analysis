@@ -151,11 +151,11 @@ An example configuration may look like this;
     <groupId>org.openhab.tools.sat</groupId>
     <artifactId>sat-plugin</artifactId>
     <configuration>
-      <checkstyleRuleset>build-tools/checkstyle/binding.xml</checkstyleRuleset>
+      <checkstyleRuleset>build-tools/checkstyle/addon.xml</checkstyleRuleset>
       <checkstyleFilter>build-tools/checkstyle/suppressions.xml</checkstyleFilter>
-      <pmdRuleset>build-tools/pmd/binding.xml</pmdRuleset>
+      <pmdRuleset>build-tools/pmd/addon.xml</pmdRuleset>
       <pmdFilter>build-tools/pmd/suppressions.properties</pmdFilter>
-      <spotbugsInclude>build-tools/spotbugs/binding.xml</spotbugsInclude>
+      <spotbugsInclude>build-tools/spotbugs/addon.xml</spotbugsInclude>
       <spotbugsExclude>build-tools/spotbugs/exclude.xml</spotbugsExclude>
       <spotbugsRuleset>build-tools/spotbugs/visitors.xml</spotbugsRuleset>
     </configuration>

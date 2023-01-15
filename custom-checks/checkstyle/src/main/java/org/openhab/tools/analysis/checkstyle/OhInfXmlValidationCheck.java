@@ -54,11 +54,11 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
     private Map<Path, File> ohInfFiles = new HashMap<>();
 
     private String thingSchema;
-    private String bindingSchema;
+    private String addonSchema;
     private String configSchema;
 
     private static Schema thingSchemaFile;
-    private static Schema bindingSchemaFile;
+    private static Schema addonSchemaFile;
     private static Schema configSchemaFile;
 
     /**
@@ -73,10 +73,10 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
     /**
      * Sets the configuration property for the binding schema file.
      *
-     * @param bindingSchema URL of the binding schema file
+     * @param addonSchema URL of the binding schema file
      */
-    public void setBindingSchema(String bindingSchema) {
-        this.bindingSchema = bindingSchema;
+    public void setAddonSchema(String addonSchema) {
+        this.addonSchema = addonSchema;
     }
 
     /**
@@ -111,7 +111,7 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
 
         CachingHttpClient<Schema> cachingClient = new CachingHttpClient<>(callback);
 
-        bindingSchemaFile = getXSD(bindingSchema, cachingClient);
+        addonSchemaFile = getXSD(addonSchema, cachingClient);
         thingSchemaFile = getXSD(thingSchema, cachingClient);
         configSchemaFile = getXSD(configSchema, cachingClient);
 
@@ -126,10 +126,10 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
     }
 
     @Override
-    protected void checkBindingFile(FileText xmlFileText) throws CheckstyleException {
+    protected void checkAddonFile(FileText xmlFileText) throws CheckstyleException {
         File xmlFile = xmlFileText.getFile();
         addToOhFiles(xmlFile);
-        validateXmlAgainstSchema(xmlFile, bindingSchemaFile);
+        validateXmlAgainstSchema(xmlFile, addonSchemaFile);
     }
 
     @Override
