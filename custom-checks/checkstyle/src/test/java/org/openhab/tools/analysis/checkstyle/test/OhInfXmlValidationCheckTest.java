@@ -162,7 +162,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
         int lineNumber = 7;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                "The content of element binding:binding is not complete. One of {name} is expected.");
+                "The content of element addon:addon is not complete. One of {type} is expected.");
         verifyWithPath("invalidBinding", RELATIVE_PATH_TO_BINDING, expectedMessages);
     }
 
