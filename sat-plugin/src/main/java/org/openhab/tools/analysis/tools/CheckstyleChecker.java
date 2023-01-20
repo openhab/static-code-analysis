@@ -53,7 +53,7 @@ public class CheckstyleChecker extends AbstractChecker {
     /**
      * The version of the maven-checkstyle-plugin that will be used
      */
-    @Parameter(property = "maven.checkstyle.version", defaultValue = "3.1.2")
+    @Parameter(property = "maven.checkstyle.version", defaultValue = "3.2.1")
     private String checkstyleMavenVersion;
 
     /**
@@ -118,7 +118,7 @@ public class CheckstyleChecker extends AbstractChecker {
 
         checkstylePlugins.add(dependency("org.openhab.tools.sat.custom-checks", "checkstyle", plugin.getVersion()));
         // Maven may load an older version, if no version is specified
-        checkstylePlugins.add(dependency("com.puppycrawl.tools", "checkstyle", "8.45.1"));
+        checkstylePlugins.add(dependency("com.puppycrawl.tools", "checkstyle", "10.6.0"));
         checkstylePlugins.forEach(logDependency());
 
         String baseDir = mavenProject.getBasedir().toString();

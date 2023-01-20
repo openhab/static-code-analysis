@@ -105,7 +105,7 @@ public class AuthorContributionDescriptionCheck extends AbstractCheck {
     public void visitToken(DetailAST ast) {
         if (!checkInnerUnits) {
             DetailAST astParent = ast.getParent();
-            if (astParent == null) {
+            if (astParent == null || astParent.getType() == TokenTypes.COMPILATION_UNIT) {
                 visit(ast);
             }
         } else {

@@ -17,7 +17,6 @@ import org.openhab.tools.analysis.checkstyle.MissingJavadocFilterCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocStyleCheck;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**

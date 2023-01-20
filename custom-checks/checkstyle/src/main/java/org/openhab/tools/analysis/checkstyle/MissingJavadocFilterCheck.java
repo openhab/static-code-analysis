@@ -13,6 +13,7 @@
 package org.openhab.tools.analysis.checkstyle;
 
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
+import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 import com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocTypeCheck;
 
 /**
@@ -34,7 +35,7 @@ public class MissingJavadocFilterCheck extends MissingJavadocTypeCheck {
         if (!checkInnerUnits) {
             DetailAST astParent = ast.getParent();
             // if outer class/interface/enum
-            if (astParent == null) {
+            if (astParent == null || astParent.getType() == TokenTypes.COMPILATION_UNIT) {
                 super.visitToken(ast);
             }
         } else {

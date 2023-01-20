@@ -13,6 +13,7 @@
 package org.openhab.tools.analysis.checkstyle;
 
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
+import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 import com.puppycrawl.tools.checkstyle.checks.javadoc.WriteTagCheck;
 
 /**
@@ -44,7 +45,7 @@ public class AuthorTagCheck extends WriteTagCheck {
         if (!checkInnerUnits) {
             DetailAST astParent = ast.getParent();
             // if outer class/interface/enum
-            if (astParent == null) {
+            if (astParent == null || astParent.getType() == TokenTypes.COMPILATION_UNIT) {
                 super.visitToken(ast);
             }
         } else {
