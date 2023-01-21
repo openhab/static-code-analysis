@@ -6,6 +6,6 @@ public class InheritDocCheckTest {
      * Does something
      */
     public void shouldLogWhenThereIsAnEmptyInheritDoc() {
-        super.getPath("")
+        super.getPath("");
     }
 }

@@ -17,7 +17,7 @@ import org.openhab.tools.analysis.checkstyle.MissingJavadocFilterCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocStyleCheck;
+import com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocTypeCheck;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
@@ -65,7 +65,7 @@ public class MissingJavadocFilterCheckTest extends AbstractStaticCheckTest {
         if (locations != null) {
             expectedMessages = new String[locations.length];
             for (int i = 0; i < locations.length; i++) {
-                expectedMessages[i] = locations[i] + ": " + JavadocStyleCheck.MSG_JAVADOC_MISSING;
+                expectedMessages[i] = locations[i] + ": " + MissingJavadocTypeCheck.MSG_JAVADOC_MISSING;
             }
         } else {
             expectedMessages = CommonUtil.EMPTY_STRING_ARRAY;
