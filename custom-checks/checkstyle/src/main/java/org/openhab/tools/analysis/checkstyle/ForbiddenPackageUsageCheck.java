@@ -19,8 +19,8 @@ import java.util.Map;
 
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
+import com.puppycrawl.tools.checkstyle.api.FullIdent;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
-import com.puppycrawl.tools.checkstyle.utils.CheckUtil;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
@@ -73,7 +73,7 @@ public class ForbiddenPackageUsageCheck extends AbstractCheck {
 
     @Override
     public void visitToken(DetailAST ast) {
-        importsToLineNumbers.put(CheckUtil.createFullType(ast).getText(), ast.getLineNo());
+        importsToLineNumbers.put(FullIdent.createFullIdent(ast.getFirstChild()).getText(), ast.getLineNo());
     }
 
     @Override
