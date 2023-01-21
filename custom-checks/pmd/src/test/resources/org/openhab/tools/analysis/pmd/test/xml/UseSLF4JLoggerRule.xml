@@ -2,7 +2,8 @@
 <test-data  xmlns="http://pmd.sourceforge.net/rule-tests"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests http://pmd.sourceforge.net/rule-tests_1_0_0.xsd">
-  <test-code reinitializeRule="false" regressionTest="true">
+  <!-- this test was previously marked with reinitializeRule="false", this has not effect anymore since PMD 6.48.0 -->
+  <test-code>
     <description>Java util logger is used</description>
     <expected-problems>1</expected-problems>
     <expected-linenumbers>5</expected-linenumbers>
@@ -16,7 +17,7 @@ class Foo{
 ]]></code>
   </test-code>
 
-  <test-code reinitializeRule="true" regressionTest="true">
+  <test-code>
     <description>Multiple different loggers are used</description>
     <expected-problems>4</expected-problems>
     <expected-linenumbers>3, 5, 6, 8</expected-linenumbers>
@@ -35,7 +36,7 @@ class Foo{
 ]]></code>
   </test-code>
 
-  <test-code reinitializeRule="true" regressionTest="true">
+  <test-code>
     <description>No logger is used</description>
     <expected-problems>0</expected-problems>
     <code><![CDATA[
@@ -44,7 +45,7 @@ class Foo{
 ]]></code>
   </test-code>
 
-  <test-code reinitializeRule="true" regressionTest="true">
+  <test-code>
     <description>Variable named logger that doesn't reference a Logger</description>
     <expected-problems>0</expected-problems>
     <code><![CDATA[
@@ -53,7 +54,7 @@ class Foo{
 }
 ]]></code>
   </test-code>
-    <test-code reinitializeRule="true" regressionTest="true">
+    <test-code>
     <description>Unknown logger used</description>
     <expected-problems>1</expected-problems>
     <expected-linenumbers>2</expected-linenumbers>
@@ -63,7 +64,7 @@ class Foo{
 }
 ]]></code>
   </test-code>
-  <test-code reinitializeRule="true" regressionTest="true">
+  <test-code>
     <description>Real smarthome class</description>
     <expected-problems>0</expected-problems>
     <code><![CDATA[
@@ -191,7 +192,7 @@ public class RawType implements PrimitiveType, State {
 }
 ]]></code>
   </test-code>
-  <test-code reinitializeRule="true" regressionTest="true">
+  <test-code>
     <description>Unresolved inferred var types</description>
     <expected-problems>0</expected-problems>
     <code><![CDATA[
