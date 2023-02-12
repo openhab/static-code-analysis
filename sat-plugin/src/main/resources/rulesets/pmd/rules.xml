@@ -5,33 +5,19 @@
 
 	<description>Default set of PMD rules used for checking all bundles</description>
 
-	<rule ref="category/java/errorprone.xml/EmptyIfStmt">
-		<!-- See https://pmd.github.io/pmd-6.53.0/pmd_rules_java_errorprone.html for all below -->
+	<rule ref="category/java/codestyle.xml/EmptyControlStatement">
+		<!-- See https://pmd.github.io/pmd-6.53.0/pmd_rules_java_codestyle.html for all below -->
+		<!-- EmptyControlStatement replaces errorprone warnings EmptyFinallyBlock, EmptyIfStmt, EmptyInitializer, -->
+		<!-- EmptyStatementBlock, EmptySwitchStatements, EmptySynchronizedBlock, EmptyTryBlock, and EmptyWhileStmt -->
+
 		<!-- Priorities range in value from 1 to 5, with 5 being the lowest priority -->
 		<!-- We will use only priority 1,2 and 3 so the results of PMD can be comparable with the results of the other tools -->
 
 		<!-- See https://docs.pmd-code.org/apidocs/pmd-core/6.53.0/net/sourceforge/pmd/RulePriority.html -->
 		<priority>3</priority>
 	</rule>
-	<rule ref="category/java/errorprone.xml/EmptyWhileStmt">
-		<priority>3</priority>
-	</rule>
-	<rule ref="category/java/errorprone.xml/EmptyTryBlock">
-		<priority>3</priority>
-	</rule>
-	<rule ref="category/java/errorprone.xml/EmptyFinallyBlock">
-		<priority>3</priority>
-	</rule>
-	<rule ref="category/java/errorprone.xml/EmptySwitchStatements">
-		<priority>3</priority>
-	</rule>
-	<rule ref="category/java/errorprone.xml/EmptySynchronizedBlock">
-		<priority>3</priority>
-	</rule>
-	<rule ref="category/java/errorprone.xml/EmptyInitializer">
-		<priority>3</priority>
-	</rule>
 	<rule ref="category/java/errorprone.xml/MisplacedNullCheck">
+		<!-- See https://pmd.github.io/pmd-6.53.0/pmd_rules_java_errorprone.html for all below -->
 		<priority>1</priority>
 	</rule>
 	<rule ref="category/java/errorprone.xml/BrokenNullCheck">
