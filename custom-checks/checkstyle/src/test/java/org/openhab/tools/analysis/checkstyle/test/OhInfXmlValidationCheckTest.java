@@ -42,14 +42,14 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     private static final String RELATIVE_PATH_TO_THING = File.separator + OH_INF_PATH + File.separator
             + OhInfXmlValidationCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
-    private static final String RELATIVE_PATH_TO_BINDING = File.separator + OH_INF_PATH + File.separator
-            + OhInfXmlValidationCheck.BINDING_DIRECTORY + File.separator + "bind.xml";
+    private static final String RELATIVE_PATH_TO_ADDON = File.separator + OH_INF_PATH + File.separator
+            + OhInfXmlValidationCheck.ADDON_DIRECTORY + File.separator + "addon.xml";
     private static final String RELATIVE_PATH_TO_CONFIG = File.separator + OH_INF_PATH + File.separator
             + OhInfXmlValidationCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
 
     private static final String SCHEMA_ROOT_URL = "https://openhab.org/schemas/";
     private static final String THING_SCHEMA_URL = SCHEMA_ROOT_URL + "thing-description-1.0.0.xsd";
-    private static final String BINDING_SCHEMA_URL = SCHEMA_ROOT_URL + "binding-1.0.0.xsd";
+    private static final String ADDON_SCHEMA_URL = SCHEMA_ROOT_URL + "addon-1.0.0.xsd";
     private static final String CONFIG_SCHEMA_URL = SCHEMA_ROOT_URL + "config-description-1.0.0.xsd";
 
     private static final String MESSAGE_EMPTY_FILE = "The file {0} should not be empty.";
@@ -59,7 +59,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
     @BeforeAll
     public static void createConfiguration() {
         CONFIGURATION.addProperty("thingSchema", THING_SCHEMA_URL);
-        CONFIGURATION.addProperty("bindingSchema", BINDING_SCHEMA_URL);
+        CONFIGURATION.addProperty("addonSchema", ADDON_SCHEMA_URL);
         CONFIGURATION.addProperty("configSchema", CONFIG_SCHEMA_URL);
     }
 
@@ -157,13 +157,13 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
     }
 
     @Test
-    public void testInvalidBinding() throws Exception {
+    public void testInvalidAddon() throws Exception {
         assumeTrue(isResourceAvailable);
 
         int lineNumber = 7;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                "The content of element binding:binding is not complete. One of {name} is expected.");
-        verifyWithPath("invalidBinding", RELATIVE_PATH_TO_BINDING, expectedMessages);
+                "The content of element addon:addon is not complete. One of {type} is expected.");
+        verifyWithPath("invalidAddon", RELATIVE_PATH_TO_ADDON, expectedMessages);
     }
 
     @Test

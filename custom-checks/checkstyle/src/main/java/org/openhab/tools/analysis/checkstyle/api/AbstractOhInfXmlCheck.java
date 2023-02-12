@@ -38,7 +38,7 @@ import com.puppycrawl.tools.checkstyle.api.FileText;
  */
 public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
     public static final String THING_DIRECTORY = "thing";
-    public static final String BINDING_DIRECTORY = "binding";
+    public static final String ADDON_DIRECTORY = "addon";
     public static final String CONFIGURATION_DIRECTORY = "config";
 
     private static final String MESSAGE_EMPTY_FILE = "The file {0} should not be empty.";
@@ -77,8 +77,8 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
                         checkThingTypeFile(xmlFileText);
                         break;
                     }
-                    case BINDING_DIRECTORY: {
-                        checkBindingFile(xmlFileText);
+                    case ADDON_DIRECTORY: {
+                        checkAddonFile(xmlFileText);
                         break;
                     }
                     case CONFIGURATION_DIRECTORY: {
@@ -108,7 +108,7 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
      * @param xmlFileText Represents the text contents of the xml file
      * @throws CheckstyleException when exception occurred during XML processing
      */
-    protected abstract void checkBindingFile(FileText xmlFileText) throws CheckstyleException;
+    protected abstract void checkAddonFile(FileText xmlFileText) throws CheckstyleException;
 
     /**
      * Validate a .xml file located in the OH-INF/thing directory

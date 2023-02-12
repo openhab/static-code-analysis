@@ -97,7 +97,7 @@ public class OnlyTabIndentationCheckTest extends AbstractStaticCheckTest {
 
     @Test
     public void testXmlWithOnlyTabsForIndentation() throws Exception {
-        String fileName = "binding.xml";
+        String fileName = "addon.xml";
         verifyTabIdentation(fileName, noMessagesExpected(), false);
     }
 
