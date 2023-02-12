@@ -42,7 +42,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     private static final String RELATIVE_PATH_TO_THING = File.separator + OH_INF_PATH + File.separator
             + OhInfXmlValidationCheck.THING_DIRECTORY + File.separator + "thing-types.xml";
-    private static final String RELATIVE_PATH_TO_BINDING = File.separator + OH_INF_PATH + File.separator
+    private static final String RELATIVE_PATH_TO_ADDON = File.separator + OH_INF_PATH + File.separator
             + OhInfXmlValidationCheck.ADDON_DIRECTORY + File.separator + "addon.xml";
     private static final String RELATIVE_PATH_TO_CONFIG = File.separator + OH_INF_PATH + File.separator
             + OhInfXmlValidationCheck.CONFIGURATION_DIRECTORY + File.separator + "conf.xml";
@@ -157,13 +157,13 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
     }
 
     @Test
-    public void testInvalidBinding() throws Exception {
+    public void testInvalidAddon() throws Exception {
         assumeTrue(isResourceAvailable);
 
         int lineNumber = 7;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
                 "The content of element addon:addon is not complete. One of {type} is expected.");
-        verifyWithPath("invalidBinding", RELATIVE_PATH_TO_BINDING, expectedMessages);
+        verifyWithPath("invalidAddon", RELATIVE_PATH_TO_ADDON, expectedMessages);
     }
 
     @Test
