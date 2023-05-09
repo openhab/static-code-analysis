@@ -25,6 +25,12 @@
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <name>openHAB Community</name>
+    </developer>
+  </developers>
+
   <modules>
     <module>custom-checks</module>
     <module>sat-extension</module>
