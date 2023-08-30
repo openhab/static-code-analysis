@@ -74,17 +74,19 @@
     <maven.plugin.api.version>3.8.5</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.7.0</maven.plugin.annotations.version>
     <maven.plugin.plugin.version>3.6.4</maven.plugin.plugin.version>
-    <maven.plugin.compiler.version>3.10.1</maven.plugin.compiler.version>
+    <maven.plugin.compiler.version>3.11.0</maven.plugin.compiler.version>
     <mojo.executor.version>2.4.0</mojo.executor.version>
     <org.jsoup.version>1.7.1</org.jsoup.version>
-    <sat.version>0.13.0</sat.version>
+    <sat.version>0.15.0</sat.version>
     <jdt-annotations.version>2.1.0</jdt-annotations.version>
     <flexmark.version>0.64.0</flexmark.version>
-    <maven.surefire.plugin.version>3.0.0-M7</maven.surefire.plugin.version>
+    <maven.surefire.plugin.version>3.1.2</maven.surefire.plugin.version>
     <jetty.server.version>9.4.50.v20221201</jetty.server.version>
     <saxon.version>9.1.0.8</saxon.version>
-    <spotless.version>2.28.0</spotless.version>
-    <spotless.eclipse.version>4.21.0</spotless.eclipse.version>
+    <spotless.version>2.38.0</spotless.version>
+    <!-- Eclipse Java formatter version 4.26+ does not check test files -->
+    <spotless.eclipse.version>4.25</spotless.eclipse.version>
+    <spotless.eclipse.wtp.version>4.21.0</spotless.eclipse.wtp.version>
     <slf4j.version>1.7.36</slf4j.version>
     <logback.version>1.2.9</logback.version>
     <eea.version>2.4.0</eea.version>
@@ -174,36 +176,41 @@
         <plugin>
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
-          <version>3.0</version>
+          <version>4.2</version>
           <configuration>
             <basedir>${basedir}</basedir>
-            <header>licenses/epl-2.0/header.txt</header>
             <quiet>false</quiet>
             <failIfMissing>true</failIfMissing>
             <strictCheck>true</strictCheck>
             <aggregate>true</aggregate>
             <mapping>
+              <java>JAVADOC_STYLE</java>
               <xml>xml-header-style</xml>
             </mapping>
-            <headerDefinitions>
-              <headerDefinition>licenses/epl-2.0/xml-header-style.xml</headerDefinition>
-            </headerDefinitions>
-            <includes>
-              <include>**/org/openhab/**/*.java</include>
-              <include>**/OSGI-INF/*.xml</include>
-            </includes>
-            <excludes>
-              <exclude>**/pom.xml</exclude>
-              <exclude>target/**</exclude>
-              <exclude>**/org/openhab/tools/analysis/findbugs/CustomClassNameLengthDetector.java</exclude>
-              <exclude>**/org/openhab/tools/analysis/report/ReportUtility.java</exclude>
-              <exclude>**/org/openhab/tools/analysis/report/ReportMojo.java</exclude>
-            </excludes>
             <useDefaultExcludes>true</useDefaultExcludes>
             <properties>
               <year>2023</year>
             </properties>
             <encoding>UTF-8</encoding>
+            <licenseSets>
+              <licenseSet>
+                <header>licenses/epl-2.0/header.txt</header>
+                <headerDefinitions>
+                  <headerDefinition>licenses/epl-2.0/xml-header-style.xml</headerDefinition>
+                </headerDefinitions>
+                <includes>
+                  <include>**/org/openhab/**/*.java</include>
+                  <include>**/OSGI-INF/*.xml</include>
+                </includes>
+                <excludes>
+                  <exclude>**/pom.xml</exclude>
+                  <exclude>target/**</exclude>
+                  <exclude>**/org/openhab/tools/analysis/findbugs/CustomClassNameLengthDetector.java</exclude>
+                  <exclude>**/org/openhab/tools/analysis/report/ReportUtility.java</exclude>
+                  <exclude>**/org/openhab/tools/analysis/report/ReportMojo.java</exclude>
+                </excludes>
+              </licenseSet>
+            </licenseSets>
           </configuration>
           <executions>
             <execution>
@@ -244,7 +251,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.4.0</version>
         </plugin>
 
         <plugin>
@@ -272,7 +279,7 @@
         <plugin>
           <groupId>com.github.ekryd.sortpom</groupId>
           <artifactId>sortpom-maven-plugin</artifactId>
-          <version>2.10.0</version>
+          <version>3.3.0</version>
           <configuration>
             <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
             <createBackupFile>false</createBackupFile>
@@ -323,7 +330,7 @@
                   <files>
                     <file>openhab_wst_xml_files.prefs</file>
                   </files>
-                  <version>${spotless.eclipse.version}</version>
+                  <version>${spotless.eclipse.wtp.version}</version>
                 </eclipseWtp>
                 <trimTrailingWhitespace/>
                 <endWithNewline/>
@@ -338,7 +345,7 @@
                   <files>
                     <file>openhab_wst_pom_file.prefs</file>
                   </files>
-                  <version>${spotless.eclipse.version}</version>
+                  <version>${spotless.eclipse.wtp.version}</version>
                 </eclipseWtp>
                 <trimTrailingWhitespace/>
                 <endWithNewline/>
@@ -430,7 +437,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.1</version>
+        <version>3.3.0</version>
         <configuration>
           <attach>true</attach>
         </configuration>
@@ -581,7 +588,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.5</version>
+            <version>3.1.0</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
