@@ -3,7 +3,6 @@
 [![GitHub Actions Build Status](https://github.com/openhab/static-code-analysis/actions/workflows/ci-build.yml/badge.svg?branch=main)](https://github.com/openhab/static-code-analysis/actions/workflows/ci-build.yml)
 [![Jenkins Build Status](https://ci.openhab.org/job/static-code-analysis/badge/icon)](https://ci.openhab.org/job/static-code-analysis/)
 [![EPL-2.0](https://img.shields.io/badge/license-EPL%202-green.svg)](https://opensource.org/licenses/EPL-2.0)
-[![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=56481698)](https://www.bountysource.com/teams/openhab/issues?tracker_ids=56481698)
 
 The Static Code Analysis Tools is a Maven plugin that executes the Maven plugins for SpotBugs, Checkstyle and PMD and generates a merged .html report.
 It is especially designed for openHAB to respect the defined coding guidelines.
