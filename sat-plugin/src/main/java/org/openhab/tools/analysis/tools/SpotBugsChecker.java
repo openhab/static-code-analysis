@@ -212,7 +212,7 @@ public class SpotBugsChecker extends AbstractChecker {
             try {
                 stream = new FileInputStream(file);
             } catch (FileNotFoundException e) {
-                getLog().warn("Unable to find file " + resolvedPath.toString());
+                getLog().warn("Unable to find file " + resolvedPath);
             }
         } else {
             stream = this.getClass().getClassLoader().getResourceAsStream(SpotBugsChecker.DEFAULT_VISITORS_XML);

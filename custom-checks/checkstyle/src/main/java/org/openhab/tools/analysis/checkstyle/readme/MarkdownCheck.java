@@ -45,10 +45,8 @@ public class MarkdownCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) throws CheckstyleException {
-        switch (file.getName()) {
-            case README_MD_FILE_NAME:
-                checkReadMe(fileText);
-                break;
+        if (file.getName().equals(README_MD_FILE_NAME)) {
+            checkReadMe(fileText);
         }
     }
 
@@ -59,12 +57,7 @@ public class MarkdownCheck extends AbstractStaticCheck {
 
         Node readmeMarkdownNode = parseMarkdown(fileText, options);
         // CallBack is used in order to use the protected log method of the AbstractStaticCheck in the Visitor
-        MarkdownVisitorCallback callBack = new MarkdownVisitorCallback() {
-            @Override
-            public void log(int line, String message) {
-                MarkdownCheck.this.log(line + 1, message);
-            }
-        };
+        MarkdownVisitorCallback callBack = (line, message) -> MarkdownCheck.this.log(line + 1, message);
         MarkdownVisitor visitor = new MarkdownVisitor(callBack, fileText);
         visitor.visit(readmeMarkdownNode);
     }

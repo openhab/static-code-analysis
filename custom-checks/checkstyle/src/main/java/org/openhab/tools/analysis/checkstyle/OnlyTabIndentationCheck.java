@@ -42,10 +42,10 @@ public class OnlyTabIndentationCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) {
-        processTabIdentationCheck(fileText);
+        processTabIndentationCheck(fileText);
     }
 
-    private void processTabIdentationCheck(FileText fileText) {
+    private void processTabIndentationCheck(FileText fileText) {
         for (int lineNumber = 0; lineNumber < fileText.size(); lineNumber++) {
             String line = fileText.get(lineNumber);
             // if line is empty and does not contain only tabs for indentation

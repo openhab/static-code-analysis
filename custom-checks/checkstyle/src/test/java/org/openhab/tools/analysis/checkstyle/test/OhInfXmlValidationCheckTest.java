@@ -75,7 +75,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
         Locale.setDefault(new Locale("en", "US"));
         try {
             URL url = new URL(THING_SCHEMA_URL);
-            CachingHttpClient<String> cachingClient = new CachingHttpClient<>(c -> new String(c));
+            CachingHttpClient<String> cachingClient = new CachingHttpClient<>(String::new);
             isResourceAvailable = cachingClient.get(url) != null;
         } catch (IOException e) {
             isResourceAvailable = false;
@@ -199,7 +199,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
         String directoryPath = getPath(testSubDirectory);
         File testDirectoryPath = new File(directoryPath);
 
-        File[] testFiles = listFilesForFolder(testDirectoryPath, new ArrayList<File>());
+        File[] testFiles = listFilesForFolder(testDirectoryPath, new ArrayList<>());
         verify(createChecker(CONFIGURATION), testFiles, directoryPath + testFilePath, expectedMessages);
     }
 

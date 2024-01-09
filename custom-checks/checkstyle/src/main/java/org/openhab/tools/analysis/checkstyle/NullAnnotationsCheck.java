@@ -40,7 +40,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  */
 public class NullAnnotationsCheck extends AbstractCheck {
 
-    private List<String> imports = new ArrayList<String>();
+    private List<String> imports = new ArrayList<>();
 
     private static final String NONNULL_ANNOTATION = NonNull.class.getSimpleName();
     private static final String NULLABLE_ANNOTATION = Nullable.class.getSimpleName();

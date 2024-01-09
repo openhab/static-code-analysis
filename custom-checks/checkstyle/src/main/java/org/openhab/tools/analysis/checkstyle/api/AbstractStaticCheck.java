@@ -119,7 +119,7 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
             Document document = builder.parse(getInputStream(fileText));
             return document;
         } catch (ParserConfigurationException e) {
-            throw new CheckstyleException("Serious configuration error occured while creating a DocumentBuilder.", e);
+            throw new CheckstyleException("Serious configuration error occurred while creating a DocumentBuilder.", e);
         } catch (SAXException e) {
             throw new CheckstyleException("Unable to read from file: " + fileText.getFile().getAbsolutePath(), e);
         } catch (IOException e) {
@@ -160,17 +160,17 @@ public abstract class AbstractStaticCheck extends AbstractFileSetCheck {
     /**
      * Compiles an XPathExpression
      *
-     * @param expresion the XPath expression
+     * @param expression the XPath expression
      * @return compiled XPath expression
      * @throws CheckstyleException if an error occurred during the compilation
      */
-    protected XPathExpression compileXPathExpression(String expresion) throws CheckstyleException {
+    protected XPathExpression compileXPathExpression(String expression) throws CheckstyleException {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         try {
-            return xpath.compile(expresion);
+            return xpath.compile(expression);
         } catch (XPathExpressionException e) {
-            throw new CheckstyleException("Unable to compile the expression" + expresion, e);
+            throw new CheckstyleException("Unable to compile the expression" + expression, e);
         }
     }
 

@@ -118,7 +118,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
         // parent folder)
         if (parentPom.exists()) {
             Optional<Document> maybeDocument = getParsedPom(parentPom);
-            if (!maybeDocument.isPresent()) {
+            if (maybeDocument.isEmpty()) {
                 return;
             }
 
@@ -163,7 +163,7 @@ public class PomXmlCheck extends AbstractStaticCheck {
 
     private Optional<String> getPomVersion(Document pomXmlDocument, String filePath) throws CheckstyleException {
         Optional<String> maybeVersionNodeValue = getNodeValue(pomXmlDocument, POM_VERSION_XPATH_EXPRESSION, filePath);
-        if (!maybeVersionNodeValue.isPresent()) {
+        if (maybeVersionNodeValue.isEmpty()) {
             return getNodeValue(pomXmlDocument, POM_PARENT_VERSION_XPATH_EXPRESSION, filePath);
         }
 

@@ -151,9 +151,9 @@ public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckT
          * warning messages are expected at the lines where other authors of outer and inner
          * classes are located, because other author contribution descriptions are missing there
          */
-        int firstWarningLineOthertAuthor = 3;
+        int firstWarningLineOtherAuthor = 3;
         int secondWarningLineOtherAuthor = 10;
-        lineNumberToWarningMessageExpected.put(firstWarningLineOthertAuthor,
+        lineNumberToWarningMessageExpected.put(firstWarningLineOtherAuthor,
                 EXPECTED_WARNING_MESSAGE_OTHER_AUTHOR_DESCRIPTION);
         lineNumberToWarningMessageExpected.put(secondWarningLineOtherAuthor,
                 EXPECTED_WARNING_MESSAGE_OTHER_AUTHOR_DESCRIPTION);
@@ -280,7 +280,7 @@ public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckT
 
     private void checkFileForAuthorContributionDescription(boolean checkInnerUnits, String fileName) throws Exception {
         String filePath = getPath(fileName);
-        String[] expected = null;
+        String[] expected;
 
         if (lineNumberToWarningMessageExpected.isEmpty()) {
             expected = CommonUtil.EMPTY_STRING_ARRAY;

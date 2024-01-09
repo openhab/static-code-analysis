@@ -81,7 +81,7 @@ public class AuthorContributionDescriptionCheck extends AbstractCheck {
     }
 
     public void setRequiredContributionDescriptions(String[] contributionDescriptions) {
-        this.requiredContributionDescriptions = new ArrayList<String>(Arrays.asList(contributionDescriptions));
+        this.requiredContributionDescriptions = new ArrayList<>(Arrays.asList(contributionDescriptions));
         setWarningMessageFirstAuthorDescription(requiredContributionDescriptions);
     }
 
@@ -97,8 +97,7 @@ public class AuthorContributionDescriptionCheck extends AbstractCheck {
      */
     private void setWarningMessageFirstAuthorDescription(List<String> contributionDescriptions) {
         warningMessageFirstAuthorDescription = contributionDescriptions.stream().map(Object::toString)
-                .collect(Collectors.joining(WARNING_MESSAGE_DELIMITER, WARNING_MESSAGE_PREFIX, WARNING_MESSAGE_SUFFIX))
-                .toString();
+                .collect(Collectors.joining(WARNING_MESSAGE_DELIMITER, WARNING_MESSAGE_PREFIX, WARNING_MESSAGE_SUFFIX));
     }
 
     @Override

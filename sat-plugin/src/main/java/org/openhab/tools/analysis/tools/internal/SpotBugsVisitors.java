@@ -29,7 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 public class SpotBugsVisitors {
 
     @XmlElement
-    List<String> visitor = new ArrayList<String>();
+    List<String> visitor = new ArrayList<>();
 
     @Override
     public String toString() {

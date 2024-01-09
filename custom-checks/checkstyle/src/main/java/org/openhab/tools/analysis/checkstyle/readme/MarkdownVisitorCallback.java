@@ -27,5 +27,5 @@ public interface MarkdownVisitorCallback {
      * @param line line number of the logged message
      * @param message the message that is logged for the error
      */
-    public void log(int line, String message);
+    void log(int line, String message);
 }

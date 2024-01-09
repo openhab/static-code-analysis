@@ -267,7 +267,7 @@
 	</xsl:template>
 
 	<xsl:template name="findbugs_link">
-		<xsl:text disable-output-escaping="yes"> &lt;a href="http://findbugs.sourceforge.net/bugDescriptions.html#</xsl:text>
+		<xsl:text disable-output-escaping="yes"> &lt;a href="https://findbugs.sourceforge.net/bugDescriptions.html#</xsl:text>
 		<xsl:value-of select="@rule_id" />
 		<xsl:text disable-output-escaping="yes">"&gt;</xsl:text>
 		<xsl:value-of select="@rule" />

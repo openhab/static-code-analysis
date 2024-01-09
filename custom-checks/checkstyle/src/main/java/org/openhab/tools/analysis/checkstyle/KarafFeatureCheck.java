@@ -81,9 +81,7 @@ public class KarafFeatureCheck extends AbstractStaticCheck {
 
             boolean isFound = false;
 
-            for (int i = 0; i < individualPaths.length; i++) {
-                String singlePath = individualPaths[i];
-
+            for (String singlePath : individualPaths) {
                 Path featurePath = resolveRecursively(file.toPath(), Paths.get(singlePath));
 
                 if (featurePath == null) {

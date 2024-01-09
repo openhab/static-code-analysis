@@ -85,7 +85,7 @@ public class ForbiddenPackageUsageCheck extends AbstractCheck {
     public void finishTree(DetailAST ast) {
         importsToLineNumbers.entrySet().stream()
                 .filter(entry -> forbiddenPackages.stream().anyMatch(entry.getKey()::contains))
-                .filter(entry -> !exceptions.stream().anyMatch(entry.getKey()::contains))
+                .filter(entry -> exceptions.stream().noneMatch(entry.getKey()::contains))
                 .forEach(entry -> log(entry.getValue(), String.format(MESSAGE, entry.getKey())));
     }
 }

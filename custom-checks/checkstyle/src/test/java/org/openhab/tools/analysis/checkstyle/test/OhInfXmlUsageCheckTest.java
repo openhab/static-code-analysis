@@ -67,7 +67,7 @@ public class OhInfXmlUsageCheckTest extends AbstractStaticCheckTest {
     public void testMissingConfigRef() throws Exception {
         String[] expectedMessages = generateExpectedMessages(0,
                 MessageFormat.format(MESSAGE_MISSING_URI_CONFIGURATION, "binding:ge:config"));
-        verifyWithPath("missingConfigDesciptionRef", RELATIVE_PATH_TO_THING, expectedMessages);
+        verifyWithPath("missingConfigDescriptionRef", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 
     @Test

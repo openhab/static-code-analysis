@@ -107,7 +107,7 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
     }
 
     public void setCheckWordCasing(final String check) {
-        this.doCheckWordCasing = Boolean.valueOf(check);
+        this.doCheckWordCasing = Boolean.parseBoolean(check);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
 
     private void evaluateExpressionOnFile(final FileText xmlFileText, final String xPathExpression, final String key)
             throws CheckstyleException {
-        final String type = fiterType(xPathExpression);
+        final String type = filterType(xPathExpression);
         final Map<String, Integer> lineNumberMap = new HashMap<>();
         final NodeList nodes = getNodes(xmlFileText, xPathExpression);
         final File file = xmlFileText.getFile();
@@ -170,8 +170,8 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
         for (int i = 0; i < words.length; i++) {
             final String word = words[i];
 
-            final int firtCharType = Character.getType(word.charAt(0));
-            final boolean lowerCase = firtCharType == Character.LOWERCASE_LETTER;
+            final int firstCharType = Character.getType(word.charAt(0));
+            final boolean lowerCase = firstCharType == Character.LOWERCASE_LETTER;
             final boolean firstOrLastWord = i == 0 || i == words.length - 1;
             boolean log = false;
 
@@ -180,7 +180,7 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
                     log = true;
                 }
             } else if (!firstOrLastWord && LOWER_CASE_WORDS.contains(word)
-                    && firtCharType == Character.UPPERCASE_LETTER) {
+                    && firstCharType == Character.UPPERCASE_LETTER) {
                 log = true;
             }
             if (log) {
@@ -228,7 +228,7 @@ public class OhInfXmlLabelCheck extends AbstractOhInfXmlCheck {
         return node.getParentNode().getParentNode().getAttributes().getNamedItem(key).getNodeValue();
     }
 
-    private String fiterType(final String expression) {
+    private String filterType(final String expression) {
         final Matcher matcher = TYPE_PATTERN.matcher(expression);
         return matcher.find() ? matcher.group(1) : "";
     }

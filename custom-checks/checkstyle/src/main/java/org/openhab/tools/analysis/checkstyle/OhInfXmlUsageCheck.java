@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 import org.openhab.tools.analysis.checkstyle.api.AbstractOhInfXmlCheck;
 import org.openhab.tools.analysis.checkstyle.api.CheckConstants;
@@ -137,9 +138,8 @@ public class OhInfXmlUsageCheck extends AbstractOhInfXmlCheck {
                 if (!Files.exists(osgiInfPath)) {
                     return uriFileMap;
                 }
-                try {
-                    Files.list(osgiInfPath)
-                            .forEach(xmlPath -> uriFileMap.putAll(getConfigurableServiceRefsFromXml(xmlPath)));
+                try (Stream<Path> pathStream = Files.list(osgiInfPath)) {
+                    pathStream.forEach(xmlPath -> uriFileMap.putAll(getConfigurableServiceRefsFromXml(xmlPath)));
                 } catch (IOException e) {
                 }
                 break;

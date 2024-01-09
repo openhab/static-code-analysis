@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -392,9 +393,9 @@ public class ReportMojo extends AbstractMojo {
                         .appendOffset("+HH:MM", "Z").toFormatter();
                 htmlString = htmlString.replace("$time", formatter.format(ZonedDateTime.now()));
 
-                FileUtils.writeStringToFile(summaryReport, htmlString);
+                FileUtils.writeStringToFile(summaryReport, htmlString, StandardCharsets.UTF_8);
             }
-            String reportContent = FileUtils.readFileToString(summaryReport);
+            String reportContent = FileUtils.readFileToString(summaryReport, StandardCharsets.UTF_8);
 
             final String singleItem = "<tr class=alternate><td><a href=\"%s\">%s</a></td></tr><tr></tr>";
             Path absoluteIndividualReportPath = htmlOutputFile.toPath();
@@ -407,7 +408,7 @@ public class ReportMojo extends AbstractMojo {
             String row = String.format(singleItem, relativePath, bundleName);
 
             reportContent = reportContent.replace("<tr></tr>", row);
-            FileUtils.writeStringToFile(summaryReport, reportContent);
+            FileUtils.writeStringToFile(summaryReport, reportContent, StandardCharsets.UTF_8);
             getLog().info("Individual report appended to summary report.");
         } catch (IOException e) {
             getLog().warn("Can't read or write to summary report. The summary report might be incomplete!", e);
