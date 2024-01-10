@@ -42,7 +42,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
@@ -63,7 +62,7 @@ public class CachingHttpClientTest {
 
     private static Server server;
 
-    private ContentReceviedCallback<String> testCallback = s -> new String(s);
+    private ContentReceivedCallback<String> testCallback = String::new;
     private CachingHttpClient<String> testClient = new CachingHttpClient<>(testCallback);
 
     @BeforeAll
@@ -82,8 +81,7 @@ public class CachingHttpClientTest {
         try {
             server.start();
         } catch (Exception e) {
-            fail(MessageFormat.format("Unable to start test server on host {} and port {} : {}", TEST_HOST, TEST_PORT,
-                    e));
+            fail(MessageFormat.format("Unable to start test server on host {} and port {}", TEST_HOST, TEST_PORT, e));
         }
     }
 
@@ -102,28 +100,25 @@ public class CachingHttpClientTest {
     }
 
     private void mockHandler(Handler handler) throws IOException, ServletException {
-        Mockito.doAnswer(new Answer<Handler>() {
-            @Override
-            public Handler answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
+        Mockito.doAnswer((Answer<Handler>) invocation -> {
+            Object[] arguments = invocation.getArguments();
 
-                Request baseRequest = (Request) arguments[2];
-                HttpServletRequest request = (HttpServletRequest) arguments[2];
-                HttpServletResponse response = (HttpServletResponse) arguments[3];
+            Request baseRequest = (Request) arguments[2];
+            HttpServletRequest request = (HttpServletRequest) arguments[2];
+            HttpServletResponse response = (HttpServletResponse) arguments[3];
 
-                baseRequest.setHandled(true);
+            baseRequest.setHandled(true);
 
-                assertThat(request.getMethod(), is(HttpMethod.GET.asString()));
+            assertThat(request.getMethod(), is(HttpMethod.GET.asString()));
 
-                if (request.getPathInfo().startsWith(PATH_TO_RESOURCE)) {
-                    response.setStatus(HttpStatus.OK_200);
-                    response.setContentType("text/html");
-                    response.getWriter().println(SERVER_RESPONSE);
-                } else {
-                    response.setStatus(HttpStatus.NOT_FOUND_404);
-                }
-                return null;
+            if (request.getPathInfo().startsWith(PATH_TO_RESOURCE)) {
+                response.setStatus(HttpStatus.OK_200);
+                response.setContentType("text/html");
+                response.getWriter().println(SERVER_RESPONSE);
+            } else {
+                response.setStatus(HttpStatus.NOT_FOUND_404);
             }
+            return null;
         }).when(handler).handle(any(), any(), any(), any());
     }
 
@@ -137,7 +132,7 @@ public class CachingHttpClientTest {
             testClient.get(unreachableURL);
         } catch (IOException e) {
             assertThat(e, instanceOf(IOException.class));
-            assertThat(e.getMessage(), equalTo("Unable to get " + unreachableURL.toString()));
+            assertThat(e.getMessage(), equalTo("Unable to get " + unreachableURL));
             assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
         }
         // Next requests do not throw exception
@@ -182,7 +177,7 @@ public class CachingHttpClientTest {
             testClient.get(url);
         } catch (IOException e) {
             assertThat(e, instanceOf(IOException.class));
-            assertThat(e.getMessage(), equalTo("Unable to get " + url.toString()));
+            assertThat(e.getMessage(), equalTo("Unable to get " + url));
             assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
         }
 

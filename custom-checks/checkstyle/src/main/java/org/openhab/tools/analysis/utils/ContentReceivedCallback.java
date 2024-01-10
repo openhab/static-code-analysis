@@ -19,7 +19,7 @@ package org.openhab.tools.analysis.utils;
  *
  * @param <T> - the type of the object
  */
-public interface ContentReceviedCallback<T> {
+public interface ContentReceivedCallback<T> {
     /**
      * Called after a successful download attempt is made by the {@link CachingHttpClient}
      * and should transform the data into a object of type T
@@ -27,5 +27,5 @@ public interface ContentReceviedCallback<T> {
      * @param content HTTP request content, can`t be null
      * @return the transformed data
      */
-    public T transform(byte[] content);
+    T transform(byte[] content);
 }

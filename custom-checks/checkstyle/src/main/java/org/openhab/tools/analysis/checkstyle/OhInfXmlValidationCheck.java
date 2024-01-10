@@ -31,7 +31,7 @@ import javax.xml.validation.Validator;
 
 import org.openhab.tools.analysis.checkstyle.api.AbstractOhInfXmlCheck;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
-import org.openhab.tools.analysis.utils.ContentReceviedCallback;
+import org.openhab.tools.analysis.utils.ContentReceivedCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -94,7 +94,7 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
 
     @Override
     public void beginProcessing(String charset) {
-        ContentReceviedCallback<Schema> callback = new ContentReceviedCallback<Schema>() {
+        ContentReceivedCallback<Schema> callback = new ContentReceivedCallback<>() {
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
             @Override

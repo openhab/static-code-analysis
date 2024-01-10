@@ -102,7 +102,7 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
 
     private void verifyPomXmlFile(String testDirectoryName, String[] expectedMessages) throws Exception {
         File testDirectory = getTestDirectory(testDirectoryName);
-        File[] testFiles = listFilesForDirectory(testDirectory, new ArrayList<File>());
+        File[] testFiles = listFilesForDirectory(testDirectory, new ArrayList<>());
         String testFilePath = testDirectory.getPath() + File.separator + POM_XML_FILE_NAME;
 
         verify(createChecker(config), testFiles, testFilePath, expectedMessages);

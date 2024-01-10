@@ -29,7 +29,7 @@ import com.google.common.cache.CacheBuilder;
 /**
  * A simple caching HttpClient
  *
- * A {@link ContentReceviedCallback} is used to convert the downloaded data.
+ * A {@link ContentReceivedCallback} is used to convert the downloaded data.
  * The cached entry expires after {@link #RETRY_TIME}
  *
  * @author Svilen Valkanov - Initial contribution
@@ -43,9 +43,9 @@ public class CachingHttpClient<T> {
     private static Cache<URL, Optional<byte[]>> cache = CacheBuilder.newBuilder()
             .expireAfterWrite(RETRY_TIME, TimeUnit.MINUTES).build();
 
-    private ContentReceviedCallback<T> callback;
+    private ContentReceivedCallback<T> callback;
 
-    public CachingHttpClient(ContentReceviedCallback<T> callback) {
+    public CachingHttpClient(ContentReceivedCallback<T> callback) {
         this.callback = callback;
     }
 
@@ -64,14 +64,14 @@ public class CachingHttpClient<T> {
             throw new IllegalArgumentException("URL must not be null");
         }
 
-        Optional<byte[]> content = Optional.empty();
+        Optional<byte[]> content;
         try {
             content = cache.get(url, () -> Optional.of(getContent(url)));
         } catch (ExecutionException e) {
             cache.put(url, Optional.empty());
-            throw new IOException("Unable to get " + url.toString(), e.getCause());
+            throw new IOException("Unable to get " + url, e.getCause());
         }
-        return content.isPresent() ? callback.transform(content.get()) : null;
+        return content.map(bytes -> callback.transform(bytes)).orElse(null);
     }
 
     private byte[] getContent(URL url) throws IOException {

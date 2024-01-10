@@ -94,7 +94,7 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
     private void checkFileForAuthorTags(boolean checkInnerUnits, String fileName, Integer... warningLine)
             throws Exception {
         String filePath = getPath(fileName);
-        String[] expected = null;
+        String[] expected;
         if (warningLine.length > 0) {
             expected = new String[warningLine.length];
             for (int i = 0; i < warningLine.length; i++) {

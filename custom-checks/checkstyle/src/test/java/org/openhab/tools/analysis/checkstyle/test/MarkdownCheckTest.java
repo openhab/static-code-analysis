@@ -50,7 +50,7 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
     }
 
     @Test
-    public void testForbiddNodeVisit() throws Exception {
+    public void testForbiddenNodeVisit() throws Exception {
         verifyMarkDownFile("testForbiddenNodeVisit", noMessagesExpected());
     }
 
@@ -134,16 +134,16 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
     }
 
     @Test
-    public void testCodeSectionAtBeginingOfFile() throws Exception {
+    public void testCodeSectionAtBeginningOfFile() throws Exception {
         String[] expectedMessages = generateExpectedMessages(1,
                 "The line before code formatting section must be empty.");
-        verifyMarkDownFile("testCodeSectionAtBeginingOfFile", expectedMessages);
+        verifyMarkDownFile("testCodeSectionAtBeginningOfFile", expectedMessages);
     }
 
     @Test
-    public void testListAtBeginingOfFile() throws Exception {
+    public void testListAtBeginningOfFile() throws Exception {
         String[] expectedMessages = generateExpectedMessages(1, "The line before a Markdown list must be empty.");
-        verifyMarkDownFile("testListAtBeginingOfFile", expectedMessages);
+        verifyMarkDownFile("testListAtBeginningOfFile", expectedMessages);
     }
 
     @Test
@@ -174,8 +174,8 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
     }
 
     @Test
-    public void testListBeginingSameAsAnotherLineBegining() throws Exception {
-        verifyMarkDownFile("testListBeginingSameAsAnotherLineBegining", noMessagesExpected());
+    public void testListBeginningSameAsAnotherLineBeginning() throws Exception {
+        verifyMarkDownFile("testListBeginningSameAsAnotherLineBeginning", noMessagesExpected());
     }
 
     @Test

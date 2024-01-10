@@ -57,7 +57,7 @@ public class OverridingParentPomConfigurationCheck extends AbstractStaticCheck {
                 try {
                     nodes = (NodeList) xpathExpression.evaluate(document, XPathConstants.NODESET);
                 } catch (XPathExpressionException e) {
-                    logger.error("An error has occured while parsing the pom.xml. Check if the file is valid.", e);
+                    logger.error("An error has occurred while parsing the pom.xml. Check if the file is valid.", e);
                 }
 
                 if (nodes != null) {

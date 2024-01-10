@@ -21,7 +21,7 @@ import com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocTypeCheck;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
- * Tests for {@link JavadocInnerClassesFilterCheck}
+ * Tests for {@link MissingJavadocFilterCheck}
  *
  * @author Petar Valchev - Initial contribution
  */
@@ -35,13 +35,13 @@ public class MissingJavadocFilterCheckTest extends AbstractStaticCheckTest {
     @Test
     public void testOuterClassWithJavadoc() throws Exception {
         String[] locations = new String[] { "10:1" };
-        verifyJavadoc("MissingJavadocOuterAndInnnerClass.java", false, locations);
+        verifyJavadoc("MissingJavadocOuterAndInnerClass.java", false, locations);
     }
 
     @Test
     public void testOuterAndInnerClassesWithJavadoc() throws Exception {
         String[] locations = new String[] { "10:1", "12:5" };
-        verifyJavadoc("MissingJavadocOuterAndInnnerClass.java", true, locations);
+        verifyJavadoc("MissingJavadocOuterAndInnerClass.java", true, locations);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class MissingJavadocFilterCheckTest extends AbstractStaticCheckTest {
 
         String filePath = getPath(testFileName);
 
-        String[] expectedMessages = null;
+        String[] expectedMessages;
         if (locations != null) {
             expectedMessages = new String[locations.length];
             for (int i = 0; i < locations.length; i++) {

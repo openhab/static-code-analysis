@@ -7,7 +7,7 @@
  */
 package org.openhab.core.buildtools.rules.checkstyle.test;
 
-public class MissingJavadocOuterAndInnnerClass { 
+public class MissingJavadocOuterAndInnerClass {
 
     public class InnerClass{
         

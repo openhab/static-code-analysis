@@ -17,7 +17,6 @@ import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OH_INF_PA
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.Before;
@@ -123,9 +122,9 @@ public class OhInfXmlLabelCheckTest extends AbstractStaticCheckTest {
             final String[] expectedMessages) throws Exception {
         final String directoryPath = getPath(testSubDirectory);
         final File testDirectoryPath = new File(directoryPath);
-        final File[] testFiles = listFilesForFolder(testDirectoryPath, new ArrayList<File>());
-        verify(createChecker(configuration), testFiles, directoryPath + testFilePath, Stream.of(expectedMessages)
-                .map(s -> s.replace("''", "'")).collect(Collectors.toList()).toArray(new String[0]));
+        final File[] testFiles = listFilesForFolder(testDirectoryPath, new ArrayList<>());
+        verify(createChecker(configuration), testFiles, directoryPath + testFilePath,
+                Stream.of(expectedMessages).map(s -> s.replace("''", "'")).toArray(String[]::new));
     }
 
     private File[] listFilesForFolder(final File folder, final ArrayList<File> files) {

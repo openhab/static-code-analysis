@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -74,7 +73,7 @@ public class ParameterizedRegexpHeaderCheck extends AbstractHeaderCheck {
     @Override
     protected void postProcessHeaderLines() {
         final List<String> headerLines = getHeaderLines();
-        String header = headerLines.stream().collect(Collectors.joining(SEPARATOR));
+        String header = String.join(SEPARATOR, headerLines);
         String formattedHeader = MessageFormat.format(header, values);
 
         for (String line : formattedHeader.split(SEPARATOR)) {

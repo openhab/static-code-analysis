@@ -112,9 +112,7 @@ public class JavadocMethodStyleCheck extends AbstractCheck {
 
     @Override
     public int[] getAcceptableTokens() {
-        /**
-         * The check will be executed for method and constructor declarations.
-         */
+        // The check will be executed for method and constructor declarations.
         return new int[] { TokenTypes.METHOD_DEF, TokenTypes.CTOR_DEF, };
     }
 
@@ -139,7 +137,7 @@ public class JavadocMethodStyleCheck extends AbstractCheck {
 
         if (textBlock != null) {
             String[] text = textBlock.getText();
-            lineNumberToLineText = new HashMap<Integer, String>();
+            lineNumberToLineText = new HashMap<>();
             tagLines = new ArrayList<>();
 
             for (int javadocLineIndex = 0; javadocLineIndex < text.length; javadocLineIndex++) {
@@ -206,7 +204,6 @@ public class JavadocMethodStyleCheck extends AbstractCheck {
         lineNumberToLineText.forEach((lineNumber, lineText) -> {
             if (lineText.contains(group)) {
                 log(lineNumber, message);
-                return;
             }
         });
     }

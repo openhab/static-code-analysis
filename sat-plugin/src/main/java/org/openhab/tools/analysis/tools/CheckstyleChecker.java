@@ -106,9 +106,9 @@ public class CheckstyleChecker extends AbstractChecker {
         log.debug("Ruleset location is " + ruleset);
         userProps.setProperty(CHECKSTYLE_RULE_SET_PROPERTY, ruleset);
 
-        String supression = getLocation(checkstyleFilter, DEFAULT_FILTER_XML);
-        log.debug("Filter location is " + supression);
-        userProps.setProperty(CHECKSTYLE_SUPPRESSION_PROPERTY, supression);
+        String suppression = getLocation(checkstyleFilter, DEFAULT_FILTER_XML);
+        log.debug("Filter location is " + suppression);
+        userProps.setProperty(CHECKSTYLE_SUPPRESSION_PROPERTY, suppression);
 
         if (checkstyleProperties != null) {
             String rulesetProperties = getLocation(checkstyleProperties, "");

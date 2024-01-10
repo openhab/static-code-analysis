@@ -131,7 +131,7 @@ public class RequiredFilesCheckTest extends AbstractStaticCheckTest {
     private File[] getFilesForDirectory(String directoryName) throws IOException {
         String directoryAbsolutePath = getPath(directoryName);
         File directory = new File(directoryAbsolutePath);
-        File[] files = listFilesForDirectory(directory, new ArrayList<File>());
+        File[] files = listFilesForDirectory(directory, new ArrayList<>());
         return files;
     }
 }

@@ -130,9 +130,9 @@ class MarkdownVisitor extends NodeVisitorBase {
             // Not checking if the line above is empty if it's another list item
             return;
         } else {
-            boolean isListfirstLineInFile = firstLineOfList == 0;
+            boolean isListFirstLineInFile = firstLineOfList == 0;
             // The first line of the file can NOT be list
-            if (isListfirstLineInFile || !StringUtils.isBlank(fileText.get(firstLineOfList - 1))) {
+            if (isListFirstLineInFile || !StringUtils.isBlank(fileText.get(firstLineOfList - 1))) {
                 // Log the one-based first line of the list
                 callback.log(firstLineOfList, EMPTY_LINE_BEFORE_LIST_MSG);
             }
@@ -145,10 +145,10 @@ class MarkdownVisitor extends NodeVisitorBase {
 
         boolean isListEnd = lastListItemContent instanceof Paragraph;
         if (isListEnd) {
-            String[] lastListItemlines = lastListItemContent.getChars().toString().split(REGEX_NEW_LINES);
-            if (lastListItemlines.length > 1) {
-                for (int i = 1; i < lastListItemlines.length; i++) {
-                    if (!lastListItemlines[i].startsWith(" ")) {
+            String[] lastListItemLines = lastListItemContent.getChars().toString().split(REGEX_NEW_LINES);
+            if (lastListItemLines.length > 1) {
+                for (int i = 1; i < lastListItemLines.length; i++) {
+                    if (!lastListItemLines[i].startsWith(" ")) {
                         // Log the one-based line where there is an empty line
                         callback.log(lastListItemContent.getLineNumber(), EMPTY_LINE_AFTER_LIST_MSG);
                         break;
@@ -159,7 +159,7 @@ class MarkdownVisitor extends NodeVisitorBase {
     }
 
     public void visit(ListBlock list) {
-        list.getChildIterator().forEachRemaining(listItem -> visit(listItem));
+        list.getChildIterator().forEachRemaining(this::visit);
         processListBlock(list);
     }
 
