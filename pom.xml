@@ -69,7 +69,7 @@
     <maven.resources.version>3.3.0</maven.resources.version>
     <pmd.version>6.53.0</pmd.version>
     <checkstyle.version>10.6.0</checkstyle.version>
-    <spotbugs.version>4.7.3</spotbugs.version>
+    <spotbugs.version>4.8.3</spotbugs.version>
     <maven.core.version>3.6.0</maven.core.version>
     <maven.plugin.api.version>3.8.5</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.7.0</maven.plugin.annotations.version>
@@ -482,7 +482,7 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>[11.0,12.0)</version>
+                  <version>[11.0,12.0),[17.0,18.0)</version>
                 </requireJavaVersion>
               </rules>
             </configuration>
