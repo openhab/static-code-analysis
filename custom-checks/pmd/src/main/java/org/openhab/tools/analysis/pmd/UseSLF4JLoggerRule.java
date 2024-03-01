@@ -15,13 +15,11 @@ package org.openhab.tools.analysis.pmd;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sourceforge.pmd.lang.ast.Node;
-import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceType;
 import net.sourceforge.pmd.lang.java.ast.ASTImportDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTReferenceType;
 import net.sourceforge.pmd.lang.java.ast.ASTType;
 import net.sourceforge.pmd.lang.java.ast.ASTVariableDeclarator;
 import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
+import net.sourceforge.pmd.lang.java.symbols.JTypeDeclSymbol;
 
 /**
  * Checks if a logger other than the one provided by slf4j is used
@@ -42,6 +40,11 @@ public class UseSLF4JLoggerRule extends AbstractJavaRule {
     }
 
     @Override
+    public String getMessage() {
+        return "The org.slf4j Logger should be used";
+    }
+
+    @Override
     public Object visit(ASTImportDeclaration node, Object data) {
         String fullImportName = node.getImportedName();
         if (forbiddenLoggers.contains(fullImportName)) {
@@ -56,19 +59,12 @@ public class UseSLF4JLoggerRule extends AbstractJavaRule {
     @Override
     public Object visit(ASTVariableDeclarator node, Object data) {
         ASTType typeNode = node.getParent().firstChild(ASTType.class);
-        if (typeNode != null) {
-            // getChild(0) returns out of bounds if no child exists, getFirstChild returns null
-            Node reftypeNode = typeNode.getFirstChild();
-            if (reftypeNode instanceof ASTReferenceType) {
-                ASTClassOrInterfaceType classOrInterfaceType = reftypeNode.firstChild(ASTClassOrInterfaceType.class);
-                if (classOrInterfaceType != null) {
-                    // getImage will now return null, not sure if getSimpleName is the correct replacement
-                    String className = classOrInterfaceType.getSimpleName();
-
-                    if (isClassNameForbidden(className)) {
-                        asCtx(data).addViolation(typeNode);
-                    }
-                }
+        if (typeNode != null && typeNode.getTypeMirror().isClassOrInterface()) {
+            JTypeDeclSymbol symbol = typeNode.getTypeMirror().getSymbol();
+            String className = symbol.getPackageName().equals(symbol.getSimpleName()) ? symbol.getSimpleName()
+                    : symbol.getPackageName() + "." + symbol.getSimpleName();
+            if (isClassNameForbidden(className)) {
+                asCtx(data).addViolation(typeNode);
             }
         }
         return super.visit(node, data);
@@ -79,7 +75,7 @@ public class UseSLF4JLoggerRule extends AbstractJavaRule {
             return true;
         }
         // If the className is Logger but org.slf4j is not in the imports,
-        // that means the current Logger literal is not a sfl4j.Logger
+        // that means the current Logger literal is not an org.slf4j.Logger
         return LOGGER_LITERAL.equals(className) && !isSlf4jPackageImported;
     }
 }
