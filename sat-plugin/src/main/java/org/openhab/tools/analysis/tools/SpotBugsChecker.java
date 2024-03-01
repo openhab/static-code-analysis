@@ -83,7 +83,7 @@ public class SpotBugsChecker extends AbstractChecker {
     /**
      * The version of the spotbugs-maven-plugin that will be used
      */
-    @Parameter(property = "maven.spotbugs.version", defaultValue = "4.6.0.0")
+    @Parameter(property = "maven.spotbugs.version", defaultValue = "4.8.3.1")
     private String spotbugsMavenPluginVersion;
 
     /**
@@ -95,7 +95,7 @@ public class SpotBugsChecker extends AbstractChecker {
     /**
      * The version of the spotbugs that will be used
      */
-    @Parameter(property = "spotbugs.version", defaultValue = "4.7.0")
+    @Parameter(property = "spotbugs.version", defaultValue = "4.8.3")
     private String spotBugsVersion;
 
     /**
