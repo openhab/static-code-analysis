@@ -6,7 +6,7 @@
   
   <!-- This is an example how to define a Rule with XPath expression -->
   <rule name="AvoidMavenPomderivedInClasspath" message="The classpath file contains maven.pomderived attribute "
-    class="net.sourceforge.pmd.lang.rule.XPathRule" language="xml">
+    class="net.sourceforge.pmd.lang.rule.xpath.XPathRule" language="xml">
     <description>
       Eclipse is adding the attribute "maven.pomderived" automatically to the classpath, when converting a
       project to Maven project, but most of the time it is not required

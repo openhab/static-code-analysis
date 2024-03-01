@@ -45,7 +45,7 @@ public class UseSLF4JLoggerRule extends AbstractJavaRule {
     public Object visit(ASTImportDeclaration node, Object data) {
         String fullImportName = node.getImportedName();
         if (forbiddenLoggers.contains(fullImportName)) {
-            addViolation(data, node);
+            asCtx(data).addViolation(node);
         } else if ("org.slf4j.Logger".equals(fullImportName)
                 || ("org.slf4j".equals(fullImportName) && node.isImportOnDemand())) {
             isSlf4jPackageImported = true;
@@ -55,17 +55,18 @@ public class UseSLF4JLoggerRule extends AbstractJavaRule {
 
     @Override
     public Object visit(ASTVariableDeclarator node, Object data) {
-        ASTType typeNode = node.getParent().getFirstChildOfType(ASTType.class);
+        ASTType typeNode = node.getParent().firstChild(ASTType.class);
         if (typeNode != null) {
-            Node reftypeNode = typeNode.getChild(0);
+            // getChild(0) returns out of bounds if no child exists, getFirstChild returns null
+            Node reftypeNode = typeNode.getFirstChild();
             if (reftypeNode instanceof ASTReferenceType) {
-                ASTClassOrInterfaceType classOrInterfaceType = reftypeNode
-                        .getFirstChildOfType(ASTClassOrInterfaceType.class);
+                ASTClassOrInterfaceType classOrInterfaceType = reftypeNode.firstChild(ASTClassOrInterfaceType.class);
                 if (classOrInterfaceType != null) {
-                    String className = classOrInterfaceType.getImage();
+                    // getImage will now return null, not sure if getSimpleName is the correct replacement
+                    String className = classOrInterfaceType.getSimpleName();
 
                     if (isClassNameForbidden(className)) {
-                        addViolation(data, typeNode);
+                        asCtx(data).addViolation(typeNode);
                     }
                 }
             }
@@ -77,7 +78,7 @@ public class UseSLF4JLoggerRule extends AbstractJavaRule {
         if (forbiddenLoggers.contains(className)) {
             return true;
         }
-        // If the classname is Logger but org.slf4j is not in the imports,
+        // If the className is Logger but org.slf4j is not in the imports,
         // that means the current Logger literal is not a sfl4j.Logger
         return LOGGER_LITERAL.equals(className) && !isSlf4jPackageImported;
     }
