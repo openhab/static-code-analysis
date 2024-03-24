@@ -68,7 +68,7 @@
     <mockito.version>4.10.0</mockito.version>
     <maven.resources.version>3.3.0</maven.resources.version>
     <pmd.version>6.53.0</pmd.version>
-    <checkstyle.version>10.6.0</checkstyle.version>
+    <checkstyle.version>10.14.0</checkstyle.version>
     <spotbugs.version>4.8.3</spotbugs.version>
     <maven.core.version>3.6.0</maven.core.version>
     <maven.plugin.api.version>3.8.5</maven.plugin.api.version>

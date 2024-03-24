@@ -24,7 +24,7 @@ import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.FileContents;
 import com.puppycrawl.tools.checkstyle.api.TextBlock;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
-import com.puppycrawl.tools.checkstyle.utils.CheckUtil;
+import com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocMethodCheck;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
@@ -123,8 +123,8 @@ public class JavadocMethodStyleCheck extends AbstractCheck {
 
     @Override
     public void visitToken(DetailAST ast) {
-        boolean skipCheck = (CheckUtil.isSetterMethod(ast) || CheckUtil.isGetterMethod(ast))
-                && allowMissingPropertyJavadoc;
+        boolean skipCheck = (MissingJavadocMethodCheck.isSetterMethod(ast)
+                || MissingJavadocMethodCheck.isGetterMethod(ast)) && allowMissingPropertyJavadoc;
         if (!skipCheck) {
             visit(ast);
         }
