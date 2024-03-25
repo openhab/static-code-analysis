@@ -1,5 +1,5 @@
 <ruleset name="Classpath Ruleset" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.net/ruleset_2_0_0.xsd">
   <description>Rule set that contains custom defined rules regarding the .classpath files</description>
-  <rule class="org.openhab.tools.analysis.pmd.UseSLF4JLoggerRule" name="UseSLF4JLoggerRule"/>
+  <rule class="org.openhab.tools.analysis.pmd.UseSLF4JLoggerRule" name="UseSLF4JLoggerRule" language="java"/>
 </ruleset>

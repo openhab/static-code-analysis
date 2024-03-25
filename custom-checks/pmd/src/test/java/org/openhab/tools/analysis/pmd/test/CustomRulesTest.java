@@ -14,7 +14,7 @@ package org.openhab.tools.analysis.pmd.test;
 
 import org.junit.jupiter.api.BeforeEach;
 
-import net.sourceforge.pmd.testframework.SimpleAggregatorTst;
+import net.sourceforge.pmd.test.SimpleAggregatorTst;
 
 /**
  * Test class that tests all custom PMD rules.
