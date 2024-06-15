@@ -12,7 +12,7 @@
 	</thing-type>
 
 	<channel-type id="check">
-		<item-type>Number:Energy</item-type>
+		<item-type>Invalid</item-type>
 		<label>Test</label>
 		<description>Test</description>
 	</channel-type>

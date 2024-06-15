@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -177,6 +178,26 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
     }
 
     @Test
+    public void testInvalidItemType() throws Exception {
+        assumeTrue(isResourceAvailable);
+
+        int lineNumber = 15;
+        String[] expectedMessages = generateExpectedMessages(lineNumber,
+                "Value Invalid is not facet-valid with respect to enumeration "
+                        + "[Call, Color, Contact, DateTime, Dimmer, Group, Image, Location, Number, Number:Acceleration, Number:AmountOfSubstance, "
+                        + "Number:Angle, Number:Area, Number:ArealDensity, Number:CatalyticActivity, Number:Currency, Number:DataAmount, "
+                        + "Number:DataTransferRate, Number:Density, Number:Dimensionless, Number:ElectricCapacitance, Number:ElectricCharge, "
+                        + "Number:ElectricConductance, Number:ElectricConductivity, Number:ElectricCurrent, Number:ElectricInductance, "
+                        + "Number:ElectricPotential, Number:ElectricResistance, Number:EmissionIntensity, Number:Energy, Number:EnergyPrice, "
+                        + "Number:Force, Number:Frequency, Number:Illuminance, Number:Intensity, Number:Length, Number:LuminousFlux, "
+                        + "Number:LuminousIntensity, Number:MagneticFlux, Number:MagneticFluxDensity, Number:Mass, Number:Power, Number:Pressure, "
+                        + "Number:RadiationDoseAbsorbed, Number:RadiationDoseEffective, Number:RadiationSpecificActivity, Number:RadioactiveActivity, "
+                        + "Number:SolidAngle, Number:Speed, Number:Temperature, Number:Time, Number:Volume, Number:VolumetricFlowRate, Player, "
+                        + "Rollershutter, String, Switch]. It must be a value from the enumeration.");
+        verifyWithPath("invalidItemType", RELATIVE_PATH_TO_THING, expectedMessages);
+    }
+
+    @Test
     public void testMissingThingDescriptionsContent() throws Exception {
         assumeTrue(isResourceAvailable);
 
@@ -203,7 +224,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
         verify(createChecker(CONFIGURATION), testFiles, directoryPath + testFilePath, expectedMessages);
     }
 
-    private File[] listFilesForFolder(File folder, ArrayList<File> files) {
+    private File[] listFilesForFolder(File folder, List<File> files) {
         for (File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry, files);
