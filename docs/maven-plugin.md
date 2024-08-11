@@ -87,7 +87,7 @@ Parameters:
 | ------ | ------| -------- |
 | **pmdRuleset** | String | Relative path of the XML configuration to use. If not set the default ruleset file will be used |
 | **pmdFilter** | String | Relative path of a suppression.properties file that lists classes and rules to be excluded from failures. If not set no classes and no rules will be excluded |
-| **maven.pmd.version** | String | The version of the maven-pmd-plugin that will be used (Default value is **3.21.2**)|
+| **maven.pmd.version** | String | The version of the maven-pmd-plugin that will be used (Default value is **3.24.0**)|
 | **pmdPlugins** | List<Dependency> | A list with artifacts that contain additional checks for PMD |
 
 ### sat-plugin:checkstyle
