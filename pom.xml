@@ -66,7 +66,7 @@
     <commons.lang3.version>3.12.0</commons.lang3.version>
     <mockito.version>4.10.0</mockito.version>
     <maven.resources.version>3.3.0</maven.resources.version>
-    <pmd.version>7.0.0</pmd.version>
+    <pmd.version>7.4.0</pmd.version>
     <checkstyle.version>10.14.0</checkstyle.version>
     <spotbugs.version>4.8.3</spotbugs.version>
     <maven.core.version>3.6.0</maven.core.version>
@@ -93,11 +93,6 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>net.sourceforge.pmd</groupId>
-      <artifactId>pmd-compat6</artifactId>
-      <version>7.0.0</version>
-    </dependency>
     <dependency>
       <groupId>javax.xml.bind</groupId>
       <artifactId>jaxb-api</artifactId>
