@@ -55,7 +55,7 @@ public class CachingHttpClientTest {
 
     private static final String PATH_TO_RESOURCE = "/found";
     private static final String PATH_TO_MISSING_RESOURCE = "/notFound";
-    private static final int TEST_PORT = 9090;
+    private static final int TEST_PORT = Integer.getInteger("http.port", 9090);
     private static final String TEST_HOST = "localhost";
     private static final int TEST_TIMEOUT = 1000;
     private static final String SERVER_RESPONSE = "content";
