@@ -65,24 +65,24 @@
     <commons.io.version>2.11.0</commons.io.version>
     <commons.lang3.version>3.12.0</commons.lang3.version>
     <mockito.version>4.10.0</mockito.version>
-    <maven.resources.version>3.3.0</maven.resources.version>
+    <maven.resources.version>3.3.1</maven.resources.version>
     <pmd.version>7.8.0</pmd.version>
     <checkstyle.version>10.17.0</checkstyle.version>
     <spotbugs.version>4.8.6</spotbugs.version>
     <maven.core.version>3.6.0</maven.core.version>
     <maven.plugin.api.version>3.8.5</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.7.0</maven.plugin.annotations.version>
-    <maven.plugin.plugin.version>3.6.4</maven.plugin.plugin.version>
-    <maven.plugin.compiler.version>3.11.0</maven.plugin.compiler.version>
+    <maven.plugin.plugin.version>3.8.2</maven.plugin.plugin.version>
+    <maven.plugin.compiler.version>3.13.0</maven.plugin.compiler.version>
     <mojo.executor.version>2.4.0</mojo.executor.version>
     <org.jsoup.version>1.7.1</org.jsoup.version>
     <sat.version>0.16.0</sat.version>
     <jdt-annotations.version>2.1.0</jdt-annotations.version>
     <flexmark.version>0.64.0</flexmark.version>
-    <maven.surefire.plugin.version>3.1.2</maven.surefire.plugin.version>
+    <maven.surefire.plugin.version>3.5.2</maven.surefire.plugin.version>
     <jetty.server.version>9.4.50.v20221201</jetty.server.version>
     <saxon.version>9.1.0.8</saxon.version>
-    <spotless.version>2.38.0</spotless.version>
+    <spotless.version>2.43.0</spotless.version>
     <!-- Eclipse Java formatter version 4.26+ does not check test files -->
     <spotless.eclipse.version>4.25</spotless.eclipse.version>
     <spotless.eclipse.wtp.version>4.21.0</spotless.eclipse.wtp.version>
@@ -175,7 +175,7 @@
         <plugin>
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
-          <version>4.2</version>
+          <version>4.6</version>
           <configuration>
             <basedir>${basedir}</basedir>
             <quiet>false</quiet>
@@ -250,7 +250,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.4.0</version>
+          <version>3.5.0</version>
         </plugin>
 
         <plugin>
@@ -284,7 +284,7 @@
         <plugin>
           <groupId>com.github.ekryd.sortpom</groupId>
           <artifactId>sortpom-maven-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>4.0.0</version>
           <configuration>
             <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
             <createBackupFile>false</createBackupFile>
@@ -442,7 +442,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
         <configuration>
           <attach>true</attach>
         </configuration>
@@ -459,7 +459,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.11.2</version>
         <configuration>
           <source>11</source>
           <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
@@ -486,6 +486,9 @@
             </goals>
             <configuration>
               <rules>
+                <requireMavenVersion>
+                  <version>3.6.3</version>
+                </requireMavenVersion>
                 <requireJavaVersion>
                   <version>[11.0,12.0)</version>
                 </requireJavaVersion>
@@ -505,7 +508,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.4.0</version>
+        <version>3.8.1</version>
         <executions>
           <execution>
             <id>unpack-eea</id>
@@ -590,7 +593,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.7</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
