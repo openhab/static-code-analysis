@@ -36,7 +36,7 @@ import com.puppycrawl.tools.checkstyle.checks.header.AbstractHeaderCheck;
  */
 public class ParameterizedRegexpHeaderCheck extends AbstractHeaderCheck {
     // Default header formats
-    public static final String DEFAULT_JAVADOC_START_COMMENT = "/**";
+    public static final String DEFAULT_JAVA_START_COMMENT = "/*";
     public static final String DEFAULT_XML_START_COMMENT = "<!--";
 
     private static final String SEPARATOR = "\n";
@@ -114,7 +114,7 @@ public class ParameterizedRegexpHeaderCheck extends AbstractHeaderCheck {
     private String getDefaultHeaderFormat(File file) {
         switch (FilenameUtils.getExtension(file.getName())) {
             case JAVA_EXTENSION:
-                return DEFAULT_JAVADOC_START_COMMENT;
+                return DEFAULT_JAVA_START_COMMENT;
             case XML_EXTENSION:
                 return DEFAULT_XML_START_COMMENT;
             default:
