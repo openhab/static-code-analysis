@@ -13,16 +13,21 @@
 package org.openhab.tools.analysis.report;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.verify;
 import static org.openhab.tools.analysis.report.ReportUtil.RESULT_FILE_NAME;
 
 import java.io.File;
+import java.util.stream.Stream;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -57,29 +62,32 @@ public class ReportMojoTest {
         }
     }
 
-    @Test
-    public void assertReportIsCreatedAndBuildFails() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideReportParameters")
+    public void assertReportIsCreatedAndBuildFailsAsExpected(boolean failOnError, boolean failOnWarning,
+            boolean failOnDebug, boolean buildFailExpected) {
         assertFalse(resultFile.exists());
 
-        subject.setFailOnError(true);
+        subject.setFailOnError(failOnError);
+        subject.setFailOnWarning(failOnWarning);
+        subject.setFailOnDebug(failOnDebug);
         subject.setSummaryReport(null);
         subject.setTargetDirectory(new File(TARGET_ABSOLUTE_DIR));
 
-        assertThrows(MojoFailureException.class, () -> subject.execute());
+        if (buildFailExpected) {
+            assertThrows(MojoFailureException.class, () -> subject.execute());
+        } else {
+            assertDoesNotThrow(() -> subject.execute());
+
+        }
         assertTrue(resultFile.exists());
     }
 
-    @Test
-    public void assertReportISCreatedAndBuildCompletes() throws MojoFailureException {
-        assertFalse(resultFile.exists());
-
-        subject.setFailOnError(false);
-        subject.setSummaryReport(null);
-        subject.setTargetDirectory(new File(TARGET_ABSOLUTE_DIR));
-
-        subject.execute();
-
-        assertTrue(resultFile.exists());
+    private static Stream<Arguments> provideReportParameters() {
+        return Stream.of(arguments(false, false, false, false), arguments(false, false, true, true),
+                arguments(false, true, false, true), arguments(false, true, true, true),
+                arguments(true, false, false, true), arguments(true, false, true, true),
+                arguments(true, true, false, true), arguments(true, true, true, true));
     }
 
     @Test

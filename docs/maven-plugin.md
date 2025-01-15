@@ -129,12 +129,14 @@ Description:
 
 Parameters:
 
-| Name | Type| Description |
-| ------ | ------| -------- |
-| **report.targetDir** | String | The directory where the individual report will be generated (default value is **${project.build.directory}/code-analysis**) |
-| **report.summary.targetDir** | String | The directory where the summary report, containing links to the individual reports will be generated (Default value is **${session.executionRootDirectory}/target**)|
-| **report.fail.on.error** | Boolean | Describes of the build should fail if high priority error is found (Default value is **true**)|
-| **report.in.maven** | Boolean | Enable/Disable maven console logging of all messages (Default value is **true**)|
+| Name                         | Type| Description                                                                                                                                                          |
+|------------------------------| ------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **report.targetDir**         | String | The directory where the individual report will be generated (default value is **${project.build.directory}/code-analysis**)                                          |
+| **report.summary.targetDir** | String | The directory where the summary report, containing links to the individual reports will be generated (Default value is **${session.executionRootDirectory}/target**) |
+| **report.fail.on.error**     | Boolean | Describes of the build should fail if high priority error is found (Default value is **true**)                                                                       |
+| **report.fail.on.warning**   | Boolean | Describes of the build should fail if warning is found (Default value is **false**)                                                                                  |
+| **report.fail.on.debug**     | Boolean | Describes of the build should fail if info is found (Default value is **false**)                                                                                     |
+| **report.in.maven**          | Boolean | Enable/Disable maven console logging of all messages (Default value is **true**)                                                                                     |
 
 ## Customization
 
