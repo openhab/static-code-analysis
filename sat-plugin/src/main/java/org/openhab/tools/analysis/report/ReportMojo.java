@@ -400,8 +400,7 @@ public class ReportMojo extends AbstractMojo {
     }
 
     private String failureMessage(String severity, int count) {
-        return String.format(
-                "%nCode Analysis Tool has found %d %s(s)! %nPlease fix the %s(s) and rerun the build.",
+        return String.format("%nCode Analysis Tool has found %d %s(s)! %nPlease fix the %s(s) and rerun the build.",
                 count, severity, severity);
     }
 
