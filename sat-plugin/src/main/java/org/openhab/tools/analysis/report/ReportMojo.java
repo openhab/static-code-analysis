@@ -364,22 +364,45 @@ public class ReportMojo extends AbstractMojo {
     }
 
     private void failOnErrors(File mergedReport) throws MojoFailureException {
-        List<String> errorPriorities = new ArrayList<>();
-        addLevel(failOnError, "@priority=1", errorPriorities);
-        addLevel(failOnWarning, "@priority=2", errorPriorities);
-        addLevel(failOnDebug, "@priority=3", errorPriorities);
-        String xpathExpression = "/sca/file/message[" + String.join(" or ", errorPriorities) + "]";
-        int errorCount = selectNodes(mergedReport, xpathExpression).getLength();
-        if (errorCount > 0) {
-            throw new MojoFailureException(String.format("%n" + "Code Analysis Tool has found %d error(s)! %n"
-                    + "Please fix the errors and rerun the build. %n", errorCount));
+        List<String> errorMessages = new ArrayList<>();
+        if (failOnError) {
+            detectFailures(errorMessages, mergedReport, 1);
+        }
+        if (failOnWarning) {
+            detectFailures(errorMessages, mergedReport, 2);
+        }
+        if (failOnDebug) {
+            detectFailures(errorMessages, mergedReport, 3);
+        }
+        if (!errorMessages.isEmpty()) {
+            throw new MojoFailureException(String.join("\n", errorMessages));
         }
     }
 
-    private static void addLevel(boolean level, String levelValue, List<String> levels) {
-        if (level) {
-            levels.add(levelValue);
+    private void detectFailures(List<String> errorMessages, File mergedReport, int priority) {
+        NodeList messages = selectNodes(mergedReport, "/sca/file/message");
+        int count = countPriority(messages, String.valueOf(priority));
+        if (count > 0) {
+            errorMessages.add(failureMessage(priority(priority), count));
         }
+    }
+
+    private String priority(int priority) {
+        switch (priority) {
+            case 1:
+                return "error";
+            case 2:
+                return "warning";
+            case 3:
+            default:
+                return "info";
+        }
+    }
+
+    private String failureMessage(String severity, int count) {
+        return String.format(
+                "%nCode Analysis Tool has found %d %s(s)! %nPlease fix the %s(s) and rerun the build.",
+                count, severity, severity);
     }
 
     private void report(String priority, String log) {
