@@ -102,9 +102,6 @@
 	<rule ref="category/java/design.xml/SimplifyBooleanExpressions">
 		<priority>3</priority>
 	</rule>
-	<rule ref="category/java/design.xml/SimplifyBooleanReturns">
-		<priority>3</priority>
-	</rule>
 
 	<!-- See https://pmd.github.io/pmd-6.53.0/pmd_rules_java_performance.html -->
 	<rule ref="category/java/performance.xml/AvoidArrayLoops">
