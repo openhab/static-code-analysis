@@ -70,7 +70,7 @@ public class ReportMojoTest {
 
         subject.setFailOnError(failOnError);
         subject.setFailOnWarning(failOnWarning);
-        subject.setFailOnInfo(failOnDebug);
+        subject.setFailOnInfo(failOnInfo);
         subject.setSummaryReport(null);
         subject.setTargetDirectory(new File(TARGET_ABSOLUTE_DIR));
 
