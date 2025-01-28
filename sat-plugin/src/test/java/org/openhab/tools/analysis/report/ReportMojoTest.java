@@ -65,7 +65,7 @@ public class ReportMojoTest {
     @ParameterizedTest
     @MethodSource("provideReportParameters")
     public void assertReportIsCreatedAndBuildFailsAsExpected(boolean failOnError, boolean failOnWarning,
-            boolean failOnDebug, boolean buildFailExpected) {
+            boolean failOnInfo, boolean buildFailExpected) {
         assertFalse(resultFile.exists());
 
         subject.setFailOnError(failOnError);
