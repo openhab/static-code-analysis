@@ -55,7 +55,9 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -116,6 +118,18 @@ public class ReportMojo extends AbstractMojo {
     private boolean failOnError;
 
     /**
+     * Describes of the build should fail if medium priority error is found
+     */
+    @Parameter(property = "report.fail.on.warning", defaultValue = "false")
+    private boolean failOnWarning;
+
+    /**
+     * Describes of the build should fail if low priority error is found
+     */
+    @Parameter(property = "report.fail.on.info", defaultValue = "false")
+    private boolean failOnInfo;
+
+    /**
      * The directory where the summary report, containing links to the individual reports will be
      * generated
      */
@@ -140,6 +154,14 @@ public class ReportMojo extends AbstractMojo {
 
     public void setFailOnError(boolean failOnError) {
         this.failOnError = failOnError;
+    }
+
+    public void setFailOnWarning(boolean failOnWarning) {
+        this.failOnWarning = failOnWarning;
+    }
+
+    public void setFailOnInfo(boolean failOnInfo) {
+        this.failOnInfo = failOnInfo;
     }
 
     public void setSummaryReport(File summaryReport) {
@@ -222,8 +244,8 @@ public class ReportMojo extends AbstractMojo {
                 reportWarningsAndErrors(mergedReport, htmlOutputFileName);
             }
 
-            // 9. Fail the build if the option is enabled and high priority warnings are found
-            if (failOnError) {
+            // 9. Fail the build if any level error is enabled and configured error levels are found
+            if (failOnError || failOnWarning || failOnInfo) {
                 failOnErrors(mergedReport);
             }
 
@@ -342,13 +364,44 @@ public class ReportMojo extends AbstractMojo {
     }
 
     private void failOnErrors(File mergedReport) throws MojoFailureException {
-        int errorCount = selectNodes(mergedReport, "/sca/file/message[@priority=1]").getLength();
-        if (errorCount > 0) {
-            throw new MojoFailureException(String.format(
-                    "%n" + "Code Analysis Tool has found %d error(s)! %n"
-                            + "Please fix the errors and rerun the build. %n",
-                    selectNodes(mergedReport, "/sca/file/message[@priority=1]").getLength()));
+        List<String> errorMessages = new ArrayList<>();
+        if (failOnError) {
+            detectFailures(errorMessages, mergedReport, 1);
         }
+        if (failOnWarning) {
+            detectFailures(errorMessages, mergedReport, 2);
+        }
+        if (failOnInfo) {
+            detectFailures(errorMessages, mergedReport, 3);
+        }
+        if (!errorMessages.isEmpty()) {
+            throw new MojoFailureException(String.join("\n", errorMessages));
+        }
+    }
+
+    private void detectFailures(List<String> errorMessages, File mergedReport, int priority) {
+        NodeList messages = selectNodes(mergedReport, "/sca/file/message");
+        int count = countPriority(messages, String.valueOf(priority));
+        if (count > 0) {
+            errorMessages.add(failureMessage(priority(priority), count));
+        }
+    }
+
+    private String priority(int priority) {
+        switch (priority) {
+            case 1:
+                return "error";
+            case 2:
+                return "warning";
+            case 3:
+            default:
+                return "info";
+        }
+    }
+
+    private String failureMessage(String severity, int count) {
+        return String.format("%nCode Analysis Tool has found %d %s(s)! %nPlease fix the %s(s) and rerun the build.",
+                count, severity, severity);
     }
 
     private void report(String priority, String log) {
