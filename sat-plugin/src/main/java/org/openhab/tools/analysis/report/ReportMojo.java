@@ -126,8 +126,8 @@ public class ReportMojo extends AbstractMojo {
     /**
      * Describes of the build should fail if low priority error is found
      */
-    @Parameter(property = "report.fail.on.debug", defaultValue = "false")
-    private boolean failOnDebug;
+    @Parameter(property = "report.fail.on.info", defaultValue = "false")
+    private boolean failOnInfo;
 
     /**
      * The directory where the summary report, containing links to the individual reports will be
@@ -160,8 +160,8 @@ public class ReportMojo extends AbstractMojo {
         this.failOnWarning = failOnWarning;
     }
 
-    public void setFailOnDebug(boolean failOnDebug) {
-        this.failOnDebug = failOnDebug;
+    public void setFailOnInfo(boolean failOnInfo) {
+        this.failOnInfo = failOnInfo;
     }
 
     public void setSummaryReport(File summaryReport) {
@@ -245,7 +245,7 @@ public class ReportMojo extends AbstractMojo {
             }
 
             // 9. Fail the build if any level error is enabled and configured error levels are found
-            if (failOnError || failOnWarning || failOnDebug) {
+            if (failOnError || failOnWarning || failOnInfo) {
                 failOnErrors(mergedReport);
             }
 
@@ -371,7 +371,7 @@ public class ReportMojo extends AbstractMojo {
         if (failOnWarning) {
             detectFailures(errorMessages, mergedReport, 2);
         }
-        if (failOnDebug) {
+        if (failOnInfo) {
             detectFailures(errorMessages, mergedReport, 3);
         }
         if (!errorMessages.isEmpty()) {
