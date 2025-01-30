@@ -65,9 +65,10 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
          * an error is expected at the line where the outer class is declared
          * in the file
          */
-        int warningLine = 1;
+        // since https://github.com/checkstyle/checkstyle/issues/11584 there is no warning
+        // if no javadoc is present
         boolean checkInnerClasses = false;
-        checkFileForAuthorTags(checkInnerClasses, fileName, warningLine);
+        checkFileForAuthorTags(checkInnerClasses, fileName);
     }
 
     @Test
@@ -77,10 +78,10 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
          * errors are expected at the lines where the classes are declared in
          * the file
          */
-        int firstWarningLine = 1;
-        int secondWarningLine = 3;
+        // since https://github.com/checkstyle/checkstyle/issues/11584 there is no warning
+        // if no javadoc is present
         boolean checkInnerClasses = true;
-        checkFileForAuthorTags(checkInnerClasses, fileName, firstWarningLine, secondWarningLine);
+        checkFileForAuthorTags(checkInnerClasses, fileName);
     }
 
     @Test
