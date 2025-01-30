@@ -61,24 +61,24 @@
     <maven.compiler.target>${oh.java.version}</maven.compiler.target>
     <maven.compiler.compilerVersion>${oh.java.version}</maven.compiler.compilerVersion>
     <maven.eclipse.version>2.10</maven.eclipse.version>
-    <junit.version>5.9.1</junit.version>
-    <commons.io.version>2.11.0</commons.io.version>
-    <commons.lang3.version>3.12.0</commons.lang3.version>
+    <junit.version>5.11.4</junit.version>
+    <commons.io.version>2.18.0</commons.io.version>
+    <commons.lang3.version>3.17.0</commons.lang3.version>
     <mockito.version>4.10.0</mockito.version>
     <maven.resources.version>3.3.1</maven.resources.version>
     <pmd.version>7.9.0</pmd.version>
     <checkstyle.version>10.21.1</checkstyle.version>
     <spotbugs.version>4.8.6</spotbugs.version>
-    <maven.core.version>3.6.0</maven.core.version>
-    <maven.plugin.api.version>3.8.5</maven.plugin.api.version>
-    <maven.plugin.annotations.version>3.7.0</maven.plugin.annotations.version>
+    <maven.core.version>3.9.9</maven.core.version>
+    <maven.plugin.api.version>3.9.9</maven.plugin.api.version>
+    <maven.plugin.annotations.version>3.15.1</maven.plugin.annotations.version>
     <maven.plugin.plugin.version>3.8.2</maven.plugin.plugin.version>
     <maven.plugin.compiler.version>3.13.0</maven.plugin.compiler.version>
-    <mojo.executor.version>2.4.0</mojo.executor.version>
-    <org.jsoup.version>1.7.1</org.jsoup.version>
+    <mojo.executor.version>2.4.1</mojo.executor.version>
+    <org.jsoup.version>1.18.3</org.jsoup.version>
     <sat.version>0.17.0</sat.version>
-    <jdt-annotations.version>2.1.0</jdt-annotations.version>
-    <flexmark.version>0.64.0</flexmark.version>
+    <jdt-annotations.version>2.3.100</jdt-annotations.version>
+    <flexmark.version>0.64.8</flexmark.version>
     <maven.surefire.plugin.version>3.5.2</maven.surefire.plugin.version>
     <jetty.server.version>9.4.50.v20221201</jetty.server.version>
     <saxon.version>9.1.0.8</saxon.version>
@@ -87,7 +87,7 @@
     <spotless.eclipse.version>4.25</spotless.eclipse.version>
     <spotless.eclipse.wtp.version>4.21.0</spotless.eclipse.wtp.version>
     <slf4j.version>1.7.36</slf4j.version>
-    <logback.version>1.2.9</logback.version>
+    <logback.version>1.2.13</logback.version>
     <eea.version>2.4.0</eea.version>
     <m2e.jdt.annotationpath>target/dependency</m2e.jdt.annotationpath>
   </properties>
@@ -130,7 +130,7 @@
       <!-- Required for Checkstyle tests -->
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
-      <version>1.1.3</version>
+      <version>1.4.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -429,12 +429,14 @@
           <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-compiler-eclipse</artifactId>
+            <!-- cannot go beyond 2.12.1 as long as Java11 is in use -->
             <version>2.12.1</version>
           </dependency>
           <dependency>
             <groupId>org.eclipse.jdt</groupId>
             <artifactId>ecj</artifactId>
-            <version>3.30.0</version>
+            <!-- cannot go beyond 3.33.0 as long as Java11 is in use -->
+            <version>3.33.0</version>
           </dependency>
         </dependencies>
       </plugin>
