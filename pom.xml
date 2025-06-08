@@ -66,7 +66,7 @@
     <commons.lang3.version>3.17.0</commons.lang3.version>
     <mockito.version>4.10.0</mockito.version>
     <maven.resources.version>3.3.1</maven.resources.version>
-    <pmd.version>7.13.0</pmd.version>
+    <pmd.version>7.14.0</pmd.version>
     <checkstyle.version>10.23.0</checkstyle.version>
     <spotbugs.version>4.9.3</spotbugs.version>
     <maven.core.version>3.9.9</maven.core.version>
