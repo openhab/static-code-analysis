@@ -26,5 +26,9 @@ public class CustomRulesTest extends SimpleAggregatorTst {
     @BeforeEach
     public void setUp() {
         addRule("pmd/ruleset/customrules.xml", "UseSLF4JLoggerRule");
+        addRule("pmd/ruleset/customrules.xml", "ImplicitDefaultLocale");
+        addRule("pmd/ruleset/customrules.xml", "ImplicitDefaultTimeZone");
+        addRule("pmd/ruleset/customrules.xml", "SetDefaultLocale");
+        addRule("pmd/ruleset/customrules.xml", "SetDefaultTimeZone");
     }
 }
