@@ -107,4 +107,7 @@
 	<rule ref="category/java/performance.xml/AvoidArrayLoops">
 		<priority>3</priority>
 	</rule>
+	<rule ref="category/java/bestpractices.xml/RelianceOnDefaultCharset">
+		<priority>3</priority>
+	</rule>
 </ruleset>
