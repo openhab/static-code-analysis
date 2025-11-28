@@ -166,8 +166,9 @@ public class SpotBugsChecker extends AbstractChecker {
 
         // These configuration properties are not exposed from the spotbugs-maven-plugin as user
         // properties, so they have to be set direct in the configuration
-        Xpp3Dom config = configuration(element("outputDirectory", outputDir), element("xmlOutputDirectory", outputDir),
-                element("spotbugsXmlOutputDirectory", outputDir), getSpotBugsPlugins(spotbugsPlugins));
+        Xpp3Dom config = configuration(element("maxHeap", "1024"), element("outputDirectory", outputDir),
+                element("xmlOutputDirectory", outputDir), element("spotbugsXmlOutputDirectory", outputDir),
+                getSpotBugsPlugins(spotbugsPlugins));
 
         // If this dependency is missing, spotbugs can not load the core plugin because of classpath
         // issues
