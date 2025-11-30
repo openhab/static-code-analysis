@@ -62,13 +62,13 @@
     <maven.compiler.compilerVersion>${oh.java.version}</maven.compiler.compilerVersion>
     <maven.eclipse.version>2.10</maven.eclipse.version>
     <junit.version>5.11.4</junit.version>
-    <commons.io.version>2.20.0</commons.io.version>
-    <commons.lang3.version>3.18.0</commons.lang3.version>
+    <commons.io.version>2.21.0</commons.io.version>
+    <commons.lang3.version>3.20.0</commons.lang3.version>
     <mockito.version>4.10.0</mockito.version>
     <maven.resources.version>3.3.1</maven.resources.version>
     <pmd.version>7.16.0</pmd.version>
     <checkstyle.version>10.26.1</checkstyle.version>
-    <spotbugs.version>4.9.4</spotbugs.version>
+    <spotbugs.version>4.9.8</spotbugs.version>
     <maven.core.version>3.9.9</maven.core.version>
     <maven.plugin.api.version>3.9.9</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.15.1</maven.plugin.annotations.version>

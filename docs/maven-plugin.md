@@ -117,8 +117,8 @@ Parameters:
 | **spotbugsRuleset** | String | Relative path to the XML that specifies the bug detectors which should be run. If not set the default file will be used|
 | **spotbugsInclude** | String | Relative path to the XML that specifies the bug instances that will be included in the report. If not set the default file will be used|
 | **spotbugsExclude** | String | Relative path to the XML that specifies the bug instances that will be excluded from the report. If not set the default file will be used|
-| **maven.spotbugs.version** | String | The version of the spotbugs-maven-plugin that will be used (default value is **4.9.4.1**) |
-| **spotbugs.version** | String | The version of SpotBugs that will be used (default value is **4.9.4**) |
+| **maven.spotbugs.version** | String | The version of the spotbugs-maven-plugin that will be used (default value is **4.9.8.2**) |
+| **spotbugs.version** | String | The version of SpotBugs that will be used (default value is **4.9.8**) |
 | **spotbugsPlugins** | List<Dependency> | A list with artifacts that contain additional detectors/patterns for SpotBugs |
 | **findbugs.slf4j.version** | String | The version of the findbugs-slf4j plugin that will be used (default value is **1.5.0**)|
 
