@@ -39,8 +39,8 @@
 				<xsl:value-of select="concat('src/', substring-after($temp_name, '/src/'))" />
 			</xsl:when>
 			<xsl:when test="contains(@name,'src')">
-				<xsl:variable name="temp_name" select="translate(@name, '/', '.')" />
-				<xsl:variable name="temp_name" select="translate($temp_name, '\', '.')" />
+				<xsl:variable name="temp_name1" select="translate(@name, '/', '.')" />
+				<xsl:variable name="temp_name" select="translate($temp_name1, '\', '.')" />
 				<xsl:value-of select="concat(substring-after($temp_name,'.java.'), substring-after($temp_name,'.resources.'))" />
 			</xsl:when>
 			<xsl:otherwise>				
