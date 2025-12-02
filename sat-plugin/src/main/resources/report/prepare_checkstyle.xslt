@@ -34,9 +34,37 @@
 	<xsl:template match="file">
 		<xsl:variable name="new_name">
 		<xsl:choose>
-			<xsl:when test="contains(@name,'feature.xml')">
+			<xsl:when test="ends-with(@name,'.xml')">
+			    <!-- this should find the last occurrence of /src/ and construct
+				a new path from parent folders name, /src/ and remaining path/filename 
+				 -->
 				<xsl:variable name="temp_name" select="translate(@name, '\', '/')" />
-				<xsl:value-of select="concat('src/', substring-after($temp_name, '/src/'))" />
+				<xsl:variable name="after_last_src">
+					<xsl:call-template name="substring-after-last">
+						<xsl:with-param name="input" select="$temp_name" />
+						<xsl:with-param name="marker" select="'/src/'" />
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:variable name="before_last_src" select="substring-before($temp_name, concat('/src/', $after_last_src))" />
+				<xsl:variable name="parent">
+					<xsl:choose>
+						<xsl:when test="string-length($before_last_src) &gt; 0">
+							<xsl:call-template name="substring-after-last">
+								<xsl:with-param name="input" select="$before_last_src" />
+								<xsl:with-param name="marker" select="'/'" />
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:otherwise />
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:choose>
+					<xsl:when test="string-length($parent) &gt; 0">
+						<xsl:value-of select="concat($parent, '/src/', $after_last_src)" />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="concat('src/', $after_last_src)" />
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="contains(@name,'src')">
 				<xsl:variable name="temp_name" select="translate(@name, '/', '.')" />

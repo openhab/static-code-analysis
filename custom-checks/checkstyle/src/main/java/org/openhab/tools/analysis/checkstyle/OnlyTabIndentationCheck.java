@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 
 import com.puppycrawl.tools.checkstyle.api.FileText;
+import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
 
 /**
  * Checks whether whitespace characters are use instead of tabs in xml files
@@ -42,7 +43,11 @@ public class OnlyTabIndentationCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) {
+        MessageDispatcher dispatcher = getMessageDispatcher();
+        dispatcher.fireFileStarted(file.getPath());
         processTabIndentationCheck(fileText);
+        fireErrors(file.getAbsolutePath());
+        dispatcher.fireFileFinished(file.getPath());
     }
 
     private void processTabIndentationCheck(FileText fileText) {
