@@ -39,6 +39,7 @@ import org.xml.sax.SAXParseException;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
+import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
 
 /**
  * Validate the thing-types, binding and config xml-s against their xsd schemas.<br>
@@ -149,7 +150,11 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
                 // Removing the type of the logged message (For example - "cvc-complex-type.2.4.b: ...").
                 message = message.substring(message.indexOf(":") + 2);
                 int lineNumber = exception.getLineNumber();
+                MessageDispatcher dispatcher = getMessageDispatcher();
+                dispatcher.fireFileStarted(xmlFile.getPath());
                 log(lineNumber, message, xmlFile.getPath());
+                fireErrors(xmlFile.getAbsolutePath());
+                dispatcher.fireFileFinished(xmlFile.getPath());
             } catch (IOException | SAXException e) {
                 logger.error("Problem occurred while parsing the file {}", xmlFile.getName(), e);
             }

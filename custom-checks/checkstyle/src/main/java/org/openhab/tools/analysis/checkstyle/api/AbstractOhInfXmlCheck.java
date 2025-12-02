@@ -29,6 +29,7 @@ import org.w3c.dom.NodeList;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
+import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
 
 /**
  * Abstract class for checks that will validate .xml files located in the OH-INF directory.
@@ -66,7 +67,11 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
     private void processXmlFile(final FileText xmlFileText) throws CheckstyleException {
         final File xmlFile = xmlFileText.getFile();
         if (isEmpty(xmlFileText)) {
+            MessageDispatcher dispatcher = getMessageDispatcher();
+            dispatcher.fireFileStarted(xmlFile.getPath());
             log(0, MessageFormat.format(MESSAGE_EMPTY_FILE, xmlFile.getName()), xmlFile.getPath());
+            fireErrors(xmlFile.getAbsolutePath());
+            dispatcher.fireFileFinished(xmlFile.getPath());
         } else {
             final File fileParentDirectory = xmlFile.getParentFile();
             final boolean isOHParentDirectory = OH_INF_DIRECTORY.equals(fileParentDirectory.getParentFile().getName());
