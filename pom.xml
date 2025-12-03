@@ -79,7 +79,7 @@
     <sat.version>0.17.0</sat.version>
     <jdt-annotations.version>2.3.100</jdt-annotations.version>
     <flexmark.version>0.64.8</flexmark.version>
-    <maven.surefire.plugin.version>3.5.2</maven.surefire.plugin.version>
+    <maven.surefire.plugin.version>3.5.4</maven.surefire.plugin.version>
     <jetty.server.version>9.4.50.v20221201</jetty.server.version>
     <saxon.version>9.1.0.8</saxon.version>
     <spotless.version>2.44.3</spotless.version>
