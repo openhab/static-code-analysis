@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data  xmlns="http://pmd.sourceforge.net/rule-tests"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.net/rule-tests_1_0_0.xsd">
+  <test-code>
+    <description>Implicit default time zone isn't used for Calendar</description>
+    <expected-problems>2</expected-problems>
+    <expected-linenumbers>5, 6</expected-linenumbers>
+    <code><![CDATA[
+import java.util.Calendar;
+import java.util.Locale;
+public class Foo {
+    public void Test() {
+        Calendar c = Calendar.getInstance();
+        c = Calendar.getInstance(Locale.FRANCE);
+    }
+}
+]]></code>
+  </test-code>
+
+  <test-code>
+    <description>Implicit default time zone isn't used for Java Time types</description>
+    <expected-problems>24</expected-problems>
+    <expected-linenumbers>24, 25, 25, 26, 26, 27, 27, 28, 28, 29, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42</expected-linenumbers>
+    <code><![CDATA[
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.MonthDay;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZonedDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.Chronology;
+import java.time.chrono.HijrahChronology;
+import java.time.chrono.HijrahDate;
+import java.time.chrono.IsoChronology;
+import java.time.chrono.JapaneseChronology;
+import java.time.chrono.JapaneseDate;
+import java.time.chrono.MinguoChronology;
+import java.time.chrono.MinguoDate;
+import java.time.chrono.ThaiBuddhistChronology;
+import java.time.chrono.ThaiBuddhistDate;
+import java.util.Locale;
+public class Foo {
+    public void Test() {
+        ChronoLocalDate c = Chronology.ofLocale(Locale.ROOT).dateNow();
+        c = HijrahChronology.INSTANCE.dateNow();
+        c = IsoChronology.INSTANCE.dateNow();
+        c = JapaneseChronology.INSTANCE.dateNow();
+        c = MinguoChronology.INSTANCE.dateNow();
+        c = ThaiBuddhistChronology.INSTANCE.dateNow();
+        c = HijrahDate.now();
+        c = JapaneseDate.now();
+        c = MinguoDate.now();
+        c = ThaiBuddhistDate.now();
+        LocalDate ld = LocalDate.now();
+        LocalDateTime ldt = LocalDateTime.now();
+        LocalTime lt = LocalTime.now();
+        MonthDay md = MonthDay.now();
+        OffsetDateTime odt = OffsetDateTime.now();
+        OffsetTime ot = OffsetTime.now();
+        YearMonth ym = YearMonth.now();
+        Year y = Year.now();
+        ZonedDateTime zdt = ZonedDateTime.now();
+    }
+}
+]]></code>
+  </test-code>
+</test-data>

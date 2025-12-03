@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data  xmlns="http://pmd.sourceforge.net/rule-tests"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.net/rule-tests_1_0_0.xsd">
+  <test-code>
+    <description>Set default locale isn't used</description>
+    <expected-problems>2</expected-problems>
+    <expected-linenumbers>5, 6</expected-linenumbers>
+    <code><![CDATA[
+import java.util.Locale;
+import java.util.Locale.Category;
+public class Foo {
+    public void Test() {
+        Locale.setDefault(Locale.ITALIAN);
+        Locale.setDefault(Category.DISPLAY, Locale.JAPAN);
+    }
+}
+]]></code>
+  </test-code>
+</test-data>

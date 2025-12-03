@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data  xmlns="http://pmd.sourceforge.net/rule-tests"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.net/rule-tests_1_0_0.xsd">
+  <test-code>
+    <description>Implicit default locale isn't used for case conversion</description>
+    <expected-problems>2</expected-problems>
+    <expected-linenumbers>3,4</expected-linenumbers>
+    <code><![CDATA[
+public class Foo {
+    public void Test() {
+        String s = "Foo".toUpperCase();
+        s = s.toLowerCase();
+    }
+}
+]]></code>
+  </test-code>
+
+  <test-code>
+    <description>Implicit default locale isn't used for DateFormat</description>
+    <expected-problems>3</expected-problems>
+    <expected-linenumbers>5, 6, 7</expected-linenumbers>
+    <code><![CDATA[
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
+public class Foo {
+    public void Test() {
+        DateFormat dt = DateFormat.getTimeInstance();
+        DateFormatSymbols s = DateFormatSymbols.getInstance();
+        s = new DateFormatSymbols();
+    }
+}
+]]></code>
+  </test-code>
+
+  <test-code>
+    <description>Implicit default locale isn't used for Decimal/NumberFormat</description>
+    <expected-problems>9</expected-problems>
+    <expected-linenumbers>6, 7, 8, 9, 11, 12, 13, 14, 15</expected-linenumbers>
+    <code><![CDATA[
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+public class Foo {
+    public void Test() {
+        DecimalFormat df = new DecimalFormat();
+        df = new DecimalFormat("bar");
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs = DecimalFormatSymbols.getInstance();
+
+        NumberFormat nf = NumberFormat.getInstance();
+        nf = NumberFormat.getNumberInstance();
+        nf = NumberFormat.getIntegerInstance();
+        nf = NumberFormat.getCurrencyInstance();
+        nf = NumberFormat.getPercentInstance();
+    }
+}
+]]></code>
+  </test-code>
+
+  <test-code>
+    <description>Implicit default locale isn't used for SimpleDateFormat and Calendar</description>
+    <expected-problems>6</expected-problems>
+    <expected-linenumbers>7, 8, 10, 11, 13, 14</expected-linenumbers>
+    <code><![CDATA[
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+public class Foo {
+    public void Test() {
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf = new SimpleDateFormat("bar");
+
+        Calendar c = Calendar.getInstance();
+        c = Calendar.getInstance(TimeZone.getTimeZone("America/Los_Angeles"));
+
+        GregorianCalendar g = new GregorianCalendar();
+        g = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
+    }
+}
+]]></code>
+  </test-code>
+
+  <test-code>
+    <description>Implicit default locale isn't used for Currency</description>
+    <expected-problems>2</expected-problems>
+    <expected-linenumbers>5, 6</expected-linenumbers>
+    <code><![CDATA[
+import java.util.Currency;
+public class Foo {
+    public void Test() {
+        Currency c = Currency.getInstance("EUR");
+        String s = c.getSymbol();
+        s = c.getDisplayName();
+    }
+}
+]]></code>
+  </test-code>
+
+  <test-code>
+    <description>Implicit default locale isn't used for Formatter</description>
+    <expected-problems>2</expected-problems>
+    <expected-linenumbers>5, 7</expected-linenumbers>
+    <code><![CDATA[
+import java.io.FileNotFoundException;
+import java.util.Formatter;
+public class Foo {
+    public void Test() {
+        Formatter f = new Formatter();
+        try {
+            f = new Formatter("bar");
+        } catch (FileNotFoundException e) {
+        }
+    }
+}
+]]></code>
+  </test-code>
+
+  <test-code>
+    <description>Implicit default locale isn't used for ResourceBundle</description>
+    <expected-problems>2</expected-problems>
+    <expected-linenumbers>5, 6</expected-linenumbers>
+    <code><![CDATA[
+import java.util.ResourceBundle;
+import java.util.ResourceBundle.Control;
+public class Foo {
+    public void Test() {
+        ResourceBundle rb = ResourceBundle.getBundle("foo");
+        rb = ResourceBundle.getBundle("foo", Control.getControl(Control.FORMAT_DEFAULT));
+    }
+}
+]]></code>
+  </test-code>
+
+  <test-code>
+    <description>Implicit default locale isn't used for TimeZone</description>
+    <expected-problems>2</expected-problems>
+    <expected-linenumbers>5, 6</expected-linenumbers>
+    <code><![CDATA[
+import java.util.TimeZone;
+public class Foo {
+    public void Test() {
+        TimeZone z = TimeZone.getTimeZone("Europe/Kyiv");
+        String s = z.getDisplayName();
+        s = z.getDisplayName(true, TimeZone.LONG);
+    }
+}
+]]></code>
+  </test-code>
+</test-data>

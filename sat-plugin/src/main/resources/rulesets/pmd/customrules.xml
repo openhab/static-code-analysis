@@ -5,4 +5,18 @@
 	<rule class="org.openhab.tools.analysis.pmd.UseSLF4JLoggerRule" name="UseSLF4J" language="java">
 		<priority>3</priority>
 	</rule>
+	<rule class="org.openhab.tools.analysis.pmd.ImplicitDefaultLocaleRule" name="ImplicitDefaultLocale"
+		language="java">
+		<priority>3</priority>
+	</rule>
+	<rule class="org.openhab.tools.analysis.pmd.ImplicitDefaultTimeZoneRule" name="ImplicitDefaultTimeZone"
+		language="java">
+		<priority>3</priority>
+	</rule>
+	<rule class="org.openhab.tools.analysis.pmd.SetDefaultLocaleRule" name="SetDefaultLocale" language="java">
+		<priority>1</priority>
+	</rule>
+	<rule class="org.openhab.tools.analysis.pmd.SetDefaultTimeZoneRule" name="SetDefaultTimeZone" language="java">
+		<priority>1</priority>
+	</rule>
 </ruleset>
