@@ -68,10 +68,10 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
         final File xmlFile = xmlFileText.getFile();
         if (isEmpty(xmlFileText)) {
             MessageDispatcher dispatcher = getMessageDispatcher();
-            dispatcher.fireFileStarted(xmlFile.getPath());
+            dispatcher.fireFileStarted(xmlFile.getAbsolutePath());
             log(0, MessageFormat.format(MESSAGE_EMPTY_FILE, xmlFile.getName()), xmlFile.getPath());
             fireErrors(xmlFile.getAbsolutePath());
-            dispatcher.fireFileFinished(xmlFile.getPath());
+            dispatcher.fireFileFinished(xmlFile.getAbsolutePath());
         } else {
             final File fileParentDirectory = xmlFile.getParentFile();
             final boolean isOHParentDirectory = OH_INF_DIRECTORY.equals(fileParentDirectory.getParentFile().getName());

@@ -151,10 +151,10 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
                 message = message.substring(message.indexOf(":") + 2);
                 int lineNumber = exception.getLineNumber();
                 MessageDispatcher dispatcher = getMessageDispatcher();
-                dispatcher.fireFileStarted(xmlFile.getPath());
+                dispatcher.fireFileStarted(xmlFile.getAbsolutePath());
                 log(lineNumber, message, xmlFile.getPath());
                 fireErrors(xmlFile.getAbsolutePath());
-                dispatcher.fireFileFinished(xmlFile.getPath());
+                dispatcher.fireFileFinished(xmlFile.getAbsolutePath());
             } catch (IOException | SAXException e) {
                 logger.error("Problem occurred while parsing the file {}", xmlFile.getName(), e);
             }

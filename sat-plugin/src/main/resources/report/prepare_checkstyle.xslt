@@ -36,7 +36,7 @@
 		<xsl:choose>
 			<xsl:when test="ends-with(@name,'.xml')">
 			    <!-- this should find the last occurrence of /src/ and construct
-				a new path from parent folders name, /src/ and remaining path/filename 
+				a new path from parent folder's name, /src/ and remaining path/filename
 				 -->
 				<xsl:variable name="temp_name" select="translate(@name, '\', '/')" />
 				<xsl:variable name="after_last_src">

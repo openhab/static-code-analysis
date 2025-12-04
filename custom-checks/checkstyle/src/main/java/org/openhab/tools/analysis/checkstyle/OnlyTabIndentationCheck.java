@@ -44,10 +44,10 @@ public class OnlyTabIndentationCheck extends AbstractStaticCheck {
     @Override
     protected void processFiltered(File file, FileText fileText) {
         MessageDispatcher dispatcher = getMessageDispatcher();
-        dispatcher.fireFileStarted(file.getPath());
+        dispatcher.fireFileStarted(file.getAbsolutePath());
         processTabIndentationCheck(fileText);
         fireErrors(file.getAbsolutePath());
-        dispatcher.fireFileFinished(file.getPath());
+        dispatcher.fireFileFinished(file.getAbsolutePath());
     }
 
     private void processTabIndentationCheck(FileText fileText) {
