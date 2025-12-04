@@ -43,12 +43,23 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>org.dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <version>${dom4j.version}</version>
+    </dependency>
 
     <!-- MOJO Executor -->
     <dependency>
       <groupId>org.twdata.maven</groupId>
       <artifactId>mojo-executor</artifactId>
       <version>${mojo.executor.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+      <version>${maven.core.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Saxon dependency -->
@@ -75,6 +86,9 @@
       <plugin>
         <artifactId>maven-plugin-plugin</artifactId>
         <version>${maven.plugin.plugin.version}</version>
+        <configuration>
+          <goalPrefix>sat</goalPrefix>
+        </configuration>
         <executions>
           <execution>
             <id>default-addPluginArtifactMetadata</id>
