@@ -57,9 +57,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <oh.java.version>11</oh.java.version>
-    <maven.compiler.source>${oh.java.version}</maven.compiler.source>
-    <maven.compiler.target>${oh.java.version}</maven.compiler.target>
-    <maven.compiler.compilerVersion>${oh.java.version}</maven.compiler.compilerVersion>
+    <maven.compiler.release>${oh.java.version}</maven.compiler.release>
     <maven.eclipse.version>2.10</maven.eclipse.version>
     <junit.version>5.11.4</junit.version>
     <commons.io.version>2.21.0</commons.io.version>
@@ -69,13 +67,13 @@
     <pmd.version>7.18.0</pmd.version>
     <checkstyle.version>10.26.1</checkstyle.version>
     <spotbugs.version>4.9.8</spotbugs.version>
-    <maven.core.version>3.9.9</maven.core.version>
+    <maven.core.version>3.9.11</maven.core.version>
     <maven.plugin.api.version>3.9.11</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.15.2</maven.plugin.annotations.version>
     <maven.plugin.plugin.version>3.8.2</maven.plugin.plugin.version>
     <maven.plugin.compiler.version>3.14.1</maven.plugin.compiler.version>
     <mojo.executor.version>2.4.1</mojo.executor.version>
-    <org.jsoup.version>1.18.3</org.jsoup.version>
+    <org.jsoup.version>1.19.1</org.jsoup.version>
     <sat.version>0.17.0</sat.version>
     <jdt-annotations.version>2.3.100</jdt-annotations.version>
     <flexmark.version>0.64.8</flexmark.version>
@@ -130,7 +128,7 @@
       <!-- Required for Checkstyle tests -->
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
-      <version>1.4.4</version>
+      <version>1.4.5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
