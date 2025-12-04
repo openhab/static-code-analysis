@@ -72,7 +72,7 @@
     <maven.core.version>3.9.9</maven.core.version>
     <maven.plugin.api.version>3.9.11</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.15.2</maven.plugin.annotations.version>
-    <maven.plugin.plugin.version>3.8.2</maven.plugin.plugin.version>
+    <maven.plugin.plugin.version>3.15.2</maven.plugin.plugin.version>
     <maven.plugin.compiler.version>3.14.1</maven.plugin.compiler.version>
     <mojo.executor.version>2.4.1</mojo.executor.version>
     <org.jsoup.version>1.18.3</org.jsoup.version>
@@ -90,6 +90,7 @@
     <logback.version>1.2.13</logback.version>
     <eea.version>2.4.0</eea.version>
     <m2e.jdt.annotationpath>target/dependency</m2e.jdt.annotationpath>
+    <dom4j.version>2.2.0</dom4j.version>
   </properties>
 
   <dependencies>
