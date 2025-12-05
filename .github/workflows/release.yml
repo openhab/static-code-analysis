@@ -71,11 +71,13 @@ jobs:
       run: mvn clean compile -DskipTests=true -DskipChecks=true
     
     - name: Deploy to Maven Central
+      id: maven-deploy
       env:
         OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       run: |
+        # Fail fast: If this step fails, no git operations will occur
         mvn -DskipTests=true -DskipChecks=true -DperformRelease=true clean deploy
     
     - name: Trigger Central Publisher Portal Upload
@@ -110,25 +112,36 @@ jobs:
         fi
     
     - name: Collect all POM files for commit
+      # This step only runs if Maven Central deployment succeeded (fail-fast behavior)
+      if: success()
       run: |
         # Add all modified tracked POM files
         git add -u **/pom.xml
     
     - name: Commit release version and push to main branch
+      # This step only runs if Maven Central deployment succeeded (fail-fast behavior)
+      if: success()
       run: |
         git commit -m "Release version ${{ github.event.inputs.release_version }}"
         git push origin
     
     - name: Create and push release tag
+      # This step only runs if Maven Central deployment and commit succeeded (fail-fast behavior)
+      if: success()
       run: |
         git tag -a "v${{ github.event.inputs.release_version }}" -m "Release version ${{ github.event.inputs.release_version }}"
         git push origin "v${{ github.event.inputs.release_version }}"
+
     - name: Update to next snapshot version
+      # This step only runs after successful tag creation (fail-fast behavior)
+      if: success()
       run: |
         mvn versions:set -DnewVersion=${{ github.event.inputs.next_snapshot_version }}
         mvn versions:commit
     
     - name: Update parent POM versions in modules to snapshot
+      # This step only runs after successful tag creation (fail-fast behavior)
+      if: success()
       run: |
         # Update parent version in all child POMs
         # Find all pom.xml files except the root pom.xml
@@ -140,11 +153,14 @@ jobs:
         done
     
     - name: Verify snapshot version
+      if: success()
       run: |
         echo "Updated version to:"
         mvn help:evaluate -Dexpression=project.version -q -DforceStdout
     
     - name: Commit and push snapshot version
+      # This step only runs after successful deployment and tag creation (fail-fast behavior)
+      if: success()
       run: |
         # Add all modified POM files
         git add **/pom.xml
@@ -152,6 +168,8 @@ jobs:
         git push origin
     
     - name: Create GitHub Release
+      # This step only runs after all previous steps succeeded (fail-fast behavior)
+      if: success()
       uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
       with:
         tag_name: "v${{ github.event.inputs.release_version }}"
