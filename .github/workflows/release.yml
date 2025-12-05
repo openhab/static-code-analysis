@@ -114,12 +114,15 @@ jobs:
         # Add all modified POM files
         git add **/pom.xml
     
-    - name: Create and push release tag
+    - name: Commit release version and push to main branch
       run: |
         git commit -m "Release version ${{ github.event.inputs.release_version }}"
+        git push origin
+    
+    - name: Create and push release tag
+      run: |
         git tag -a "v${{ github.event.inputs.release_version }}" -m "Release version ${{ github.event.inputs.release_version }}"
         git push origin "v${{ github.event.inputs.release_version }}"
-    
     - name: Update to next snapshot version
       run: |
         mvn versions:set -DnewVersion=${{ github.event.inputs.next_snapshot_version }}
