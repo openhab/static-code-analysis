@@ -128,7 +128,8 @@ jobs:
     - name: Update parent POM versions in modules to snapshot
       run: |
         # Update parent version in all child POMs
-        for pom in $(find custom-checks sat-extension sat-plugin codestyle -name pom.xml); do
+        # Find all pom.xml files except the root pom.xml
+        for pom in $(find . -name pom.xml ! -path "./pom.xml"); do
           if [ -f "$pom" ]; then
             mvn versions:update-parent -DparentVersion=${{ github.event.inputs.next_snapshot_version }} -f "$pom"
             mvn versions:commit -f "$pom"
