@@ -128,7 +128,7 @@ jobs:
     - name: Update parent POM versions in modules to snapshot
       run: |
         # Update parent version in all child POMs
-        for pom in custom-checks/pom.xml custom-checks/checkstyle/pom.xml custom-checks/findbugs/pom.xml custom-checks/pmd/pom.xml sat-extension/pom.xml sat-plugin/pom.xml codestyle/pom.xml; do
+        for pom in $(find custom-checks sat-extension sat-plugin codestyle -name pom.xml); do
           if [ -f "$pom" ]; then
             mvn versions:update-parent -DparentVersion=${{ github.event.inputs.next_snapshot_version }} -f "$pom"
             mvn versions:commit -f "$pom"
@@ -143,14 +143,7 @@ jobs:
     - name: Commit and push snapshot version
       run: |
         # Add all modified POM files
-        git add pom.xml
-        git add custom-checks/pom.xml
-        git add custom-checks/checkstyle/pom.xml
-        git add custom-checks/findbugs/pom.xml
-        git add custom-checks/pmd/pom.xml
-        git add sat-extension/pom.xml
-        git add sat-plugin/pom.xml
-        git add codestyle/pom.xml
+        git add **/pom.xml
         git commit -m "Prepare for next development iteration: ${{ github.event.inputs.next_snapshot_version }}"
         git push origin
     
