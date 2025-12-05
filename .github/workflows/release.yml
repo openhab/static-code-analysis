@@ -111,8 +111,8 @@ jobs:
     
     - name: Collect all POM files for commit
       run: |
-        # Add all modified POM files
-        git add **/pom.xml
+        # Add all modified tracked POM files
+        git add -u **/pom.xml
     
     - name: Commit release version and push to main branch
       run: |
