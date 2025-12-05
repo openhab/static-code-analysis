@@ -112,14 +112,7 @@ jobs:
     - name: Collect all POM files for commit
       run: |
         # Add all modified POM files
-        git add pom.xml
-        git add custom-checks/pom.xml
-        git add custom-checks/checkstyle/pom.xml
-        git add custom-checks/findbugs/pom.xml
-        git add custom-checks/pmd/pom.xml
-        git add sat-extension/pom.xml
-        git add sat-plugin/pom.xml
-        git add codestyle/pom.xml
+        git add **/pom.xml
     
     - name: Create and push release tag
       run: |
