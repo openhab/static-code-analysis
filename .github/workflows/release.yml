@@ -155,12 +155,10 @@ jobs:
         git push origin
     
     - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: "v${{ github.event.inputs.release_version }}"
-        release_name: "Release ${{ github.event.inputs.release_version }}"
+        name: "Release ${{ github.event.inputs.release_version }}"
         body: |
           Release ${{ github.event.inputs.release_version }}
           
