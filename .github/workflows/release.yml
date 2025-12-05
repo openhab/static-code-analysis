@@ -79,7 +79,6 @@ jobs:
       run: |
         # Fail fast: If this step fails, no git operations will occur
         mvn -DskipTests=true -DskipChecks=true -DperformRelease=true clean deploy
-        echo "maven_deploy_success=true" >> $GITHUB_OUTPUT
     
     - name: Trigger Central Publisher Portal Upload
       env:
