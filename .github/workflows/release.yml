@@ -55,7 +55,7 @@ jobs:
     - name: Update parent POM versions in modules
       run: |
         # Update parent version in all child POMs
-        for pom in $(find . -name pom.xml -not -path "*/target/*"); do
+        for pom in $(find . -name pom.xml -not -path "*/target/*" -not -path "*/src/test/resources/*"); do
           if [ -f "$pom" ]; then
             mvn versions:update-parent -DparentVersion=${{ github.event.inputs.release_version }} -f "$pom"
             mvn versions:commit -f "$pom"
