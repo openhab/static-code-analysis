@@ -149,7 +149,7 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
                 // Removing the type of the logged message (For example - "cvc-complex-type.2.4.b: ...").
                 message = message.substring(message.indexOf(":") + 2);
                 int lineNumber = exception.getLineNumber();
-                log(lineNumber, message, xmlFile.getPath());
+                logMessage(xmlFile.getAbsolutePath(), lineNumber, xmlFile.getName(), message);
             } catch (IOException | SAXException e) {
                 logger.error("Problem occurred while parsing the file {}", xmlFile.getName(), e);
             }

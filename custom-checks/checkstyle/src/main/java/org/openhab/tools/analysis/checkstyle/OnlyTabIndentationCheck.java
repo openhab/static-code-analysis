@@ -42,19 +42,19 @@ public class OnlyTabIndentationCheck extends AbstractStaticCheck {
 
     @Override
     protected void processFiltered(File file, FileText fileText) {
-        processTabIndentationCheck(fileText);
+        processTabIndentationCheck(file, fileText);
     }
 
-    private void processTabIndentationCheck(FileText fileText) {
+    private void processTabIndentationCheck(File file, FileText fileText) {
         for (int lineNumber = 0; lineNumber < fileText.size(); lineNumber++) {
             String line = fileText.get(lineNumber);
             // if line is empty and does not contain only tabs for indentation
             if (line.trim().isEmpty() && !doesLineContainOnlyTabs(line)) {
                 if (onlyShowFirstWarning) {
-                    logMessage(lineNumber);
+                    logMessage(file, lineNumber);
                     return;
                 }
-                logMessage(lineNumber);
+                logMessage(file, lineNumber);
                 continue;
             }
             int indexNonWhitespaceCharacter = line.indexOf(line.trim());
@@ -63,10 +63,10 @@ public class OnlyTabIndentationCheck extends AbstractStaticCheck {
                 String lineBeforeCharacter = line.substring(0, indexNonWhitespaceCharacter);
                 if (!doesLineContainOnlyTabs(lineBeforeCharacter)) {
                     if (onlyShowFirstWarning) {
-                        logMessage(lineNumber);
+                        logMessage(file, lineNumber);
                         return;
                     }
-                    logMessage(lineNumber);
+                    logMessage(file, lineNumber);
                 }
             }
         }
@@ -87,7 +87,7 @@ public class OnlyTabIndentationCheck extends AbstractStaticCheck {
      *
      * @param lineNumber the line number where the message should be logged
      */
-    private void logMessage(int lineNumber) {
-        log(lineNumber + 1, WARNING_MESSAGE);
+    private void logMessage(File file, int lineNumber) {
+        logMessage(file.getAbsolutePath(), lineNumber + 1, file.getName(), WARNING_MESSAGE);
     }
 }

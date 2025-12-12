@@ -66,7 +66,7 @@ public abstract class AbstractOhInfXmlCheck extends AbstractStaticCheck {
     private void processXmlFile(final FileText xmlFileText) throws CheckstyleException {
         final File xmlFile = xmlFileText.getFile();
         if (isEmpty(xmlFileText)) {
-            log(0, MessageFormat.format(MESSAGE_EMPTY_FILE, xmlFile.getName()), xmlFile.getPath());
+            logMessage(xmlFile.getAbsolutePath(), 0, xmlFile.getName(), MESSAGE_EMPTY_FILE);
         } else {
             final File fileParentDirectory = xmlFile.getParentFile();
             final boolean isOHParentDirectory = OH_INF_DIRECTORY.equals(fileParentDirectory.getParentFile().getName());
