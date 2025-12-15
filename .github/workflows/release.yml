@@ -36,7 +36,7 @@ jobs:
         java-version: 11
         distribution: 'temurin'
         cache: maven
-        server-id: ossrh
+        server-id: maven
         server-username: OSSRH_USERNAME
         server-password: OSSRH_PASSWORD
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
