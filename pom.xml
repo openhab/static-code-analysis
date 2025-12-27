@@ -405,8 +405,8 @@
           <dependency>
             <groupId>org.eclipse.jdt</groupId>
             <artifactId>ecj</artifactId>
-            <!-- cannot go beyond 3.33.0 as long as Java11 is in use -->
-            <version>3.33.0</version>
+            <!-- cannot go beyond 3.44.0 as long as Java11 is in use -->
+            <version>3.44.0</version>
           </dependency>
         </dependencies>
       </plugin>
