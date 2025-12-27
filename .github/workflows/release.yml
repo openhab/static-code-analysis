@@ -49,16 +49,16 @@ jobs:
     
     - name: Update version to release version
       run: |
-        mvn versions:set -DnewVersion=${{ github.event.inputs.release_version }}
-        mvn versions:commit
+        mvn -B versions:set -DnewVersion=${{ github.event.inputs.release_version }}
+        mvn -B versions:commit
     
     - name: Update parent POM versions in modules
       run: |
         # Update parent version in all child POMs
         for pom in $(find . -name pom.xml -not -path "*/target/*" -not -path "*/src/test/resources/*"); do
           if [ -f "$pom" ]; then
-            mvn versions:update-parent -DparentVersion=${{ github.event.inputs.release_version }} -f "$pom"
-            mvn versions:commit -f "$pom"
+            mvn -B versions:update-parent -DparentVersion=${{ github.event.inputs.release_version }} -f "$pom"
+            mvn -B versions:commit -f "$pom"
           fi
         done
     
@@ -78,7 +78,7 @@ jobs:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       run: |
         # Fail fast: If this step fails, no git operations will occur
-        mvn -DskipTests=true -DskipChecks=true -DperformRelease=true clean deploy
+        mvn -B -DskipTests=true -DskipChecks=true -DperformRelease=true clean deploy
     
     - name: Trigger Central Publisher Portal Upload
       env:
@@ -136,8 +136,8 @@ jobs:
       # This step only runs after successful tag creation (fail-fast behavior)
       if: success()
       run: |
-        mvn versions:set -DnewVersion=${{ github.event.inputs.next_snapshot_version }}
-        mvn versions:commit
+        mvn -B versions:set -DnewVersion=${{ github.event.inputs.next_snapshot_version }}
+        mvn -B versions:commit
     
     - name: Update parent POM versions in modules to snapshot
       # This step only runs after successful tag creation (fail-fast behavior)
@@ -145,10 +145,11 @@ jobs:
       run: |
         # Update parent version in all child POMs
         # Find all pom.xml files except the root pom.xml
-        for pom in $(find . -name pom.xml ! -path "./pom.xml"); do
+        for pom in $(find . -name pom.xml ! -path "./pom.xml" -not -path "*/target/*" -not -path "*/src/test/resources/*"); do
           if [ -f "$pom" ]; then
-            mvn versions:update-parent -DparentVersion=${{ github.event.inputs.next_snapshot_version }} -f "$pom"
-            mvn versions:commit -f "$pom"
+            echo "Updating parent version in $pom"
+            mvn -B versions:update-parent -DparentVersion=${{ github.event.inputs.next_snapshot_version }} -f "$pom"
+            mvn -B versions:commit -f "$pom"
           fi
         done
     
