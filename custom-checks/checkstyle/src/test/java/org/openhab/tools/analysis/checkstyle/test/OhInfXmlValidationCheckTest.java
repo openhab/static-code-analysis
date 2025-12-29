@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,11 +58,21 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
     private static final DefaultConfiguration CONFIGURATION = createModuleConfig(OhInfXmlValidationCheck.class);
 
+    private static Locale initialLocale;
+
     @BeforeAll
     public static void createConfiguration() {
+        initialLocale = Locale.getDefault();
         CONFIGURATION.addProperty("thingSchema", THING_SCHEMA_URL);
         CONFIGURATION.addProperty("addonSchema", ADDON_SCHEMA_URL);
         CONFIGURATION.addProperty("configSchema", CONFIG_SCHEMA_URL);
+    }
+
+    @AfterAll
+    @SuppressWarnings("PMD.SetDefaultLocale")
+    public static void tearDownClass() {
+        // Set the default locale to its initial value.
+        Locale.setDefault(initialLocale);
     }
 
     @Override
@@ -72,6 +83,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
     private boolean isResourceAvailable;
 
     @BeforeEach
+    @SuppressWarnings("PMD.SetDefaultLocale")
     public void checkConnection() {
         Locale.setDefault(new Locale("en", "US"));
         try {
