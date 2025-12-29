@@ -84,8 +84,8 @@
     <!-- Eclipse Java formatter version 4.26+ does not check test files -->
     <spotless.eclipse.version>4.25</spotless.eclipse.version>
     <spotless.eclipse.wtp.version>4.21.0</spotless.eclipse.wtp.version>
-    <slf4j.version>1.7.36</slf4j.version>
-    <logback.version>1.2.13</logback.version>
+    <slf4j.version>2.0.17</slf4j.version>
+    <logback.version>1.5.23</logback.version>
     <eea.version>2.4.0</eea.version>
     <m2e.jdt.annotationpath>target/dependency</m2e.jdt.annotationpath>
     <dom4j.version>2.2.0</dom4j.version>
