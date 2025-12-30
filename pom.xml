@@ -75,7 +75,7 @@
     <mojo.executor.version>2.4.1</mojo.executor.version>
     <org.jsoup.version>1.19.1</org.jsoup.version>
     <sat.version>0.18.0</sat.version>
-    <jdt-annotations.version>2.3.100</jdt-annotations.version>
+    <jdt-annotations.version>2.4.100</jdt-annotations.version>
     <flexmark.version>0.64.8</flexmark.version>
     <maven.surefire.plugin.version>3.5.4</maven.surefire.plugin.version>
     <jetty.server.version>9.4.50.v20221201</jetty.server.version>
@@ -93,14 +93,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-      <version>2.3.1</version>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>4.0.4</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>jaxb-runtime</artifactId>
-      <version>2.3.1</version>
+      <version>4.0.6</version>
     </dependency>
     <dependency>
       <groupId>org.hamcrest</groupId>
