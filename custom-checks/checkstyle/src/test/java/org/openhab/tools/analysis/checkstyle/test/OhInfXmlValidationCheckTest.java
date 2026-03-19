@@ -203,7 +203,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
                         + "Number:ElectricPotential, Number:ElectricResistance, Number:EmissionIntensity, Number:Energy, Number:EnergyPrice, "
                         + "Number:Force, Number:Frequency, Number:Illuminance, Number:Intensity, Number:Length, Number:LuminousFlux, "
                         + "Number:LuminousIntensity, Number:MagneticFlux, Number:MagneticFluxDensity, Number:Mass, Number:Power, Number:Pressure, "
-                        + "Number:RadiationDoseAbsorbed, Number:RadiationDoseEffective, Number:RadiationSpecificActivity, Number:RadioactiveActivity, "
+                        + "Number:RadiationDoseAbsorbed, Number:RadiationDoseEffective, Number:RadiationDoseRate, Number:RadiationSpecificActivity, Number:RadioactiveActivity, "
                         + "Number:SolidAngle, Number:Speed, Number:Temperature, Number:Time, Number:Volume, Number:VolumePrice, "
                         + "Number:VolumetricFlowRate, Player, Rollershutter, String, Switch]. It must be a value from the enumeration.");
         verifyWithPath("invalidItemType", RELATIVE_PATH_TO_THING, expectedMessages);
