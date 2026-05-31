@@ -170,7 +170,7 @@ public class OhInfXmlValidationCheck extends AbstractOhInfXmlCheck {
         try {
             URL schemaUrl = URI.create(schemaUrlString).toURL();
             return client.get(schemaUrl);
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             logger.error("Unable to get XSD file {} : {}", schemaUrlString, e.getMessage(), e);
             return null;
         }
