@@ -15,13 +15,22 @@ package org.openhab.tools.analysis.checkstyle.test;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.OH_INF_PATH;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,6 +39,8 @@ import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.OhInfXmlValidationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 import org.openhab.tools.analysis.utils.CachingHttpClient;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
@@ -81,16 +92,50 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
     }
 
     private boolean isResourceAvailable;
+    private String thingSchema;
+
+    private static Document parseXml(String xml) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        factory.setXIncludeAware(false);
+        factory.setExpandEntityReferences(false);
+
+        try (InputStream inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
+            return factory.newDocumentBuilder().parse(inputStream);
+        }
+    }
+
+    private static String generateInvalidItemTypeMessage(String invalidValue, String schema) throws Exception {
+        Document document = parseXml(schema);
+        XPath xpath = XPathFactory.newInstance().newXPath();
+
+        NodeList values = (NodeList) xpath.evaluate(
+                "//*[local-name()='simpleType'][@name='itemTypeName']" + "//*[local-name()='enumeration']/@value",
+                document, XPathConstants.NODESET);
+
+        List<String> itemTypes = new ArrayList<>();
+        for (int i = 0; i < values.getLength(); i++) {
+            itemTypes.add(values.item(i).getNodeValue());
+        }
+
+        return "Value " + invalidValue + " is not facet-valid with respect to enumeration ["
+                + String.join(", ", itemTypes) + "]. It must be a value from the enumeration.";
+    }
 
     @BeforeEach
     @SuppressWarnings("PMD.SetDefaultLocale")
     public void checkConnection() {
-        Locale.setDefault(new Locale("en", "US"));
+        Locale.setDefault(Locale.US);
         try {
-            URL url = new URL(THING_SCHEMA_URL);
+            URL url = URI.create(THING_SCHEMA_URL).toURL();
             CachingHttpClient<String> cachingClient = new CachingHttpClient<>(String::new);
-            isResourceAvailable = cachingClient.get(url) != null;
+            thingSchema = cachingClient.get(url);
+            isResourceAvailable = thingSchema != null;
         } catch (IOException e) {
+            thingSchema = null;
             isResourceAvailable = false;
         }
     }
@@ -195,17 +240,8 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
 
         int lineNumber = 15;
         String[] expectedMessages = generateExpectedMessages(lineNumber,
-                "Value Invalid is not facet-valid with respect to enumeration "
-                        + "[Call, Color, Contact, DateTime, Dimmer, Group, Image, Location, Number, Number:Acceleration, Number:AmountOfSubstance, "
-                        + "Number:Angle, Number:Area, Number:ArealDensity, Number:CatalyticActivity, Number:Currency, Number:DataAmount, "
-                        + "Number:DataTransferRate, Number:Density, Number:Dimensionless, Number:ElectricCapacitance, Number:ElectricCharge, "
-                        + "Number:ElectricConductance, Number:ElectricConductivity, Number:ElectricCurrent, Number:ElectricInductance, "
-                        + "Number:ElectricPotential, Number:ElectricResistance, Number:EmissionIntensity, Number:Energy, Number:EnergyPrice, "
-                        + "Number:Force, Number:Frequency, Number:Illuminance, Number:Intensity, Number:Length, Number:LuminousFlux, "
-                        + "Number:LuminousIntensity, Number:MagneticFlux, Number:MagneticFluxDensity, Number:Mass, Number:Power, Number:Pressure, "
-                        + "Number:RadiationDoseAbsorbed, Number:RadiationDoseEffective, Number:RadiationDoseRate, Number:RadiationSpecificActivity, Number:RadioactiveActivity, "
-                        + "Number:SolidAngle, Number:Speed, Number:Temperature, Number:Time, Number:Volume, Number:VolumePrice, "
-                        + "Number:VolumetricFlowRate, Player, Rollershutter, String, Switch]. It must be a value from the enumeration.");
+                generateInvalidItemTypeMessage("Invalid", thingSchema));
+
         verifyWithPath("invalidItemType", RELATIVE_PATH_TO_THING, expectedMessages);
     }
 
