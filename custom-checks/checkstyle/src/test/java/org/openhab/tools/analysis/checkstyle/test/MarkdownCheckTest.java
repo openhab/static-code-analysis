@@ -249,6 +249,11 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
         verifyMarkDownFile("testDocFolderWrong", expectedMessages);
     }
 
+    @Test
+    public void testFrontMatterIgnored() throws Exception {
+        verifyMarkDownFile("testFrontMatterIgnored", noMessagesExpected());
+    }
+
     private void createValidConfig() {
         config = createModuleConfig(MarkdownCheck.class);
     }
