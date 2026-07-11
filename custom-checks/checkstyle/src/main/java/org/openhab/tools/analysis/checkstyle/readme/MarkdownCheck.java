@@ -15,11 +15,13 @@ package org.openhab.tools.analysis.checkstyle.readme;
 import static org.openhab.tools.analysis.checkstyle.api.CheckConstants.*;
 
 import java.io.File;
+import java.util.List;
 
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheck;
 
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.FileText;
+import com.vladsch.flexmark.ext.yaml.front.matter.YamlFrontMatterExtension;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataSet;
@@ -54,6 +56,7 @@ public class MarkdownCheck extends AbstractStaticCheck {
         MutableDataSet options = new MutableDataSet();
         // By setting this option to true, the parser provides line numbers in the original markdown text for each node
         options.set(Parser.TRACK_DOCUMENT_LINES, true);
+        options.set(Parser.EXTENSIONS, List.of(YamlFrontMatterExtension.create()));
 
         Node readmeMarkdownNode = parseMarkdown(fileText, options);
         // CallBack is used in order to use the protected log method of the AbstractStaticCheck in the Visitor
