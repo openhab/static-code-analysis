@@ -43,7 +43,7 @@ public class ParameterizedRegexpHeaderCheckTest extends AbstractStaticCheckTest 
     }
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/parameterizedRegexpHeaderCheckTest";
     }
 

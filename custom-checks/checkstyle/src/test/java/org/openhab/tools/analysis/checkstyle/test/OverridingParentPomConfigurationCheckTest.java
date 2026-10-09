@@ -38,7 +38,7 @@ public class OverridingParentPomConfigurationCheckTest extends AbstractStaticChe
     }
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/overridingParentPomConfigurationCheckTest";
     }
 

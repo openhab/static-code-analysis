@@ -64,8 +64,8 @@
 
     <!-- Saxon dependency -->
     <dependency>
-      <groupId>net.sourceforge.saxon</groupId>
-      <artifactId>saxon</artifactId>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>Saxon-HE</artifactId>
       <version>${saxon.version}</version>
     </dependency>
 

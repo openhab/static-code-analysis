@@ -40,7 +40,7 @@ public class OnlyTabIndentationCheckTest extends AbstractStaticCheckTest {
     }
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/onlyTabIndentationInXmlFilesCheck";
     }
 

@@ -31,7 +31,7 @@ public class AvoidScheduleAtFixedRateCheckTest extends AbstractStaticCheckTest {
     private final Configuration config = createModuleConfig(AvoidScheduleAtFixedRateCheck.class);
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/avoidScheduleAtFixedRateCheckTest";
     }
 

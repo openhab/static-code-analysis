@@ -95,7 +95,7 @@ public class SpotBugsChecker extends AbstractChecker {
     /**
      * The version of the spotbugs that will be used
      */
-    @Parameter(property = "spotbugs.version", defaultValue = "4.9.8")
+    @Parameter(property = "spotbugs.version", defaultValue = "4.10.4")
     private String spotBugsVersion;
 
     /**

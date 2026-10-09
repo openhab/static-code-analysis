@@ -30,7 +30,7 @@ public class InheritDocCheckTest extends AbstractStaticCheckTest {
     Configuration config = createModuleConfig(InheritDocCheck.class);
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/inheritDocCheckTest";
     }
 

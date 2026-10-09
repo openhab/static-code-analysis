@@ -26,7 +26,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 public class OptionalFieldCheckTest extends AbstractStaticCheckTest {
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/optionalFieldCheckTest";
     }
 

@@ -19,8 +19,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.OhInfXmlLabelCheck;
 import org.openhab.tools.analysis.checkstyle.OhInfXmlValidationCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
@@ -41,14 +41,14 @@ public class OhInfXmlLabelCheckTest extends AbstractStaticCheckTest {
 
     private DefaultConfiguration configuration;
 
-    @Before
+    @BeforeEach
     public void before() {
         configuration = createModuleConfig(OhInfXmlLabelCheck.class);
         configuration.addProperty("checkWordCasing", "true");
     }
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/ohInfXmlLabelCheckTest";
     }
 

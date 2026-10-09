@@ -15,42 +15,37 @@ package org.openhab.tools.analysis.utils;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
+import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.util.Callback;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 /**
  * Tests for {@link CachingHttpClient}
  *
  * @author Svilen Valkanov - Initial contribution
  */
-@ExtendWith(MockitoExtension.class)
 public class CachingHttpClientTest {
 
     private static final String PATH_TO_RESOURCE = "/found";
@@ -61,9 +56,34 @@ public class CachingHttpClientTest {
     private static final String SERVER_RESPONSE = "content";
 
     private static Server server;
+    private static TestHandler handler = new TestHandler();
 
     private ContentReceivedCallback<String> testCallback = String::new;
     private CachingHttpClient<String> testClient = new CachingHttpClient<>(testCallback);
+
+    /**
+     * Serves {@link #SERVER_RESPONSE} for {@link #PATH_TO_RESOURCE} and counts the received requests.
+     * Requests that are not handled are answered with 404 by the server.
+     */
+    private static class TestHandler extends Handler.Abstract {
+        private final AtomicInteger requestCount = new AtomicInteger();
+        private volatile boolean responding = true;
+
+        @Override
+        public boolean handle(Request request, Response response, Callback callback) {
+            requestCount.incrementAndGet();
+
+            assertThat(request.getMethod(), is(HttpMethod.GET.asString()));
+
+            if (!responding || !Request.getPathInContext(request).startsWith(PATH_TO_RESOURCE)) {
+                return false;
+            }
+            response.setStatus(HttpStatus.OK_200);
+            response.getHeaders().put(HttpHeader.CONTENT_TYPE, "text/html");
+            Content.Sink.write(response, true, SERVER_RESPONSE + System.lineSeparator(), callback);
+            return true;
+        }
+    }
 
     @BeforeAll
     public static void setUp() throws Exception {
@@ -75,7 +95,6 @@ public class CachingHttpClientTest {
         http.setIdleTimeout(TEST_TIMEOUT);
         server.addConnector(http);
 
-        Handler handler = Mockito.mock(Handler.class);
         server.setHandler(handler);
 
         try {
@@ -93,33 +112,9 @@ public class CachingHttpClientTest {
     }
 
     @BeforeEach
-    public void clearInteractionsWithServer() throws Exception {
-        Handler handler = server.getHandler();
-        Mockito.reset(handler);
-        mockHandler(handler);
-    }
-
-    private void mockHandler(Handler handler) throws IOException, ServletException {
-        Mockito.doAnswer((Answer<Handler>) invocation -> {
-            Object[] arguments = invocation.getArguments();
-
-            Request baseRequest = (Request) arguments[2];
-            HttpServletRequest request = (HttpServletRequest) arguments[2];
-            HttpServletResponse response = (HttpServletResponse) arguments[3];
-
-            baseRequest.setHandled(true);
-
-            assertThat(request.getMethod(), is(HttpMethod.GET.asString()));
-
-            if (request.getPathInfo().startsWith(PATH_TO_RESOURCE)) {
-                response.setStatus(HttpStatus.OK_200);
-                response.setContentType("text/html");
-                response.getWriter().println(SERVER_RESPONSE);
-            } else {
-                response.setStatus(HttpStatus.NOT_FOUND_404);
-            }
-            return null;
-        }).when(handler).handle(any(), any(), any(), any());
+    public void resetHandler() {
+        handler.requestCount.set(0);
+        handler.responding = true;
     }
 
     @Test
@@ -139,7 +134,7 @@ public class CachingHttpClientTest {
         assertNull(testClient.get(unreachableURL));
         assertNull(testClient.get(unreachableURL));
 
-        verify(server.getHandler(), times(1)).handle(any(), any(), any(), any());
+        assertEquals(1, handler.requestCount.get());
     }
 
     @Test
@@ -150,7 +145,7 @@ public class CachingHttpClientTest {
         assertNotNull(testClient.get(reachableURL));
         assertNotNull(testClient.get(reachableURL));
 
-        verify(server.getHandler(), times(1)).handle(any(), any(), any(), any());
+        assertEquals(1, handler.requestCount.get());
     }
 
     @Test
@@ -159,10 +154,10 @@ public class CachingHttpClientTest {
         assertNotNull(testClient.get(url));
 
         // The server stops responding
-        Mockito.doNothing().when(server.getHandler()).handle(any(), any(), any(), any());
+        handler.responding = false;
 
         assertNotNull(testClient.get(url));
-        verify(server.getHandler(), times(1)).handle(any(), any(), any(), any());
+        assertEquals(1, handler.requestCount.get());
     }
 
     @Test
@@ -170,7 +165,7 @@ public class CachingHttpClientTest {
         URL url = getUniqueURL(PATH_TO_RESOURCE);
 
         // The server stops responding
-        Mockito.doNothing().when(server.getHandler()).handle(any(), any(), any(), any());
+        handler.responding = false;
 
         // First request throws exception, because a get request is sent
         try {
@@ -181,17 +176,17 @@ public class CachingHttpClientTest {
             assertThat(e.getCause(), instanceOf(FileNotFoundException.class));
         }
 
-        mockHandler(server.getHandler());
+        handler.responding = true;
 
         // Next requests do not throw exception
         assertNull(testClient.get(url));
         assertNull(testClient.get(url));
 
-        verify(server.getHandler(), times(1)).handle(any(), any(), any(), any());
+        assertEquals(1, handler.requestCount.get());
     }
 
     private URL getUniqueURL(String path) throws MalformedURLException {
         String fileName = new SimpleDateFormat("mmssSSS'.txt'").format(new Date());
-        return new URL("http", TEST_HOST, TEST_PORT, path + "/" + fileName);
+        return URI.create("http://" + TEST_HOST + ":" + TEST_PORT + path + "/" + fileName).toURL();
     }
 }

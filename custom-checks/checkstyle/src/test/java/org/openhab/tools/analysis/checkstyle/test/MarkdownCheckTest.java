@@ -39,7 +39,7 @@ public class MarkdownCheckTest extends AbstractStaticCheckTest {
     }
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/markdownCheckTest";
     }
 

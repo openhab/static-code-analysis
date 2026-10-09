@@ -34,7 +34,7 @@ public class NoEmptyLineSeparatorCheckTest extends AbstractStaticCheckTest {
     private static DefaultConfiguration config = createModuleConfig(NoEmptyLineSeparatorCheck.class);
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/noEmptyLineSeparatorCheck";
     }
 

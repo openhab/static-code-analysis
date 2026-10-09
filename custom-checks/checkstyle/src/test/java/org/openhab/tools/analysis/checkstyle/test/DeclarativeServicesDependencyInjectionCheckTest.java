@@ -29,7 +29,7 @@ public class DeclarativeServicesDependencyInjectionCheckTest extends AbstractSta
     private static final String SERVICE_CUSTOMIZER_IMPLEMENTED = "Avoid using ServiceTrackerCustomizer for dependency injection, consider using Declarative Services";
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/declarativeServicesDependencyInjectionTest";
     }
 
