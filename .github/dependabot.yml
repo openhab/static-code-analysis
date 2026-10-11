@@ -28,6 +28,7 @@ updates:
     open-pull-requests-limit: 15
     allow:
       - dependency-name: "org.apache.maven.plugins:*"
+      - dependency-name: "org.apache.maven:apache-maven" # Maven wrapper distribution
       - dependency-name: "org.codehaus.mojo:*"
       - dependency-name: "*plugin*"
       - dependency-name: "org.eclipse.jdt:ecj" # eclipse compiler
