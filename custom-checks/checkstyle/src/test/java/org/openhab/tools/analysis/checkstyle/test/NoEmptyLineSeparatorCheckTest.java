@@ -245,6 +245,14 @@ public class NoEmptyLineSeparatorCheckTest extends AbstractStaticCheckTest {
         verifyJavaFileNoErrors("ValidEmptyDefaultDefinition.java");
     }
 
+    @Test
+    public void verifyEmptyLineInMethodAfterSwitchWithoutBraces() throws Exception {
+        // the state of a case group without braces must not leak into the following blocks
+        String[] expectedMessages = generateExpectedMessages(13, MSG_LINE_AFTER_OPENING_BRACE_EMPTY, 15,
+                MSG_LINE_BEFORE_CLOSING_BRACE_EMPTY);
+        verifyJavaFile("EmptyLineInMethodAfterSwitchWithoutBraces.java", expectedMessages);
+    }
+
     private void verifyJavaFile(String testFileName, String[] expectedMessages) throws Exception {
         String absolutePathToTestFile = getPath(testFileName);
         verify(config, absolutePathToTestFile, expectedMessages);
