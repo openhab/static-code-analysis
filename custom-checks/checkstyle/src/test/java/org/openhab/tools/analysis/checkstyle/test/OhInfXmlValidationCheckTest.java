@@ -87,7 +87,7 @@ public class OhInfXmlValidationCheckTest extends AbstractStaticCheckTest {
     }
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/ohInfXmlValidationCheckTest";
     }
 

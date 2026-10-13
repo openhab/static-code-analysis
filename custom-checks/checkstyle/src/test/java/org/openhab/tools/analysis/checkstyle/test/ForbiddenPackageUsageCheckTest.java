@@ -36,7 +36,7 @@ public class ForbiddenPackageUsageCheckTest extends AbstractStaticCheckTest {
     }
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/ForbiddenPackageUsageCheckTest";
     }
 

@@ -12,6 +12,7 @@
  */
 package org.openhab.tools.analysis.checkstyle;
 
+import com.puppycrawl.tools.checkstyle.FileStatefulCheck;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
@@ -68,6 +69,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  * @author Svilen Valkanov - Initial contribution
  * @author Tanya Georgieva - Added check for switch statement without braces
  */
+@FileStatefulCheck
 public class NoEmptyLineSeparatorCheck extends AbstractCheck {
 
     private static final String MSG_LINE_AFTER_OPENING_BRACE_EMPTY = "Remove empty line after opening brace";
@@ -117,6 +119,14 @@ public class NoEmptyLineSeparatorCheck extends AbstractCheck {
 
     @Override
     public void visitToken(DetailAST ast) {
+        // the case group flags are set in findRightCurly when visiting a case group, and are reused by its case and
+        // default labels, which are visited right after it. They must not leak into any other block.
+        if (ast.getType() != TokenTypes.LITERAL_CASE && ast.getType() != TokenTypes.LITERAL_DEFAULT) {
+            isCaseGroupWithoutBraces = false;
+            isCaseGroupWithoutListOfStatements = false;
+            isCaseGroupWithBraces = false;
+        }
+
         DetailAST leftCurly = findLeftCurly(ast);
         DetailAST rightCurly = findRightCurly(ast);
 
@@ -275,6 +285,7 @@ public class NoEmptyLineSeparatorCheck extends AbstractCheck {
                      * }
                      */
                     isCaseGroupWithoutListOfStatements = true;
+                    isCaseGroupWithoutBraces = true;
                     return findRightCurlyInBlock(ast);
                 }
             }

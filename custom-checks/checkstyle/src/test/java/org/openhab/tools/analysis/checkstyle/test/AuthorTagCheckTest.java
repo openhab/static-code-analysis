@@ -17,6 +17,7 @@ import org.openhab.tools.analysis.checkstyle.AuthorTagCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
+import com.puppycrawl.tools.checkstyle.checks.javadoc.WriteTagCheck;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
 /**
@@ -29,7 +30,7 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
     private static final String EXPECTED_WARNING_MESSAGE = "An author tag is missing";
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/authorTagCheckTest";
     }
 
@@ -40,9 +41,9 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
          * an error is expected at the line where the outer class is declared
          * in the file
          */
-        int warningLine = 4;
+        String warningLocation = "4:1";
         boolean checkInnerClasses = false;
-        checkFileForAuthorTags(checkInnerClasses, fileName, warningLine);
+        checkFileForAuthorTags(checkInnerClasses, fileName, warningLocation);
     }
 
     @Test
@@ -52,10 +53,10 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
          * errors are expected at the lines where the classes are declared in
          * the file
          */
-        int firstWarningLine = 4;
-        int secondWarningLine = 9;
+        String firstWarningLocation = "4:1";
+        String secondWarningLocation = "9:9";
         boolean checkInnerClasses = true;
-        checkFileForAuthorTags(checkInnerClasses, fileName, firstWarningLine, secondWarningLine);
+        checkFileForAuthorTags(checkInnerClasses, fileName, firstWarningLocation, secondWarningLocation);
     }
 
     @Test
@@ -92,14 +93,14 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
         checkFileForAuthorTags(checkInnerClasses, fileName);
     }
 
-    private void checkFileForAuthorTags(boolean checkInnerUnits, String fileName, Integer... warningLine)
+    private void checkFileForAuthorTags(boolean checkInnerUnits, String fileName, String... warningLocation)
             throws Exception {
         String filePath = getPath(fileName);
         String[] expected;
-        if (warningLine.length > 0) {
-            expected = new String[warningLine.length];
-            for (int i = 0; i < warningLine.length; i++) {
-                expected[i] = warningLine[i] + ": " + EXPECTED_WARNING_MESSAGE;
+        if (warningLocation.length > 0) {
+            expected = new String[warningLocation.length];
+            for (int i = 0; i < warningLocation.length; i++) {
+                expected[i] = warningLocation[i] + ": " + EXPECTED_WARNING_MESSAGE;
             }
         } else {
             expected = CommonUtil.EMPTY_STRING_ARRAY;
@@ -118,9 +119,8 @@ public class AuthorTagCheckTest extends AbstractStaticCheckTest {
          */
         configuration.addProperty("tag", "@author");
         configuration.addProperty("tagFormat", "\\S");
-        configuration.addProperty("tagSeverity", "ignore");
         configuration.addProperty("checkInnerUnits", String.valueOf(checkInnerUnits));
-        configuration.addMessage("type.missingTag", EXPECTED_WARNING_MESSAGE);
+        configuration.addMessage(WriteTagCheck.MSG_MISSING_TAG, EXPECTED_WARNING_MESSAGE);
 
         return configuration;
     }

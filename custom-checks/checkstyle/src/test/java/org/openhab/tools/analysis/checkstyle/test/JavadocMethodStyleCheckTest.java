@@ -33,7 +33,7 @@ public class JavadocMethodStyleCheckTest extends AbstractStaticCheckTest {
     private DefaultConfiguration configuration = createModuleConfig(JavadocMethodStyleCheck.class);
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/javadocMethodStyleCheckTest";
     }
 

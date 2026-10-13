@@ -46,7 +46,7 @@ public class AuthorContributionDescriptionCheckTest extends AbstractStaticCheckT
     private DefaultConfiguration configuration;
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/authorContributionDescriptionCheckTest";
     }
 

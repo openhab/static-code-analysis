@@ -47,7 +47,7 @@ public class OhInfXmlUsageCheckTest extends AbstractStaticCheckTest {
     private static final DefaultConfiguration CONFIGURATION = createModuleConfig(OhInfXmlUsageCheck.class);
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/ohInfXmlUsageCheckTest";
     }
 

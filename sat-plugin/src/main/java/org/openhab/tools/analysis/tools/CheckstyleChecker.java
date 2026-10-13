@@ -117,8 +117,9 @@ public class CheckstyleChecker extends AbstractChecker {
         }
 
         checkstylePlugins.add(dependency("org.openhab.tools.sat.custom-checks", "checkstyle", plugin.getVersion()));
-        // Maven may load an older version, if no version is specified
-        checkstylePlugins.add(dependency("com.puppycrawl.tools", "checkstyle", "12.3.0"));
+        // Maven may load an older version, if no version is specified.
+        // Must match ${checkstyle.version} in the root pom.xml, which the custom checks are compiled against.
+        checkstylePlugins.add(dependency("com.puppycrawl.tools", "checkstyle", "14.3.0"));
         checkstylePlugins.forEach(logDependency());
 
         String baseDir = mavenProject.getBasedir().toString();

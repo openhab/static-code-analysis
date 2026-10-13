@@ -34,7 +34,7 @@ public class NullAnnotationsCheckTest extends AbstractStaticCheckTest {
     private DefaultConfiguration configuration = createModuleConfig(NullAnnotationsCheck.class);
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/nullAnnotationsCheckTest";
     }
 

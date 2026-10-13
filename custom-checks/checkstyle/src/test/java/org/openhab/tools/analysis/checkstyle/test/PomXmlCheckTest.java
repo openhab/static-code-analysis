@@ -50,7 +50,7 @@ public class PomXmlCheckTest extends AbstractStaticCheckTest {
     }
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/pomXmlCheckTest";
     }
 

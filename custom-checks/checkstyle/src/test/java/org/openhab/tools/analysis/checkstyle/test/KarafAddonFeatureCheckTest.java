@@ -19,7 +19,7 @@ import java.io.File;
 import java.text.MessageFormat;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.openhab.tools.analysis.checkstyle.KarafAddonFeatureCheck;
 import org.openhab.tools.analysis.checkstyle.api.AbstractStaticCheckTest;
 
@@ -36,7 +36,7 @@ public class KarafAddonFeatureCheckTest extends AbstractStaticCheckTest {
     private static final DefaultConfiguration CONFIGURATION = createModuleConfig(KarafAddonFeatureCheck.class);
 
     @Override
-    protected String getPackageLocation() {
+    public String getPackageLocation() {
         return "checkstyle/karafAddonFeatureCheck";
     }
 
