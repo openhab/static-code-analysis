@@ -250,7 +250,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.6.3</version>
+          <version>3.7.0</version>
         </plugin>
 
         <plugin>
@@ -467,7 +467,7 @@
             <configuration>
               <rules>
                 <requireMavenVersion>
-                  <version>3.6.3</version>
+                  <version>3.7.0</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
                   <version>[21.0,22.0),[25.0,26.0)</version>
