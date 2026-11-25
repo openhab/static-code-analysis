@@ -21,7 +21,7 @@ on:
 jobs:
   release:
     name: Release to Maven Central
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     
     steps:
     - name: Checkout code
@@ -220,7 +220,7 @@ jobs:
   check-central-deployment:
     name: Verify Maven Central Deployment
     needs: release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     
     steps:
     - name: Wait for Maven Central synchronization
